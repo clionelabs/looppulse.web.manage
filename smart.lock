@@ -1,0 +1,15 @@
+{
+  "meteor": {},
+  "dependencies": {
+    "basePackages": {
+      "Firebase": {}
+    },
+    "packages": {
+      "Firebase": {
+        "git": "https://github.com/dybskiy/meteor-firebase.git",
+        "tag": "v0.6.15.1",
+        "commit": "6b7084adc87ceb301a77a2f431fb996c7eedac34"
+      }
+    }
+  }
+}
