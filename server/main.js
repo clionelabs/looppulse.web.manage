@@ -10,15 +10,23 @@ firebaseEventsRef.on(
    )
 );
 
-var processBeaconEvent = function(beaconEvent) {
-  var visitor = new Visitor(beaconEvent.visitor_uuid);
+var processBeaconEvent = function(beaconEventJSON) {
+  var visitor = new Visitor(beaconEventJSON.visitor_uuid);
   visitor.save();
 
-  var beacon = new Beacon(beaconEvent.uuid, beaconEvent.major, beaconEvent.minor);
+  var beacon = new Beacon(beaconEventJSON.uuid, beaconEventJSON.major, beaconEventJSON.minor);
   beacon.save();
 
-  var beaconEvent = new BeaconEvent(visitor, beacon, beaconEvent);
+  var beaconEvent = new BeaconEvent(visitor, beacon, beaconEventJSON);
+  // ignore unknown proximity event
+  if (beaconEvent.proximity && beaconEvent.proximity=='unknown') {
+    console.log("Ignore unknown proximity event! " + JSON.stringify(beaconEvent));
+    return;
+  }
   beaconEvent.save();
+
+  var encounter = new Encounter(visitor, beacon, beaconEvent.type, beaconEvent.createdAt);
+  encounter.saveIfExit();
 }
 
 var log = function(eventName, beaconEvent) {

@@ -9,3 +9,8 @@ Visitor.prototype.save = function() {
   this._id = Visitors.findOne(this)._id;
   return this._id;
 }
+
+Visitor.prototype.lastEncounter = function() {
+  return Encounters.find({visitor_id:this._id},
+                         {sort:{exitTime:-1}, limit:1});
+}
