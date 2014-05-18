@@ -25,7 +25,7 @@ var processBeaconEvent = function(beaconEventJSON) {
   }
   beaconEvent.save();
 
-  var encounter = new Encounter(visitor, beacon, beaconEvent.type, beaconEvent.createdAt);
+  var encounter = new Encounter(visitor._id, beacon._id, beaconEvent.type, beaconEvent.createdAt);
   encounter.saveIfExit();
 }
 
