@@ -25,8 +25,11 @@ var processBeaconEvent = function(beaconEventJSON) {
   }
   beaconEvent.save();
 
-  var encounter = new Encounter(visitor._id, beacon._id, beaconEvent.type, beaconEvent.createdAt);
-  encounter.saveIfExit();
+  // Exit event marks the end of an encounter.
+  if (beaconEvent.isExit()) {
+    var encounter = new Encounter(visitor._id, beacon._id, beaconEvent.createdAt);
+    encounter.save();
+  }
 }
 
 var log = function(eventName, beaconEvent) {

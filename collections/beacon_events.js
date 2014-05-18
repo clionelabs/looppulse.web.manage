@@ -33,6 +33,11 @@ BeaconEvent.exitType = function() {
   return "didExitRegion";
 }
 
+BeaconEvent.prototype.isExit = function() {
+  return (this.type == BeaconEvent.exitType());
+}
+
+
 BeaconEvent.prototype.warnAboutUnknownProximity = function() {
   if (this.proximity && this.proximity == "unknown") {
     console.log("BeaconEvent with unknown proximity saved! " + JSON.stringify(this));
