@@ -18,17 +18,12 @@ var processBeaconEvent = function(beaconEventJSON) {
   beacon.save();
 
   var beaconEvent = new BeaconEvent(visitor, beacon, beaconEventJSON);
-  // ignore unknown proximity event
-  if (beaconEvent.proximity && beaconEvent.proximity=='unknown') {
-    console.log("Ignore unknown proximity event! " + JSON.stringify(beaconEvent));
-    return;
-  }
-  beaconEvent.save();
-
-  // Exit event marks the end of an encounter.
-  if (beaconEvent.isExit()) {
-    var encounter = new Encounter(visitor._id, beacon._id, beaconEvent.createdAt);
-    encounter.save();
+  if (beaconEvent.save()) {
+    // Exit event marks the end of an encounter.
+    if (beaconEvent.isExit()) {
+      var encounter = new Encounter(visitor._id, beacon._id, beaconEvent.createdAt);
+      encounter.save();
+    }
   }
 }
 

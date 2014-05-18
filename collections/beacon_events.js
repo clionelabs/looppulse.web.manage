@@ -15,9 +15,11 @@ BeaconEvent = function(visitor, beacon, json) {
 }
 
 BeaconEvent.prototype.save = function() {
+  if (this.warnAboutUnknownProximity()) {
+    return undefined;
+  }
   BeaconEvents.upsert(this, this);
   this._id = BeaconEvents.findOne(this)._id;
-  this.warnAboutUnknownProximity();
   return this._id;
 }
 
@@ -41,5 +43,7 @@ BeaconEvent.prototype.isExit = function() {
 BeaconEvent.prototype.warnAboutUnknownProximity = function() {
   if (this.proximity && this.proximity == "unknown") {
     console.log("BeaconEvent with unknown proximity saved! " + JSON.stringify(this));
+    return true;
   }
+  return false;
 }
