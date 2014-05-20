@@ -28,10 +28,19 @@ Encounter.prototype.entryEvent = function() {
                                             type: BeaconEvent.exitType(),
                                             createdAt: {$lt: this.exitedAt}},
                                            {sort: {createdAt: -1}});
-  var firstNonExitEvent = BeaconEvents.findOne({visitor_id: this.visitor_id,
-                                                beacon_id: this.beacon_id,
-                                                type: {$ne: BeaconEvent.exitType()},
-                                                createdAt: {$gt: lastExitEvent.createdAt}},
-                                               {sort: {createdAt: 1}});
+  var firstNonExitEvent;
+  if (lastExitEvent) {
+    firstNonExitEvent = BeaconEvents.findOne({visitor_id: this.visitor_id,
+                                              beacon_id: this.beacon_id,
+                                              type: {$ne: BeaconEvent.exitType()},
+                                              createdAt: {$gt: lastExitEvent.createdAt}},
+                                             {sort: {createdAt: 1}});
+  } else {
+    // If there was no prior exit event, then we use the first non exit event.
+    firstNonExitEvent = BeaconEvents.findOne({visitor_id: this.visitor_id,
+                                              beacon_id: this.beacon_id,
+                                              type: {$ne: BeaconEvent.exitType()}},
+                                             {sort: {createdAt: 1}});
+  }
    return firstNonExitEvent;
 }
