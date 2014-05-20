@@ -1,0 +1,85 @@
+
+body { font-size: 24px; }
+
+h3 {
+    font-size: 1.3em;
+}
+h4 {
+    font-size: 1em;
+    font-weight: normal;
+}
+
+.number { 
+    font-size: 2em;
+    display: block; 
+}
+$box-bg: #eee;
+$box-border: #ccc;
+header {
+    h2 {
+        text-align: center;
+        padding: 1em;
+        margin: 1em;
+    }  
+}
+.summary {
+    text-align: center;
+    margin: 1em 0 3em; 
+    .stat-box {
+        border: 2px solid $box-border;
+        background-color: $box-bg;
+        padding: 0.2em 0 0.8em;
+    }
+}
+.zone-report{
+    font-size: 24px;
+    text-align: center;
+    h4 {
+        margin: 1.2em 0 1em;
+    }
+    .number-box, .number-box-division {
+        margin: 0 1.5em;
+    }
+    .number-box {
+        background-color: $box-bg;
+        border:2px solid $box-border;
+        padding-bottom: 0.4em;
+        .unit {
+            margin-top: -0.4em;
+            display: block;
+        }
+    }
+    .number-box-division {
+        text-align: right;
+        padding: 1em 0;
+        &:before, &:after {
+            content: "";
+            display: inline-block;
+        }
+        &:before {
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-top: 3em solid $box-bg;
+            border-bottom: 0;
+            margin-top: -1.1em;
+            position: absolute;
+            left: calc(50% - 30px);
+            z-index: 100;
+        }
+        &:after {
+            border-left: 32px solid transparent;
+            border-right: 32px solid transparent;
+            border-top: 3.2em solid $box-border;
+            border-bottom: 0;
+            margin-top: -1em;
+            position: absolute;
+            left: calc(50% - 32px);
+        }
+    }
+    .number-box-conculsion {
+        margin-top: 1em;
+        .number {
+            font-weight:bold
+        }
+    }
+}

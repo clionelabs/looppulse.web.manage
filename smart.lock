@@ -2,13 +2,25 @@
   "meteor": {},
   "dependencies": {
     "basePackages": {
-      "Firebase": {}
+      "Firebase": {},
+      "bootstrap-3": {},
+      "scss": {}
     },
     "packages": {
       "Firebase": {
         "git": "https://github.com/dybskiy/meteor-firebase.git",
         "tag": "v0.6.15.1",
         "commit": "6b7084adc87ceb301a77a2f431fb996c7eedac34"
+      },
+      "bootstrap-3": {
+        "git": "https://github.com/mangasocial/meteor-bootstrap-3.git",
+        "tag": "v3.1.1-1",
+        "commit": "63dd38968828bb8963636df93e9a1c45e2dfe67e"
+      },
+      "scss": {
+        "git": "https://github.com/fourseven/meteor-scss.git",
+        "tag": "v0.8.7",
+        "commit": "d085b7272eacc20866abff61b25c915a22ddbcf4"
       }
     }
   }

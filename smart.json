@@ -1,5 +1,7 @@
 {
   "packages": {
-    "Firebase": {}
+    "Firebase": {},
+    "bootstrap-3": {},
+    "scss": {}
   }
 }
