@@ -1,8 +1,8 @@
 Products = new Meteor.Collection('products');
 
-Product = function(name, company_id) {
+Product = function(name, companyId) {
   this.name = name;
-  this.company_id = company_id;
+  this.companyId = ccompanyId
 }
 
 Product.prototype.save = function() {

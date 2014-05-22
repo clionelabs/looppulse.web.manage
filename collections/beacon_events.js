@@ -2,9 +2,9 @@
 
 BeaconEvents = new Meteor.Collection('beacon_events');
 
-BeaconEvent = function(visitor, beacon, json) {
-  this.visitor_id = visitor._id;
-  this.beacon_id = beacon._id;
+BeaconEvent = function(visitorId, beaconId, json) {
+  this.visitorId = visitorId
+  this.beaconId = beaconId
   this.type = json.type;
   this.createdAt = Date.parse(json.created_at);
   if (this.type == BeaconEvent.rangingType()) {

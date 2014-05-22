@@ -21,7 +21,7 @@ var processBeaconEvent = function(beaconEventJSON) {
   var beacon = new Beacon(beaconEventJSON.uuid, beaconEventJSON.major, beaconEventJSON.minor);
   beacon.save();
 
-  var beaconEvent = new BeaconEvent(visitor, beacon, beaconEventJSON);
+  var beaconEvent = new BeaconEvent(visitor._id, beacon._id, beaconEventJSON);
   if (beaconEvent.save()) {
     // Exit event marks the end of an encounter.
     if (beaconEvent.isExit()) {
