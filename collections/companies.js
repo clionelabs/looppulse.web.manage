@@ -1,8 +1,8 @@
 Companies = new Meteor.Collection('companies');
 
-Company = function(name, logo_url) {
+Company = function(name, logoUrl) {
   this.name = name;
-  this.logo_url = logo_url;
+  this.logoUrl = logoUrl;
 }
 
 Company.prototype.save = function() {

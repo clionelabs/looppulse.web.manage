@@ -1,7 +1,7 @@
 Visitors = new Meteor.Collection('visitors');
 
-Visitor = function(visitor_uuid) {
-  this.uuid = visitor_uuid;
+Visitor = function(uuid) {
+  this.uuid = uuid;
 }
 
 Visitor.prototype.save = function() {

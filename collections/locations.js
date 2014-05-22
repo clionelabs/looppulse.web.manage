@@ -1,9 +1,9 @@
 Locations = new Meteor.Collection('locations');
 
-Location = function(name, address, company_id) {
+Location = function(name, address, companyId) {
   this.name = name;
   this.address = address;
-  this.company_id = company_id;
+  this.companyId = companyId;
 }
 
 Location.prototype.save = function() {
