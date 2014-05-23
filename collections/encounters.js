@@ -3,9 +3,9 @@
 
 Encounters = new Meteor.Collection('encounters');
 
-Encounter = function(visitor_id, beacon_id, exitedAt) {
-  this.visitor_id = visitor_id;
-  this.beacon_id = beacon_id;
+Encounter = function(visitorId, beaconId, exitedAt) {
+  this.visitorId = visitorId;
+  this.beaconId = beaconId;
   this.exitedAt = exitedAt;
   this.close();
 }
@@ -23,22 +23,22 @@ Encounter.prototype.save = function() {
 
 // Possible entry event is the first event since last exit event
 Encounter.prototype.entryEvent = function() {
-  var lastExitEvent = BeaconEvents.findOne({visitor_id: this.visitor_id,
-                                            beacon_id: this.beacon_id,
+  var lastExitEvent = BeaconEvents.findOne({visitorId: this.visitorId,
+                                            beaconId: this.beaconId,
                                             type: BeaconEvent.exitType(),
                                             createdAt: {$lt: this.exitedAt}},
                                            {sort: {createdAt: -1}});
   var firstNonExitEvent;
   if (lastExitEvent) {
-    firstNonExitEvent = BeaconEvents.findOne({visitor_id: this.visitor_id,
-                                              beacon_id: this.beacon_id,
+    firstNonExitEvent = BeaconEvents.findOne({visitorId: this.visitorId,
+                                              beaconId: this.beaconId,
                                               type: {$ne: BeaconEvent.exitType()},
                                               createdAt: {$gt: lastExitEvent.createdAt}},
                                              {sort: {createdAt: 1}});
   } else {
     // If there was no prior exit event, then we use the first non exit event.
-    firstNonExitEvent = BeaconEvents.findOne({visitor_id: this.visitor_id,
-                                              beacon_id: this.beacon_id,
+    firstNonExitEvent = BeaconEvents.findOne({visitorId: this.visitorId,
+                                              beaconId: this.beaconId,
                                               type: {$ne: BeaconEvent.exitType()}},
                                              {sort: {createdAt: 1}});
   }

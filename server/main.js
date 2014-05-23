@@ -21,7 +21,7 @@ var processBeaconEvent = function(beaconEventJSON) {
   var beacon = new Beacon(beaconEventJSON.uuid, beaconEventJSON.major, beaconEventJSON.minor);
   beacon.save();
 
-  var beaconEvent = new BeaconEvent(visitor, beacon, beaconEventJSON);
+  var beaconEvent = new BeaconEvent(visitor._id, beacon._id, beaconEventJSON);
   if (beaconEvent.save()) {
     // Exit event marks the end of an encounter.
     if (beaconEvent.isExit()) {
@@ -50,12 +50,14 @@ var buildDemoData = function() {
                    {uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D', major: 54330, minor: 38700},
                    {uuid: 'E2C56DB5-DFFB-48D2-B060-D0F5A71096E0', major: 10,    minor: 47}];
     demoProducts.forEach(function(element, index, array) {
-      console.log("creating product");
-      var product = new Product(element);
+      var product = new Product(element, company._id);
       product.save();
-      location.addProduct(product._id);
 
-      var beacon = new Beacon(demoBeacons[index].uuid, demoBeacons[index].major, demoBeacons[index].minor, product._id);
+      var beacon = new Beacon(demoBeacons[index].uuid,
+                              demoBeacons[index].major,
+                              demoBeacons[index].minor,
+                              product._id,
+                              location._id);
       beacon.save();
     });
   }

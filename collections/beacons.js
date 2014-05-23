@@ -1,12 +1,11 @@
 Beacons = new Meteor.Collection('beacons');
 
-Beacon = function(uuid, major, minor, product_id) {
+Beacon = function(uuid, major, minor, productId, locationId) {
   this.uuid = uuid;
   this.major = major;
   this.minor = minor;
-  if (product_id) {
-    this.product_id = product_id;
-  }
+  this.productId = productId;
+  this.locationId = locationId;
 }
 
 Beacon.prototype.save = function() {
