@@ -3,9 +3,9 @@
 
 Encounters = new Meteor.Collection('encounters');
 
-Encounter = function(visitorId, beaconId, exitedAt) {
+Encounter = function(visitorId, installationId, exitedAt) {
   this.visitorId = visitorId;
-  this.beaconId = beaconId;
+  this.installationId = installationId;
   this.exitedAt = exitedAt;
   this.close();
 }
@@ -23,22 +23,24 @@ Encounter.prototype.save = function() {
 
 // Possible entry event is the first event since last exit event
 Encounter.prototype.entryEvent = function() {
+  var installation = Installations.findOne({_id: this.installationId});
+  var beaconId = installation.beaconId;
   var lastExitEvent = BeaconEvents.findOne({visitorId: this.visitorId,
-                                            beaconId: this.beaconId,
+                                            beaconId: beaconId,
                                             type: BeaconEvent.exitType(),
                                             createdAt: {$lt: this.exitedAt}},
                                            {sort: {createdAt: -1}});
   var firstNonExitEvent;
   if (lastExitEvent) {
     firstNonExitEvent = BeaconEvents.findOne({visitorId: this.visitorId,
-                                              beaconId: this.beaconId,
+                                              beaconId: beaconId,
                                               type: {$ne: BeaconEvent.exitType()},
                                               createdAt: {$gt: lastExitEvent.createdAt}},
                                              {sort: {createdAt: 1}});
   } else {
     // If there was no prior exit event, then we use the first non exit event.
     firstNonExitEvent = BeaconEvents.findOne({visitorId: this.visitorId,
-                                              beaconId: this.beaconId,
+                                              beaconId: beaconId,
                                               type: {$ne: BeaconEvent.exitType()}},
                                              {sort: {createdAt: 1}});
   }
