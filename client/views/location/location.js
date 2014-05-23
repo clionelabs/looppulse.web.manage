@@ -1,13 +1,10 @@
 Template.location.helpers({ 
   company: function() {
-    return Companies.findOne({_id: this.company_id}); 
+    return Companies.findOne(this.companyId); 
   },
   products: function(){
-    if (this.product_ids && this.product_ids.length > 0) {
-      return Products.find({_id: { $in: this.product_ids }});
-    } else {
-      console.log(this.product_ids)
-      return [];
-    }
+    productIds = Installations.find({ locationId:"g6egbdcMarvy7tv4h"}).map(function(o){ return o.physicalId; })
+    return Products.find({ _id: {$in: productIds} })
+    
   }
 });

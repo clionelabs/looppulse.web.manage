@@ -1,4 +1,4 @@
-Template.locationsList.helpers({ 
+Template.company.helpers({ 
   locations: function() {
     return Locations.find(); 
   }
