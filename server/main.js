@@ -1,5 +1,7 @@
 Meteor.startup(function() {
-  buildDemoData();
+  Meteor.bindEnvironment(function(){
+    buildDemoData();
+  });
 });
 
 // Observe raw event from Firebase
