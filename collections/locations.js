@@ -19,10 +19,6 @@ Location.load = function(id) {
   return loaded;
 }
 
-var mapId = function(object, index, cursor) {
-  return object._id;
-}
-
 Location.prototype.entranceInstallationIds = function() {
   var installs = Installations.find({locationId: this._id, type: 'entrance'});
   return Installations.find({locationId: this._id, type: 'entrance'}).map(mapId);
@@ -39,6 +35,7 @@ Location.prototype.cashierInstallationIds = function() {
 }
 
 Location.prototype.funnel = function(productId, timeRange) {
+  var timeRange = timeRange || defaultTimeRange();
   var funnel = {entrances: 0, product: 0, cashiers: 0};
 
   // Entrance
@@ -73,4 +70,12 @@ Location.prototype.funnel = function(productId, timeRange) {
   funnel.cashiers = cashierEncounters.count();
 
   return funnel;
+}
+
+var mapId = function(object, index, cursor) {
+  return object._id;
+}
+
+var defaultTimeRange = function() {
+  return {$gte: BeaconEvents.findOne({},{sort:{createdAt:1}}).createdAt};
 }
