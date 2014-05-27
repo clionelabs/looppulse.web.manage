@@ -14,7 +14,7 @@ firebaseEventsRef.on(
    Meteor.bindEnvironment(
      function(childSnapshot, prevChildName) {
        log(childSnapshot.val().type, childSnapshot.val());
-       //processBeaconEvent(childSnapshot.val());
+       processBeaconEvent(childSnapshot.val());
      }
    )
 );
