@@ -1,5 +1,7 @@
 Meteor.startup(function() {
-  buildDemoData();
+  Meteor.bindEnvironment(function(){
+    buildDemoData();
+  });
 });
 
 // Observe raw event from Firebase
@@ -37,7 +39,7 @@ var processBeaconEvent = function(beaconEventJSON) {
 }
 
 var buildDemoData = function() {
-  if (Companies.find().count()===0) {
+  if (Companies.find().count()==0) {
 
     var companyName = 'Marathon Sports';
     company = new Company(companyName, 'http://www.ilovelkf.hk/sites/www.ilovelkf.hk/files/business/image_promo/marathon-sports-logo-promo.png');
@@ -84,10 +86,6 @@ var buildDemoData = function() {
     installation = new Installation(location._id, beacon._id, cashier._id, 'cashier');
     installation.save();
 
-
-    Companies.find().forEach(function(b, i, a) {
-      console.log("created company: " + JSON.stringify(b));
-    })
     Beacons.find().forEach(function(b, i, a) {
       console.log("created beacon: " + JSON.stringify(b));
     });
