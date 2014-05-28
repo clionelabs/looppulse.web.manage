@@ -26,6 +26,20 @@ Meteor.publish('owned-locations', function(companyId) {
   return Locations.find(q);
 });
 
+
+Meteor.publish('owned-products', function(companyId){
+  return Products.find()
+})
+
+Meteor.publish('owned-installations', function(companyId){
+  return Installations.find()
+})
+
+Meteor.publish('related-encounters', function(companyId){
+  return Encounters.find()
+})
+
+
 // Meteor.publish('location', function(_id) {
 //   return Locations.findOne(_id);
 // });
