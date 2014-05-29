@@ -15,14 +15,14 @@ firebaseEventsRef.on(
   'child_added',
    Meteor.bindEnvironment(
      function(childSnapshot, prevChildName) {
-       var beaconEventRef = fbPath + '/' + childSnapshot.name();
-       processBeaconEvent(childSnapshot.val(), beaconEventRef);
-       log(childSnapshot.val().type, childSnapshot.val(), beaconEventRef);
+       var removeFromFirebase = false; // remove from Firebase after processing
+       processBeaconEventFromFirebase(childSnapshot, removeFromFirebase);
      }
    )
 );
 
-var processBeaconEvent = function(beaconEventJSON, beaconEventRef) {
+var processBeaconEventFromFirebase = function(snapshot, removeFromFirebase) {
+  var beaconEventJSON = snapshot.val();
   var visitor = new Visitor(beaconEventJSON.visitor_uuid);
   visitor.save();
 
@@ -38,7 +38,9 @@ var processBeaconEvent = function(beaconEventJSON, beaconEventRef) {
   if (beaconEvent.save()) {
     // Remove the copy on Firebase so we will not re process the
     // beacon event on restart
-    removeBeaconEvent(beaconEventRef);
+    if (removeFromFirebase) {
+      removeBeaconEventFromFirebase(snapshot.ref());
+    }
 
     // Exit event marks the end of an encounter.
     if (beaconEvent.isExit()) {
@@ -49,8 +51,9 @@ var processBeaconEvent = function(beaconEventJSON, beaconEventRef) {
   }
 }
 
-var removeBeaconEvent = function(beaconEventRef) {
-  var fbPath = new Firebase(beaconEventRef);
+var removeBeaconEventFromFirebase = function(beaconEventRef) {
+  // beaconEventRef can be passed in as DataSnapshot
+  var fbPath = new Firebase(beaconEventRef.toString());
   fbPath.remove();
   console.log('Removed: ' + beaconEventRef);
 }
