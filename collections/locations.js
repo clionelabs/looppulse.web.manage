@@ -77,5 +77,7 @@ var mapId = function(object, index, cursor) {
 }
 
 var defaultTimeRange = function() {
-  return {$gte: BeaconEvents.findOne({},{sort:{createdAt:1}}).createdAt};
+  // Do not query about first BeaconEvent every time.
+  // return {$gte: BeaconEvents.findOne({},{sort:{createdAt:1}}).createdAt};
+  return {$gte: 1400345402000};
 }
