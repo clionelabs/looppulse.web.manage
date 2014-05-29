@@ -13,7 +13,7 @@ firebaseEventsRef.on(
   'child_added',
    Meteor.bindEnvironment(
      function(childSnapshot, prevChildName) {
-       log(childSnapshot.val().type, childSnapshot.val());
+       //log(childSnapshot.val().type, childSnapshot.val());
        processBeaconEvent(childSnapshot.val());
      }
    )
@@ -26,8 +26,8 @@ var processBeaconEvent = function(beaconEventJSON) {
   var beacon = Beacons.findOne({uuid: beaconEventJSON.uuid,
                                 major: beaconEventJSON.major,
                                 minor: beaconEventJSON.minor});
-  if (beacon == undefined) {
-    console.log("can't find beacon: " + JSON.stringify(beaconEventJSON));
+  if (!beacon) {
+    //console.log("can't find beacon: " + JSON.stringify(beaconEventJSON));
     return;
   }
   var beaconEvent = new BeaconEvent(visitor._id, beacon._id, beaconEventJSON);

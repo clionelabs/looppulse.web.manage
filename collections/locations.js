@@ -19,6 +19,17 @@ Location.load = function(id) {
   return loaded;
 }
 
+// Create a location object based on the obj given
+Location.create = function(arg) {
+  if (!arg) {
+    return null;
+  }
+  var obj = (arg && arg == "object") ? arg : Locations.findOne(arg);
+  var location = new Location(obj.name, obj.address, obj.companyId);
+  location._id = obj._id;
+  return location;
+}
+
 Location.prototype.entranceInstallationIds = function() {
   var installs = Installations.find({locationId: this._id, type: 'entrance'});
   return Installations.find({locationId: this._id, type: 'entrance'}).map(mapId);
@@ -49,7 +60,7 @@ Location.prototype.funnel = function(productId, timeRange) {
                                                    type: 'product',
                                                    physicalId: productId});
   if (!productInstallation) {
-    console.log('Cannot find product with ID: ' + productId);
+    console.log('Cannot find product with ID: [location] ' + this._id + ' / [product]' +productId);
     return funnel;
   }
 
