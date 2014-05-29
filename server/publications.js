@@ -1,5 +1,5 @@
 DEBUG = true
-console.log("publishers")
+console.log("Publishers Ready, Deploying")
 
 Meteor.publish('owned-company', function(_id) {
   q = {}
