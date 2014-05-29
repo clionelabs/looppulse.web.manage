@@ -7,18 +7,22 @@ if (Meteor.isServer) {
   );
 }
 
-// Observe raw event from Firebase
-var fbPath = 'https://looppulse-dev.firebaseio.com/beacon_events';
-var firebaseEventsRef = new Firebase(fbPath);
-console.log('Observing: ' + fbPath);
-firebaseEventsRef.on(
-  'child_added',
-   Meteor.bindEnvironment(
-     function(childSnapshot, prevChildName) {
-       var removeFromFirebase = false; // remove from Firebase after processing
-       processBeaconEventFromFirebase(childSnapshot, removeFromFirebase);
-     }
-   )
+// Observe raw events from Firebase
+Companies.find().forEach(
+  function(company) {
+    var fbPath = 'https://looppulse-dev-2.firebaseio.com/companies/'+company.firebaseId+'/beacon_events';
+    var firebaseEventsRef = new Firebase(fbPath);
+    console.log('Observing: ' + fbPath);
+    firebaseEventsRef.on(
+      'child_added',
+       Meteor.bindEnvironment(
+         function(childSnapshot, prevChildName) {
+           var removeFromFirebase = false; // remove from Firebase after processing
+           processBeaconEventFromFirebase(childSnapshot, removeFromFirebase);
+         }
+       )
+    );
+  }
 );
 
 var processBeaconEventFromFirebase = function(snapshot, removeFromFirebase) {
@@ -64,7 +68,8 @@ var buildDemoData = function() {
     console.log("Core Data not found. Rebuild db...")
     var companyName = 'Marathon Sports';
     company = new Company(companyName,
-                          'http://www.ilovelkf.hk/sites/www.ilovelkf.hk/files/business/image_promo/marathon-sports-logo-promo.png');
+                          'http://www.ilovelkf.hk/sites/www.ilovelkf.hk/files/business/image_promo/marathon-sports-logo-promo.png',
+                          'bcb72ca29d0e9ff18766c589');
     company.save();
 
     var location = new Location('Causeway Bay Store', 'Shop 616, L6, Times Squaocaocnre, Causeway Bay', company._id);
