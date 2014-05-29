@@ -8,18 +8,21 @@ if (Meteor.isServer) {
 }
 
 // Observe raw event from Firebase
-firebaseEventsRef = new Firebase('https://looppulse-dev.firebaseio.com/beacon_events');
+var fbPath = 'https://looppulse-dev.firebaseio.com/beacon_events';
+var firebaseEventsRef = new Firebase(fbPath);
+console.log('Observing: ' + fbPath);
 firebaseEventsRef.on(
   'child_added',
    Meteor.bindEnvironment(
      function(childSnapshot, prevChildName) {
-       log(childSnapshot.val().type, childSnapshot.val());
-       processBeaconEvent(childSnapshot.val());
+       var removeFromFirebase = false; // remove from Firebase after processing
+       processBeaconEventFromFirebase(childSnapshot, removeFromFirebase);
      }
    )
 );
 
-var processBeaconEvent = function(beaconEventJSON) {
+var processBeaconEventFromFirebase = function(snapshot, removeFromFirebase) {
+  var beaconEventJSON = snapshot.val();
   var visitor = new Visitor(beaconEventJSON.visitor_uuid);
   visitor.save();
 
@@ -30,8 +33,15 @@ var processBeaconEvent = function(beaconEventJSON) {
     console.log("can't find beacon: " + JSON.stringify(beaconEventJSON));
     return;
   }
+
   var beaconEvent = new BeaconEvent(visitor._id, beacon._id, beaconEventJSON);
   if (beaconEvent.save()) {
+    // Remove the copy on Firebase so we will not re process the
+    // beacon event on restart
+    if (removeFromFirebase) {
+      removeBeaconEventFromFirebase(snapshot.ref());
+    }
+
     // Exit event marks the end of an encounter.
     if (beaconEvent.isExit()) {
       var installation = Installations.findOne({beaconId: beacon._id});
@@ -41,12 +51,20 @@ var processBeaconEvent = function(beaconEventJSON) {
   }
 }
 
+var removeBeaconEventFromFirebase = function(beaconEventRef) {
+  // beaconEventRef can be passed in as DataSnapshot
+  var fbPath = new Firebase(beaconEventRef.toString());
+  fbPath.remove();
+  console.log('Removed: ' + beaconEventRef);
+}
+
 var buildDemoData = function() {
   console.log("DB checking")
   if (Companies.find().count()==0) {
     console.log("Core Data not found. Rebuild db...")
     var companyName = 'Marathon Sports';
-    company = new Company(companyName, 'http://www.ilovelkf.hk/sites/www.ilovelkf.hk/files/business/image_promo/marathon-sports-logo-promo.png');
+    company = new Company(companyName,
+                          'http://www.ilovelkf.hk/sites/www.ilovelkf.hk/files/business/image_promo/marathon-sports-logo-promo.png');
     company.save();
 
     var location = new Location('Causeway Bay Store', 'Shop 616, L6, Times Squaocaocnre, Causeway Bay', company._id);
@@ -99,6 +117,6 @@ var buildDemoData = function() {
   }
 }
 
-var log = function(eventName, beaconEvent) {
-  console.log(eventName + ' | Beacon ' + beaconEvent.major + ' : ' + beaconEvent.minor);
+var log = function(eventName, beaconEvent, fbPath) {
+  console.log(eventName + ' | Beacon ' + beaconEvent.major + ' : ' + beaconEvent.minor + ' firebase: ' + fbPath);
 }
