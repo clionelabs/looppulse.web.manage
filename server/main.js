@@ -8,18 +8,21 @@ if (Meteor.isServer) {
 }
 
 // Observe raw event from Firebase
-firebaseEventsRef = new Firebase('https://looppulse-dev.firebaseio.com/beacon_events');
+var fbPath = 'https://looppulse-dev.firebaseio.com/beacon_events';
+var firebaseEventsRef = new Firebase(fbPath);
+console.log('Observing: ' + fbPath);
 firebaseEventsRef.on(
   'child_added',
    Meteor.bindEnvironment(
      function(childSnapshot, prevChildName) {
-       log(childSnapshot.val().type, childSnapshot.val());
-       processBeaconEvent(childSnapshot.val());
+       var beaconEventRef = fbPath + '/' + childSnapshot.name();
+       processBeaconEvent(childSnapshot.val(), beaconEventRef);
+       log(childSnapshot.val().type, childSnapshot.val(), beaconEventRef);
      }
    )
 );
 
-var processBeaconEvent = function(beaconEventJSON) {
+var processBeaconEvent = function(beaconEventJSON, beaconEventRef) {
   var visitor = new Visitor(beaconEventJSON.visitor_uuid);
   visitor.save();
 
@@ -30,8 +33,13 @@ var processBeaconEvent = function(beaconEventJSON) {
     console.log("can't find beacon: " + JSON.stringify(beaconEventJSON));
     return;
   }
+
   var beaconEvent = new BeaconEvent(visitor._id, beacon._id, beaconEventJSON);
   if (beaconEvent.save()) {
+    // Remove the copy on Firebase so we will not re process the
+    // beacon event on restart
+    removeBeaconEvent(beaconEventRef);
+
     // Exit event marks the end of an encounter.
     if (beaconEvent.isExit()) {
       var installation = Installations.findOne({beaconId: beacon._id});
@@ -41,12 +49,19 @@ var processBeaconEvent = function(beaconEventJSON) {
   }
 }
 
+var removeBeaconEvent = function(beaconEventRef) {
+  var fbPath = new Firebase(beaconEventRef);
+  fbPath.remove();
+  console.log('Removed: ' + beaconEventRef);
+}
+
 var buildDemoData = function() {
   console.log("DB checking")
   if (Companies.find().count()==0) {
     console.log("Core Data not found. Rebuild db...")
     var companyName = 'Marathon Sports';
-    company = new Company(companyName, 'http://www.ilovelkf.hk/sites/www.ilovelkf.hk/files/business/image_promo/marathon-sports-logo-promo.png');
+    company = new Company(companyName,
+                          'http://www.ilovelkf.hk/sites/www.ilovelkf.hk/files/business/image_promo/marathon-sports-logo-promo.png');
     company.save();
 
     var location = new Location('Causeway Bay Store', 'Shop 616, L6, Times Squaocaocnre, Causeway Bay', company._id);
@@ -99,6 +114,6 @@ var buildDemoData = function() {
   }
 }
 
-var log = function(eventName, beaconEvent) {
-  console.log(eventName + ' | Beacon ' + beaconEvent.major + ' : ' + beaconEvent.minor);
+var log = function(eventName, beaconEvent, fbPath) {
+  console.log(eventName + ' | Beacon ' + beaconEvent.major + ' : ' + beaconEvent.minor + ' firebase: ' + fbPath);
 }
