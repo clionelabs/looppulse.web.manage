@@ -29,8 +29,8 @@ var processBeaconEventFromFirebase = function(snapshot, removeFromFirebase) {
   var beacon = Beacons.findOne({uuid: beaconEventJSON.uuid,
                                 major: beaconEventJSON.major,
                                 minor: beaconEventJSON.minor});
-  if (beacon == undefined) {
-    console.log("can't find beacon: " + JSON.stringify(beaconEventJSON));
+  if (!beacon) {
+    //console.log("can't find beacon: " + JSON.stringify(beaconEventJSON));
     return;
   }
 

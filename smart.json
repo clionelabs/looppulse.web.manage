@@ -2,6 +2,7 @@
   "packages": {
     "Firebase": {},
     "bootstrap-3": {},
-    "scss": {}
+    "scss": {},
+    "iron-router": {}
   }
 }

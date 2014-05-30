@@ -1,0 +1,33 @@
+<template name="product">
+    <div class="col-sm-4 product-line">
+        <h4>{{product.name}}</h4>
+        {{#with funnel}}
+        <div class="number-box">
+            <span class="number">{{entrances}}</span>
+            <span class="unit">total visits</span>
+        </div>
+        <div class="number-box-division">
+            <span class="fiction">{{fraction product entrances}}</span>
+        </div>
+        <div class="number-box">
+            <span class="number">{{product}}</span>
+            <span class="unit">visits to kids</span>
+        </div>
+        <div class="number-box-division">
+            <span class="fiction">{{fraction cashiers product}}</span>
+        </div>
+        <div class="number-box">
+            <span class="number">{{cashiers}}</span>
+            <span class="unit">checked out</span>
+        </div>
+
+        <div class="number-box-division">
+            <span class="fiction"></span>
+        </div>
+        <div class="number-box-conculsion">
+            <span class="number">{{missed}}</span>
+            <span class="unit">missed</span>
+        </div>
+        {{/with}}
+    </div>
+</template>

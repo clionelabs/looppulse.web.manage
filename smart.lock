@@ -4,7 +4,8 @@
     "basePackages": {
       "Firebase": {},
       "bootstrap-3": {},
-      "scss": {}
+      "scss": {},
+      "iron-router": {}
     },
     "packages": {
       "Firebase": {
@@ -21,6 +22,16 @@
         "git": "https://github.com/fourseven/meteor-scss.git",
         "tag": "v0.8.7",
         "commit": "d085b7272eacc20866abff61b25c915a22ddbcf4"
+      },
+      "iron-router": {
+        "git": "https://github.com/EventedMind/iron-router.git",
+        "tag": "v0.7.1",
+        "commit": "d1ffb3f06ea4c112132b030f2eb1a70b81675ecb"
+      },
+      "blaze-layout": {
+        "git": "https://github.com/EventedMind/blaze-layout.git",
+        "tag": "v0.2.4",
+        "commit": "b40e9b0612329288d75cf52ad14a7da64bb8618f"
       }
     }
   }
