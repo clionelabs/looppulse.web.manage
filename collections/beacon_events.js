@@ -39,6 +39,10 @@ BeaconEvent.prototype.isExit = function() {
   return (this.type == BeaconEvent.exitType());
 }
 
+BeaconEvent.ensureIndex = function() {
+  console.log("BeaconEvent.ensureIndex");
+  BeaconEvents._ensureIndex({visitorId:1, beaconId:1, type:1, createdAt:1});
+}
 
 BeaconEvent.prototype.warnAboutUnknownProximity = function() {
   if (this.proximity && this.proximity == "unknown") {
