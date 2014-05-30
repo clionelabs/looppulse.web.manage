@@ -2,26 +2,29 @@ if (Meteor.isServer) {
   Meteor.startup(
     Meteor.bindEnvironment(function(){
       console.log("Environment Setup.");
+      setDefaultSettings();
       ensureIndexes();
       buildDemoData();
+      observeBeaconEventsFromFirebase();
     })
   );
 }
 
 // Observe raw event from Firebase
-var fbPath = 'https://looppulse-dev.firebaseio.com/beacon_events';
-var firebaseEventsRef = new Firebase(fbPath);
-console.log('Observing: ' + fbPath);
-firebaseEventsRef.on(
-  'child_added',
-   Meteor.bindEnvironment(
-     function(childSnapshot, prevChildName) {
-       var removeFromFirebase = false; // remove from Firebase after processing
-       processBeaconEventFromFirebase(childSnapshot, removeFromFirebase);
-      //  console.log("processed: "+JSON.stringify(childSnapshot.val()));
-     }
-   )
-);
+var observeBeaconEventsFromFirebase = function() {
+  var fbPath = Meteor.settings.firebase.root + '/beacon_events';
+  var firebaseEventsRef = new Firebase(fbPath);
+  console.log('Observing: ' + fbPath);
+  firebaseEventsRef.on(
+    'child_added',
+     Meteor.bindEnvironment(
+       function(childSnapshot, prevChildName) {
+         processBeaconEventFromFirebase(childSnapshot, Meteor.settings.removeFromFirebase);
+        //  console.log("processed: "+JSON.stringify(childSnapshot.val()));
+       }
+     )
+  );
+}
 
 var processBeaconEventFromFirebase = function(snapshot, removeFromFirebase) {
   var beaconEventJSON = snapshot.val();

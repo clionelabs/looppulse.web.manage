@@ -1,0 +1,6 @@
+{
+    "firebase": {
+        "root": "https://looppulse-dev.firebaseio.com"
+    },
+    "removeFromFirebase": false
+}
