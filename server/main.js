@@ -1,7 +1,8 @@
 if (Meteor.isServer) {
   Meteor.startup(
     Meteor.bindEnvironment(function(){
-      console.log("Environment Setup.")
+      console.log("Environment Setup.");
+      ensureIndexes();
       buildDemoData();
     })
   );
@@ -17,6 +18,7 @@ firebaseEventsRef.on(
      function(childSnapshot, prevChildName) {
        var removeFromFirebase = false; // remove from Firebase after processing
        processBeaconEventFromFirebase(childSnapshot, removeFromFirebase);
+      //  console.log("processed: "+JSON.stringify(childSnapshot.val()));
      }
    )
 );
@@ -56,6 +58,17 @@ var removeBeaconEventFromFirebase = function(beaconEventRef) {
   var fbPath = new Firebase(beaconEventRef.toString());
   fbPath.remove();
   console.log('Removed: ' + beaconEventRef);
+}
+
+var ensureIndexes = function() {
+  var classes = [BeaconEvent, Encounter, Installation, Visitor];
+  classes.forEach(
+    function(objectClass) {
+      if (objectClass.hasOwnProperty('ensureIndex')) {
+        objectClass.ensureIndex();
+      }
+    }
+  )
 }
 
 var buildDemoData = function() {

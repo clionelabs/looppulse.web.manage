@@ -46,3 +46,7 @@ Encounter.prototype.entryEvent = function() {
   }
    return firstNonExitEvent;
 }
+
+Encounter.ensureIndex = function() {
+  Encounters._ensureIndex({installationId:1, enteredAt:1, exitedAt:1});
+}

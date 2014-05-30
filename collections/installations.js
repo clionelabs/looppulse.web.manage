@@ -12,3 +12,7 @@ Installation.prototype.save = function() {
   this._id = Installations.findOne(this)._id;
   return this._id;
 }
+
+Installation.ensureIndex = function() {
+  Installations._ensureIndex({locationId:1, type:1, physicalId:1})
+}

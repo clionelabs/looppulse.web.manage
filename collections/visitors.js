@@ -9,3 +9,7 @@ Visitor.prototype.save = function() {
   this._id = Visitors.findOne(this)._id;
   return this._id;
 }
+
+Visitor.ensureIndex = function() {
+  Visitors._ensureIndex({uuid: 1});
+}
