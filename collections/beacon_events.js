@@ -40,7 +40,6 @@ BeaconEvent.prototype.isExit = function() {
 }
 
 BeaconEvent.ensureIndex = function() {
-  console.log("BeaconEvent.ensureIndex");
   BeaconEvents._ensureIndex({visitorId:1, beaconId:1, type:1, createdAt:1});
 }
 
