@@ -12,7 +12,7 @@ Template.product.helpers({
     console.log("locator:", locator, product)
     if(locator){
       var funnel = locator.funnel(product._id)
-      funnel.missed = funnel.entrances - funnel.product - funnel.cashiers
+      funnel.missed = funnel.product - funnel.cashiers
       return funnel
     }
     return null;
