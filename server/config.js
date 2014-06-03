@@ -7,8 +7,6 @@ configure = function() {
     // We can try to read the file using
     // https://gist.github.com/awatson1978/4625493
   }
-
-  buildDemoData();
 }
 
 ensureIndexes = function() {
@@ -22,60 +20,67 @@ ensureIndexes = function() {
   )
 }
 
-var buildDemoData = function() {
-  if (Companies.find().count()==0) {
-    console.log("Demo data not found. Rebuilding...")
-    var companyName = 'Marathon Sports';
-    company = new Company(companyName,
-                          'http://www.ilovelkf.hk/sites/www.ilovelkf.hk/files/business/image_promo/marathon-sports-logo-promo.png');
-    company.save();
+// TODO: We need to observe other changes in company.
+observerCompaniesFromFirebase = function() {
+  var fbPath = Meteor.settings.firebase.config + '/companies';
+  var companiesRef = new Firebase(fbPath);
+  console.log("Observing for company addition: "+ fbPath);
+  companiesRef.on(
+    "child_added",
+    Meteor.bindEnvironment(
+      function(childSnapshot, prevChildName) {
+        createCompany(childSnapshot, Meteor.settings.removeFromFirebase);
+      }
+    )
+  );
+}
 
-    var location = new Location('Causeway Bay Store', 'Shop 616, L6, Times Squaocaocnre, Causeway Bay', company._id);
-    location.save();
+var createCompany = function(snapshot, removeFromFirebase) {
+  var companyConfig = snapshot.val();
+  var company = new Company(companyConfig.name, companyConfig.logoUrl);
+  companyConfig._id = company.save();
+  console.log("Company created: " + JSON.stringify(company));
 
-    var demoProducts = ['Kids', 'Men', 'Women'];
-    var demoBeacons = [{uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D', major: 28364, minor: 4756},
-                       {uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D', major: 54330, minor: 38700},
-                       {uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D', major: 58020, minor: 34876},
-                       {uuid: '74278BDA-B644-4520-8F0C-720EAF059935', major: 100,   minor: 0},
-                       {uuid: 'E2C56DB5-DFFB-48D2-B060-D0F5A71096E0', major: 10,    minor: 47}];
-    demoProducts.forEach(function(element, index, array) {
-      var product = new Product(element, company._id);
-      product.save();
+  _.each(companyConfig.products, function(productConfig, productKey) {
+    var p = new Product(productConfig.name, company._id);
+    companyConfig.products[productKey]._id = p.save();
+    console.log("Product created: " + JSON.stringify(p));
+  });
 
-      var beacon = new Beacon(demoBeacons[index].uuid,
-                              demoBeacons[index].major,
-                              demoBeacons[index].minor);
-      beacon.save();
+  _.each(companyConfig.beacons, function(beaconConfig, beaconKey) {
+    var b = new Beacon(beaconConfig.uuid, beaconConfig.major, beaconConfig.minor);
+    companyConfig.beacons[beaconKey]._id = b.save();
+    console.log("Beacon created: " + JSON.stringify(b));
+  });
 
-      var installation = new Installation(location._id, beacon._id, product._id, 'product');
-      installation.save();
+  _.each(companyConfig.locations, function(locationConfig, locationKey) {
+    var l = new Location(locationConfig.name, locationConfig.address, company._id);
+    companyConfig.locations[locationKey]._id = l.save();
+    console.log("Location created: " + JSON.stringify(l));
+
+    _.each(locationConfig.installations, function(installationConfig) {
+      var type = installationConfig.type;
+      var locationId = l._id;
+      var beaconId = companyConfig.beacons[installationConfig.beacon]._id;
+      var physicalId = undefined;
+      if (type === 'product') {
+        physicalId = companyConfig.products[installationConfig.product]._id;
+      }
+      var i = new Installation(type, locationId, beaconId, physicalId);
+      i.save();
+      console.log("Installtion created: " + JSON.stringify(i));
     });
+  });
 
-    // Entrance & Cashier
-    var entrance = new Entrance('Main');
-    entrance.save();
-    beacon = new Beacon(demoBeacons[3].uuid,
-                        demoBeacons[3].major,
-                        demoBeacons[3].minor);
-    beacon.save();
-    installation = new Installation(location._id, beacon._id, entrance._id, 'entrance');
-    installation.save();
-
-    var cashier = new Cashier('Main');
-    cashier.save();
-    beacon = new Beacon(demoBeacons[4].uuid,
-                        demoBeacons[4].major,
-                        demoBeacons[4].minor);
-    beacon.save();
-    installation = new Installation(location._id, beacon._id, cashier._id, 'cashier');
-    installation.save();
-
-    Beacons.find().forEach(function(b, i, a) {
-      console.log("created beacon: " + JSON.stringify(b));
-    });
-    Installations.find().forEach(function(b, i, a) {
-      console.log("created installation: " + JSON.stringify(b));
-    });
+  if (removeFromFirebase) {
+    removeCompanyFromFirebase(snapshot.ref());
   }
+}
+
+// TODO: refactor w/ removeBeaconEventFromFirebase()
+var removeCompanyFromFirebase = function(ref) {
+  // beaconEventRef can be passed in as DataSnapshot
+  var fb = new Firebase(ref.toString());
+  fb.remove();
+  console.log('Removed: ' + ref);
 }

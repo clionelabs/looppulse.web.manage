@@ -1,10 +1,10 @@
 Installations = new Meteor.Collection('installations');
 
-Installation = function(locationId, beaconId, physicalId, type) {
+Installation = function(type, locationId, beaconId, physicalId) {
+  this.type = type;
   this.locationId = locationId;
   this.beaconId = beaconId;
   this.physicalId = physicalId;
-  this.type = type;
 }
 
 Installation.prototype.save = function() {
