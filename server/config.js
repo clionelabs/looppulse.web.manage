@@ -68,7 +68,7 @@ var createCompany = function(snapshot, removeFromFirebase) {
       }
       var i = new Installation(type, locationId, beaconId, physicalId);
       i.save();
-      console.log("Installtion created: " + JSON.stringify(i));
+      console.log("Installation created: " + JSON.stringify(i));
     });
   });
 
