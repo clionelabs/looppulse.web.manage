@@ -7,6 +7,8 @@ configure = function() {
     // We can try to read the file using
     // https://gist.github.com/awatson1978/4625493
   }
+
+  configureDEBUG();
 }
 
 ensureIndexes = function() {
@@ -83,4 +85,22 @@ var removeCompanyFromFirebase = function(ref) {
   var fb = new Firebase(ref.toString());
   fb.remove();
   console.log('Removed: ' + ref);
+}
+
+var configureDEBUG = function() {
+  var debugConfig = Meteor.settings.DEBUG;
+  if (JSON.stringify(debugConfig) != "{}") {
+    console.log("Applying DEBUG options: " + JSON.stringify(debugConfig));
+    if (debugConfig.resetLocal) {
+      resetLocal();
+    }
+  }
+}
+
+var resetLocal = function() {
+  var collections = [BeaconEvents, Encounters, Visitors];
+  _.each(collections, function(collection) {
+    collection.remove({});
+    console.log("Removed all data in: " + JSON.stringify(collection));
+  });
 }

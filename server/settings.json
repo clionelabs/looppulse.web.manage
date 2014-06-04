@@ -1,4 +1,8 @@
 {
+  "DEBUG": {
+    "resetLocal": true
+  },
+
   "firebase": {
       "root": "https://looppulse-dev-thomas.firebaseio.com",
       "config": "https://looppulse-config-thomas.firebaseio.com"
