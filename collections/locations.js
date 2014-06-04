@@ -60,7 +60,7 @@ Location.prototype.funnel = function(productId, timeRange) {
                                                    type: 'product',
                                                    physicalId: productId});
   if (!productInstallation) {
-    console.log('Cannot find product with ID: [location] ' + this._id + ' / [product]' +productId);
+    console.log("Cannot find product["+productId+"] in Location["+this._id+"]");
     return funnel;
   }
 
@@ -68,18 +68,27 @@ Location.prototype.funnel = function(productId, timeRange) {
   var productEncounters = Encounters.find({installationId: productInstallation._id,
                                            enteredAt: timeRange,
                                            exitedAt:  timeRange});
-  funnel.product = productEncounters.count();
 
-  // Cashier after visiting Product
-  var visitorIds = productEncounters.map(function(encounter, index, cursor) {
-                                           return encounter.visitorId;
-                                         });
-  var cashierEncounters = Encounters.find({installationId: {$in: this.cashierInstallationIds()},
-                                           visitorId: {$in: visitorIds},
-                                           enteredAt: timeRange,
-                                           exitedAt:  timeRange});
-  funnel.cashiers = cashierEncounters.count();
+  // Cashiers
+  var cashierInstallationIds = this.cashierInstallationIds();
+  productEncounters.forEach(
+    // Find the first encounter to any cashier installations after the
+    // visitor visited the given product.
+    function(productEncounter) {
+      var visitorId = productEncounter.visitorId;
+      var cashierEncounter = Encounters.find({installationId: {$in: cashierInstallationIds},
+                                              visitorId: productEncounter.visitorId,
+                                              enteredAt: {$gt: productEncounter.exitedAt},
+                                              exitedAt: timeRange},
+                                             {sort: {enteredAt: 1}, limit: 1});
+      funnel.product += 1;
+      if (cashierEncounter.count() > 0) {
+        funnel.cashiers += 1;
+      }
+    }
+  );
 
+  console.log("Location["+this._id+"].funnel("+productId+"): " + JSON.stringify(funnel));
   return funnel;
 }
 
