@@ -1,7 +1,7 @@
 {
-    "firebase": {
-        "root": "https://looppulse-dev-thomas.firebaseio.com",
-        "config": "https://looppulse-config-thomas.firebaseio.com"
-    },
-    "removeFromFirebase": false
+  "firebase": {
+      "root": "https://looppulse-dev-thomas.firebaseio.com",
+      "config": "https://looppulse-config-thomas.firebaseio.com"
+  },
+  "removeFromFirebase": false
 }
