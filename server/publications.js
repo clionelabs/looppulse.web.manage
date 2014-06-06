@@ -1,12 +1,10 @@
-DEBUG = true
 console.log("Publishers Ready, Deploying")
 
-Meteor.publish('owned-company', function(_id) {
-  q = {}
-  if (_id) {
-    q = {_id:_id}
-  } else if (DEBUG) {
-    q = {}
+Meteor.publish('owned-company', function(id) {
+  var q = {}
+  console.log("Returning Company Data", id)
+  if (id) {
+    q = { _id: id }
   } else {
     return null;
   }
@@ -14,12 +12,11 @@ Meteor.publish('owned-company', function(_id) {
 
 });
 
-Meteor.publish('owned-locations', function(companyId) {
-  q = {}
-  if (companyId) {
-    q = {companyId:companyId}
-  } else if (DEBUG) {
-    q = {}
+Meteor.publish('owned-locations', function(id) {
+  var q = {}
+  console.log("Returning Location Data", id)
+  if (id) {
+    q = { companyId: id }
   } else {
     return null;
   }
@@ -27,31 +24,39 @@ Meteor.publish('owned-locations', function(companyId) {
 });
 
 
-Meteor.publish('owned-products', function(companyId){
-  return Products.find()
+Meteor.publish('owned-products', function(id){
+  var q = {}
+  console.log("Returning Products Data", id)
+  if (id) {
+    q = { companyId: id }
+  } else {
+    return null;
+  }
+  return Products.find(q)
 })
 
-Meteor.publish('owned-installations', function(companyId){
-  return Installations.find()
+Meteor.publish('owned-installations', function(id){
+  var q = {}
+  console.log("Returning Installations Data", id)
+  if (id) {
+    q = { locationId: id }
+  } else {
+    return null;
+  }
+  return Installations.find(q)
 })
 
-Meteor.publish('related-encounters', function(companyId){
-  return Encounters.find()
+Meteor.publish('related-encounters', function(ids){
+  var q = {}
+  console.log("Returning Encounters Data", ids)
+  if (ids) {
+    if (typeof ids == "string") {
+      q = { installationId: id }
+    } else if (ids.length) {
+      q = { installationId: { $in:  ids } }
+    }
+  } else {
+    //return null;
+  }
+  return Encounters.find(q)
 })
-
-
-// Meteor.publish('location', function(_id) {
-//   return Locations.findOne(_id);
-// });
-
-Meteor.publish('beacons', function(_id) {
-  // var products = Products.find({location_id: location_id});
-  // return products.map(function(product, index, ref) {
-  //   Beacons.findOne({product_id: product._id},
-  //                   {fields: {uuid: 0, major: 0, minor: 0}});
-  // });
-});
-
-// Meteor.publish('encounters', function(beacon_id) {
-//   return Encounters.find({beacon_id: beacon_id});
-// });
