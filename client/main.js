@@ -2,7 +2,18 @@
 Session.set('initialLoad', true);
 Session.set('today', new Date());
 Session.set('sessionId', Meteor.default_connection._lastSessionId);
-Session.set("companyId", "rSZ6gszkurBQzfpai")
+
+(function(){
+
+  var config = Meteor.settings["public"];
+
+  if (config.DEBUG && config.testId){
+    console.log("Welcome to DEBUG mode")
+    console.log("company for testing: ", config.testId)
+    Session.set("companyId", config.testId)
+  }
+
+})();
 
 // Notifications - only load if user is logged in
 // Not mandatory, because server won't publish anything even if we try to load.
@@ -18,7 +29,7 @@ Session.set("companyId", "rSZ6gszkurBQzfpai")
 //   }
 // });
 
-Deps.autorun(function(computation) {
+Deps.autorun(function(computation){
   var companyId = Session.get("companyId");
   var locationId = null;
   var installationIds = null;

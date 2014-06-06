@@ -7,5 +7,9 @@
       "root": "https://looppulse-test-event.firebaseio.com/",
       "config": "https://looppulse-test-confi.firebaseio.com/"
   },
-  "removeFromFirebase": false
+  "removeFromFirebase": false,
+  "public": {
+    "DEBUG": true,
+    "testId": "rSZ6gszkurBQzfpai"
+  }
 }
