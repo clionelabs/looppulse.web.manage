@@ -25,12 +25,23 @@ header {
     }
 }
 .summary {
-    text-align: center;
     margin: 1em 0 3em;
+    height: 425px;
+    border: 2px solid $box-border;
+    overflow: hidden;
     .stat-box {
-        border: 2px solid $box-border;
-        background-color: $box-bg;
         padding: 0.2em 0 0.8em;
+        h4 {
+            text-align: right;
+            line-height: 2em;
+            padding-right: 1em;
+        }
+    }
+    .map-wrapper, .stat-box-wrapper {
+        height:425px;
+    }
+    .stat-box-wrapper {
+        background-color: $box-bg;
     }
 }
 .zone-report{
@@ -124,8 +135,7 @@ $beacon_pulse_offset: ($beacon_pulse_size - $becon_size)/2;
 
 .beacon-map {
     position:relative;
-    border:1px solid #ccc;
-    height:425px;
+    height:100%;
 }
 .beacon-marker {
     display: block;
