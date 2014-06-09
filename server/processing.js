@@ -40,6 +40,9 @@ var processBeaconEventFromFirebase = function(snapshot, removeFromFirebase) {
       var installation = Installations.findOne({beaconId: beacon._id});
       var encounter = new Encounter(visitor._id, installation._id, beaconEvent.createdAt);
       encounter.save();
+
+      var location = Location.load(installation.locationId);
+      Metric.update(location, encounter);
     }
   }
 }

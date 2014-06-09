@@ -98,7 +98,7 @@ var configureDEBUG = function() {
 }
 
 var resetLocal = function() {
-  var collections = [BeaconEvents, Encounters, Visitors];
+  var collections = [BeaconEvents, Encounters, Visitors, Metrics, Funnels];
   _.each(collections, function(collection) {
     collection.remove({});
     console.log("Removed all data in: " + JSON.stringify(collection));
