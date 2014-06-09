@@ -4,8 +4,12 @@
   },
 
   "firebase": {
-      "root": "https://looppulse-dev-thomas.firebaseio.com",
-      "config": "https://looppulse-config-thomas.firebaseio.com"
+      "root": "https://looppulse-test-event.firebaseio.com/",
+      "config": "https://looppulse-test-confi.firebaseio.com/"
   },
-  "removeFromFirebase": false
+  "removeFromFirebase": false,
+  "public": {
+    "DEBUG": true,
+    "testId": "rSZ6gszkurBQzfpai"
+  }
 }
