@@ -1,0 +1,14 @@
+<template name="beacons_map">
+    <div class="beacon-map map">
+    {{!each events this.beacons }}
+    {{#each this.beacons }}
+      {{> beacons_map_marker beacon=this coord=getCoord }}
+    {{/each}}
+    </div>
+</template>
+
+<template name="beacons_map_marker">
+    <div class="beacon-marker" style="top: {{coord.x}}px; left: {{coord.y}}px" data-beacon-id="{{beacon._id}}">
+      <div {{attributes}}></div>
+    </div>
+</template>

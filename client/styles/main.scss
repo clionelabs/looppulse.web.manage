@@ -1,7 +1,9 @@
 
 body { font-size: 16px; }
 
-main { font-size: 24px; }
+main {
+    line-height: 1.4;
+}
 
 h3 {
     font-size: 1.3em;
@@ -25,6 +27,7 @@ header {
     }
 }
 .summary {
+    font-size: 20px;
     margin: 1em 0 3em;
     height: 425px;
     border: 2px solid $box-border;

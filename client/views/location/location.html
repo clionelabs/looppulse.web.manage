@@ -8,28 +8,7 @@
     <div class="summary">
         <div class="row">
             <div class="col-sm-6 map-wrapper">
-                <div class="beacon-map">
-                    <div class="beacon-marker" style="top: 20px; right: 20px">
-                      <div class="pulse on"></div>
-                    </div>
-
-                    <div class="beacon-marker" style="top: 120px; right: 210px">
-                      <div class="pulse"></div>
-                    </div>
-
-                    <div class="beacon-marker" style="top: 30px; left: 28px">
-                      <div class="pulse on fast"></div>
-                    </div>
-
-                    <div class="beacon-marker" style="top: 220px; right: 320px">
-                      <div class="pulse on"></div>
-                    </div>
-
-                    <div class="beacon-marker" style="top: 350px; left: 410px">
-                      <div class="pulse on slow"></div>
-                    </div>
-
-                </div>
+                {{> beacons_map beacons=beacons }}
             </div>
             <div class="col-sm-6 stat-box-wrapper">
                 <div class="stat-box row">

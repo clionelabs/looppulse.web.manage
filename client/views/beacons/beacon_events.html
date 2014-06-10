@@ -1,0 +1,21 @@
+<template name="beacon_events">
+  <header>
+    <h1>{{ name }}</h1>
+  </header>
+  <div class="table-responsive">
+    <table class="table-striped table">
+      <thead>
+        <tr>
+          <td>Time</td>
+          <td>Beacon</td>
+          <td>Vistor</td>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each events }}
+        <tr><td>{{time this.createdAt}}</td><td>{{this.beaconId}}</td><td>{{this.visitorId}}</td></tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</template>
