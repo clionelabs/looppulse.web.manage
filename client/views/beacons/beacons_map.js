@@ -3,7 +3,6 @@ Template.beacons_map.helpers({
     if (!beaconsCursor) { return null }
     var beaconIds = beaconsCursor.map(function(o) { return o.beaconId; })
     var events = BeaconEvents.find({ beaconId: { $in: beaconIds },  type: "didRangeBeacons" })
-    // console.log("Querying", this._id, beacons, events)
     return events;
   },
   getCoord: function() {
@@ -22,21 +21,18 @@ Template.beacons_map.helpers({
   }
 });
 Template.beacons_map_marker.helpers({
-
+  events: function(){
+    var events = BeaconEvents.find({ beaconId: this.beacon.beaconId,  type: "didRangeBeacons" }).map(function(o, idx) {
+      //console.log(o, idx)
+      o.pos = idx +1
+      return o;
+    });
+    return events;
+  },
   attributes: function() {
-    var t = (new Date()).getTime()
-    var lastLoad = null
-    console.log("Last Update At", lastLoad)
-    var q = { beaconId: this.beacon.beaconId,  type: "didRangeBeacons" }
-
-    if(lastLoad)
-      q.createdAt = { $gt: lastLoad }
-
-    console.log(q)
-    var events = BeaconEvents.find(q);
     var attrs = {};
     attrs["class"] = "pulse";
-    if (events.count() > 0) {
+    if (this._id) {
       attrs["class"] += " on"
     }
     return attrs;

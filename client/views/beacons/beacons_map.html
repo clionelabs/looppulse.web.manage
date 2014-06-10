@@ -1,6 +1,5 @@
 <template name="beacons_map">
     <div class="beacon-map map">
-    {{!each events this.beacons }}
     {{#each this.beacons }}
       {{> beacons_map_marker beacon=this coord=getCoord }}
     {{/each}}
@@ -8,7 +7,14 @@
 </template>
 
 <template name="beacons_map_marker">
-    <div class="beacon-marker" style="top: {{coord.x}}px; left: {{coord.y}}px" data-beacon-id="{{beacon._id}}">
-      <div {{attributes}}></div>
+    <div class="beacon-marker" style="top: {{coord.y}}px; left: {{coord.x}}px" data-beacon-id="{{beacon._id}}">
+      <div class="pulse-wrapper">
+        <div class="pulse"></div>
+      {{#each events}}
+        <div {{attributes}} >
+          <div class="ring" style="-ms-animation-delay: {{this.pos}}s; -webkit-animation-delay: {{this.pos}}s; -moz-animation-delay: {{this.pos}}s;animation-delay:{{this.pos}}s; "></div>
+        </div>
+      {{/each}}
+      </div>
     </div>
 </template>

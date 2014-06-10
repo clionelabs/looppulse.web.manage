@@ -136,6 +136,9 @@ $becon_size: 16px;
 $beacon_pulse_size: 64px;
 $beacon_pulse_offset: ($beacon_pulse_size - $becon_size)/2;
 
+$pulse-default-duration:1s;
+$pulse-default-delay:10s;
+$pulse-freq: 5;
 .beacon-map {
     position:relative;
     height:100%;
@@ -143,15 +146,21 @@ $beacon_pulse_offset: ($beacon_pulse_size - $becon_size)/2;
 .beacon-marker {
     display: block;
     position: absolute;
-
+    .pulse-wrapper {
+        width: $becon_size;
+        height: $becon_size;
+        position: relative;
+        border-radius: $becon_size;
+    }
     .pulse {
         width: $becon_size;
         height: $becon_size;
         background: $beacon_color;
         border-radius: $becon_size;
         display: block;
-        position: relative;
-        &:before {
+        position: absolute;
+        opacity: 0.45;
+        & .ring {
             content: "";
             margin: 0 auto;
             position: absolute;
@@ -165,26 +174,26 @@ $beacon_pulse_offset: ($beacon_pulse_size - $becon_size)/2;
             border: 2px solid $beacon_color;
             opacity: 0;
         }
-        &.on:before {
-            -ms-animation: pulse 1s linear infinite;
-            -moz-animation: pulse 1s linear infinite;
-            -webkit-animation: pulse 1s linear infinite;
-            animation: pulse 1s linear infinite;
+        &.on .ring{
+            -ms-animation: pulse $pulse-default-duration $pulse-default-delay $pulse-freq linear;
+            -moz-animation: pulse $pulse-default-duration $pulse-default-delay $pulse-freq linear;
+            -webkit-animation: pulse $pulse-default-duration $pulse-default-delay $pulse-freq linear;
+            animation: pulse $pulse-default-duration $pulse-default-delay $pulse-freq linear;
             border-image: initial;
         }
-        &.slow:before {
+        &.slow .ring {
             -ms-animation-duration: 3s;
             -moz-animation-duration: 3s;
             -webkit-animation-duration: 3s;
             animation-duration: 3s;
         }
-        &.fast:before {
+        &.fast .ring {
             -ms-animation-duration: 500ms;
             -moz-animation-duration: 500ms;
             -webkit-animation-duration: 500ms;
             animation-duration: 500ms;
         }
-        &.blink:before {
+        &.blink .ring {
             -ms-animation-duration: 200ms;
             -moz-animation-duration: 200ms;
             -webkit-animation-duration: 200ms;
