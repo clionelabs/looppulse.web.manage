@@ -16,29 +16,33 @@ Funnel.prototype.save = function() {
   return this._id;
 }
 
+Funnel.prototype.markClosed = function(visitorId) {
+  var self = this;
+  Funnels.update({_id: self._id},
+                 {$addToSet: {productVisitors: visitorId,
+                              cashierVisitors: visitorId}});
+  console.log("Funnel#markClosed("+visitorId+"): "+JSON.stringify(Funnels.findOne({_id:self._id})));
+}
+
+Funnel.prototype.markOpen = function(visitorId) {
+  var self = this;
+  Funnels.update({_id: self._id},
+                 {$addToSet: {productVisitors: visitorId},
+                  $pull:     {cashierVisitors: visitorId}});
+  console.log("Funnel#markOpen("+visitorId+"): "+JSON.stringify(Funnels.findOne({_id:self._id})));
+}
+
+Funnel.prototype.productVisits = function() {
+  return this.productVisitors.length;
+}
+
+Funnel.prototype.cashierVisits = function() {
+  return this.cashierVisitors.length;
+}
+
 Funnel.load = function(id) {
   var json = Funnels.findOne({_id: id});
   var loaded = new Funnel(json.metricId, json.installationId);
   loaded._id = json._id;
   return loaded;
-}
-
-// We use Funnel#encounters to store product encounters which do not have a
-// matching cashier visit.
-
-Funnel.prototype.incrementProductVisit = function(encounterId) {
-  Funnels.update({_id: this._id},
-                 {$inc: {productVisits: 1},
-                  $addToSet: {encounters: encounterId}});
-  // console.log("incrementProductVisit: "+ JSON.stringify(this));
-}
-
-Funnel.prototype.incrementCashierVisit = function(productEncounterId) {
-  // console.log("searching: "+JSON.stringify({_id: this._id,encounters: productEncounterId}));
-  Funnels.update({_id: this._id,
-                  encounters: productEncounterId},
-
-                 {$inc: {cashierVisits: 1},
-                  $pull: {encounters: productEncounterId}});
-  // console.log("Funnel#incrementCashierVisit ("+productEncounterId+"): "+ JSON.stringify(Funnels.findOne({_id:this._id})));
 }

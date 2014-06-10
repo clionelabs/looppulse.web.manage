@@ -42,7 +42,7 @@ var processBeaconEventFromFirebase = function(snapshot, removeFromFirebase) {
       encounter.save();
 
       var location = Location.load(installation.locationId);
-      Metric.update(location, encounter);
+      Metric.update(location, encounter, visitor);
     }
   }
 }
