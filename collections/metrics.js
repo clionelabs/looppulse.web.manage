@@ -26,7 +26,7 @@ Metric.prototype.updateEntrances = function(entrances, visitorId) {
   }
   _(times).times(function(n) {
     Metrics.update({_id: self._id},
-                   {entranceVisitors: {$add: visitorId}});
+                   {$addToSet: {entranceVisitors: visitorId}});
   });
 }
 
