@@ -4,12 +4,20 @@
   },
 
   "firebase": {
-      "root": "https://looppulse-test-event.firebaseio.com/",
+      "root": "https://looppulse-ievent.firebaseio.com/",
       "config": "https://looppulse-test-confi.firebaseio.com/"
   },
   "removeFromFirebase": false,
   "public": {
     "DEBUG": true,
-    "testId": "rSZ6gszkurBQzfpai"
+    "testId": "rSZ6gszkurBQzfpai",
+    "view": {
+      "beaconsMap": {
+        "limit": 50,
+        "forwardBufferInSec": 5
+      }
+    }
+  },
+  "performance": {
   }
 }

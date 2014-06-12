@@ -21,9 +21,10 @@ Template.beacons_map.helpers({
 });
 Template.beacons_map_marker.helpers({
   events: function(){
-    var lim = 300;
+    var config = Meteor.settings.public.view.beaconsMap || {};
+    var lim = config.limit || 10;
     var t = (new Date()).getTime();
-    var qt = t - (10 * 60 * 1000); // js timestamp is in ms
+    var qt = t - (config.forwardBufferInSec * 60 * 1000); // js timestamp is in ms
     var events = BeaconEvents.find({ beaconId: this.beacon.beaconId,  type: "didRangeBeacons", createdAt: { $gt: qt } }, {limit: lim }).map(function(o, idx) {
       console.log(o._id, new Date(o.createdAt), idx)
       o.pos = idx +1
