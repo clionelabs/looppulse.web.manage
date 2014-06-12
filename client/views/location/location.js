@@ -1,5 +1,6 @@
 Template.location.helpers({
   company: function() {
+    console.log("Instances" , this)
     console.log("Querying Company in Location", this._id)
     return Companies.findOne(this.companyId);
   },
