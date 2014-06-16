@@ -8,7 +8,7 @@ observeBeaconEventsFromFirebase = function() {
      Meteor.bindEnvironment(
        function(childSnapshot, prevChildName) {
          processBeaconEventFromFirebase(childSnapshot, Meteor.settings.removeFromFirebase);
-         console.log("processed: "+JSON.stringify(childSnapshot.val()));
+         // console.log("processed: "+JSON.stringify(childSnapshot.val()));
        }
      )
   );

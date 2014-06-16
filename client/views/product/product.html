@@ -1,23 +1,23 @@
 <template name="product">
     <div class="col-sm-4 product-line">
         <h4>{{product.name}}</h4>
-        {{#with funnel}}
+
         <div class="number-box">
-            <span class="number">{{entrances}}</span>
+            <span class="number">{{totalVisit}}</span>
             <span class="unit">total visits</span>
         </div>
         <div class="number-box-division">
-            <span class="fiction">{{fraction product entrances}}</span>
+            <span class="fiction">{{fraction productVisit totalVisit}}</span>
         </div>
         <div class="number-box">
-            <span class="number">{{product}}</span>
+            <span class="number">{{productVisit}}</span>
             <span class="unit">visits</span>
         </div>
         <div class="number-box-division">
-            <span class="fiction">{{fraction cashiers product}}</span>
+            <span class="fiction">{{fraction cashierVisit productVisit}}</span>
         </div>
         <div class="number-box">
-            <span class="number">{{cashiers}}</span>
+            <span class="number">{{cashierVisit}}</span>
             <span class="unit">checked out</span>
         </div>
 
@@ -25,9 +25,9 @@
             <span class="fiction"></span>
         </div>
         <div class="number-box-conculsion">
-            <span class="number">{{missed}}</span>
+            <span class="number">{{missedVisit}}</span>
             <span class="unit">missed</span>
         </div>
-        {{/with}}
+
     </div>
 </template>
