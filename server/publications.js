@@ -78,3 +78,16 @@ Meteor.publish('related-beacon-events', function(ids){
   }
   return BeaconEvents.find(q)
 })
+
+Meteor.publish('related-funnels', function(){
+  var q = {}
+  console.log("Returning Funnel Data")
+
+  return Funnels.find()
+})
+
+Meteor.publish('related-metrics', function(){
+  var q = {}
+  console.log("Returning Metric Data")
+  return Metrics.find()
+})
