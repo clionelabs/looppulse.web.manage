@@ -44,7 +44,23 @@ Encounter.prototype.entryEvent = function() {
                                               type: {$ne: BeaconEvent.exitType()}},
                                              {sort: {createdAt: 1}});
   }
-   return firstNonExitEvent;
+
+  // It is possible that at the time this didExitRegion event arrives,
+  // we have not received the didRangeBeacons event which should have
+  // arrived before.
+  // We can either throw an error and put this event back into a queue for
+  // processing at a later time. Or, we can fail silently.
+  if (!firstNonExitEvent) {
+    console.log("firstNonExitEvent is undefined.");
+    console.log("  visitorId: "+this.visitorId);
+    console.log("  installationId: "+this.installationId);
+    console.log("  exitedAt: "+this.exitedAt);
+
+    // Fake a entry event with the exact same time so the duration
+    // becomes insignificant.
+    firstNonExitEvent = {createdAt: this.exitedAt};
+  }
+  return firstNonExitEvent;
 }
 
 Encounter.ensureIndex = function() {
