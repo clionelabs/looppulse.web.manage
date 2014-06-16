@@ -89,7 +89,7 @@ var removeCompanyFromFirebase = function(ref) {
 
 var configureDEBUG = function() {
   var debugConfig = Meteor.settings.DEBUG;
-  if (JSON.stringify(debugConfig) != "{}") {
+  if (debugConfig && JSON.stringify(debugConfig) != "{}") {
     console.log("Applying DEBUG options: " + JSON.stringify(debugConfig));
     if (debugConfig.resetLocal) {
       resetLocal();
