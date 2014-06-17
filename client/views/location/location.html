@@ -16,15 +16,15 @@
             <div class="col-sm-6 stat-box-wrapper">
                 <div class="stat-box row">
                     <h4 class="col-xs-7">Missed Opportunites</h4>
-                    <span class="number col-xs-5">{{../missedVisit}}</span>
+                    <span class="number col-xs-5">{{ ../missedVisit }}</span>
                 </div>
                 <div class="stat-box row">
                     <h4 class="col-xs-7">Today Visits</h4>
-                    <span class="number col-xs-5">{{../entranceVisitors.length}}</span>
+                    <span class="number col-xs-5">{{ ../entranceVisitors.length }}</span>
                 </div>
                 <div class="stat-box row">
                     <h4 class="col-xs-7">Conversion</h4>
-                    <span class="number col-xs-5">19.34%</span><!--  {{! visit - missed / visit}} -->
+                    <span class="number col-xs-5">{{ invertedFraction ../missedVisit ../entranceVisitors.length }}</span>
                 </div>
             </div>
             {{/with}}{{/with}}

@@ -40,9 +40,9 @@ Template.location.helpers({
       console.log("Pairing", o.productId, o.installationId, o.funnel)
     })
     if (obj.metric) {
-      obj.metric.totalVisit = obj.metric.entranceVisitors.length
+      obj.metric.totalVisit = (obj.metric.entranceVisitors)  ? obj.metric.entranceVisitors.length : 0;
     } else {
-      obj.metric = { totalVisit: -1 }
+      obj.metric = { totalVisit: 0 }
     }
     console.log("Processed", obj)
     return obj;
@@ -52,9 +52,25 @@ Template.location.helpers({
   },
   metric: function(){
     var metric = Metrics.findOne({ locationId: this._id })
+    if (!metric) {
+      return null;
+    }
+    metric.missedVisit = 0
+    var funnels = Funnels.find({ metricId: metric._id })
+    funnels.forEach(function(f){
+      var cashierVisit = f.cashierVisitors ? f.cashierVisitors.length : 0;
+      var productVisit = f.productVisitors ? f.productVisitors.length : 0;
+      var miss = productVisit - cashierVisit;
+      if (metric._id === f.metricId) {
+        metric.missedVisit += miss;
+      } else {
+         throw new Error("Metric doesn't match current Installation");
+      }
+    })
     return metric;
   },
   funnels: function(metric){
+    console.log("Enter funnels this")
     if (!metric && this) {
         metric = Metrics.findOne({ locationId: this._id })
     }
@@ -78,14 +94,14 @@ Template.location.helpers({
       indexedFunnels[f.installationId].productVisit = productVisit;
       indexedFunnels[f.installationId].missedVisit = miss;
 
-      if (metric._id === f.metricId) {
-        if (!metric.missedVisit) {
-          metric.missedVisit = 0;
-        }
-        metric.missedVisit += miss;
-      } else {
-         throw new Error("Metric doesn't match current Installation");
-      }
+      // if (metric._id === f.metricId) {
+      //   if (!metric.missedVisit) {
+      //     metric.missedVisit = 0;
+      //   }
+      //   metric.missedVisit += miss;
+      // } else {
+      //    throw new Error("Metric doesn't match current Installation");
+      // }
     })
 
     console.log("return", metric._id, metric, indexedFunnels)

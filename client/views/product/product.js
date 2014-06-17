@@ -18,12 +18,5 @@ Template.product.helpers({
   missedVisit: function(){
     if (!this || !this.product || !this.product.funnel) { return "--"; }
     return this.product.funnel.missedVisit || 0
-  },
-  fraction: function(a,b){
-    var result = (a/b*100).toFixed(2)
-    if (!isNaN(result))
-      return result+"%";
-    else
-      return "0%"
   }
 });
