@@ -1,20 +1,45 @@
 Metrics = new Meteor.Collection("metrics");
 
-Metric = function(locationId, enteredAt, exitedAt) {
+Metric = function(locationId, enteredAt, exitedAt, entranceVisitors) {
   this.locationId = locationId;
   this.enteredAt = enteredAt;
   this.exitedAt = exitedAt;
+  if (entranceVisitors) {
+    this.entranceVisitors = entranceVisitors;
+  }
 }
 
 Metric.prototype.save = function() {
   var self = this;
-  Metrics.upsert(self, self);
-  self._id = Metrics.findOne(self)._id;
+  var result = Metrics.upsert(self, self);
+  if (result.insertedId) {
+    self._id = result.insertedId;
+  } else {
+    self._id = Metrics.findOne(this)._id;
+  }
   return self._id;
 }
 
+Metric.load = function(attributes) {
+  var json = Metrics.findOne(attributes);
+  var loaded = new Metric(json.locationId, json.enteredAt, json.exitedAt, json.entranceVisitors);
+  loaded._id = json._id;
+  return loaded;
+}
+
 Metric.prototype.entranceVisits = function() {
-  return this.entranceVisitors.length;
+  return (this.entranceVisitors||[]).length;
+}
+
+Metric.prototype.missedOpportunities = function() {
+  // Go thru all the funnels at this location
+  // and calculate the non converted visits
+  var missed = 0;
+  Funnels.find({metricId: this._id}).forEach(function(loaded) {
+    var funnel = Funnel.load(loaded);
+    missed += funnel.productVisits() - funnel.cashierVisits();
+  });
+  return missed;
 }
 
 Metric.prototype.updateEntrances = function(entrances, visitorId) {
@@ -74,4 +99,5 @@ Metric.update = function(location, encounter, visitor) {
     metric.updateClosedFunnels(subPath.closed, visitorId);
     metric.updateOpenFunnels(subPath.open, visitorId);
   });
+  return metric;
 }
