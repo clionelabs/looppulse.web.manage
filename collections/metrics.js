@@ -21,10 +21,10 @@ Metric.prototype.save = function() {
 }
 
 Metric.load = function(attributes) {
-  var json = Metrics.findOne(attributes);
-  var loaded = new Metric(json.locationId, json.enteredAt, json.exitedAt, json.entranceVisitors);
-  loaded._id = json._id;
-  return loaded;
+  var obj = Metrics.findOne(attributes);
+  var instance = (obj) ? new Metric(obj.locationId, obj.enteredAt, obj.exitedAt, obj.entranceVisitors) : new Metric();
+  instance._id = (obj) ? obj._id : "";
+  return instance;
 }
 
 Metric.prototype.entranceVisits = function() {

@@ -12,22 +12,21 @@
             </div>
 
             {{#with metric }}
-            {{#with funnels this }}
             <div class="col-sm-6 stat-box-wrapper">
                 <div class="stat-box row">
                     <h4 class="col-xs-7">Missed Opportunites</h4>
-                    <span class="number col-xs-5">{{ ../missedVisit }}</span>
+                    <span class="number col-xs-5">{{ missedOpportunities  }}</span>
                 </div>
                 <div class="stat-box row">
                     <h4 class="col-xs-7">Today Visits</h4>
-                    <span class="number col-xs-5">{{ ../entranceVisitors.length }}</span>
+                    <span class="number col-xs-5">{{ entranceVisits }}</span>
                 </div>
                 <div class="stat-box row">
                     <h4 class="col-xs-7">Conversion</h4>
-                    <span class="number col-xs-5">{{ invertedFraction ../missedVisit ../entranceVisitors.length }}</span>
+                    <span class="number col-xs-5">{{ invertedFraction missedOpportunities entranceVisits }}</span>
                 </div>
             </div>
-            {{/with}}{{/with}}
+            {{/with}}
         </div>
     </div>
 

@@ -18,3 +18,9 @@ UI.registerHelper('invertedFraction',
         return "0%"
   }
 );
+
+UI.registerHelper('log',
+  function(obj){
+      console.log("UI object logging:", obj)
+  }
+);

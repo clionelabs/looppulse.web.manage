@@ -51,22 +51,11 @@ Template.location.helpers({
     return Installations.find({ locationId: this._id } )
   },
   metric: function(){
-    var metric = Metrics.findOne({ locationId: this._id })
+    var metric = Metric.load({ locationId: this._id })
     if (!metric) {
       return null;
     }
-    metric.missedVisit = 0
-    var funnels = Funnels.find({ metricId: metric._id })
-    funnels.forEach(function(f){
-      var cashierVisit = f.cashierVisitors ? f.cashierVisitors.length : 0;
-      var productVisit = f.productVisitors ? f.productVisitors.length : 0;
-      var miss = productVisit - cashierVisit;
-      if (metric._id === f.metricId) {
-        metric.missedVisit += miss;
-      } else {
-         throw new Error("Metric doesn't match current Installation");
-      }
-    })
+
     return metric;
   },
   funnels: function(metric){
