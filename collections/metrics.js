@@ -14,7 +14,7 @@ Metric.prototype.save = function() {
 }
 
 Metric.prototype.entranceVisits = function() {
-  return this.entranceVisitors.length;
+  return this.entranceVisitors ? this.entranceVisitors.length : 0;
 }
 
 Metric.prototype.updateEntrances = function(entrances, visitorId) {
