@@ -33,11 +33,11 @@ Funnel.prototype.markOpen = function(visitorId) {
 }
 
 Funnel.prototype.productVisits = function() {
-  return this.productVisitors.length;
+  return this.productVisitors ? this.productVisitors.length : 0;
 }
 
 Funnel.prototype.cashierVisits = function() {
-  return this.cashierVisitors.length;
+  return this.cashierVisitors ? this.cashierVisitors.length : 0;
 }
 
 Funnel.load = function(id) {
