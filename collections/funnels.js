@@ -1,19 +1,25 @@
 Funnels = new Meteor.Collection("funnels");
 
-Funnel = function(metricId, installationId) {
+Funnel = function(metricId, installationId, productVisitors, cashierVisitors) {
   this.metricId = metricId;
   this.installationId = installationId;
-
-  // Do not initialize these as we would over write the exisiting
-  // if this particular funnel exists before.
-  // this.productVisits = 0;
-  // this.cashiersVisits = 0;
+  if (productVisitors) {
+    this.productVisitors = productVisitors;
+  }
+  if (cashierVisitors) {
+    this.cashierVisitors = cashierVisitors;
+  }
 }
 
 Funnel.prototype.save = function() {
-  Funnels.upsert(this, this);
-  this._id = Funnels.findOne(this)._id;
-  return this._id;
+  var self = this;
+  var result = Funnels.upsert(self, self);
+  if (result.insertedId) {
+    self._id = result.insertedId;
+  } else {
+    self._id = Funnels.findOne(self)._id;
+  }
+  return self._id;
 }
 
 Funnel.prototype.markClosed = function(visitorId) {
@@ -21,7 +27,6 @@ Funnel.prototype.markClosed = function(visitorId) {
   Funnels.update({_id: self._id},
                  {$addToSet: {productVisitors: visitorId,
                               cashierVisitors: visitorId}});
-  console.log("Funnel#markClosed("+visitorId+"): "+JSON.stringify(Funnels.findOne({_id:self._id})));
 }
 
 Funnel.prototype.markOpen = function(visitorId) {
@@ -29,20 +34,20 @@ Funnel.prototype.markOpen = function(visitorId) {
   Funnels.update({_id: self._id},
                  {$addToSet: {productVisitors: visitorId},
                   $pull:     {cashierVisitors: visitorId}});
-  console.log("Funnel#markOpen("+visitorId+"): "+JSON.stringify(Funnels.findOne({_id:self._id})));
 }
 
 Funnel.prototype.productVisits = function() {
-  return this.productVisitors ? this.productVisitors.length : 0;
+  return (this.productVisitors||[]).length;
 }
 
 Funnel.prototype.cashierVisits = function() {
-  return this.cashierVisitors ? this.cashierVisitors.length : 0;
+  return (this.cashierVisitors||[]).length;
 }
 
-Funnel.load = function(id) {
-  var json = Funnels.findOne({_id: id});
-  var loaded = new Funnel(json.metricId, json.installationId);
+Funnel.load = function(attributes) {
+  var json = Funnels.findOne(attributes);
+  var loaded = new Funnel(json.metricId, json.installationId,
+                          json.productVisitors, json.cashierVisitors);
   loaded._id = json._id;
   return loaded;
 }
