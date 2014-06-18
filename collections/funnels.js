@@ -45,9 +45,8 @@ Funnel.prototype.cashierVisits = function() {
 }
 
 Funnel.load = function(attributes) {
-  var json = Funnels.findOne(attributes);
-  var loaded = new Funnel(json.metricId, json.installationId,
-                          json.productVisitors, json.cashierVisitors);
-  loaded._id = json._id;
-  return loaded;
+  var obj = Funnels.findOne(attributes);
+  var instance =  (obj) ? new Funnel(obj.metricId, obj.installationId, obj.productVisitors, obj.cashierVisitors) :  new Funnel() ;
+  instance._id = (obj) ? obj._id : "";
+  return instance;
 }

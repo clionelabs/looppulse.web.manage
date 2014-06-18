@@ -59,9 +59,9 @@ Template.location.helpers({
     return metric;
   },
   funnels: function(metric){
-    console.log("Enter funnels this")
+    console.log("Enter funnels")
     if (!metric && this) {
-        metric = Metrics.findOne({ locationId: this._id })
+        metric = Metric.load({ locationId: this._id })
     }
 
     if(!metric){
@@ -73,27 +73,16 @@ Template.location.helpers({
       if(!indexedFunnels[f.installationId])
         indexedFunnels[f.installationId] = {}
 
-      console.log("Funnel queued", f.installationId )
-
-      indexedFunnels[f.installationId] = f
-      var cashierVisit = f.cashierVisitors ? f.cashierVisitors.length : 0;
-      var productVisit = f.productVisitors ? f.productVisitors.length : 0;
+      funnel = Funnel.load({}, f)
+      indexedFunnels[f.installationId] = funnel
+      var cashierVisit = funnel.cashierVisits();
+      var productVisit = funnel.productVisits();
       var miss = productVisit - cashierVisit; //no teleport is allowed.
       indexedFunnels[f.installationId].cashierVisit = cashierVisit;
       indexedFunnels[f.installationId].productVisit = productVisit;
       indexedFunnels[f.installationId].missedVisit = miss;
 
-      // if (metric._id === f.metricId) {
-      //   if (!metric.missedVisit) {
-      //     metric.missedVisit = 0;
-      //   }
-      //   metric.missedVisit += miss;
-      // } else {
-      //    throw new Error("Metric doesn't match current Installation");
-      // }
     })
-
-    console.log("return", metric._id, metric, indexedFunnels)
     return indexedFunnels;
   },
   funnel: function(installationId){
