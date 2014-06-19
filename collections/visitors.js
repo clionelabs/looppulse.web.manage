@@ -5,7 +5,6 @@ Visitor = function(uuid) {
 }
 
 Visitor.prototype.save = function() {
-  console.log("Visitor found", this)
   Visitors.upsert(this, this);
   this._id = Visitors.findOne(this)._id;
   return this._id;

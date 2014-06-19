@@ -1,8 +1,8 @@
 configure = function() {
-  console.log("Configuring with Meteor.settings: " + JSON.stringify(Meteor.settings));
+  console.info("Configuring with Meteor.settings: " + JSON.stringify(Meteor.settings));
 
   if (JSON.stringify(Meteor.settings)=='{}') {
-    console.log("Meteor.settings expected. Rerun: meteor --settings server/settings.json");
+    console.warn("Meteor.settings expected. Rerun: meteor --settings server/settings.json");
 
     // We can try to read the file using
     // https://gist.github.com/awatson1978/4625493
@@ -26,7 +26,7 @@ ensureIndexes = function() {
 observerCompaniesFromFirebase = function() {
   var fbPath = Meteor.settings.firebase.config + '/companies';
   var companiesRef = new Firebase(fbPath);
-  console.log("Observing for company addition: "+ fbPath);
+  console.log("[Remote] Observing for company addition: "+ fbPath);
   companiesRef.on(
     "child_added",
     Meteor.bindEnvironment(
@@ -41,24 +41,24 @@ var createCompany = function(snapshot, removeFromFirebase) {
   var companyConfig = snapshot.val();
   var company = new Company(companyConfig.name, companyConfig.logoUrl);
   companyConfig._id = company.save();
-  console.log("Company created: " + JSON.stringify(company));
+  console.info("[Init] Company created:", company._id, company.name);
 
   _.each(companyConfig.products, function(productConfig, productKey) {
     var p = new Product(productConfig.name, company._id);
     companyConfig.products[productKey]._id = p.save();
-    console.log("Product created: " + JSON.stringify(p));
+    console.info("[Init] Product created:", p._id, p.name);
   });
 
   _.each(companyConfig.beacons, function(beaconConfig, beaconKey) {
     var b = new Beacon(beaconConfig.uuid, beaconConfig.major, beaconConfig.minor);
     companyConfig.beacons[beaconKey]._id = b.save();
-    console.log("Beacon created: " + JSON.stringify(b));
+    console.info("[Init] Beacon created:", JSON.stringify(b));
   });
 
   _.each(companyConfig.locations, function(locationConfig, locationKey) {
     var l = new Location(locationConfig.name, locationConfig.address, company._id);
     companyConfig.locations[locationKey]._id = l.save();
-    console.log("Location created: " + JSON.stringify(l));
+    console.info("[Init] Location created:", l._id, l.name);
 
     _.each(locationConfig.installations, function(installationConfig) {
       var type = installationConfig.type;
@@ -70,7 +70,7 @@ var createCompany = function(snapshot, removeFromFirebase) {
       }
       var i = new Installation(type, locationId, beaconId, physicalId);
       i.save();
-      console.log("Installation created: " + JSON.stringify(i));
+      console.info("[Init] Installation created:", JSON.stringify(i));
     });
   });
 
@@ -84,13 +84,13 @@ var removeCompanyFromFirebase = function(ref) {
   // beaconEventRef can be passed in as DataSnapshot
   var fb = new Firebase(ref.toString());
   fb.remove();
-  console.log('Removed: ' + ref);
+  console.info('[Reset] Firebase Removed:',ref);
 }
 
 var configureDEBUG = function() {
   var debugConfig = Meteor.settings.DEBUG;
   if (debugConfig && JSON.stringify(debugConfig) != "{}") {
-    console.log("Applying DEBUG options: " + JSON.stringify(debugConfig));
+    console.info("[Dev] Applying DEBUG options: ", debugConfig);
     if (debugConfig.resetLocal) {
       resetLocal();
     }
@@ -99,8 +99,8 @@ var configureDEBUG = function() {
 
 var resetLocal = function() {
   var collections = [BeaconEvents, Encounters, Visitors, Metrics, Funnels];
-  _.each(collections, function(collection) {
+  collections.forEach(function(collection) {
     collection.remove({});
-    console.log("Removed all data in: " + JSON.stringify(collection));
+    console.info("[Reset] Removed all data in:", collection._name);
   });
 }
