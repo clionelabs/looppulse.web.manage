@@ -1,11 +1,11 @@
 {
   "DEBUG": {
-    "resetLocal": true
+    "resetLocal": false
   },
 
   "firebase": {
-      "root": "https://looppulse-ievent.firebaseio.com/",
-      "config": "https://looppulse-test-confi.firebaseio.com/"
+      "root": "https://looppulse-event.firebaseio.com/",
+      "config": "https://looppulse-store.firebaseio.com/"
   },
   "removeFromFirebase": false,
   "public": {
