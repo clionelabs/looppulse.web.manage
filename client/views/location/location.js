@@ -73,8 +73,9 @@ Template.location.helpers({
       if(!indexedFunnels[f.installationId])
         indexedFunnels[f.installationId] = {}
 
-      funnel = Funnel.load({}, f)
+      var funnel = Funnel.load({}, f)
       indexedFunnels[f.installationId] = funnel
+      console.log("Mapped", f.installationId, funnel)
       var cashierVisit = funnel.cashierVisits();
       var productVisit = funnel.productVisits();
       var miss = productVisit - cashierVisit; //no teleport is allowed.

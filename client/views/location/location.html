@@ -36,7 +36,7 @@
 
             {{#with summerizedProducts self=this products=products metric=metric funnels=funnels }}
                 {{#each this.products}}
-                    {{> product product=this metric=../metric }}
+                    {{> product funnel=this.funnel product=this.product metric=../metric  }}
                 {{/each}}
             {{/with}}
 

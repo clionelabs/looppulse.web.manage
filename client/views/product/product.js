@@ -8,15 +8,16 @@ Template.product.helpers({
     return this.metric.totalVisit || "--"
   },
   productVisit: function(){
-    if (!this || !this.product || !this.product.funnel ) { return "--"; }
-    return this.product.funnel.productVisit || 0
+    console.log(this)
+    if (!this || !this.funnel ) { return "--"; }
+    return this.funnel.productVisit || 0
   },
   cashierVisit: function(){
-    if (!this || !this.product || !this.product.funnel) { return "--"; }
-    return this.product.funnel.cashierVisit || 0
+    if (!this || !this.funnel) { return "--"; }
+    return this.funnel.cashierVisit || 0
   },
   missedVisit: function(){
-    if (!this || !this.product || !this.product.funnel) { return "--"; }
-    return this.product.funnel.missedVisit || 0
+    if (!this || !this.funnel) { return "--"; }
+    return this.funnel.missedVisit || 0
   }
 });
