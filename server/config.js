@@ -49,6 +49,18 @@ var createCompany = function(snapshot, removeFromFirebase) {
     console.info("[Init] Product created:", p._id, p.name);
   });
 
+  _.each(companyConfig.entrances, function(entranceConfig, entranceKey) {
+    var p = new Entrance(entranceConfig.name, company._id);
+    companyConfig.entrances[entranceKey]._id = p.save();
+    console.info("[Init] Entrance created:", p._id, p.name);
+  });
+
+  _.each(companyConfig.cashiers, function(cashierConfig, cashierKey) {
+    var p = new Cashier(cashierConfig.name, company._id);
+    companyConfig.cashiers[cashierKey]._id = p.save();
+    console.info("[Init] Cashier created:", p._id, p.name);
+  });
+
   _.each(companyConfig.beacons, function(beaconConfig, beaconKey) {
     var b = new Beacon(beaconConfig.uuid, beaconConfig.major, beaconConfig.minor);
     companyConfig.beacons[beaconKey]._id = b.save();
@@ -67,6 +79,10 @@ var createCompany = function(snapshot, removeFromFirebase) {
       var physicalId = undefined;
       if (type === 'product') {
         physicalId = companyConfig.products[installationConfig.product]._id;
+      } else if (type === 'entrance') {
+        physicalId = companyConfig.entrances[installationConfig.entrance]._id;
+      } else if (type === 'cashier') {
+        physicalId = companyConfig.cashiers[installationConfig.cashier]._id;
       }
       var i = new Installation(type, locationId, beaconId, physicalId);
       i.save();
