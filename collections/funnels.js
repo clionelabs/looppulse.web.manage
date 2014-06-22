@@ -13,11 +13,21 @@ Funnel = function(metricId, installationId, productVisitors, cashierVisitors) {
 
 Funnel.prototype.save = function() {
   var self = this;
-  var result = Funnels.upsert(self, self);
+  var attributes = function() {
+    return {
+      metricId: self.metricId,
+      installationId: self.installationId
+    };
+  };
+  var modifiers = function() {
+    return {$set: attributes()};
+  }
+
+  var result = Funnels.upsert(attributes(), modifiers());
   if (result.insertedId) {
     self._id = result.insertedId;
   } else {
-    self._id = Funnels.findOne(self)._id;
+    self._id = Funnels.findOne(attributes())._id;
   }
   return self._id;
 }
