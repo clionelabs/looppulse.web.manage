@@ -111,6 +111,8 @@ var configureDEBUG = function() {
       resetLocal();
     }
   }
+
+  Debug.observeChanges();
 }
 
 var resetLocal = function() {
