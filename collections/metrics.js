@@ -11,20 +11,29 @@ Metric = function(locationId, enteredAt, exitedAt, entranceVisitors) {
 
 Metric.prototype.save = function() {
   var self = this;
-  var result = Metrics.upsert(self, self);
+  var attributes = function() {
+    return {
+      locationId: self.locationId,
+      enteredAt: self.enteredAt,
+      exitedAt: self.exitedAt };
+  };
+  var modifiers = function() {
+    return {$set: attributes()};
+  };
+  var result = Metrics.upsert(attributes(), modifiers());
   if (result.insertedId) {
     self._id = result.insertedId;
   } else {
-    self._id = Metrics.findOne(this)._id;
+    self._id = Metrics.findOne(attributes())._id;
   }
   return self._id;
 }
 
 Metric.load = function(attributes) {
-  var json = Metrics.findOne(attributes);
-  var loaded = new Metric(json.locationId, json.enteredAt, json.exitedAt, json.entranceVisitors);
-  loaded._id = json._id;
-  return loaded;
+  var obj = Metrics.findOne(attributes);
+  var instance = (obj) ? new Metric(obj.locationId, obj.enteredAt, obj.exitedAt, obj.entranceVisitors) : new Metric();
+  instance._id = (obj) ? obj._id : "";
+  return instance;
 }
 
 Metric.prototype.entranceVisits = function() {
@@ -43,16 +52,11 @@ Metric.prototype.missedOpportunities = function() {
 }
 
 Metric.prototype.updateEntrances = function(entrances, visitorId) {
-  // We actually only count once.
-  var self = this;
-  var times = 0;
+  // Only count one entrance per visitor within the given Metric's time range
   if (entrances.length > 0) {
-    times = 1;
-  }
-  _(times).times(function(n) {
-    Metrics.update({_id: self._id},
+    Metrics.update({_id: this._id},
                    {$addToSet: {entranceVisitors: visitorId}});
-  });
+  }
 }
 
 Metric.prototype.updateClosedFunnels = function(closed, visitorId) {

@@ -1,0 +1,23 @@
+{
+  "DEBUG": {
+    "resetLocal": false
+  },
+
+  "firebase": {
+      "root": "https://looppulse-event.firebaseio.com/",
+      "config": "https://looppulse-store.firebaseio.com/"
+  },
+  "removeFromFirebase": false,
+  "public": {
+    "DEBUG": true,
+    "testId": "rSZ6gszkurBQzfpai",
+    "view": {
+      "beaconsMap": {
+        "limit": 50,
+        "forwardBufferInSec": 5
+      }
+    }
+  },
+  "performance": {
+  }
+}

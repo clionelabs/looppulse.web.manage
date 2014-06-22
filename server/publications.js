@@ -56,7 +56,38 @@ Meteor.publish('related-encounters', function(ids){
       q = { installationId: { $in:  ids } }
     }
   } else {
+    // WARNING: BETA Code. MUST Uncomment.
     //return null;
   }
   return Encounters.find(q)
+})
+
+
+Meteor.publish('related-beacon-events', function(ids){
+  var q = {}
+  console.log("Returning Encounters Data", ids)
+  if (ids) {
+    if (typeof ids == "string") {
+      q = { beaconId: id }
+    } else if (ids.length) {
+      q = { beaconId: { $in:  ids } }
+    }
+  } else {
+    // WARNING: BETA Code. MUST Uncomment.
+    //return null;
+  }
+  return BeaconEvents.find(q)
+})
+
+Meteor.publish('related-funnels', function(){
+  var q = {}
+  console.log("Returning Funnel Data")
+
+  return Funnels.find()
+})
+
+Meteor.publish('related-metrics', function(){
+  var q = {}
+  console.log("Returning Metric Data")
+  return Metrics.find()
 })

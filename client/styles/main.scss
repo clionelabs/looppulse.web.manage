@@ -1,7 +1,9 @@
 
 body { font-size: 16px; }
 
-main { font-size: 24px; }
+main {
+    line-height: 1.4;
+}
 
 h3 {
     font-size: 1.3em;
@@ -11,9 +13,9 @@ h4 {
     font-weight: normal;
 }
 
-.number { 
+.number {
     font-size: 2em;
-    display: block; 
+    display: block;
 }
 $box-bg: #eee;
 $box-border: #ccc;
@@ -22,15 +24,27 @@ header {
         text-align: center;
         padding: 1em;
         margin: 1em;
-    }  
+    }
 }
 .summary {
-    text-align: center;
-    margin: 1em 0 3em; 
+    font-size: 20px;
+    margin: 1em 0 3em;
+    height: 425px;
+    border: 2px solid $box-border;
+    overflow: hidden;
     .stat-box {
-        border: 2px solid $box-border;
-        background-color: $box-bg;
         padding: 0.2em 0 0.8em;
+        h4 {
+            text-align: right;
+            line-height: 2em;
+            padding-right: 1em;
+        }
+    }
+    .map-wrapper, .stat-box-wrapper {
+        height:425px;
+    }
+    .stat-box-wrapper {
+        background-color: $box-bg;
     }
 }
 .zone-report{
@@ -84,4 +98,107 @@ header {
             font-weight:bold
         }
     }
+}
+
+// Map and Pulse
+@-ms-keyframes pulse {
+  0%   { -ms-transform: scale(0);   opacity: 0; }
+  8%   { -ms-transform: scale(0);   opacity: 0; }
+  15%  { -ms-transform: scale(0.1); opacity: 1; }
+  30%  { -ms-transform: scale(0.5); opacity: 1; }
+  100% { -ms-transform: scale(1);   opacity: 0; }
+}
+@-webkit-keyframes pulse {
+  0%   { -webkit-transform: scale(0);   opacity: 0; }
+  8%   { -webkit-transform: scale(0);   opacity: 0; }
+  15%  { -webkit-transform: scale(0.1); opacity: 1; }
+  30%  { -webkit-transform: scale(0.5); opacity: 1; }
+  100% { -webkit-transform: scale(1);   opacity: 0; }
+}
+@-moz-keyframes pulse {
+  0%   { transform: scale(0);   opacity: 0; }
+  8%   { transform: scale(0);   opacity: 0; }
+  15%  { transform: scale(0.1); opacity: 1; }
+  30%  { transform: scale(0.5); opacity: 1; }
+  100% { transform: scale(1);   opacity: 0; }
+}
+
+@-keyframes pulse {
+  0%   { transform: scale(0);   opacity: 0; }
+  8%   { transform: scale(0);   opacity: 0; }
+  15%  { transform: scale(0.1); opacity: 1; }
+  30%  { transform: scale(0.5); opacity: 1; }
+  100% { transform: scale(1);   opacity: 0; }
+}
+
+$beacon_color: #33cccc;
+$becon_size: 16px;
+$beacon_pulse_size: 64px;
+$beacon_pulse_offset: ($beacon_pulse_size - $becon_size)/2;
+
+$pulse-default-duration:1s;
+$pulse-default-delay:10s;
+$pulse-freq: 5;
+.beacon-map {
+    position:relative;
+    height:100%;
+}
+.beacon-marker {
+    display: block;
+    position: absolute;
+    .pulse-wrapper {
+        width: $becon_size;
+        height: $becon_size;
+        position: relative;
+        border-radius: $becon_size;
+    }
+    .pulse {
+        width: $becon_size;
+        height: $becon_size;
+        background: $beacon_color;
+        border-radius: $becon_size;
+        display: block;
+        position: absolute;
+        opacity: 0.45;
+        & .ring {
+            content: "";
+            margin: 0 auto;
+            position: absolute;
+            right: -($beacon_pulse_offset);
+            top: -($beacon_pulse_offset);
+            z-index: 100;
+            opacity: 0.1;
+            width: $beacon_pulse_size;
+            height: $beacon_pulse_size;
+            border-radius: $beacon_pulse_size;
+            border: 2px solid $beacon_color;
+            opacity: 0;
+        }
+        &.on .ring{
+            -ms-animation: pulse $pulse-default-duration $pulse-default-delay $pulse-freq linear;
+            -moz-animation: pulse $pulse-default-duration $pulse-default-delay $pulse-freq linear;
+            -webkit-animation: pulse $pulse-default-duration $pulse-default-delay $pulse-freq linear;
+            animation: pulse $pulse-default-duration $pulse-default-delay $pulse-freq linear;
+            border-image: initial;
+        }
+        &.slow .ring {
+            -ms-animation-duration: 3s;
+            -moz-animation-duration: 3s;
+            -webkit-animation-duration: 3s;
+            animation-duration: 3s;
+        }
+        &.fast .ring {
+            -ms-animation-duration: 500ms;
+            -moz-animation-duration: 500ms;
+            -webkit-animation-duration: 500ms;
+            animation-duration: 500ms;
+        }
+        &.blink .ring {
+            -ms-animation-duration: 200ms;
+            -moz-animation-duration: 200ms;
+            -webkit-animation-duration: 200ms;
+            animation-duration: 200ms;
+        }
+    }
+
 }
