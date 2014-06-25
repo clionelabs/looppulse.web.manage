@@ -8,7 +8,7 @@
 </template>
 
 <template name="beacons_map_marker">
-    <div class="beacon-marker" style="top: {{coord.y}}px; left: {{coord.x}}px" data-beacon-id="{{beacon.beaconId}}">
+    <div class="beacon-marker" style="top: {{coord.y}}px; left: {{coord.x}}px" data-beacon-id="{{beacon.beaconId}}" id="insta-{{beacon._id}}">
       <div class="pulse-wrapper">
         <div class="pulse"></div>
         {{#each events}}
@@ -17,5 +17,6 @@
           </div>
         {{/each}}
       </div>
+      <div class="beacon-label">{{beacon.type}}</div>
     </div>
 </template>

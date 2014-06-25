@@ -34,7 +34,7 @@ Template.beacons_map_marker.helpers({
   }
 })
 Template.beacons_map.rendered = function(){
-  console.log(this)
+  // console.log(this)
   var self = this;
   self.marker = 0;
 
@@ -48,12 +48,12 @@ Template.beacons_map.rendered = function(){
       $elem = $(arguments[0])
       beaconId = $elem.data("beacon-id")
     }
-    console.log("beacon set.", beaconId)
+    // console.log("beacon set.", beaconId)
     if($elem.size() > 0){
-      console.log("Rendered, trigger animation...")
+      // console.log("Rendered, trigger animation...")
       $elem.find(".pulse.queued").first().addClass("on")
     }else{
-      console.log("DOM not ready")
+      // console.log("DOM not ready")
     }
   }
 

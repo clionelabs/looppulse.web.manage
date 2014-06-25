@@ -146,6 +146,11 @@ $pulse-freq: 5;
 .beacon-marker {
     display: block;
     position: absolute;
+    .beacon-label {
+        width: $beacon_pulse_size;
+        margin-left: -($beacon_pulse_offset);
+        text-align: center
+    }
     .pulse-wrapper {
         width: $becon_size;
         height: $becon_size;
