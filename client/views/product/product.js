@@ -8,7 +8,6 @@ Template.product.helpers({
     return this.metric.totalVisit || "--"
   },
   productVisit: function(){
-    console.log(this)
     if (!this || !this.funnel ) { return "--"; }
     return this.funnel.productVisit || 0
   },

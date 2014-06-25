@@ -137,7 +137,7 @@ $beacon_pulse_size: 64px;
 $beacon_pulse_offset: ($beacon_pulse_size - $becon_size)/2;
 
 $pulse-default-duration:1s;
-$pulse-default-delay:10s;
+$pulse-default-delay:200ms;
 $pulse-freq: 5;
 .beacon-map {
     position:relative;
@@ -159,7 +159,10 @@ $pulse-freq: 5;
         border-radius: $becon_size;
         display: block;
         position: absolute;
-        opacity: 0.45;
+        opacity: 1;
+        &.queued {
+            background:transparent;
+        }
         & .ring {
             content: "";
             margin: 0 auto;
