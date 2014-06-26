@@ -24,3 +24,9 @@ UI.registerHelper('log',
       console.log("UI object logging:", obj)
   }
 );
+
+UI.registerHelper('rand',
+  function(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+)

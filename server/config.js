@@ -77,6 +77,7 @@ var createCompany = function(snapshot, removeFromFirebase) {
       var locationId = l._id;
       var beaconId = companyConfig.beacons[installationConfig.beacon]._id;
       var physicalId = undefined;
+      var coord = installationConfig.coord;
       if (type === 'product') {
         physicalId = companyConfig.products[installationConfig.product]._id;
       } else if (type === 'entrance') {
@@ -84,7 +85,7 @@ var createCompany = function(snapshot, removeFromFirebase) {
       } else if (type === 'cashier') {
         physicalId = companyConfig.cashiers[installationConfig.cashier]._id;
       }
-      var i = new Installation(type, locationId, beaconId, physicalId);
+      var i = new Installation(type, locationId, beaconId, physicalId, coord);
       i.save();
       console.info("[Init] Installation created:", JSON.stringify(i));
     });

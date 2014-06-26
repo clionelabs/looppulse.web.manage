@@ -44,7 +44,7 @@ Template.location.helpers({
     } else {
       obj.metric = { totalVisit: 0 }
     }
-    console.log("Processed", obj)
+    //console.log("Processed", obj)
     return obj;
   },
   beacons: function() {
@@ -59,7 +59,7 @@ Template.location.helpers({
     return metric;
   },
   funnels: function(metric){
-    console.log("Enter funnels")
+    //console.log("Enter funnels")
     if (!metric && this) {
         metric = Metric.load({ locationId: this._id })
     }

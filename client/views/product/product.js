@@ -21,7 +21,8 @@ Template.product.helpers({
   }
 });
 Template.product.created = function(){
-  var instaId = this.data.funnel.installationId;
+  var instaId = this.data.funnel ? this.data.funnel.installationId : "";
+  if(!instaId) { return ;}
   var label = this.data.product ? this.data.product.name : ""
   //console.log(Beacon found, )
   var _id = "#insta-"+instaId

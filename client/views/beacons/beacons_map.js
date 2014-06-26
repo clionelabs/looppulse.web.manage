@@ -6,17 +6,13 @@ Template.beacons_map.helpers({
     return events;
   },
   getCoord: function() {
-    var padding = 45;
-    var w = 583 - padding;
-    var h = 425 - padding;
-    return { x: Template.beacons_map.randInt(padding, w), y: Template.beacons_map.randInt(padding, h) };
+    var _x = this.coord.x;
+    var _y = this.coord.y;
+    return { x: _x, y: _y };
   },
   time: function(ts, tz){
     var d = new Date(ts)
     return d;
-  },
-  randInt: function(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 });
 Template.beacons_map_marker.helpers({
