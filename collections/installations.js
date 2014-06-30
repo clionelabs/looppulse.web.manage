@@ -1,10 +1,11 @@
 Installations = new Meteor.Collection('installations');
 
-Installation = function(type, locationId, beaconId, physicalId, coord) {
+Installation = function(type, locationId, beaconId, physicalId, name, coord) {
   this.type = type;
   this.locationId = locationId;
   this.beaconId = beaconId;
   this.physicalId = physicalId;
+  this.name = name;
   this.coord = coord
 }
 
@@ -16,7 +17,7 @@ Installation.prototype.save = function() {
 
 Installation.load = function(attributes) {
   var json = Installations.findOne(attributes);
-  var loaded = new Installation(json.type, json.locationId, json.beaconId, json.physicalId);
+  var loaded = new Installation(json.type, json.locationId, json.beaconId, json.physicalId, json.name, json.coord);
   loaded._id = json._id;
   return loaded;
 }

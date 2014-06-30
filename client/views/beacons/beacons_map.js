@@ -6,6 +6,7 @@ Template.beacons_map.helpers({
     return events;
   },
   getCoord: function() {
+    console.log(this)
     var _x = this.coord.x;
     var _y = this.coord.y;
     return { x: _x, y: _y };
