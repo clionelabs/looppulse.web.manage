@@ -3,7 +3,7 @@ Meteor.startup(
     configure();
 
     ensureIndexes();
-    observerCompaniesFromFirebase();
+    observeCompaniesFromFirebase();
     observeBeaconEventsFromFirebase();
   })
 );

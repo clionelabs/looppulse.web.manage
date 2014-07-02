@@ -23,7 +23,7 @@ ensureIndexes = function() {
 }
 
 // TODO: We need to observe other changes in company.
-observerCompaniesFromFirebase = function() {
+observeCompaniesFromFirebase = function() {
   var fbPath = Meteor.settings.firebase.config + '/companies';
   var companiesRef = new Firebase(fbPath);
   console.log("[Remote] Observing for company addition: "+ fbPath);
