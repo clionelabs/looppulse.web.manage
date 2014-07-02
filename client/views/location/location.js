@@ -33,7 +33,7 @@ Template.location.helpers({
 
     var obj = self.hash;
 
-    console.log("Summerize Products in Location", this._id)
+    console.log("Summerize Products in Location (funnel updates)", this._id)
 
     obj.products.forEach(function(o){
       o.funnel = obj.funnels[o.installationId]
