@@ -9,7 +9,7 @@
   },
   "parse": {
     "applicationId": "",
-    "javascriptKey": ""
+    "restKey": ""
   },
   "removeFromFirebase": false,
   "public": {

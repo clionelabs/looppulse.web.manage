@@ -19,6 +19,5 @@ Engagement.startup = function () {
   Encounters.find().observe({
     "added": function(encounter) { Engagement.dispatch(encounter); }
   });
-  Message.startup();
   console.info("[Engagement] startup complete");
 }

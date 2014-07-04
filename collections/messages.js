@@ -1,5 +1,3 @@
-Messages = new Meteor.Collection("messages");
-
 Message = function (visitorId, body, actionUrl) {
   var self = this;
   self.visitorId = visitorId;
@@ -9,27 +7,18 @@ Message = function (visitorId, body, actionUrl) {
 
 Message.prototype.channels = function() {
   var visitor = Visitors.findOne({ _id: this.visitorId });
-  return [visitor.uuid];
+  var channel = "VisitorUUID_" + visitor.uuid;
+  return [channel];
 }
 
 Message.prototype.deliver = function () {
   var self = this;
-  Parse.Push.send({
-    channels: self.channels(),
-    data: {
-      alert: self.body
-    }
-  }, {
-    success: function () {
-      console.info("[Message] delivered: " + self.body);
-    },
-    error: function () {
-      console.info("[Message] failed to deliver: " + self.body + " with error: " + error);
-    }
-  });
-}
-
-Message.startup = function () {
-  Parse.initialize(Meteor.settings.parse.applicationId, 
-                   Meteor.settings.parse.javascriptKey);
+  var url  = "https://api.parse.com/1/push";
+  var headers = { "X-Parse-Application-Id": Meteor.settings.parse.applicationId,
+                  "X-Parse-REST-API-Key": Meteor.settings.parse.restKey,
+                  "Content-Type": "application/json"};
+  var data = { "channels": self.channels(),
+               "data": { "alert": self.body }};
+  var options = { headers: headers, data: data };
+  HTTP.post(url, options);
 }
