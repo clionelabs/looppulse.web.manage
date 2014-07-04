@@ -5,6 +5,8 @@ Message = function (visitorId, body, actionUrl) {
   self.actionUrl = actionUrl;
 }
 
+// Using UUID as channel could generate invalid channel name.
+// https://github.com/clionelabs/looppulse.ios.sdk/issues/3#issuecomment-48022164
 Message.prototype.channels = function() {
   var visitor = Visitors.findOne({ _id: this.visitorId });
   var channel = "VisitorUUID_" + visitor.uuid;
