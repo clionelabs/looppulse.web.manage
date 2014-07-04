@@ -14,8 +14,8 @@ WelcomeEngagement.readyToTrigger = function (encounter) {
   var eightHours = 8*60*60*1000;
   var longAgo = encounter.enteredAt - eightHours;
   var previous = Encounters.find({ visitorId: encounter.visitorId,
-                                   enteredAt: {$gt: longAgo,
-                                               $lt: encounter.enteredAt}});
+                                   enteredAt: { $gt: longAgo,
+                                                $lt: encounter.enteredAt }});
   if (previous.count() > 0) {
     return false;
   }
@@ -26,4 +26,13 @@ WelcomeEngagement.readyToTrigger = function (encounter) {
 WelcomeEngagement.trigger = function (encounter) {
   var visitor = Visitors.findOne({_id: encounter.visitorId});
   console.info("[Engagement] Triggering WelcomeEngagement for Encounter["+encounter._id+"] from Visitor["+visitor.uuid+" (uuid)]");
+  var message = new Message(encounter.visitorId,
+                            WelcomeEngagement.message(encounter));
+  message.deliver();
+}
+
+WelcomeEngagement.message = function (encounter) {
+  var installation = Installations.findOne({ _id: encounter.installationId });
+  var location = Locations.findOne({ _id: installation.locationId });
+  return "Welcome to " + location.name + "!";
 }
