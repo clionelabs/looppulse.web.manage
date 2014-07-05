@@ -1,13 +1,21 @@
-Message = function (visitorId, body, actionUrl) {
+Messages = new Meteor.Collection("messages");
+
+Message = function (visitorId, body) {
   var self = this;
   self.visitorId = visitorId;
   self.body = body;
-  self.actionUrl = actionUrl;
+}
+
+Message.prototype.save = function () {
+  Messages.upsert(this,
+                  { visitorId: this.visitorId,
+                    body: this.body,
+                    createdAt: (new Date).getTime()});
 }
 
 // Using UUID as channel could generate invalid channel name.
 // https://github.com/clionelabs/looppulse.ios.sdk/issues/3#issuecomment-48022164
-Message.prototype.channels = function() {
+Message.prototype.channels = function () {
   var visitor = Visitors.findOne({ _id: this.visitorId });
   var channel = "VisitorUUID_" + visitor.uuid;
   return [channel];
@@ -23,4 +31,6 @@ Message.prototype.deliver = function () {
                "data": { "alert": self.body }};
   var options = { headers: headers, data: data };
   HTTP.post(url, options);
+
+  self.save();
 }
