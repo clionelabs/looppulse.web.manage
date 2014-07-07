@@ -147,9 +147,11 @@ $pulse-freq: 1;
     display: block;
     position: absolute;
     .beacon-label {
-        width: $beacon_pulse_size;
-        margin-left: -($beacon_pulse_offset);
-        text-align: center
+        width: 96px; //64px + 32px
+        margin-left: -40px; //32px+8px
+        text-align: center;
+        white-space: nowrap;
+        font-size: smaller;
     }
     .pulse-wrapper {
         width: $becon_size;
