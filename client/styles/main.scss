@@ -137,8 +137,8 @@ $beacon_pulse_size: 64px;
 $beacon_pulse_offset: ($beacon_pulse_size - $becon_size)/2;
 
 $pulse-default-duration:1s;
-$pulse-default-delay:10s;
-$pulse-freq: 5;
+$pulse-default-delay:200ms;
+$pulse-freq: 1;
 .beacon-map {
     position:relative;
     height:100%;
@@ -146,6 +146,11 @@ $pulse-freq: 5;
 .beacon-marker {
     display: block;
     position: absolute;
+    .beacon-label {
+        width: $beacon_pulse_size;
+        margin-left: -($beacon_pulse_offset);
+        text-align: center
+    }
     .pulse-wrapper {
         width: $becon_size;
         height: $becon_size;
@@ -159,7 +164,10 @@ $pulse-freq: 5;
         border-radius: $becon_size;
         display: block;
         position: absolute;
-        opacity: 0.45;
+        opacity: 1;
+        &.queued {
+            background:transparent;
+        }
         & .ring {
             content: "";
             margin: 0 auto;

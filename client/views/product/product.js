@@ -8,7 +8,6 @@ Template.product.helpers({
     return this.metric.totalVisit || "--"
   },
   productVisit: function(){
-    console.log(this)
     if (!this || !this.funnel ) { return "--"; }
     return this.funnel.productVisit || 0
   },
@@ -21,3 +20,12 @@ Template.product.helpers({
     return this.funnel.missedVisit || 0
   }
 });
+Template.product.created = function(){
+  var instaId = this.data.funnel ? this.data.funnel.installationId : "";
+  if(!instaId) { return ;}
+  var label = this.data.product ? this.data.product.name : ""
+  //console.log(Beacon found, )
+  var _id = "#insta-"+instaId
+  var insta = $(".beacon-label", _id)
+  insta.text(label)
+}

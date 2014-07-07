@@ -76,17 +76,29 @@ var createCompany = function(snapshot, removeFromFirebase) {
       var type = installationConfig.type;
       var locationId = l._id;
       var beaconId = companyConfig.beacons[installationConfig.beacon]._id;
-      var physicalId = undefined;
+      var physicalId = null;
+      var name = installationConfig.name;
+      var coord = installationConfig.coord;
+      var data = null;
+
+      // load the data object according to its type
       if (type === 'product') {
-        physicalId = companyConfig.products[installationConfig.product]._id;
+        data = companyConfig.products[installationConfig.product]
       } else if (type === 'entrance') {
-        physicalId = companyConfig.entrances[installationConfig.entrance]._id;
+        data = companyConfig.entrances[installationConfig.entrance];
       } else if (type === 'cashier') {
-        physicalId = companyConfig.cashiers[installationConfig.cashier]._id;
+        data = companyConfig.cashiers[installationConfig.cashier];
       }
-      var i = new Installation(type, locationId, beaconId, physicalId);
-      i.save();
-      console.info("[Init] Installation created:", JSON.stringify(i));
+
+      if (!data) {
+        console.error("[Init] Error creating installation", JSON.stringify(companyConfig))
+      }
+      //write the data
+      physicalId = data._id;
+      name = !name ? data.name : name; // only override the name label if no given name
+      var insta = new Installation(type, locationId, beaconId, physicalId, name, coord);
+      insta.save();
+      console.info("[Init] Installation created:", JSON.stringify(insta));
     });
   });
 

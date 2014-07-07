@@ -1,20 +1,17 @@
 <template name="beacons_map">
     <div class="beacon-map map">
     {{#each this.beacons }}
+      {{! beacon = installation in context }}
       {{> beacons_map_marker beacon=this coord=getCoord }}
     {{/each}}
     </div>
 </template>
 
 <template name="beacons_map_marker">
-    <div class="beacon-marker" style="top: {{coord.y}}px; left: {{coord.x}}px" data-beacon-id="{{beacon._id}}">
+    <div class="beacon-marker" style="top: {{coord.y}}px; left: {{coord.x}}px" data-beacon-id="{{beacon.beaconId}}" id="insta-{{beacon._id}}">
       <div class="pulse-wrapper">
         <div class="pulse"></div>
-      {{#each events}}
-        <div {{attributes}} >
-          <div class="ring" style="-ms-animation-delay: {{this.delay}}ms; -webkit-animation-delay: {{this.delay}}ms; -moz-animation-delay: {{this.delay}}ms;animation-delay:{{this.delay}}ms; "></div>
-        </div>
-      {{/each}}
       </div>
+      <div class="beacon-label">{{beacon.type}}</div>
     </div>
 </template>
