@@ -6,7 +6,7 @@ Template.beacons_map.helpers({
     return events;
   },
   getCoord: function() {
-    //console.log(this)
+    // console.log(this)
     var _x = this.coord.x;
     var _y = this.coord.y;
     return { x: _x, y: _y };
@@ -71,7 +71,8 @@ Template.beacons_map_marker.rendered = function(){
 
   $marker.on(animationEnd, ".pulse", function(e){
     if(!Template.beacons_map_marker.owlMode){ console.log("Next:", qn) }
-    $(".on .ring", e.target).remove()
+      //console.log($(".on .ring", e.target), e.target)
+    $(e.target).remove()
     setTimeout(function(){
       tmpl.processing = false;
       $(".beacon-map").dequeue(qn)
