@@ -91,3 +91,12 @@ Meteor.publish('related-metrics', function(){
   console.log("Returning Metric Data")
   return Metrics.find()
 })
+
+Meteor.publish('admin-companies', function() {
+  return Companies.find({});
+
+});
+
+Meteor.publish('admin-locations', function(id) {
+  return Locations.find({});
+});
