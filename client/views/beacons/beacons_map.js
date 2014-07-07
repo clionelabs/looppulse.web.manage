@@ -71,7 +71,8 @@ Template.beacons_map_marker.rendered = function(){
 
   $marker.on(animationEnd, ".pulse", function(e){
     if(!Template.beacons_map_marker.owlMode){ console.log("Next:", qn) }
-    $(".on .ring", e.target).remove()
+      //console.log($(".on .ring", e.target), e.target)
+    $(e.target).remove()
     setTimeout(function(){
       tmpl.processing = false;
       $(".beacon-map").dequeue(qn)
