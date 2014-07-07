@@ -1,12 +1,19 @@
-WelcomeEngagement = {};
+WelcomeEngagements = new Meteor.Collection("WelcomeEngagements", {
+  transform: function (doc) { return new WelcomeEngagement(doc); }
+});
+
+WelcomeEngagement = function (doc) {
+  _.extend(this, doc);
+}
+
 
 // Send welcome message when it is the first encounter of the day.
-WelcomeEngagement.readyToTrigger = function (encounter) {
-  // TODO: Use Meteor.Collection#transform to return an encounter object #52
-  var installation = Installation.load({ _id: encounter.installationId });
+WelcomeEngagement.prototype.readyToTrigger = function (encounter) {
+  var self = this;
+  var installation = Installations.findOne({ _id: encounter.installationId });
 
-  // Only greet at entrance
-  if (!installation.isEntrance()) {
+  // Only greet at trigger installations
+  if (!_.contains(self.triggerInstallationIds, installation._id)){
     return false;
   }
 
@@ -23,16 +30,10 @@ WelcomeEngagement.readyToTrigger = function (encounter) {
   return true;
 }
 
-WelcomeEngagement.trigger = function (encounter) {
+WelcomeEngagement.prototype.trigger = function (encounter) {
+  var self = this;
   var visitor = Visitors.findOne({_id: encounter.visitorId});
-  console.info("[Engagement] Triggering WelcomeEngagement for Encounter["+encounter._id+"] from Visitor["+visitor.uuid+" (uuid)]");
-  var message = new Message(encounter.visitorId,
-                            WelcomeEngagement.message(encounter));
+  console.info("[Engagement] Triggering WelcomeEngagement["+self._id+"] for Encounter["+encounter._id+"] from Visitor["+visitor.uuid+" (uuid)]");
+  var message = new Message(encounter.visitorId, self.message);
   message.deliver();
-}
-
-WelcomeEngagement.message = function (encounter) {
-  var installation = Installations.findOne({ _id: encounter.installationId });
-  var location = Locations.findOne({ _id: installation.locationId });
-  return "Welcome to " + location.name + "!";
 }

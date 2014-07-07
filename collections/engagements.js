@@ -1,15 +1,17 @@
 Engagement = {};
 
-Engagement.types = function () {
-  return [WelcomeEngagement];
+Engagement.types = function (locationId) {
+  return WelcomeEngagements.find({ locationId: locationId });
 }
 
 Engagement.dispatch = function (encounter) {
   // Determine which type of engagement this encounter should trigger.
-  Engagement.types().forEach(
-    function (engagementType) {
-      if (engagementType.readyToTrigger(encounter)) {
-        engagementType.trigger(encounter);
+  var installation = Installations.findOne({_id: encounter.installationId });
+  var locationId = installation.locationId;
+  Engagement.types(locationId).forEach(
+    function (engagement) {
+      if (engagement.readyToTrigger(encounter)) {
+        engagement.trigger(encounter);
       }
     }
   )

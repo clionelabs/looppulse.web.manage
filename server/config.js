@@ -88,6 +88,24 @@ var createCompany = function(snapshot, removeFromFirebase) {
       i.save();
       console.info("[Init] Installation created:", JSON.stringify(i));
     });
+
+    _.each(locationConfig.engagements, function(engagementConfig) {
+      var type = engagementConfig.type;
+      var triggerBeacons = engagementConfig.triggerBeacons;
+      var triggerInstallationIds = _.map(triggerBeacons, function (beaconKey) {
+        var beaconId = companyConfig.beacons[beaconKey]._id;
+        var installation = Installations.findOne({ beaconId: beaconId });
+        return installation._id;
+      });
+      if (type === "welcome") {
+        var e = { locationId: companyConfig.locations[locationKey]._id,
+                  message: engagementConfig.message,
+                  triggerInstallationIds: triggerInstallationIds };
+        WelcomeEngagements.upsert(e, e);
+        var reloaded = WelcomeEngagements.findOne(e);
+        console.info("[Init] Engagement created:", JSON.stringify(reloaded));
+      }
+    })
   });
 
   if (removeFromFirebase) {
