@@ -1,7 +1,18 @@
+Engagements = new Meteor.Collection("engagements", {
+  transform: function (doc) {
+    if (doc.type === WelcomeEngagement.type) {
+      return new WelcomeEngagement(doc);
+    } else if (doc.type === RecommendationEngagement.type) {
+      return new RecommendationEngagement(doc);
+    }
+    return doc;
+  }
+});
+
 Engagement = {};
 
 Engagement.types = function (locationId) {
-  return WelcomeEngagements.find({ locationId: locationId });
+  return Engagements.find({ locationId: locationId });
 }
 
 Engagement.dispatch = function (encounter) {

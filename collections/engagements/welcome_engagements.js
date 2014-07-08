@@ -1,11 +1,8 @@
-WelcomeEngagements = new Meteor.Collection("WelcomeEngagements", {
-  transform: function (doc) { return new WelcomeEngagement(doc); }
-});
-
 WelcomeEngagement = function (doc) {
   _.extend(this, doc);
+  this.type = WelcomeEngagement.type;
 }
-
+WelcomeEngagement.type = "welcome";
 
 // Send welcome message when it is the first encounter of the day.
 WelcomeEngagement.prototype.readyToTrigger = function (encounter) {
@@ -32,7 +29,7 @@ WelcomeEngagement.prototype.readyToTrigger = function (encounter) {
 
 WelcomeEngagement.prototype.trigger = function (encounter) {
   this.log(encounter);
-  Message.deliver(encounter.visitorId, this.message);
+  Message.deliver(encounter.visitorId, this.message, this._id);
 }
 
 WelcomeEngagement.prototype.log = function (encounter) {

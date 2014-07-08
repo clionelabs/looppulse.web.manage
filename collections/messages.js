@@ -1,15 +1,17 @@
 Messages = new Meteor.Collection("messages");
 
-Message = function (visitorId, body) {
+Message = function (visitorId, body, engagementId) {
   var self = this;
   self.visitorId = visitorId;
   self.body = body;
+  self.engagementId = engagementId;
 }
 
 Message.prototype.save = function () {
   Messages.upsert(this,
                   { visitorId: this.visitorId,
                     body: this.body,
+                    engagementId: this.engagementId,
                     createdAt: (new Date).getTime()});
 }
 
@@ -33,8 +35,8 @@ Message.prototype.deliver = function () {
   HTTP.post(url, options);
 }
 
-Message.deliver = function (visitorId, body) {
-  var message = new Message(visitorId, body);
+Message.deliver = function (visitorId, body, engagementId) {
+  var message = new Message(visitorId, body, engagementId);
   message.deliver();
   message.save();
 }

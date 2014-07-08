@@ -90,21 +90,19 @@ var createCompany = function(snapshot, removeFromFirebase) {
     });
 
     _.each(locationConfig.engagements, function(engagementConfig) {
-      var type = engagementConfig.type;
       var triggerBeacons = engagementConfig.triggerBeacons;
       var triggerInstallationIds = _.map(triggerBeacons, function (beaconKey) {
         var beaconId = companyConfig.beacons[beaconKey]._id;
         var installation = Installations.findOne({ beaconId: beaconId });
         return installation._id;
       });
-      if (type === "welcome") {
-        var e = { locationId: companyConfig.locations[locationKey]._id,
-                  message: engagementConfig.message,
-                  triggerInstallationIds: triggerInstallationIds };
-        WelcomeEngagements.upsert(e, e);
-        var reloaded = WelcomeEngagements.findOne(e);
-        console.info("[Init] Engagement created:", JSON.stringify(reloaded));
-      }
+      var e = { type: engagementConfig.type,
+                locationId: companyConfig.locations[locationKey]._id,
+                message: engagementConfig.message,
+                triggerInstallationIds: triggerInstallationIds };
+      Engagements.upsert(e, e);
+      var reloaded = Engagements.findOne(e);
+      console.info("[Init] Engagement created:", JSON.stringify(reloaded));
     })
   });
 
