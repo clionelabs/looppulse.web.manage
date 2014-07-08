@@ -22,6 +22,7 @@ Engagement.dispatch = function (encounter) {
   Engagement.types(locationId).forEach(
     function (engagement) {
       if (engagement.readyToTrigger(encounter)) {
+        console.info("[Engagement] Ready to trigger "+engagement.type+" Engagement["+engagement._id+"] on Visitor["+encounter.visitorId+"] due to Encounter["+encounter._id+"]");
         engagement.trigger(encounter);
       }
     }

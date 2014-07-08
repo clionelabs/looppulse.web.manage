@@ -28,12 +28,5 @@ WelcomeEngagement.prototype.readyToTrigger = function (encounter) {
 }
 
 WelcomeEngagement.prototype.trigger = function (encounter) {
-  this.log(encounter);
   Message.deliver(encounter.visitorId, this.message, this._id);
-}
-
-WelcomeEngagement.prototype.log = function (encounter) {
-  var self = this;
-  var visitor = Visitors.findOne({_id: encounter.visitorId});
-  console.info("[Engagement] Triggering WelcomeEngagement["+self._id+"] for Encounter["+encounter._id+"] from Visitor["+visitor.uuid+" (uuid)]");
 }
