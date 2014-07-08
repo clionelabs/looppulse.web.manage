@@ -31,6 +31,10 @@ Message.prototype.deliver = function () {
                "data": { "alert": self.body }};
   var options = { headers: headers, data: data };
   HTTP.post(url, options);
+}
 
-  self.save();
+Message.deliver = function (visitorId, body) {
+  var message = new Message(visitorId, body);
+  message.deliver();
+  message.save();
 }
