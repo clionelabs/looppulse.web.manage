@@ -10,3 +10,5 @@ bootstrap-3
 scss
 iron-router
 accounts-password
+accounts-ui
+accounts-entry

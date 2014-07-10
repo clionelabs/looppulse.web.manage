@@ -5,7 +5,11 @@
       "Firebase": {},
       "bootstrap-3": {},
       "scss": {},
-      "iron-router": {}
+      "iron-router": {},
+      "accounts-entry": {
+        "git": "https://github.com/Differential/accounts-entry.git",
+        "branch": "master"
+      }
     },
     "packages": {
       "Firebase": {
@@ -28,10 +32,30 @@
         "tag": "v0.7.1",
         "commit": "d1ffb3f06ea4c112132b030f2eb1a70b81675ecb"
       },
+      "accounts-entry": {
+        "git": "https://github.com/Differential/accounts-entry.git",
+        "branch": "master",
+        "commit": "4d830f21b3e084a7896869d5b28d1755327845c4"
+      },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
         "tag": "v0.2.4",
         "commit": "b40e9b0612329288d75cf52ad14a7da64bb8618f"
+      },
+      "accounts-t9n": {
+        "git": "https://github.com/softwarerero/meteor-accounts-t9n.git",
+        "tag": "v0.0.5",
+        "commit": "ad9539a8818049d5d9fa050d8b2a1f62706483b1"
+      },
+      "simple-form": {
+        "git": "https://github.com/Differential/simple-form.git",
+        "tag": "v0.1.8",
+        "commit": "1ea0d3621b333e6f24f37e0e93efd3c081068716"
+      },
+      "underscore-string-latest": {
+        "git": "https://github.com/TimHeckel/meteor-underscore-string.git",
+        "tag": "v2.3.3",
+        "commit": "4a5d70eee48fbd90a6e6fc78747250d704a0b3bb"
       }
     }
   }

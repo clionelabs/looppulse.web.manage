@@ -3,6 +3,10 @@
     "Firebase": {},
     "bootstrap-3": {},
     "scss": {},
-    "iron-router": {}
+    "iron-router": {},
+    "accounts-entry": {
+      "git":"https://github.com/Differential/accounts-entry.git",
+      "branch": "master"
+    }
   }
 }
