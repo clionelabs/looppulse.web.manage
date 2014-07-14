@@ -90,16 +90,33 @@ var createCompany = function(snapshot, removeFromFirebase) {
     });
 
     _.each(locationConfig.engagements, function(engagementConfig) {
-      var triggerBeacons = engagementConfig.triggerBeacons;
-      var triggerInstallationIds = _.map(triggerBeacons, function (beaconKey) {
+      var beaconKeyToInstallationId = function (beaconKey) {
         var beaconId = companyConfig.beacons[beaconKey]._id;
         var installation = Installations.findOne({ beaconId: beaconId });
         return installation._id;
-      });
+      }
+
+      var triggerInstallationIds = _.map(engagementConfig.triggerBeacons,
+                                         beaconKeyToInstallationId);
+      var recommendInstallationIds = _.map(engagementConfig.recommendBeacons,
+                                           beaconKeyToInstallationId);
+      var replaceBeaconKeyWithInstallationIds = function (beaconKeyMessages) {
+        var installationIdsToMessages = {};
+        _.each(message, function(message, key) {
+          installationId = beaconKeyToInstallationId(key);
+          installationIdsToMessages[installationId] = message;
+        })
+        return installationIdsToMessages;
+      }
+      var message = engagementConfig.message;
+      if (engagementConfig.type === RecommendationEngagement.type) {
+        message = replaceBeaconKeyWithInstallationIds(engagementConfig.message);
+      }
       var e = { type: engagementConfig.type,
                 locationId: companyConfig.locations[locationKey]._id,
-                message: engagementConfig.message,
-                triggerInstallationIds: triggerInstallationIds };
+                message: message,
+                triggerInstallationIds: triggerInstallationIds,
+                recommendInstallationIds: recommendInstallationIds };
       Engagements.upsert(e, e);
       var reloaded = Engagements.findOne(e);
       console.info("[Init] Engagement created:", JSON.stringify(reloaded));
