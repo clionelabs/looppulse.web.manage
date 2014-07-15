@@ -48,7 +48,7 @@ RecommendationEngagement.prototype.customizedMessage = function (installationId)
 }
 
 RecommendationEngagement.prototype.trigger = function (encounter) {
-  var recommendInstallationId = random(this.recommendInstallationIds);
+  var recommendInstallationId = Random.choice(this.recommendInstallationIds);
   Message.deliver(encounter.visitorId,
                   this.customizedMessage(recommendInstallationId),
                   this._id);
