@@ -35,8 +35,22 @@ Message.prototype.deliver = function () {
   HTTP.post(url, options);
 }
 
+Message.prototype.previouslySent = function () {
+  var oneHour = 60*60*1000;
+  var now = (new Date).getTime();
+  var longAgo = now - 8 * oneHour;
+  var sameMessages = Messages.find({ visitorId: this.visitorId,
+                                     body: this.body,
+                                     engagementId: this.engagementId,
+                                     createdAt: { $gt: longAgo,
+                                                  $lt: now }});
+  return (sameMessages.count() > 0);
+}
+
 Message.deliver = function (visitorId, body, engagementId) {
   var message = new Message(visitorId, body, engagementId);
-  message.deliver();
-  message.save();
+  if (! message.previouslySent()) {
+    message.deliver();
+    message.save();
+  }
 }
