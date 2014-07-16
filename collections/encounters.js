@@ -51,10 +51,8 @@ Encounter.prototype.entryEvent = function() {
   // We can either throw an error and put this event back into a queue for
   // processing at a later time. Or, we can fail silently.
   if (!firstNonExitEvent) {
-    console.log("firstNonExitEvent is undefined.");
-    console.log("  visitorId: "+this.visitorId);
-    console.log("  installationId: "+this.installationId);
-    console.log("  exitedAt: "+this.exitedAt);
+    console.warn("[Encounter] firstNonExitEvent is undefined. visitorId, installationId, exitedAt: ",
+                  this.visitorId, this.installationId, this.exitedAt);
 
     // Fake a entry event with the exact same time so the duration
     // becomes insignificant.
