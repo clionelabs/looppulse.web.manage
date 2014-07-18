@@ -9,7 +9,9 @@
       "accounts-entry": {
         "git": "https://github.com/Differential/accounts-entry.git",
         "branch": "master"
-      }
+      },
+      "roles": {},
+      "accounts-admin-ui-bootstrap-3": {}
     },
     "packages": {
       "Firebase": {
@@ -36,6 +38,16 @@
         "git": "https://github.com/Differential/accounts-entry.git",
         "branch": "master",
         "commit": "5cbe67e0d2adc2ae4d0e9f18be3ed49d469c3a40"
+      },
+      "roles": {
+        "git": "https://github.com/alanning/meteor-roles.git",
+        "tag": "v1.2.10",
+        "commit": "7ccb35de0a6cb0c9a0c3666badd04757e39c09a6"
+      },
+      "accounts-admin-ui-bootstrap-3": {
+        "git": "https://github.com/hharnisc/meteor-accounts-admin-ui-bootstrap-3.git",
+        "tag": "v0.2.6",
+        "commit": "fe74692303daf73d440f2729010bcf1557af62ca"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

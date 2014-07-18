@@ -5,8 +5,10 @@
     "scss": {},
     "iron-router": {},
     "accounts-entry": {
-      "git":"https://github.com/Differential/accounts-entry.git",
+      "git": "https://github.com/Differential/accounts-entry.git",
       "branch": "master"
-    }
+    },
+    "roles": {},
+    "accounts-admin-ui-bootstrap-3": {}
   }
 }

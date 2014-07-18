@@ -8,6 +8,15 @@
       "config": "https://looppulse-store.firebaseio.com/"
   },
   "removeFromFirebase": false,
+  "accounts": {
+    "forbidClientAccountCreation": true,
+    "admin" :{
+      "login": "hello@looppulse.com",
+      "passphrase": null,
+      "showInfoAfterCreation": false,
+      "mailInfoAfterCreation": true
+    }
+  },
   "public": {
     "DEBUG": true,
     "testId": "rSZ6gszkurBQzfpai",
