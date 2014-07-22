@@ -4,27 +4,31 @@ WelcomeEngagement = function (doc) {
 }
 WelcomeEngagement.type = "welcome";
 
+WelcomeEngagement.prototype.atTriggerInstallation = function (encounter) {
+  if (_.contains(this.triggerInstallationIds, encounter.installationId)){
+    return true;
+  }
+  return false;
+}
+
+WelcomeEngagement.prototype.recentlyVisitedTriggerInstallation = function (encounter) {
+  // Only greet if the visitor hasn't visited this location in the last 8 hours.
+  var oneHour = 60*60*1000;
+  var longAgo = encounter.enteredAt - 8 * oneHour;
+  var previousVisit = Encounters.findOne({ visitorId: encounter.visitorId,
+                                           enteredAt: { $gt: longAgo,
+                                                        $lt: encounter.enteredAt }});
+  return previousVisit!=null;
+}
+
 // Send welcome message when it is the first encounter of the day.
 WelcomeEngagement.prototype.readyToTrigger = function (encounter) {
   var self = this;
-  var installation = Installations.findOne({ _id: encounter.installationId });
-
-  // Only greet at trigger installations
-  if (!_.contains(self.triggerInstallationIds, installation._id)){
-    return false;
+  if ( self.atTriggerInstallation(encounter) &&
+      !self.recentlyVisitedTriggerInstallation(encounter)) {
+    return true;
   }
-
-  // Only greet if the visitor hasn't visited this location in the last 8 hours.
-  var eightHours = 8*60*60*1000;
-  var longAgo = encounter.enteredAt - eightHours;
-  var previous = Encounters.find({ visitorId: encounter.visitorId,
-                                   enteredAt: { $gt: longAgo,
-                                                $lt: encounter.enteredAt }});
-  if (previous.count() > 0) {
-    return false;
-  }
-
-  return true;
+  return false;
 }
 
 WelcomeEngagement.prototype.trigger = function (encounter) {
