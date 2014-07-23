@@ -7,6 +7,7 @@
     "velocity": {},
     "jasmine-unit": {},
     "mocha-web-velocity": {},
-    "velocity-html-reporter": {}
+    "velocity-html-reporter": {},
+    "mocha-web-sinon": {}
   }
 }

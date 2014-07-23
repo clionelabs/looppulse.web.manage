@@ -9,7 +9,8 @@
       "velocity": {},
       "jasmine-unit": {},
       "mocha-web-velocity": {},
-      "velocity-html-reporter": {}
+      "velocity-html-reporter": {},
+      "mocha-web-sinon": {}
     },
     "packages": {
       "Firebase": {
@@ -51,6 +52,11 @@
         "git": "https://github.com/rdickert/velocity-html-reporter.git",
         "tag": "v0.1.4",
         "commit": "55f973519fb6db831678219057854b94a4cec846"
+      },
+      "mocha-web-sinon": {
+        "git": "https://github.com/CodeAdventure/meteor-mocha-web-sinon.git",
+        "tag": "v0.1.5",
+        "commit": "f7fa86517944f2e899d2fc18c33dd407a68792af"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
