@@ -11,7 +11,7 @@ Engagements = new Meteor.Collection("engagements", {
 
 Engagement = {};
 
-Engagement.types = function (locationId) {
+Engagement.availableEngagements = function (locationId) {
   return Engagements.find({ locationId: locationId });
 }
 
@@ -19,7 +19,7 @@ Engagement.dispatch = function (encounter) {
   // Determine which type of engagement this encounter should trigger.
   var installation = Installations.findOne({_id: encounter.installationId });
   var locationId = installation.locationId;
-  Engagement.types(locationId).forEach(
+  Engagement.availableEngagements(locationId).forEach(
     function (engagement) {
       if (engagement.readyToTrigger(encounter)) {
         console.info("[Engagement] Ready to trigger "+engagement.type+" Engagement["+engagement._id+"] on Visitor["+encounter.visitorId+"] due to Encounter["+encounter._id+"]");
