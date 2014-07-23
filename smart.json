@@ -3,6 +3,10 @@
     "Firebase": {},
     "bootstrap-3": {},
     "scss": {},
-    "iron-router": {}
+    "iron-router": {},
+    "velocity": {},
+    "jasmine-unit": {},
+    "mocha-web-velocity": {},
+    "velocity-html-reporter": {}
   }
 }

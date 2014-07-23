@@ -11,3 +11,7 @@ scss
 iron-router
 http
 random
+velocity
+jasmine-unit
+mocha-web-velocity
+velocity-html-reporter

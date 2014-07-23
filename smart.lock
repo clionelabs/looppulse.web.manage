@@ -5,7 +5,11 @@
       "Firebase": {},
       "bootstrap-3": {},
       "scss": {},
-      "iron-router": {}
+      "iron-router": {},
+      "velocity": {},
+      "jasmine-unit": {},
+      "mocha-web-velocity": {},
+      "velocity-html-reporter": {}
     },
     "packages": {
       "Firebase": {
@@ -28,10 +32,40 @@
         "tag": "v0.7.1",
         "commit": "d1ffb3f06ea4c112132b030f2eb1a70b81675ecb"
       },
+      "velocity": {
+        "git": "https://github.com/xolvio/velocity.git",
+        "tag": "v0.1.14",
+        "commit": "a79260e019e385dce09a67f1017f90d3143a12d9"
+      },
+      "jasmine-unit": {
+        "git": "https://github.com/xolvio/jasmine-unit.git",
+        "tag": "v0.1.24",
+        "commit": "885dde77a96390d0fd31b03756f837f482db2ef1"
+      },
+      "mocha-web-velocity": {
+        "git": "https://github.com/mad-eye/meteor-mocha-web.git",
+        "tag": "v0.3.4",
+        "commit": "5b68e18104c00687748b190b04a7752478472d17"
+      },
+      "velocity-html-reporter": {
+        "git": "https://github.com/rdickert/velocity-html-reporter.git",
+        "tag": "v0.1.4",
+        "commit": "55f973519fb6db831678219057854b94a4cec846"
+      },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
         "tag": "v0.2.4",
         "commit": "b40e9b0612329288d75cf52ad14a7da64bb8618f"
+      },
+      "package-stubber": {
+        "git": "https://github.com/alanning/meteor-package-stubber.git",
+        "tag": "v0.0.15",
+        "commit": "62ad08f8486aacbbc5ec22ea6e2a31573748b7d7"
+      },
+      "mirror": {
+        "git": "https://github.com/xdissent/meteor-mirror.git",
+        "tag": "v0.0.2",
+        "commit": "03d965dcab2f976a1fdc6ce513edcd4c17b75746"
       }
     }
   }
