@@ -5,5 +5,7 @@ Meteor.startup(
     ensureIndexes();
     observeCompaniesFromFirebase();
     observeBeaconEventsFromFirebase();
+
+    Engagement.startup();
   })
 );
