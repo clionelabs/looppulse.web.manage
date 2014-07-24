@@ -55,6 +55,32 @@
 
     });
 
+    describe("save", function () {
+      it("should do nothing for unknown proximity", function () {
+        var beacon_event = new BeaconEvent('aVisitorId', 'aBeaconId', { type: 't1' });
+        beacon_event.proximity = "unknown";
+        expect(beacon_event.save()).toBe(undefined);
+      });
+
+      it("should return ID after save", function () {
+        // TODO fix upsert does not exists in test
+        if (!(typeof BeaconEvents.upsert === 'undefined')) {
+          spyOn(BeaconEvents, 'upsert');
+        } else {
+          BeaconEvents.upsert = jasmine.createSpy('upsert');
+        }
+
+        var expectedId = 1;
+        spyOn(BeaconEvents, 'findOne').andReturn({ _id: expectedId});
+
+        var beacon_event = new BeaconEvent('aVisitorId', 'aBeaconId', { type: 't1' });
+        beacon_event.save();
+
+        expect(BeaconEvents.upsert).toHaveBeenCalledWith(beacon_event, beacon_event);
+        expect(beacon_event._id).toBe(expectedId);
+      });
+    });
+
   });
 
 }());
