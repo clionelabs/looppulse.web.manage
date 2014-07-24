@@ -43,10 +43,14 @@
     describe("warnAboutUnknownProximity", function () {
 
       it("should return false when missing proximity", function () {
-        var beacon_event = new BeaconEvent('aVisitorId', 'aBeaconId', {
-          type: 't1'
-        });
+        var beacon_event = new BeaconEvent('aVisitorId', 'aBeaconId', { type: 't1' });
         expect(beacon_event.warnAboutUnknownProximity()).toBe(false);
+      });
+
+      it("should return true when proximity equals to 'unknown'", function () {
+        var beacon_event = new BeaconEvent('aVisitorId', 'aBeaconId', { type: 't1' });
+        beacon_event.proximity = "unknown";
+        expect(beacon_event.warnAboutUnknownProximity()).toBe(true);
       });
 
     });
