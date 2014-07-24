@@ -2,15 +2,19 @@
 
   "use strict";
 
-  describe("BeaconEvents", function () {
+  describe("BeaconEvent", function () {
     beforeEach(function () {
     });
 
-    it("should return false when missing proximity", function () {
-      var beacon_event = new BeaconEvent('aVisitorId', 'aBeaconId', {
-        type: 't1'
+    describe("warnAboutUnknownProximity", function () {
+
+      it("should return false when missing proximity", function () {
+        var beacon_event = new BeaconEvent('aVisitorId', 'aBeaconId', {
+          type: 't1'
+        });
+        expect(beacon_event.warnAboutUnknownProximity()).toBe(false);
       });
-      expect(beacon_event.warnAboutUnknownProximity()).toBe(false);
+
     });
 
   });
