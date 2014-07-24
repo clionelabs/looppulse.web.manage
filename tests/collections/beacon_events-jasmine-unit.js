@@ -6,6 +6,24 @@
     beforeEach(function () {
     });
 
+    describe("entryType", function () {
+      it("should return 'didEnterRegion'", function () {
+        expect(BeaconEvent.entryType()).toBe("didEnterRegion");
+      });
+    });
+
+    describe("rangingType", function () {
+      it("should return 'didRangeBeacons'", function () {
+        expect(BeaconEvent.rangingType()).toBe("didRangeBeacons");
+      });
+    });
+
+    describe("exitType", function () {
+      it("should return 'didExitRegion'", function () {
+        expect(BeaconEvent.exitType()).toBe("didExitRegion");
+      });
+    });
+
     describe("warnAboutUnknownProximity", function () {
 
       it("should return false when missing proximity", function () {
