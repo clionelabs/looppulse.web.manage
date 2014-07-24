@@ -91,3 +91,9 @@ Meteor.publish('related-metrics', function(){
   console.log("Returning Metric Data")
   return Metrics.find()
 })
+
+//@@DEV
+Meteor.publish('all-companies', function(){
+  var q = {}
+  return Companies.find(q);
+})

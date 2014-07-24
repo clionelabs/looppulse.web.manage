@@ -1,0 +1,41 @@
+<template name="show">
+<table class="table table-striped">
+
+
+{{#if cursor}}
+  {{#each cursor}}
+<thead>
+  <tr>
+
+    {{#if ../fields }}
+      {{#each ../fields }}
+        <th>{{this}}</th>
+      {{/each}}
+    {{else}}
+      <th>_id</th>
+    {{/if}}
+  </tr>
+</thead>
+  {{/each}}
+{{/if}}
+
+
+
+{{#if cursor}}
+  {{#each cursor}}
+<tbody>
+  <tr>
+
+    {{#if ../fields }}
+      {{#each ../fields }}
+        <td>{{get obj=.. prop=this}}</td>
+      {{/each}}
+    {{else}}
+      <td>{{_id}}</td>
+    {{/if}}
+  </tr>
+</tbody>
+  {{/each}}
+{{/if}}
+</table>
+</template>
