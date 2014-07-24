@@ -6,6 +6,22 @@
     beforeEach(function () {
     });
 
+    describe("proximity", function () {
+      it("should be set when provided for rangingType", function () {
+        var expectedProximity = 'p1';
+        var beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didRangeBeacons", proximity: expectedProximity });
+        expect(beacon_event.proximity).toBe(expectedProximity);
+      });
+
+      it("should not be set when provided for non-rangingType", function () {
+        var beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didEnterRegion", proximity: 'p1' });
+        expect(beacon_event.proximity).toBe(undefined);
+
+        var beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didExitRegion", proximity: 'p1' });
+        expect(beacon_event.proximity).toBe(undefined);
+      });
+    });
+
     describe("entryType", function () {
       it("should return 'didEnterRegion'", function () {
         expect(BeaconEvent.entryType()).toBe("didEnterRegion");
