@@ -63,13 +63,7 @@
       });
 
       it("should return ID after save", function () {
-        // TODO fix upsert does not exists in test
-        if (!(typeof BeaconEvents.upsert === 'undefined')) {
-          spyOn(BeaconEvents, 'upsert');
-        } else {
-          BeaconEvents.upsert = jasmine.createSpy('upsert');
-        }
-
+        spyOn(BeaconEvents, 'upsert');
         var expectedId = 1;
         spyOn(BeaconEvents, 'findOne').andReturn({ _id: expectedId});
 
