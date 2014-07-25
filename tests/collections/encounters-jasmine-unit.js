@@ -52,6 +52,32 @@
       });
     });
 
+    describe("entryEvent()", function () {
+
+      it("should return fake entry event", function () {
+        spyOn(Installations, 'findOne').andReturn({ beaconId: "b1" });
+        var expectedCreatedAt = 'exitedAt';
+        var encounter = new Encounter('aVisitorId', 'aInstallationId', expectedCreatedAt);
+
+        var entryEvent = encounter.entryEvent();
+
+        expect(entryEvent).toEqual({ createdAt: expectedCreatedAt });
+      });
+
+      it("should return first non-exist event", function () {
+        spyOn(Installations, 'findOne').andReturn({ beaconId: "b1" });
+        var expectedEntryEvent = {};
+        spyOn(BeaconEvents, 'findOne').andReturn(expectedEntryEvent);
+        var encounter = new Encounter('aVisitorId', 'aInstallationId', 'exitedAt');
+
+        var entryEvent = encounter.entryEvent();
+
+        expect(entryEvent).toBe(expectedEntryEvent);
+      });
+
+      // TODO add more test cases
+    });
+
     describe("save()", function () {
       it("should set _id and return it", function () {
         spyOn(Encounters, 'upsert');
