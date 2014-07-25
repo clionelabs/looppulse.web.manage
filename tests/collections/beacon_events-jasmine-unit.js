@@ -47,7 +47,7 @@
         var beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didEnterRegion", proximity: "p1" });
         expect(beacon_event.proximity).toBeUndefined();
 
-        var beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didExitRegion", proximity: "p1" });
+        beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didExitRegion", proximity: "p1" });
         expect(beacon_event.proximity).toBeUndefined();
       });
     });
