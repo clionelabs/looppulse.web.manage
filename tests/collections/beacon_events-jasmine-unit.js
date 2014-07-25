@@ -3,7 +3,15 @@
   "use strict";
 
   describe("BeaconEvent", function () {
-    beforeEach(function () {
+
+    describe("ensureIndex", function () {
+      it("should call Meteor.Collection._ensureIndex", function () {
+        spyOn(BeaconEvents, '_ensureIndex');
+
+        BeaconEvent.ensureIndex();
+
+        expect(BeaconEvents._ensureIndex).toHaveBeenCalled();
+      });
     });
 
     describe("proximity", function () {
