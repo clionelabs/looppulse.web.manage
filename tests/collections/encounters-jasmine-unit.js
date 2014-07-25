@@ -39,6 +39,22 @@
       });
     });
 
+    describe("save", function () {
+      it("should set _id and return it", function () {
+        spyOn(Encounters, 'upsert');
+        var expectedId = 1;
+        spyOn(Encounters, 'findOne').andReturn({ _id: expectedId});
+        spyOn(Encounter.prototype, 'close');
+
+        var encounter = new Encounter('aVisitorId', 'aBeaconId', { type: 't1' });
+        var encounterId = encounter.save();
+
+        expect(Encounters.upsert).toHaveBeenCalledWith(encounter, encounter);
+        expect(encounter._id).toBe(expectedId);
+        expect(encounterId).toBe(expectedId);
+      });
+    });
+
   });
 
 }());
