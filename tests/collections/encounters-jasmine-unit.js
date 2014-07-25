@@ -3,7 +3,7 @@
   "use strict";
 
 
-  describe("Encounter", function () {
+  describe("new Encounter()", function () {
 
     it("should set properties from arguments", function () {
       spyOn(Encounter.prototype, 'close');
@@ -16,7 +16,7 @@
       expect(encounter.close).toHaveBeenCalled();
     });
 
-    describe("close", function () {
+    describe("close()", function () {
       it("should set enteredAt from entryEvent", function() {
         var expectedEnteredAt = 1;
         spyOn(Encounter.prototype, 'entryEvent').andReturn({ createdAt: expectedEnteredAt });
@@ -39,7 +39,7 @@
       });
     });
 
-    describe("save", function () {
+    describe("save()", function () {
       it("should set _id and return it", function () {
         spyOn(Encounters, 'upsert');
         var expectedId = 1;
