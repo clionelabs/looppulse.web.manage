@@ -2,6 +2,19 @@
 
   "use strict";
 
+  describe("Encounter", function () {
+
+    describe("ensureIndex()", function () {
+      it("should call Meteor.Collection._ensureIndex", function () {
+        spyOn(Encounters, '_ensureIndex');
+
+        Encounter.ensureIndex();
+
+        expect(Encounters._ensureIndex).toHaveBeenCalled();
+      });
+    });
+
+  });
 
   describe("new Encounter()", function () {
 
@@ -17,7 +30,7 @@
     });
 
     describe("close()", function () {
-      it("should set enteredAt from entryEvent", function() {
+      it("should set enteredAt from entryEvent", function () {
         var expectedEnteredAt = 1;
         spyOn(Encounter.prototype, 'entryEvent').andReturn({ createdAt: expectedEnteredAt });
         var encounter = new Encounter('aVisitorId', 'aInstallationId', 'exitedAt');
@@ -28,7 +41,7 @@
         expect(encounter.entryEvent).toHaveBeenCalled();
       });
 
-      it("should set duration", function() {
+      it("should set duration", function () {
         spyOn(Encounter.prototype, 'entryEvent').andReturn({ createdAt: 2 });
         var encounter = new Encounter('aVisitorId', 'aInstallationId', 'exitedAt');
         encounter.exitedAt = 3;
