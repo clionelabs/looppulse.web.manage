@@ -1,4 +1,4 @@
-Template.show.helpers({
+Template.show_view.helpers({
   log: function(o){
     console.log(o)
   },

@@ -1,0 +1,44 @@
+<!--
+     Extensible Generic Collection Management Template for Collection CRUD
+     Naming： Action+_+View/Tab/List ...Most of the time should be "View"
+     Controller Action+View+Controller
+-->
+<template name="show_view">
+{{> yield region="show-view-header"}}
+<table class="table table-striped">
+  {{#if cursor}}
+    {{#each cursor}}
+    <thead>
+      <tr>
+        {{#if ../fields }}
+          {{#each ../fields }}
+            <th>{{this}}</th>
+          {{/each}}
+        {{else}}
+          <th>_id</th>
+        {{/if}}
+      </tr>
+    </thead>
+    {{/each}}
+  {{/if}}
+
+
+
+  {{#if cursor}}
+    {{#each cursor}}
+    <tbody>
+      <tr>
+        {{#if ../fields }}
+          {{#each ../fields }}
+            <td>{{get obj=.. prop=this}}</td>
+          {{/each}}
+        {{else}}
+          <td>{{_id}}</td>
+        {{/if}}
+      </tr>
+    </tbody>
+    {{/each}}
+  {{/if}}
+</table>
+{{> yield region="show-view-footer"}}
+</template>
