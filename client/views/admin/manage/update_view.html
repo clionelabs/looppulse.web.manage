@@ -1,0 +1,23 @@
+<template name="update_view">
+{{> yield region="update-view-header"}}
+<div class="row">
+  <h2 class="page-header">{{title}}</h2>
+  <form class="update-action-form form-horizontal col-md-6" role="form" data-collection="{{collectionName}}" data-id="{{data._id}}">
+    {{#if ../fields }}
+      {{#each ../fields }}
+        <div class="form-group">
+            <div class="col-sm-2">
+              <label class="control-label">{{this}}</label>
+            </div>
+            <div class="col-sm-10">
+              <input data-field-name="{{this}}" class="form-control" name="{{../collectionName}}.{{this}}" value="{{get ../data this}}" placeholder="">
+            </div>
+        </div>
+      {{/each}}
+    {{/if}}
+    {{> yield region="create-form-extension"}}
+    <button class="update-action-btn action-btn btn btn-primary" >Update</button>
+  </form>
+</div>
+{{> yield region="create-view-footer"}}
+</template>
