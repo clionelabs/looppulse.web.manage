@@ -7,27 +7,37 @@
 {{> yield region="show-view-header"}}
 <table class="table table-striped">
   {{#if cursor}}
-    {{#each cursor}}
     <thead>
       <tr>
-        {{#if ../fields }}
-          {{#each ../fields }}
+        {{#if hasRowPrepend}}
+          <th>{{hasRowPrepend}}</th>
+        {{/if}}
+        {{#if fields }}
+          {{#each fields}}
             <th>{{this}}</th>
           {{/each}}
         {{else}}
           <th>_id</th>
         {{/if}}
+
+        {{#if hasRowAppend}}
+          <th>{{hasRowAppend}}</th>
+        {{/if}}
       </tr>
     </thead>
-    {{/each}}
   {{/if}}
 
 
 
   {{#if cursor}}
-    {{#each cursor}}
     <tbody>
-      <tr>
+    {{#each cursor}}
+      <tr data-id="{{_id}}">
+
+
+        {{#if ../hasRowPrepend}}
+        <td>{{> yield region="show-row-prepend" }}</td>
+        {{/if}}
         {{#if ../fields }}
           {{#each ../fields }}
             <td>{{get obj=.. prop=this}}</td>
@@ -35,9 +45,14 @@
         {{else}}
           <td>{{_id}}</td>
         {{/if}}
+
+
+        {{#if ../hasRowAppend}}
+        <td>{{> yield region="show-row-append" }}</td>
+        {{/if}}
       </tr>
-    </tbody>
     {{/each}}
+    </tbody>
   {{/if}}
 </table>
 {{> yield region="show-view-footer"}}
