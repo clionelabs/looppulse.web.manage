@@ -1,3 +1,5 @@
 <template name="admin_collection_actions">
-<a class="edit-link">Edit</a>
+{{#with getWrapperObject ../.. }}
+<a class="edit-link" data-id="{{_companyId}}" href="{{pathFor 'admin_company_update'}}">Edit</a>
+{{/with}}
 </template>
