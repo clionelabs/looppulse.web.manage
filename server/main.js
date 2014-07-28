@@ -6,6 +6,7 @@ Meteor.startup(
     observeCompaniesFromFirebase();
     observeBeaconEventsFromFirebase();
 
+    Encounter.startup();
     Engagement.startup();
   })
 );
