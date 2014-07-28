@@ -32,8 +32,8 @@
       },
       "velocity": {
         "git": "https://github.com/xolvio/velocity.git",
-        "tag": "v0.1.16",
-        "commit": "047ee02ce4e6340bbd6229b6bed9ff81940bc22b"
+        "tag": "v0.1.17",
+        "commit": "19c51cf2f9efb2c4db42b5e700bb9ea6fe32e921"
       },
       "jasmine-unit": {
         "git": "https://github.com/xolvio/jasmine-unit.git",
