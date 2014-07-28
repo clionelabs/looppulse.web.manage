@@ -52,6 +52,20 @@
       });
     });
 
+    describe("isEnter()", function () {
+      it("should return true for didEnterRegion type", function () {
+        var beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didEnterRegion", proximity: "p1" });
+
+        expect(beacon_event.isEnter()).toBe(true);
+      });
+
+      it("should return false for non-didEnterRegion type", function () {
+        var beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didRangeBeacons", proximity: "p1" });
+
+        expect(beacon_event.isEnter()).toBe(false);
+      });
+    });
+
     describe("save()", function () {
       it("should do nothing for unknown proximity", function () {
         var beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "t1" });
