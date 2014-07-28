@@ -6,7 +6,7 @@ Template.admin_user_input.settings = function(){
      {
        token: '',
        collection: Meteor.users,
-       field: "emails.address",
+       field: "emails.0.address",
        template: Template.userPill
      }
    ]
