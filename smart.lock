@@ -11,7 +11,8 @@
         "branch": "master"
       },
       "roles": {},
-      "accounts-admin-ui-bootstrap-3": {}
+      "accounts-admin-ui-bootstrap-3": {},
+      "autocomplete": {}
     },
     "packages": {
       "Firebase": {
@@ -37,7 +38,7 @@
       "accounts-entry": {
         "git": "https://github.com/Differential/accounts-entry.git",
         "branch": "master",
-        "commit": "5cbe67e0d2adc2ae4d0e9f18be3ed49d469c3a40"
+        "commit": "6ea37affd93e953bbd0998b484c3ebf0f176d8df"
       },
       "roles": {
         "git": "https://github.com/alanning/meteor-roles.git",
@@ -48,6 +49,11 @@
         "git": "https://github.com/hharnisc/meteor-accounts-admin-ui-bootstrap-3.git",
         "tag": "v0.2.6",
         "commit": "fe74692303daf73d440f2729010bcf1557af62ca"
+      },
+      "autocomplete": {
+        "git": "https://github.com/mizzao/meteor-autocomplete.git",
+        "tag": "v0.4.5",
+        "commit": "48a706f0055939ac9e05dd619ad6d4df3dcc237d"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
@@ -63,6 +69,11 @@
         "git": "https://github.com/Differential/simple-form.git",
         "tag": "v0.1.8",
         "commit": "1ea0d3621b333e6f24f37e0e93efd3c081068716"
+      },
+      "caret-position": {
+        "git": "https://github.com/StockBase/meteor-caret-position.git",
+        "tag": "v2.1.0-3",
+        "commit": "6028cf980f62cbf72cb2ea527091a3a31f87b8a7"
       },
       "underscore-string-latest": {
         "git": "https://github.com/TimHeckel/meteor-underscore-string.git",
