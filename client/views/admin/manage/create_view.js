@@ -1,4 +1,4 @@
-Template.create_view.helpers({
+Template.collection_create_view.helpers({
   roles: function() {
     return Roles.getAllRoles();
   },
@@ -7,8 +7,8 @@ Template.create_view.helpers({
   }
 });
 
-Template.create_view.events({
-  'submit .create-action-form': function(e, tmpl) {
+Template.collection_create_view.events({
+  'submit .collection-create-form': function(e, tmpl) {
     e.preventDefault();
     e.stopPropagation();
     console.log("clicked", tmpl, this)

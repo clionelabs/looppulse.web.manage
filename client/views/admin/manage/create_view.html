@@ -1,8 +1,13 @@
-<template name="create_view">
-{{> yield region="create-view-header"}}
+<!--
+  Collection creation template
+  See collection_show_view.html
+ -->
+<template name="collection_create_view">
+{{! prefix: collection-create }}
+{{> yield region="view-header" }}
 <div class="row">
   <h2 class="page-header">{{title}}</h2>
-  <form class="create-action-form form-horizontal col-md-6" role="form" data-collection="{{collectionName}}">
+  <form class="collection-create-form form-horizontal col-md-6" role="form" data-collection="{{collectionName}}">
     {{#if ../fields }}
       {{#each ../fields }}
         <div class="form-group">
@@ -15,9 +20,9 @@
         </div>
       {{/each}}
     {{/if}}
-    {{> yield region="create-form-extension"}}
-    <button class="create-action-btn action-btn btn btn-primary" >New</button>
+    {{> yield region="form-extension" }}
+    <button class="collection-create-btn action-btn btn btn-primary" >New</button>
   </form>
 </div>
-{{> yield region="create-view-footer"}}
+{{> yield region="view-footer" }}
 </template>

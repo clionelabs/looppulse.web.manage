@@ -1,11 +1,15 @@
 <!--
      Extensible Generic Collection Management Template for Collection CRUD
-     Naming： Action+_+View/Tab/List ...Most of the time should be "View"
-     Controller Action+View+Controller
+     Naming： {{Type}}_{{Action}}_{{View}}
+     Controller {{Type}}{{Action}}{{View}}Controller
+      Type: Collection/Specific Class
+      Action: Create/Show/Delete/Update
+      View: View/Tab/List/Page, Most of the time should be "View"
 -->
-<template name="show_view">
-{{> yield region="show-view-header"}}
-<table class="table table-striped">
+<template name="collection_show_view">
+{{! prefix: collection-show }}
+{{> yield region="view-header" }}
+<table class="collection-show-table table table-striped">
   {{#if cursor}}
     <thead>
       <tr>
@@ -36,11 +40,11 @@
 
 
         {{#if ../hasRowPrepend}}
-        <td>{{> yield region="show-row-prepend" }}</td>
+        <td>{{> yield region="row-prepend" }}</td>
         {{/if}}
         {{#if ../fields }}
           {{#each ../fields }}
-            <td>{{get obj=.. prop=this}}</td>
+            <td>{{obtain .. this}}</td>
           {{/each}}
         {{else}}
           <td>{{_id}}</td>
@@ -48,12 +52,12 @@
 
 
         {{#if ../hasRowAppend}}
-        <td>{{> yield region="show-row-append" }}</td>
+        <td>{{> yield region="row-append" }}</td>
         {{/if}}
       </tr>
     {{/each}}
     </tbody>
   {{/if}}
 </table>
-{{> yield region="show-view-footer"}}
+{{> yield region="view-footer" }}
 </template>

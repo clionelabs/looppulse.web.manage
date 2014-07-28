@@ -30,3 +30,13 @@ UI.registerHelper('rand',
       return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 )
+
+UI.registerHelper('obtain',
+  function(obj, prop) {
+    if (obj) {
+      return obj[prop]
+    } else {
+      return null
+    }
+  }
+)
