@@ -11,3 +11,5 @@ scss
 iron-router
 http
 random
+velocity
+jasmine-unit

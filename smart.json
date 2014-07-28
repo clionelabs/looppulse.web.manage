@@ -3,6 +3,8 @@
     "Firebase": {},
     "bootstrap-3": {},
     "scss": {},
-    "iron-router": {}
+    "iron-router": {},
+    "velocity": {},
+    "jasmine-unit": {}
   }
 }
