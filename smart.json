@@ -5,7 +5,6 @@
     "scss": {},
     "iron-router": {},
     "velocity": {},
-    "jasmine-unit": {},
-    "velocity-html-reporter": {}
+    "jasmine-unit": {}
   }
 }
