@@ -8,9 +8,7 @@
       "iron-router": {},
       "velocity": {},
       "jasmine-unit": {},
-      "mocha-web-velocity": {},
-      "velocity-html-reporter": {},
-      "mocha-web-sinon": {}
+      "velocity-html-reporter": {}
     },
     "packages": {
       "Firebase": {
@@ -35,28 +33,18 @@
       },
       "velocity": {
         "git": "https://github.com/xolvio/velocity.git",
-        "tag": "v0.1.14",
-        "commit": "a79260e019e385dce09a67f1017f90d3143a12d9"
+        "tag": "v0.1.16",
+        "commit": "047ee02ce4e6340bbd6229b6bed9ff81940bc22b"
       },
       "jasmine-unit": {
         "git": "https://github.com/xolvio/jasmine-unit.git",
         "tag": "v0.1.24",
         "commit": "885dde77a96390d0fd31b03756f837f482db2ef1"
       },
-      "mocha-web-velocity": {
-        "git": "https://github.com/mad-eye/meteor-mocha-web.git",
-        "tag": "v0.3.4",
-        "commit": "5b68e18104c00687748b190b04a7752478472d17"
-      },
       "velocity-html-reporter": {
         "git": "https://github.com/rdickert/velocity-html-reporter.git",
         "tag": "v0.1.4",
         "commit": "55f973519fb6db831678219057854b94a4cec846"
-      },
-      "mocha-web-sinon": {
-        "git": "https://github.com/CodeAdventure/meteor-mocha-web-sinon.git",
-        "tag": "v0.1.5",
-        "commit": "f7fa86517944f2e899d2fc18c33dd407a68792af"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
@@ -67,11 +55,6 @@
         "git": "https://github.com/alanning/meteor-package-stubber.git",
         "tag": "v0.0.15",
         "commit": "62ad08f8486aacbbc5ec22ea6e2a31573748b7d7"
-      },
-      "mirror": {
-        "git": "https://github.com/xdissent/meteor-mirror.git",
-        "tag": "v0.0.2",
-        "commit": "03d965dcab2f976a1fdc6ce513edcd4c17b75746"
       }
     }
   }

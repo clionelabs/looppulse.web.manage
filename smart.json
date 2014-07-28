@@ -6,8 +6,6 @@
     "iron-router": {},
     "velocity": {},
     "jasmine-unit": {},
-    "mocha-web-velocity": {},
-    "velocity-html-reporter": {},
-    "mocha-web-sinon": {}
+    "velocity-html-reporter": {}
   }
 }
