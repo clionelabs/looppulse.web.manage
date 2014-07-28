@@ -51,6 +51,9 @@
         var beaconEvent = jasmine.createSpyObj("beaconEvent", ["createdAt"]);
         beaconEvent.isEnter = function () { return false; };
         beaconEvent.isExit = function () { return true; };
+        // TODO the following preparations should not be needed after Metric.update() moved
+        spyOn(Location, "load");
+        spyOn(Metric, "update");
 
         var encounterId = Encounter.createOrUpdate(beaconEvent);
 
