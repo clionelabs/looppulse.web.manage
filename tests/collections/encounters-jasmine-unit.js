@@ -4,6 +4,63 @@
 
   describe("Encounter", function () {
 
+    describe("createOrUpdate()", function () {
+
+      it("should do nothing when installation is missing", function () {
+        spyOn(Installations, "findOne").andReturn(null);
+        var beaconEvent = jasmine.createSpyObj("beaconEvent", ["beaconId"]);
+
+        var encounterId = Encounter.createOrUpdate(beaconEvent);
+
+        expect(Installations.findOne).toHaveBeenCalledWith({beaconId: beaconEvent.beaconId});
+        expect(encounterId).toBeUndefined();
+      });
+
+      it("should do nothing for non-enter and non-exit BeaconEvent", function () {
+        spyOn(Installations, "findOne").andReturn({ _id: 1 });
+        spyOn(Encounter.prototype, "save");
+        var beaconEvent = jasmine.createSpyObj("beaconEvent", ["beaconId"]);
+        beaconEvent.isEnter = function () { return false; };
+        beaconEvent.isExit = function () { return false; };
+
+        var encounterId = Encounter.createOrUpdate(beaconEvent);
+
+        expect(Encounter.prototype.save).not.toHaveBeenCalled();
+        expect(encounterId).toBeUndefined();
+      });
+
+      it("should create Encounter for 'enter' BeaconEvent", function () {
+        spyOn(Installations, "findOne").andReturn({ _id: 1 });
+        var expectedEncounterId = 2;
+        spyOn(Encounter.prototype, "save").andReturn(expectedEncounterId);
+        var beaconEvent = jasmine.createSpyObj("beaconEvent", ["createdAt"]);
+        beaconEvent.isEnter = function () { return true; };
+        beaconEvent.isExit = function () { return false; };
+
+        var encounterId = Encounter.createOrUpdate(beaconEvent);
+
+        expect(Encounter.prototype.save).toHaveBeenCalled();
+        expect(encounterId).toBe(expectedEncounterId);
+      });
+
+      it("should update Encounter for 'exit' BeaconEvent", function () {
+        spyOn(Installations, "findOne").andReturn({ _id: 1 });
+        var expectedEncounter = jasmine.createSpyObj("encounter", ["_id", "save"]);
+        expectedEncounter.save.andReturn(expectedEncounter._id);
+        spyOn(Encounters, "findOne").andReturn(expectedEncounter);
+        var beaconEvent = jasmine.createSpyObj("beaconEvent", ["createdAt"]);
+        beaconEvent.isEnter = function () { return false; };
+        beaconEvent.isExit = function () { return true; };
+
+        var encounterId = Encounter.createOrUpdate(beaconEvent);
+
+        expect(Encounters.findOne).toHaveBeenCalled();
+        expect(expectedEncounter.save).toHaveBeenCalled();
+        expect(encounterId).toBe(expectedEncounter._id);
+      });
+
+    });
+
     describe("ensureIndex()", function () {
       it("should call Meteor.Collection._ensureIndex", function () {
         spyOn(Encounters, "_ensureIndex");
