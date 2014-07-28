@@ -78,6 +78,26 @@
       // TODO add more test cases
     });
 
+    describe("isClosed()", function () {
+      it("should return true if exitedAt is set", function () {
+        spyOn(Encounter.prototype, "close");
+        var encounter = new Encounter("aVisitorId", "aInstallationId", "exitedAt");
+
+        var isClosed = encounter.isClosed();
+
+        expect(isClosed).toBe(true);
+      });
+
+      it("should return false if exitedAt is not set", function () {
+        spyOn(Encounter.prototype, "close");
+        var encounter = new Encounter("aVisitorId", "aInstallationId", null);
+
+        var isClosed = encounter.isClosed();
+
+        expect(isClosed).toBe(false);
+      });
+    });
+
     describe("save()", function () {
       it("should set _id and return it", function () {
         spyOn(Encounters, "upsert");
