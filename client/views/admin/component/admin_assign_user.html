@@ -4,13 +4,19 @@
           <label class="control-label">admin</label>
         </div>
         <div class="col-sm-10">
-          {{> admin_user_input }}
+        {{#with currentAdminUser ../../collectionName ../../data._id }}
+            {{#with defaultText "default line" }}
+                {{> admin_user_input email=.. placeholder=this }}
+            {{/with}}
+        {{/with}}
         </div>
     </div>
 </template>
 
 <template name="admin_user_input">
-    {{> inputAutocomplete settings=settings id="admin-email" class="form-control" placeholder="enter admin user email" }}
+    {{log this}}
+    {{> inputAutocomplete settings=settings id="admin-email" class="form-control" placeholder=placeholder value=email }}
+
 </template>
 
 <template name="userPill">

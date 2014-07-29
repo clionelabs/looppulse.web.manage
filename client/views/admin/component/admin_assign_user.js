@@ -12,7 +12,31 @@ Template.admin_user_input.settings = function(){
    ]
   }
 };
+Template.admin_assign_user.helpers({
+  currentAdminUser: function(collectionName, collectionId){
+    var _f = "profile."+collectionName
+    if(!collectionName || !collectionId) { return; }
 
+    var _q = {}
+    _q[_f] = collectionId
+
+    var data = Meteor.users.findOne(_q, { "emails.address":1 })
+    if (data && data.emails && data.emails.length > 0){
+      return data.emails[0].address
+    } else {
+      return ""
+    }
+  },
+  defaultText: function(s){
+    console.log("Converting", s, this)
+    if(!this){
+      return s
+    }else{
+      return this.toString()
+    }
+  }
+
+});
 Template.admin_assign_user.rendered = function(){
   console.log("Hooking listener", $(".collection-processing-form"))
   $(".collection-processing-form").on('submit', function(e) { //this is a dangerous assumption
