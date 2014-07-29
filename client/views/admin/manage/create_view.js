@@ -10,7 +10,6 @@ Template.collection_create_view.helpers({
 Template.collection_create_view.events({
   'submit .collection-create-form': function(e, tmpl) {
     e.preventDefault();
-    e.stopPropagation();
     console.log("clicked", tmpl, this)
     var $form = $(e.target)
     var collectionName = $form.data("collection")
@@ -19,6 +18,7 @@ Template.collection_create_view.events({
     $form.find("input").each(function(i, v){
       var $input = $(this)
       var _field = $input.data("field-name")
+      if (! _field) { return;  }
       var _val = $input.val()
 
       obj[_field] = _val
@@ -37,10 +37,8 @@ Template.collection_create_view.events({
       }
       //Clean Up if everything is fine.
       if (res) {
-        $form.html("Company created. id:"+res)
+        $form.html("<p>New item in <span>"+collectionName+"</span> created. id: <span>"+res+"</span></p>")
       }
     });
-
-    return false;
   }
 });

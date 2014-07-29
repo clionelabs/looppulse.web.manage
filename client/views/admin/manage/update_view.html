@@ -8,7 +8,7 @@
 {{> yield region="view-header"}}
 <div class="row">
   <h2 class="page-header">{{title}}</h2>
-  <form class="collection-update-form form-horizontal col-md-6" role="form" data-collection="{{collectionName}}" data-id="{{data._id}}">
+  <form class="collection-update-form collection-processing-form form-horizontal col-md-6" role="form" data-collection="{{collectionName}}" data-id="{{data._id}}">
     {{#if ../fields }}
       {{#each ../fields }}
         <div class="form-group">
