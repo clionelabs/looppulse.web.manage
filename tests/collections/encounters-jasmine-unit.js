@@ -75,6 +75,17 @@
       });
     });
 
+    describe("startup()", function () {
+      it("should observe added BeaconEvent", function () {
+        var beaconEvents = jasmine.createSpyObj("beaconEvents", ["observe"]);
+        spyOn(BeaconEvents, "find").andReturn(beaconEvents);
+
+        Encounter.startup();
+
+        expect(beaconEvents.observe).toHaveBeenCalledWith({ "added": jasmine.any(Function) });
+      });
+    });
+
   });
 
   describe("new Encounter()", function () {
