@@ -39,64 +39,72 @@
     describe("proximity", function () {
       it("should be set when provided for rangingType", function () {
         var expectedProximity = "p1";
-        var beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didRangeBeacons", proximity: expectedProximity });
-        expect(beacon_event.proximity).toBe(expectedProximity);
+        var beaconEvent = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didRangeBeacons", proximity: expectedProximity });
+
+        expect(beaconEvent.proximity).toBe(expectedProximity);
       });
 
       it("should not be set when provided for non-rangingType", function () {
-        var beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didEnterRegion", proximity: "p1" });
-        expect(beacon_event.proximity).toBeUndefined();
+        var beaconEvent = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didEnterRegion", proximity: "p1" });
+        expect(beaconEvent.proximity).toBeUndefined();
 
-        beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didExitRegion", proximity: "p1" });
-        expect(beacon_event.proximity).toBeUndefined();
+        beaconEvent = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didExitRegion", proximity: "p1" });
+        expect(beaconEvent.proximity).toBeUndefined();
       });
     });
 
     describe("isEnter()", function () {
       it("should return true for didEnterRegion type", function () {
-        var beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didEnterRegion", proximity: "p1" });
+        var beaconEvent = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didEnterRegion", proximity: "p1" });
 
-        expect(beacon_event.isEnter()).toBe(true);
+        expect(beaconEvent.isEnter()).toBe(true);
       });
 
       it("should return false for non-didEnterRegion type", function () {
-        var beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didRangeBeacons", proximity: "p1" });
+        var beaconEvent = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didRangeBeacons", proximity: "p1" });
 
-        expect(beacon_event.isEnter()).toBe(false);
+        expect(beaconEvent.isEnter()).toBe(false);
       });
     });
 
     describe("save()", function () {
       it("should do nothing for unknown proximity", function () {
-        var beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "t1" });
-        beacon_event.proximity = "unknown";
-        expect(beacon_event.save()).toBe(undefined);
+        var beaconEvent = new BeaconEvent("aVisitorId", "aBeaconId", { type: "t1" });
+
+        beaconEvent.proximity = "unknown";
+
+        expect(beaconEvent.save()).toBe(undefined);
       });
 
       it("should return ID after save", function () {
-        spyOn(BeaconEvents, "upsert");
+        spyOn(BeaconEvents, "upsert").andReturn({});
         var expectedId = 1;
         spyOn(BeaconEvents, "findOne").andReturn({ _id: expectedId});
+        var beaconEvent = new BeaconEvent("aVisitorId", "aBeaconId", { type: "t1" });
 
-        var beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "t1" });
-        beacon_event.save();
+        var beaconEventId = beaconEvent.save();
 
-        expect(BeaconEvents.upsert).toHaveBeenCalledWith(beacon_event, beacon_event);
-        expect(beacon_event._id).toBe(expectedId);
+        // TODO test more details
+        expect(BeaconEvents.upsert).toHaveBeenCalled();
+        expect(beaconEvent._id).toBe(expectedId);
+        expect(beaconEventId).toBe(expectedId);
       });
     });
 
     describe("warnAboutUnknownProximity()", function () {
 
       it("should return false when missing proximity", function () {
-        var beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "t1" });
-        expect(beacon_event.warnAboutUnknownProximity()).toBe(false);
+        var beaconEvent = new BeaconEvent("aVisitorId", "aBeaconId", { type: "t1" });
+
+        expect(beaconEvent.warnAboutUnknownProximity()).toBe(false);
       });
 
       it("should return true when proximity equals to 'unknown'", function () {
-        var beacon_event = new BeaconEvent("aVisitorId", "aBeaconId", { type: "t1" });
-        beacon_event.proximity = "unknown";
-        expect(beacon_event.warnAboutUnknownProximity()).toBe(true);
+        var beaconEvent = new BeaconEvent("aVisitorId", "aBeaconId", { type: "t1" });
+
+        beaconEvent.proximity = "unknown";
+
+        expect(beaconEvent.warnAboutUnknownProximity()).toBe(true);
       });
 
     });
