@@ -45,7 +45,7 @@
 
       it("should update Encounter for 'exit' BeaconEvent", function () {
         spyOn(Installations, "findOne").andReturn({ _id: 1 });
-        var expectedEncounter = jasmine.createSpyObj("encounter", ["_id", "save"]);
+        var expectedEncounter = jasmine.createSpyObj("encounter", ["_id", "close", "save"]);
         expectedEncounter.save.andReturn(expectedEncounter._id);
         spyOn(Encounters, "findOne").andReturn(expectedEncounter);
         var beaconEvent = jasmine.createSpyObj("beaconEvent", ["createdAt"]);
@@ -58,6 +58,7 @@
         var encounterId = Encounter.createOrUpdate(beaconEvent);
 
         expect(Encounters.findOne).toHaveBeenCalled();
+        expect(expectedEncounter.close).toHaveBeenCalledWith(beaconEvent.createdAt);
         expect(expectedEncounter.save).toHaveBeenCalled();
         expect(encounterId).toBe(expectedEncounter._id);
       });
@@ -81,67 +82,40 @@
     it("should set properties from arguments", function () {
       spyOn(Encounter.prototype, "close");
 
-      var encounter = new Encounter("aVisitorId", "aInstallationId", "exitedAt");
+      var encounter = new Encounter("aVisitorId", "aInstallationId", "enteredAt");
 
       expect(encounter.visitorId).toBe("aVisitorId");
       expect(encounter.installationId).toBe("aInstallationId");
-      expect(encounter.exitedAt).toBe("exitedAt");
-      expect(encounter.close).toHaveBeenCalled();
+      expect(encounter.enteredAt).toBe("enteredAt");
+      expect(encounter.close).not.toHaveBeenCalled();
     });
 
     describe("close()", function () {
-      it("should set enteredAt from entryEvent", function () {
-        var expectedEnteredAt = 1;
-        spyOn(Encounter.prototype, "entryEvent").andReturn({ createdAt: expectedEnteredAt });
-        var encounter = new Encounter("aVisitorId", "aInstallationId", "exitedAt");
+      it("should set exitedAt", function () {
+        var expectedExitedAt = 3;
+        var encounter = new Encounter("aVisitorId", "aInstallationId", "enteredAt");
 
-        encounter.close();
+        encounter.close(expectedExitedAt);
 
-        expect(encounter.enteredAt).toBe(expectedEnteredAt);
-        expect(encounter.entryEvent).toHaveBeenCalled();
+        expect(encounter.exitedAt).toBe(expectedExitedAt);
       });
 
       it("should set duration", function () {
-        spyOn(Encounter.prototype, "entryEvent").andReturn({ createdAt: 2 });
-        var encounter = new Encounter("aVisitorId", "aInstallationId", "exitedAt");
-        encounter.exitedAt = 3;
+        var enteredAt = 1;
+        var exitedAt = 3;
+        var expectedDuration = exitedAt - enteredAt;
+        var encounter = new Encounter("aVisitorId", "aInstallationId", enteredAt);
 
-        encounter.close();
+        encounter.close(exitedAt);
 
-        expect(encounter.duration).toBe(1);
+        expect(encounter.duration).toBe(expectedDuration);
       });
-    });
-
-    describe("entryEvent()", function () {
-
-      it("should return fake entry event", function () {
-        spyOn(Installations, "findOne").andReturn({ beaconId: "b1" });
-        var expectedCreatedAt = "exitedAt";
-        var encounter = new Encounter("aVisitorId", "aInstallationId", expectedCreatedAt);
-
-        var entryEvent = encounter.entryEvent();
-
-        expect(entryEvent).toEqual({ createdAt: expectedCreatedAt });
-      });
-
-      it("should return first non-exist event", function () {
-        spyOn(Installations, "findOne").andReturn({ beaconId: "b1" });
-        var expectedEntryEvent = {};
-        spyOn(BeaconEvents, "findOne").andReturn(expectedEntryEvent);
-        var encounter = new Encounter("aVisitorId", "aInstallationId", "exitedAt");
-
-        var entryEvent = encounter.entryEvent();
-
-        expect(entryEvent).toBe(expectedEntryEvent);
-      });
-
-      // TODO add more test cases
     });
 
     describe("isClosed()", function () {
       it("should return true if exitedAt is set", function () {
-        spyOn(Encounter.prototype, "close");
-        var encounter = new Encounter("aVisitorId", "aInstallationId", "exitedAt");
+        var encounter = new Encounter("aVisitorId", "aInstallationId", "enteredAt");
+        encounter.exitedAt = 1;
 
         var isClosed = encounter.isClosed();
 
@@ -149,7 +123,6 @@
       });
 
       it("should return false if exitedAt is not set", function () {
-        spyOn(Encounter.prototype, "close");
         var encounter = new Encounter("aVisitorId", "aInstallationId", null);
 
         var isClosed = encounter.isClosed();
