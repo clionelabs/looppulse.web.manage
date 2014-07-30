@@ -75,6 +75,18 @@
       });
     });
 
+    describe("findClosed()", function () {
+      it("should return a cursor", function () {
+        var fakeCursor = "fakeCursor";
+        spyOn(Encounters, "find").andReturn(fakeCursor);
+
+        var result = Encounter.findClosed();
+
+        expect(result).toBe(fakeCursor);
+        expect(Encounters.find).toHaveBeenCalledWith({"exitedAt": {"$exists": true}});
+      });
+    });
+
     describe("startup()", function () {
       it("should observe added BeaconEvent", function () {
         var beaconEvents = jasmine.createSpyObj("beaconEvents", ["observe"]);
