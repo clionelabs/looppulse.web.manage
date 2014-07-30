@@ -14,7 +14,31 @@ Meteor.startup(function(){
 
   initAccounts(Meteor.settings.accounts.admin)
 
+  initSecurity();
+
 });
+
+// Security Setup go here
+var initSecurity = function(){
+    Accounts.validateNewUser(function (user) {
+      var loggedInUser = Meteor.user();
+
+      //@@TODO: configurable function access
+      if (Roles.userIsInRole(loggedInUser, ['admin'])) {
+        return true;
+      }
+
+      throw new Meteor.Error(403, "Not authorized to create new users");
+    });
+
+    AccountsEntry.signInAsAdmin = function(router, pause){
+      return AccountsEntry.signInRequired(router, pause, Roles.userIsInRole(Meteor.user(), ['admin']))
+    }
+
+    // AccountsEntry.signInAsCompanyUser = function(router, pause, distCompanyId){
+    //   return AccountsEntry.signInRequired(router, pause, Roles.userIsInRole(Meteor.user(), ['admin']))
+    // }
+}
 
 var initAccounts = function(settings){
   if (!settings || !settings.login) { return false; }
