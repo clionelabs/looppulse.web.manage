@@ -14,21 +14,21 @@
       });
     });
 
-    describe("entryType()", function () {
+    describe("entryType", function () {
       it("should return 'didEnterRegion'", function () {
-        expect(BeaconEvent.entryType()).toBe("didEnterRegion");
+        expect(BeaconEvent.entryType).toBe("didEnterRegion");
       });
     });
 
-    describe("rangingType()", function () {
+    describe("rangingType", function () {
       it("should return 'didRangeBeacons'", function () {
-        expect(BeaconEvent.rangingType()).toBe("didRangeBeacons");
+        expect(BeaconEvent.rangingType).toBe("didRangeBeacons");
       });
     });
 
-    describe("exitType()", function () {
+    describe("exitType", function () {
       it("should return 'didExitRegion'", function () {
-        expect(BeaconEvent.exitType()).toBe("didExitRegion");
+        expect(BeaconEvent.exitType).toBe("didExitRegion");
       });
     });
 
