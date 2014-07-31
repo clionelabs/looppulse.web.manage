@@ -20,14 +20,14 @@
       expect(engagement.type).toBe("recommendation");
     });
 
-    describe("atTriggerInstallation()", function () {
+    describe("leavingTriggerInstallation()", function () {
       it("should return true if BeaconEvent happens within triggerInstallationIds", function () {
         var installationId = 1;
         var encounter = jasmine.createSpyObj("encounter", ["installationId"]);
         var engagement = new RecommendationEngagement();
         spyOn(_, "contains").andReturn(true);
 
-        var result = engagement.atTriggerInstallation(encounter);
+        var result = engagement.leavingTriggerInstallation(encounter);
 
         expect(result).toBe(true);
         expect(_.contains).toHaveBeenCalledWith(engagement.triggerInstallationIds, encounter.installationId);
@@ -37,7 +37,7 @@
         var encounter = jasmine.createSpyObj("encounter", ["installationId"]);
         var engagement = new RecommendationEngagement();
 
-        var result = engagement.atTriggerInstallation(encounter);
+        var result = engagement.leavingTriggerInstallation(encounter);
 
         expect(result).toBe(false);
       });
@@ -93,20 +93,20 @@
       it("should return true if within trigger installations and not visit recommend installation recently", function () {
         var encounter = jasmine.createSpy("encounter");
         var engagement = new RecommendationEngagement();
-        spyOn(engagement, "atTriggerInstallation").andReturn(true);
+        spyOn(engagement, "leavingTriggerInstallation").andReturn(true);
         spyOn(engagement, "recentlyVisitedRecommendInstallation").andReturn(false);
 
         var result = engagement.readyToTriggerByVisit(encounter);
 
         expect(result).toBe(true);
-        expect(engagement.atTriggerInstallation).toHaveBeenCalledWith(encounter);
+        expect(engagement.leavingTriggerInstallation).toHaveBeenCalledWith(encounter);
         expect(engagement.recentlyVisitedRecommendInstallation).toHaveBeenCalledWith(encounter);
       });
 
       it("should return false if visit recommend installation recently", function () {
         var encounter = jasmine.createSpy("encounter");
         var engagement = new RecommendationEngagement();
-        spyOn(engagement, "atTriggerInstallation").andReturn(true);
+        spyOn(engagement, "leavingTriggerInstallation").andReturn(true);
         spyOn(engagement, "recentlyVisitedRecommendInstallation").andReturn(true);
 
         var result = engagement.readyToTriggerByVisit(encounter);
@@ -118,12 +118,12 @@
       it("should return false if outside trigger installations", function () {
         var encounter = jasmine.createSpy("encounter");
         var engagement = new RecommendationEngagement();
-        spyOn(engagement, "atTriggerInstallation").andReturn(false);
+        spyOn(engagement, "leavingTriggerInstallation").andReturn(false);
 
         var result = engagement.readyToTriggerByVisit(encounter);
 
         expect(result).toBe(false);
-        expect(engagement.atTriggerInstallation).toHaveBeenCalledWith(encounter);
+        expect(engagement.leavingTriggerInstallation).toHaveBeenCalledWith(encounter);
       });
     });
 
