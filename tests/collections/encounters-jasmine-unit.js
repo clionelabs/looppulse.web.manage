@@ -87,6 +87,46 @@
       });
     });
 
+    describe("findLastOpen()", function () {
+      var beaconEvent;
+      var installation;
+
+      beforeEach(function () {
+        beaconEvent = jasmine.createSpyObj("beaconEvent", ["visitorId", "createdAt"]);
+        installation = jasmine.createSpyObj("installation", ["_id"]);
+      });
+
+      it("should find an Encounter", function () {
+        var expectedEncounter = "expectedEncounter";
+        spyOn(Encounters, "findOne").andReturn(expectedEncounter);
+
+        var result = Encounter.findLastOpen(beaconEvent, installation);
+
+        expect(result).toBe(expectedEncounter);
+      });
+
+      it("should find with correct filters", function () {
+        spyOn(Encounters, "findOne");
+
+        Encounter.findLastOpen(beaconEvent, installation);
+
+        expect(Encounters.findOne).toHaveBeenCalledWith({
+          visitorId: beaconEvent.visitorId,
+          installationId: installation._id,
+          enteredAt: {$lt: beaconEvent.createdAt},
+          exitedAt: {"$exists": false}
+        }, jasmine.any(Object));
+      });
+
+      it("should find with descending enteredAt", function () {
+        spyOn(Encounters, "findOne");
+
+        Encounter.findLastOpen(beaconEvent, installation);
+
+        expect(Encounters.findOne).toHaveBeenCalledWith(jasmine.any(Object), {sort: {enteredAt: -1}});
+      });
+    });
+
     describe("startup()", function () {
       it("should observe added BeaconEvent", function () {
         var beaconEvents = jasmine.createSpyObj("beaconEvents", ["observe"]);
