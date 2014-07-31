@@ -21,13 +21,35 @@
     });
 
     describe("leavingTriggerInstallation()", function () {
+      var engagmentAtTriggerInstallation;
+      beforeEach(function () {
+        engagmentAtTriggerInstallation = new RecommendationEngagement();
+        spyOn(engagmentAtTriggerInstallation, "atTriggerInstallation").andReturn(true);
+      })
+
+      it("should return false if it's an open encounter", function () {
+        var openEncounter = {
+          isClosed: function() { return false }
+        };
+        expect(engagmentAtTriggerInstallation.leavingTriggerInstallation(openEncounter)).toBe(false);
+      });
+
+      it("should return true if it's a closed encounter", function () {
+        var closedEncounter = {
+          isClosed: function() { return true }
+        };
+        expect(engagmentAtTriggerInstallation.leavingTriggerInstallation(closedEncounter)).toBe(true);
+      });
+    });
+
+    describe("atTriggerInstallation()", function () {
       it("should return true if BeaconEvent happens within triggerInstallationIds", function () {
         var installationId = 1;
         var encounter = jasmine.createSpyObj("encounter", ["installationId"]);
         var engagement = new RecommendationEngagement();
         spyOn(_, "contains").andReturn(true);
 
-        var result = engagement.leavingTriggerInstallation(encounter);
+        var result = engagement.atTriggerInstallation(encounter);
 
         expect(result).toBe(true);
         expect(_.contains).toHaveBeenCalledWith(engagement.triggerInstallationIds, encounter.installationId);
@@ -37,7 +59,7 @@
         var encounter = jasmine.createSpyObj("encounter", ["installationId"]);
         var engagement = new RecommendationEngagement();
 
-        var result = engagement.leavingTriggerInstallation(encounter);
+        var result = engagement.atTriggerInstallation(encounter);
 
         expect(result).toBe(false);
       });
