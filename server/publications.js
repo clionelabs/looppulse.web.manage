@@ -3,11 +3,12 @@ console.log("Publishers Ready, Deploying")
 Meteor.publish('owned-company', function(id) {
   var q = {}
   console.log("Returning Company Data", id)
-  if (id) {
+  if (id && AccountsHelper.companyMatch(id, this.userId)) {
     q = { _id: id }
   } else {
     return null;
   }
+
   return Companies.find(q); //Note: Return MongoDB Cursor
 
 });
@@ -15,7 +16,7 @@ Meteor.publish('owned-company', function(id) {
 Meteor.publish('owned-locations', function(id) {
   var q = {}
   console.log("Returning Location Data", id)
-  if (id) {
+  if (id && AccountsHelper.companyMatch(id, this.userId)) {
     q = { companyId: id }
   } else {
     return null;
@@ -27,7 +28,7 @@ Meteor.publish('owned-locations', function(id) {
 Meteor.publish('owned-products', function(id){
   var q = {}
   console.log("Returning Products Data", id)
-  if (id) {
+  if (id && AccountsHelper.companyMatch(id, this.userId)) {
     q = { companyId: id }
   } else {
     return null;
@@ -95,5 +96,8 @@ Meteor.publish('related-metrics', function(){
 //@@DEV
 Meteor.publish('all-companies', function(){
   var q = {}
+  var userId = this.userId
+  if (!userId || !Roles.userIsInRole(userId, ['admin']))
+      throw new Meteor.Error(401, "You need to be an admin");
   return Companies.find(q);
 })
