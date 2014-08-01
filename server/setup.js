@@ -31,13 +31,6 @@ var initSecurity = function(){
       throw new Meteor.Error(403, "Not authorized to create new users");
     });
 
-    AccountsEntry.signInAsAdmin = function(router, pause){
-      return AccountsEntry.signInRequired(router, pause, Roles.userIsInRole(Meteor.user(), ['admin']))
-    }
-
-    // AccountsEntry.signInAsCompanyUser = function(router, pause, distCompanyId){
-    //   return AccountsEntry.signInRequired(router, pause, Roles.userIsInRole(Meteor.user(), ['admin']))
-    // }
 }
 
 var initAccounts = function(settings){

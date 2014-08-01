@@ -25,7 +25,7 @@ Meteor.methods({
     console.log("Called Update", collectionName, "for", _id, " with ", obj)
 
     var user = Meteor.user();
-    if (!user || !Roles.userIsInRole(user, ['admin']))
+    if (!user || !Roles.userIsInRole(user, ['admin'], group))
       throw new Meteor.Error(401, "You need to be an admin");
 
     //Should be a white list filtering but it can be process later
@@ -43,16 +43,17 @@ Meteor.methods({
     var res = _collection.update({"_id": _id}, obj) //return row affected.
     return res;
   },
-  updateUserProfile: function(_user, obj){
+  updateUserProfileByEmail: function(userEmail, obj){
     console.log("Updating User profile:", _user, obj)
 
+    //check current user
     var user = Meteor.user();
     if (!user || !Roles.userIsInRole(user, ['admin']))
       throw new Meteor.Error(401, "You need to be an admin");
 
     //do some checking
 
-    var res = Meteor.users.update({ "emails.address": _user },{ $set:{ profile: obj } });
+    var res = Meteor.users.update({ "emails.address": userEmail },{ $set:{ profile: obj } });
     return res;
   }
 });

@@ -57,9 +57,10 @@ Template.admin_assign_user.rendered = function(){
     }
 
     //if everything alright
-    obj[collectionName] = collectionId
+    obj.collectionName = collectionName
+    obj.collectionId = collectionId
 
-    Meteor.call('updateUserProfile', userEmail , obj, function(error, res) {
+    Meteor.call('updateUserProfileByEmail', userEmail , obj, function(error, res) {
       if (error) {
         // optionally use a meteor errors package
         if (typeof Errors === "undefined")
