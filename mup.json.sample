@@ -10,7 +10,8 @@
   "app": "/path/to/looppulse.web.manage",
 
   "env": {
-    "ROOT_URL": "http://<EC2_INSTANCE_IP_OR_DOMAIN>"
+    "ROOT_URL": "http://<EC2_INSTANCE_IP_OR_DOMAIN>",
+    "NODE_ENV": "production"
   },
 
   "appName": "looppulse_manage",
