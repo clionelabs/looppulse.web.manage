@@ -56,8 +56,7 @@ Meteor.publish('related-encounters', function(ids){
       q = { installationId: { $in:  ids } }
     }
   } else {
-    // WARNING: BETA Code. MUST Uncomment.
-    //return null;
+    return null;
   }
   return Encounters.find(q)
 })
@@ -73,8 +72,7 @@ Meteor.publish('related-beacon-events', function(ids){
       q = { beaconId: { $in:  ids } }
     }
   } else {
-    // WARNING: BETA Code. MUST Uncomment.
-    //return null;
+    return null;
   }
   return BeaconEvents.find(q)
 })
