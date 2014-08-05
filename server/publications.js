@@ -65,7 +65,7 @@ Meteor.publish('related-encounters', function(ids){
 
 Meteor.publish('related-beacon-events', function(ids){
   var q = {}
-  console.log("Returning Encounters Data", ids)
+  console.log("Returning Beacon Events Data", ids)
   if (ids) {
     if (typeof ids == "string") {
       q = { beaconId: id }

@@ -44,14 +44,18 @@
     });
 
     describe("startup()", function () {
-      it("should observe encounter added event", function () {
+      it("should observe encounter added and changed event", function () {
         var encountersSpy = jasmine.createSpyObj("encounters", ["observe"]);
         spyOn(Encounters, "find").andReturn(encountersSpy);
 
         Engagement.startup();
 
-        expect(encountersSpy.observe).toHaveBeenCalledWith({ "added": jasmine.any(Function) });
+        expect(encountersSpy.observe).toHaveBeenCalledWith({
+          "added": jasmine.any(Function),
+          "changed": jasmine.any(Function)
+        });
       });
+
     });
 
   });

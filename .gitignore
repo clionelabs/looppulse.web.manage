@@ -1,5 +1,7 @@
 .DS_Store
 
+/mup.json
+/settings.json
 /server/settings.json
 /tests/.reports/
 /tests/a1-package-stubs.js
