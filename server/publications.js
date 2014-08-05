@@ -108,5 +108,5 @@ Meteor.publish("admin-assignee", function(){
       throw new Meteor.Error(401, "You need to be an admin");
 
 
-  return Meteor.users.find({}, { fields:{"emails.address": 1 }})
+  return Meteor.users.find({}, { fields:{"emails.address": 1 , "profile":1}})
 })

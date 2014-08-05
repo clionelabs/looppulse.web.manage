@@ -9,6 +9,7 @@
       "branch": "master"
     },
     "roles": {},
-    "autocomplete": {}
+    "autocomplete": {},
+    "reactive-table": {}
   }
 }

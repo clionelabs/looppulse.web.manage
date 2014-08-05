@@ -57,8 +57,8 @@ Template.admin_assign_superuser.rendered = function(){
     }
 
     //if everything alright
-    obj.collectionName = collectionName
-    obj.collectionId = collectionId
+    obj.key = collectionName
+    obj.val = collectionId
 
     Meteor.call('updateUserProfileByEmail', userEmail , obj, function(error, res) {
       if (error) {
@@ -98,8 +98,8 @@ Template.admin_assign_user.rendered = function(){
     }
 
     //if everything alright
-    obj.collectionName = collectionName
-    obj.collectionId = collectionId
+    obj.key = collectionName
+    obj.val = collectionId
 
     console.log(userEmail, obj)
 

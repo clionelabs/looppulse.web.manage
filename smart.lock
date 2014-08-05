@@ -11,7 +11,8 @@
         "branch": "master"
       },
       "roles": {},
-      "autocomplete": {}
+      "autocomplete": {},
+      "reactive-table": {}
     },
     "packages": {
       "Firebase": {
@@ -31,13 +32,13 @@
       },
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
-        "tag": "v0.7.1",
-        "commit": "d1ffb3f06ea4c112132b030f2eb1a70b81675ecb"
+        "tag": "v0.8.2",
+        "commit": "05415a8891ea87a00fb1e2388585f2ca5a38e0da"
       },
       "accounts-entry": {
         "git": "https://github.com/Differential/accounts-entry.git",
         "branch": "master",
-        "commit": "6ea37affd93e953bbd0998b484c3ebf0f176d8df"
+        "commit": "653c92e0b31c1f8cfe5378749807826c31cc7b06"
       },
       "roles": {
         "git": "https://github.com/alanning/meteor-roles.git",
@@ -46,13 +47,18 @@
       },
       "autocomplete": {
         "git": "https://github.com/mizzao/meteor-autocomplete.git",
-        "tag": "v0.4.5",
-        "commit": "48a706f0055939ac9e05dd619ad6d4df3dcc237d"
+        "tag": "v0.4.6",
+        "commit": "6db34b563a833eee4b9a04f16f2f420e2eac7fb3"
       },
-      "blaze-layout": {
-        "git": "https://github.com/EventedMind/blaze-layout.git",
-        "tag": "v0.2.4",
-        "commit": "b40e9b0612329288d75cf52ad14a7da64bb8618f"
+      "reactive-table": {
+        "git": "https://github.com/ecohealthalliance/reactive-table.git",
+        "tag": "v0.3.17",
+        "commit": "19ae3d81852a478ca873f90ff98aacee8d622da7"
+      },
+      "iron-layout": {
+        "git": "https://github.com/EventedMind/iron-layout.git",
+        "tag": "v0.2.0",
+        "commit": "4a2d53e35ba036b0c189c7ceca34be494d4c6c97"
       },
       "accounts-t9n": {
         "git": "https://github.com/softwarerero/meteor-accounts-t9n.git",
@@ -68,6 +74,26 @@
         "git": "https://github.com/StockBase/meteor-caret-position.git",
         "tag": "v2.1.0-3",
         "commit": "6028cf980f62cbf72cb2ea527091a3a31f87b8a7"
+      },
+      "just-i18n": {
+        "git": "https://github.com/subhog/meteor-just-i18n.git",
+        "tag": "v0.3.0",
+        "commit": "a60e7f4350fb9648d6f6b4a01acbbc114c4f4343"
+      },
+      "blaze-layout": {
+        "git": "https://github.com/EventedMind/blaze-layout.git",
+        "tag": "v0.2.5",
+        "commit": "273e3ab7d005d91a1a59c71bd224533b4dae2fbd"
+      },
+      "iron-core": {
+        "git": "https://github.com/EventedMind/iron-core.git",
+        "tag": "v0.2.0",
+        "commit": "0e48b5dc50d03f01025b7b900fb5ce2f13d52cad"
+      },
+      "iron-dynamic-template": {
+        "git": "https://github.com/EventedMind/iron-dynamic-template.git",
+        "tag": "v0.2.1",
+        "commit": "4dd1185c4d9d616c9abdb3f33e4a7d5a88db7e18"
       },
       "underscore-string-latest": {
         "git": "https://github.com/TimHeckel/meteor-underscore-string.git",
