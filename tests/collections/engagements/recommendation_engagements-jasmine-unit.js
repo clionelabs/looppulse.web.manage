@@ -152,6 +152,7 @@
     describe("recentlyVisitedRecommendInstallation()", function () {
       it("should return true if having recent Encounter", function () {
         var encounter = jasmine.createSpyObj("encounter", ["enteredAt", "visitorId"]);
+        encounter.findPrevious = Encounter.prototype.findPrevious;
         var expectedGt = 1;
         encounter.enteredAt = 3600 * 1000 + expectedGt;
         spyOn(Encounters, "findOne").andReturn(encounter);
@@ -174,6 +175,7 @@
       it("should return false if no recent Encounter", function () {
         spyOn(Encounters, "findOne").andReturn(null);
         var encounter = jasmine.createSpyObj("encounter", ["enteredAt", "visitorId"]);
+        encounter.findPrevious = Encounter.prototype.findPrevious;
         var engagement = new RecommendationEngagement();
 
         var result = engagement.recentlyVisitedRecommendInstallation(encounter);
