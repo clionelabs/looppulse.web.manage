@@ -1,6 +1,7 @@
 {
   "DEBUG": {
-    "resetLocal": false
+    "resetLocal": false,
+    "logVisitorToFirebase": false
   },
 
   "firebase": {
