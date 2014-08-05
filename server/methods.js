@@ -44,7 +44,7 @@ Meteor.methods({
     return res;
   },
   updateUserProfileByEmail: function(userEmail, obj){
-    console.log("Updating User profile:", _user, obj)
+    console.log("Updating User profile:", userEmail, obj)
 
     //check current user
     var user = Meteor.user();
@@ -52,6 +52,8 @@ Meteor.methods({
       throw new Meteor.Error(401, "You need to be an admin");
 
     //do some checking
+    if (!userEmail || !obj)
+      throw new Meteor.Error(401, "Missing Parameter")
 
     var res = Meteor.users.update({ "emails.address": userEmail },{ $set:{ profile: obj } });
     return res;

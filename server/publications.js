@@ -101,3 +101,12 @@ Meteor.publish('all-companies', function(){
       throw new Meteor.Error(401, "You need to be an admin");
   return Companies.find(q);
 })
+
+Meteor.publish("admin-assignee", function(){
+  var userId = this.userId
+  if (!userId || !Roles.userIsInRole(userId, ['admin']))
+      throw new Meteor.Error(401, "You need to be an admin");
+
+
+  return Meteor.users.find({}, { fields:{"emails.address": 1 }})
+})

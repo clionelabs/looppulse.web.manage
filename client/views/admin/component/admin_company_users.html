@@ -1,0 +1,28 @@
+<template name="admin_company_users">
+        <table class="company-users-table table table-striped" data-company-id="{{_id}}">
+            <thead>
+                <tr>
+                    <th>UserId</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each currentCompanyUser}}
+                    <tr data-user-id="{{_id}}">
+                        <td>
+                            {{_id}}
+                        </td>
+                        <td>
+                            {{emails.[0].address}}
+                        </td>
+                        <td>
+                            &nbsp;
+                            {{log this}}
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+
+        </table>
+</template>
