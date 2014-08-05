@@ -43,7 +43,7 @@
     });
 
     describe("atTriggerInstallation()", function () {
-      it("should return true if BeaconEvent happens within triggerInstallationIds", function () {
+      it("should return true if Encounter happens within triggerInstallationIds", function () {
         var installationId = 1;
         var encounter = jasmine.createSpyObj("encounter", ["installationId"]);
         var engagement = new RecommendationEngagement();
@@ -55,7 +55,7 @@
         expect(_.contains).toHaveBeenCalledWith(engagement.triggerInstallationIds, encounter.installationId);
       });
 
-      it("should return false if BeaconEvent happens outside triggerInstallationIds", function () {
+      it("should return false if Encounter happens outside triggerInstallationIds", function () {
         var encounter = jasmine.createSpyObj("encounter", ["installationId"]);
         var engagement = new RecommendationEngagement();
 
@@ -94,7 +94,7 @@
         var engagement = new RecommendationEngagement();
         spyOn(engagement, "readyToTriggerByVisit").andReturn(true);
 
-        var result = engagement.readyToTriggerByVisit(encounter);
+        var result = engagement.readyToTrigger(encounter);
 
         expect(result).toBe(true);
         expect(engagement.readyToTriggerByVisit).toHaveBeenCalledWith(encounter);
@@ -105,7 +105,7 @@
         var engagement = new RecommendationEngagement();
         spyOn(engagement, "readyToTriggerByVisit").andReturn(false);
 
-        var result = engagement.readyToTriggerByVisit(encounter);
+        var result = engagement.readyToTrigger(encounter);
 
         expect(result).toBe(false);
       });
