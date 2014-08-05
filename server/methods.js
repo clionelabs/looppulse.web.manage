@@ -64,5 +64,27 @@ Meteor.methods({
 
     var res = Meteor.users.update({ "emails.address": userEmail },{ $set:{ profile: data  } });
     return res;
+  },
+  updateUserProfileById: function(userId, mapper){
+    console.log("Updating User profile:", userId, mapper)
+
+    //check current user
+    var user = Meteor.user();
+    var data = {}
+    if (!user || !Roles.userIsInRole(user, ['admin']))
+      throw new Meteor.Error(401, "You need to be an admin");
+
+    //do some checking
+    if (!userId || !mapper)
+      throw new Meteor.Error(401, "Missing Parameter")
+
+    var datas = [].concat(mapper)
+
+    datas.forEach(function(o){
+      data[o.key] = o.val
+    })
+
+    var res = Meteor.users.update(userId,{ $set:{ profile: data  } });
+    return res;
   }
 });

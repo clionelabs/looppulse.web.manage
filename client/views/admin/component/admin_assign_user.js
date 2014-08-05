@@ -101,8 +101,6 @@ Template.admin_assign_user.rendered = function(){
     obj.key = collectionName
     obj.val = collectionId
 
-    console.log(userEmail, obj)
-
     Meteor.call('updateUserProfileByEmail', userEmail , obj, function(error, res) {
       if (error) {
         // optionally use a meteor errors package
@@ -115,6 +113,7 @@ Template.admin_assign_user.rendered = function(){
       //Clean Up if everything is fine.
       if (res) {
         $form.prepend("<p>Profile updated for <span>"+collectionName+"</span> updated (returned: <span>"+res+"</span>)</p>")
+        $("#new-user-email").val("")
       }else{
         console.log("Nothing happen", res)
       }
