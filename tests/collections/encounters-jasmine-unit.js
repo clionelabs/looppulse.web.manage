@@ -131,7 +131,8 @@
 
         Encounter.startup();
 
-        expect(beaconEvents.observe).toHaveBeenCalledWith({ "added": jasmine.any(Function) });
+        // TODO test details with mocha-web
+        expect(beaconEvents.observe).toHaveBeenCalled();
       });
     });
 
