@@ -1,6 +1,47 @@
 //Basic CSS after bootstrap style
-main {
-    line-height: 1.4;
+$primary-color: #3DCBCB;
+$alt-dark-color: #494D59;
+html {
+  position: relative;
+  min-height: 100%;
 }
 
-body { font-size: 16px; }
+main {
+    line-height: 1.4;
+    padding: 20px 0;
+}
+
+body {
+  font-size: 16px;
+  margin-bottom: 60px;
+}
+
+header.primary {
+  background-color: $primary-color;
+  color: #fff;
+}
+
+footer.primary {
+  background-color: $alt-dark-color;
+  color: #fff;
+
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 60px;
+  width: 100%
+}
+
+.navbar-default {
+  border:none;
+  background-color:transparent;
+  margin-bottom: 0;
+  header.primary & {
+    a {
+      color: #fff;
+    }
+  }
+}
+.copyright {
+  margin-top: 10px;
+}
