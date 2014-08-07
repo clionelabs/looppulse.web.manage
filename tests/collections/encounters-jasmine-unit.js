@@ -224,13 +224,14 @@
         expect(Encounters.findOne.mostRecentCall.args[0]["duration"]["$gte"]).toEqual(expectedDuration);
       });
 
-      it("should filter by enteredAt.$gt if after filter provided", function () {
-        var expectedAfter = "after";
-        var encounter = new Encounter(null, null, null);
+      it("should filter by enteredAt.$gt if millisecondsSinceEnteredAt filter provided", function () {
+        var millisecondsSinceEnteredAt = 1;
+        var expectedEnteredAt = 99;
+        var encounter = new Encounter(null, null, expectedEnteredAt + millisecondsSinceEnteredAt);
 
-        encounter.findPrevious({ after: expectedAfter });
+        encounter.findPrevious({ millisecondsSinceEnteredAt: millisecondsSinceEnteredAt });
 
-        expect(Encounters.findOne.mostRecentCall.args[0]["enteredAt"]["$gt"]).toEqual(expectedAfter);
+        expect(Encounters.findOne.mostRecentCall.args[0]["enteredAt"]["$gt"]).toEqual(expectedEnteredAt);
       });
 
       it("should filter by installationId.$in if installationIds filter provided", function () {

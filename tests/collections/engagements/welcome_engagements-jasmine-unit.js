@@ -10,18 +10,6 @@
         expect(type).toBe("welcome");
       });
     });
-
-    describe("longAgoDate()", function () {
-      it("should return the number of milliseconds since midnight Jan 1, 1970 of 8 hours ago", function () {
-        var currentDate = new Date(2014, 1, 2, 3, 4, 5, 6);
-        var expectedDate = new Date(2014, 1, 1, 19, 4, 5, 6);
-        var expectedMilliseconds = expectedDate.getTime();
-
-        var longAgo = WelcomeEngagement.longAgoDate(currentDate);
-
-        expect(longAgo).toBe(expectedMilliseconds);
-      });
-    });
   });
 
   describe("new WelcomeEngagement()", function () {
