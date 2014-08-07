@@ -54,13 +54,13 @@
         var encounter = jasmine.createSpy("encounter");
         var engagement = new WelcomeEngagement();
         spyOn(engagement, "atTriggerInstallation").andReturn(true);
-        spyOn(engagement, "recentlyVisitedTriggerInstallation").andReturn(false);
+        spyOn(engagement, "recentlyStayedAtTriggerInstallation").andReturn(false);
 
         var result = engagement.readyToTrigger(encounter);
 
         expect(result).toBe(true);
         expect(engagement.atTriggerInstallation).toHaveBeenCalled();
-        expect(engagement.recentlyVisitedTriggerInstallation).toHaveBeenCalled();
+        expect(engagement.recentlyStayedAtTriggerInstallation).toHaveBeenCalled();
       });
 
       it("should return false if not at trigger installation", function () {
@@ -78,23 +78,23 @@
         var encounter = jasmine.createSpy("encounter");
         var engagement = new WelcomeEngagement();
         spyOn(engagement, "atTriggerInstallation").andReturn(true);
-        spyOn(engagement, "recentlyVisitedTriggerInstallation").andReturn(true);
+        spyOn(engagement, "recentlyStayedAtTriggerInstallation").andReturn(true);
 
         var result = engagement.readyToTrigger(encounter);
 
         expect(result).toBe(false);
-        expect(engagement.recentlyVisitedTriggerInstallation).toHaveBeenCalled();
+        expect(engagement.recentlyStayedAtTriggerInstallation).toHaveBeenCalled();
       });
     });
 
-    describe("recentlyVisitedTriggerInstallation()", function () {
+    describe("recentlyStayedAtTriggerInstallation()", function () {
       it("should return true if having recent Encounter", function () {
         var encounter = jasmine.createSpyObj("encounter", ["enteredAt", "visitorId"]);
         encounter.findPrevious = Encounter.prototype.findPrevious;
         spyOn(Encounters, "findOne").andReturn(encounter);
         var engagement = new WelcomeEngagement();
 
-        var result = engagement.recentlyVisitedTriggerInstallation(encounter);
+        var result = engagement.recentlyStayedAtTriggerInstallation(encounter);
 
         expect(result).toBe(true);
         expect(Encounters.findOne).toHaveBeenCalled();
@@ -106,7 +106,7 @@
         encounter.findPrevious = Encounter.prototype.findPrevious;
         var engagement = new WelcomeEngagement();
 
-        var result = engagement.recentlyVisitedTriggerInstallation(encounter);
+        var result = engagement.recentlyStayedAtTriggerInstallation(encounter);
 
         expect(result).toBe(false);
         expect(Encounters.findOne).toHaveBeenCalled();
