@@ -192,6 +192,57 @@
       });
     });
 
+    describe("findPrevious()", function () {
+      beforeEach(function () {
+        spyOn(Encounters, "findOne");
+      });
+
+      it("should filter by visitorId if no filters provided", function () {
+        var expectedVisitorId = "aVisitorId";
+        var encounter = new Encounter(expectedVisitorId, null, null);
+
+        encounter.findPrevious();
+
+        expect(Encounters.findOne.mostRecentCall.args[0]["visitorId"]).toEqual(expectedVisitorId);
+      });
+
+      it("should filter by enteredAt.$lt if no filters provided", function () {
+        var expectedEnteredAt = "enteredAt";
+        var encounter = new Encounter(null, null, expectedEnteredAt);
+
+        encounter.findPrevious();
+
+        expect(Encounters.findOne.mostRecentCall.args[0]["enteredAt"]["$lt"]).toEqual(expectedEnteredAt);
+      });
+
+      it("should filter by duration if minDuration filter provided", function () {
+        var expectedDuration = "duration";
+        var encounter = new Encounter(null, null, null);
+
+        encounter.findPrevious({ minDuration: expectedDuration });
+
+        expect(Encounters.findOne.mostRecentCall.args[0]["duration"]["$gte"]).toEqual(expectedDuration);
+      });
+
+      it("should filter by enteredAt.$gt if after filter provided", function () {
+        var expectedAfter = "after";
+        var encounter = new Encounter(null, null, null);
+
+        encounter.findPrevious({ after: expectedAfter });
+
+        expect(Encounters.findOne.mostRecentCall.args[0]["enteredAt"]["$gt"]).toEqual(expectedAfter);
+      });
+
+      it("should filter by installationId.$in if installationIds filter provided", function () {
+        var expectedInstallationIds = "installationIds";
+        var encounter = new Encounter(null, null, null);
+
+        encounter.findPrevious({ installationIds: expectedInstallationIds });
+
+        expect(Encounters.findOne.mostRecentCall.args[0]["installationId"]["$in"]).toEqual(expectedInstallationIds);
+      });
+    });
+
     describe("save()", function () {
       it("should set _id and return it", function () {
         spyOn(Encounters, "upsert").andReturn({});
