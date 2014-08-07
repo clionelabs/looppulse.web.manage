@@ -10,6 +10,8 @@
     },
     "roles": {},
     "autocomplete": {},
-    "reactive-table": {}
+    "reactive-table": {},
+    "velocity": {},
+    "jasmine-unit": {}
   }
 }

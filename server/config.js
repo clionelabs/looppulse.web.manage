@@ -101,6 +101,39 @@ var createCompany = function(snapshot, removeFromFirebase) {
       insta.save();
       console.info("[Init] Installation created:", JSON.stringify(insta));
     });
+
+    _.each(locationConfig.engagements, function(engagementConfig) {
+      var beaconKeyToInstallationId = function (beaconKey) {
+        var beaconId = companyConfig.beacons[beaconKey]._id;
+        var installation = Installations.findOne({ beaconId: beaconId });
+        return installation._id;
+      }
+
+      var triggerInstallationIds = _.map(engagementConfig.triggerBeacons,
+                                         beaconKeyToInstallationId);
+      var recommendInstallationIds = _.map(engagementConfig.recommendBeacons,
+                                           beaconKeyToInstallationId);
+      var replaceBeaconKeyWithInstallationIds = function (beaconKeyMessages) {
+        var installationIdsToMessages = {};
+        _.each(message, function(message, key) {
+          installationId = beaconKeyToInstallationId(key);
+          installationIdsToMessages[installationId] = message;
+        })
+        return installationIdsToMessages;
+      }
+      var message = engagementConfig.message;
+      if (engagementConfig.type === RecommendationEngagement.type) {
+        message = replaceBeaconKeyWithInstallationIds(engagementConfig.message);
+      }
+      var e = { type: engagementConfig.type,
+                locationId: companyConfig.locations[locationKey]._id,
+                message: message,
+                triggerInstallationIds: triggerInstallationIds,
+                recommendInstallationIds: recommendInstallationIds };
+      Engagements.upsert(e, e);
+      var reloaded = Engagements.findOne(e);
+      console.info("[Init] Engagement created:", JSON.stringify(reloaded));
+    })
   });
 
   if (removeFromFirebase) {
@@ -129,7 +162,7 @@ var configureDEBUG = function() {
 }
 
 var resetLocal = function() {
-  var collections = [BeaconEvents, Encounters, Visitors, Metrics, Funnels];
+  var collections = [BeaconEvents, Encounters, Visitors, Metrics, Funnels, Messages];
   collections.forEach(function(collection) {
     collection.remove({});
     console.info("[Reset] Removed all data in:", collection._name);

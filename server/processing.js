@@ -35,20 +35,6 @@ var processBeaconEventFromFirebase = function(snapshot, removeFromFirebase) {
     if (removeFromFirebase) {
       removeBeaconEventFromFirebase(snapshot.ref());
     }
-
-    // Exit event marks the end of an encounter.
-    if (beaconEvent.isExit()) {
-      var installation = Installations.findOne({beaconId: beacon._id});
-      if (!installation) {
-        console.warn("[processBeaconEventFromFirebase] Beacon missing installation:", beacon)
-        return;
-      }
-      var encounter = new Encounter(visitor._id, installation._id, beaconEvent.createdAt);
-      encounter.save();
-
-      var location = Location.load(installation.locationId);
-      Metric.update(location, encounter, visitor);
-    }
   }
 }
 

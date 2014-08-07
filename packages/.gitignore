@@ -18,3 +18,10 @@
 /just-i18n
 /iron-core
 /iron-dynamic-template
+/velocity
+/jasmine-unit
+/package-stubber
+/mocha-web-velocity
+/mirror
+/velocity-html-reporter
+/mocha-web-sinon

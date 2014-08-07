@@ -1,11 +1,16 @@
 {
   "DEBUG": {
-    "resetLocal": false
+    "resetLocal": false,
+    "logVisitorToFirebase": false
   },
 
   "firebase": {
-      "root": "https://looppulse-event.firebaseio.com/",
-      "config": "https://looppulse-store.firebaseio.com/"
+      "root": "",
+      "config": ""
+  },
+  "parse": {
+    "applicationId": "",
+    "restKey": ""
   },
   "removeFromFirebase": false,
   "accounts": {

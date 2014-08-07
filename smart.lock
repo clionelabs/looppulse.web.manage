@@ -12,7 +12,9 @@
       },
       "roles": {},
       "autocomplete": {},
-      "reactive-table": {}
+      "reactive-table": {},
+      "velocity": {},
+      "jasmine-unit": {}
     },
     "packages": {
       "Firebase": {
@@ -55,6 +57,16 @@
         "tag": "v0.3.17",
         "commit": "19ae3d81852a478ca873f90ff98aacee8d622da7"
       },
+      "velocity": {
+        "git": "https://github.com/xolvio/velocity.git",
+        "tag": "v0.1.18",
+        "commit": "1958c117417e832c3e9025088cca845b4a82728f"
+      },
+      "jasmine-unit": {
+        "git": "https://github.com/xolvio/jasmine-unit.git",
+        "tag": "v0.1.24",
+        "commit": "885dde77a96390d0fd31b03756f837f482db2ef1"
+      },
       "iron-layout": {
         "git": "https://github.com/EventedMind/iron-layout.git",
         "tag": "v0.2.0",
@@ -79,6 +91,11 @@
         "git": "https://github.com/subhog/meteor-just-i18n.git",
         "tag": "v0.3.0",
         "commit": "a60e7f4350fb9648d6f6b4a01acbbc114c4f4343"
+      },
+      "package-stubber": {
+        "git": "https://github.com/alanning/meteor-package-stubber.git",
+        "tag": "v0.0.15",
+        "commit": "62ad08f8486aacbbc5ec22ea6e2a31573748b7d7"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

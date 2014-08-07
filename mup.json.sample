@@ -1,0 +1,28 @@
+{
+  "servers": [
+    {
+      "host": "<EC2_INSTANCE_IP>",
+      "username": "ubuntu",
+      "pem": "~/.ssh/id_rsa"
+    }
+  ],
+
+  "app": "/path/to/looppulse.web.manage",
+
+  "env": {
+    "ROOT_URL": "http://<EC2_INSTANCE_IP_OR_DOMAIN>",
+    "NODE_ENV": "production"
+  },
+
+  "appName": "looppulse_manage",
+
+  "setupMongo": true,
+
+  "setupNode": true,
+
+  "nodeVersion": "0.10.29",
+
+  "setupPhantom": false,
+
+  "deployCheckWaitTime": 15
+}
