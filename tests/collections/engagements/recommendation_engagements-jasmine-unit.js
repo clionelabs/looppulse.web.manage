@@ -116,25 +116,25 @@
         var encounter = jasmine.createSpy("encounter");
         var engagement = new RecommendationEngagement();
         spyOn(engagement, "leavingTriggerInstallation").andReturn(true);
-        spyOn(engagement, "recentlyStayedRecommendInstallation").andReturn(false);
+        spyOn(engagement, "recentlyStayedAtRecommendInstallation").andReturn(false);
 
         var result = engagement.readyToTriggerByStay(encounter);
 
         expect(result).toBe(true);
         expect(engagement.leavingTriggerInstallation).toHaveBeenCalledWith(encounter);
-        expect(engagement.recentlyStayedRecommendInstallation).toHaveBeenCalledWith(encounter);
+        expect(engagement.recentlyStayedAtRecommendInstallation).toHaveBeenCalledWith(encounter);
       });
 
       it("should return false if visit recommend installation recently", function () {
         var encounter = jasmine.createSpy("encounter");
         var engagement = new RecommendationEngagement();
         spyOn(engagement, "leavingTriggerInstallation").andReturn(true);
-        spyOn(engagement, "recentlyStayedRecommendInstallation").andReturn(true);
+        spyOn(engagement, "recentlyStayedAtRecommendInstallation").andReturn(true);
 
         var result = engagement.readyToTriggerByStay(encounter);
 
         expect(result).toBe(false);
-        expect(engagement.recentlyStayedRecommendInstallation).toHaveBeenCalledWith(encounter);
+        expect(engagement.recentlyStayedAtRecommendInstallation).toHaveBeenCalledWith(encounter);
       });
 
       it("should return false if outside trigger installations", function () {
@@ -149,7 +149,7 @@
       });
     });
 
-    describe("recentlyStayedRecommendInstallation()", function () {
+    describe("recentlyStayedAtRecommendInstallation()", function () {
       it("should return true if having recent Encounter", function () {
         var encounter = jasmine.createSpyObj("encounter", ["enteredAt", "visitorId"]);
         encounter.findPrevious = Encounter.prototype.findPrevious;
@@ -159,7 +159,7 @@
         var engagement = new RecommendationEngagement();
         engagement.recommendInstallationIds = jasmine.createSpy("recommendInstallationIds");
 
-        var result = engagement.recentlyStayedRecommendInstallation(encounter, 0);
+        var result = engagement.recentlyStayedAtRecommendInstallation(encounter, 0);
 
         expect(result).toBe(true);
         expect(Encounters.findOne).toHaveBeenCalledWith({
@@ -178,7 +178,7 @@
         encounter.findPrevious = Encounter.prototype.findPrevious;
         var engagement = new RecommendationEngagement();
 
-        var result = engagement.recentlyStayedRecommendInstallation(encounter);
+        var result = engagement.recentlyStayedAtRecommendInstallation(encounter);
 
         expect(result).toBe(false);
         expect(Encounters.findOne).toHaveBeenCalled();
