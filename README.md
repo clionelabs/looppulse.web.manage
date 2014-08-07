@@ -41,3 +41,12 @@ Set up environment.
   a. Run `mup setup` to setup the server
   b. Reboot server
   c. Run `mup deploy` to deploy code to server
+
+
+## Documentation
+
+1. Install jsdoc: `npm install -g jsdoc`
+
+2. Generate documentation: `jsdoc -c jsdoc.json`
+
+3. Open `out/index.html` in browser
