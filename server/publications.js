@@ -1,13 +1,15 @@
 console.log("Publishers Ready, Deploying")
 
+//General Publication
 Meteor.publish('owned-company', function(id) {
   var q = {}
   console.log("Returning Company Data", id)
-  if (id) {
+  if (id && AccountsHelper.companyMatch(id, this.userId)) {
     q = { _id: id }
   } else {
     return null;
   }
+
   return Companies.find(q); //Note: Return MongoDB Cursor
 
 });
@@ -15,7 +17,7 @@ Meteor.publish('owned-company', function(id) {
 Meteor.publish('owned-locations', function(id) {
   var q = {}
   console.log("Returning Location Data", id)
-  if (id) {
+  if (id && AccountsHelper.companyMatch(id, this.userId)) {
     q = { companyId: id }
   } else {
     return null;
@@ -27,7 +29,7 @@ Meteor.publish('owned-locations', function(id) {
 Meteor.publish('owned-products', function(id){
   var q = {}
   console.log("Returning Products Data", id)
-  if (id) {
+  if (id && AccountsHelper.companyMatch(id, this.userId)) {
     q = { companyId: id }
   } else {
     return null;
@@ -38,7 +40,7 @@ Meteor.publish('owned-products', function(id){
 Meteor.publish('owned-installations', function(id){
   var q = {}
   console.log("Returning Installations Data", id)
-  if (id) {
+  if (id && AccountsHelper.fieldMatch("locations", id, this.userId)) {
     q = { locationId: id }
   } else {
     return null;
@@ -49,7 +51,7 @@ Meteor.publish('owned-installations', function(id){
 Meteor.publish('related-encounters', function(ids){
   var q = {}
   console.log("Returning Encounters Data", ids)
-  if (ids) {
+  if (ids && AccountsHelper.fieldMatch("installations", ids, this.userId)) {
     if (typeof ids == "string") {
       q = { installationId: id }
     } else if (ids.length) {
@@ -64,10 +66,10 @@ Meteor.publish('related-encounters', function(ids){
 
 Meteor.publish('related-beacon-events', function(ids){
   var q = {}
-  console.log("Returning Beacon Events Data", ids)
-  if (ids) {
+  console.log("Returning Encounters Data", ids)
+  if (ids && AccountsHelper.fieldMatch("beacons", ids, this.userId)) {
     if (typeof ids == "string") {
-      q = { beaconId: id }
+      q = { beaconId: ids }
     } else if (ids.length) {
       q = { beaconId: { $in:  ids } }
     }
@@ -77,24 +79,53 @@ Meteor.publish('related-beacon-events', function(ids){
   return BeaconEvents.find(q)
 })
 
-Meteor.publish('related-funnels', function(){
+Meteor.publish('related-funnels', function(ids){
   var q = {}
-  console.log("Returning Funnel Data")
+  console.log("Returning Funnel Data", ids)
 
-  return Funnels.find()
+  if (ids && AccountsHelper.fieldMatch("installations", ids, this.userId)) {
+    if (typeof ids == "string") {
+      q = { installationId: ids }
+    } else if (ids.length) {
+      q = { installationId: { $in:  ids } }
+    }
+  } else {
+    //@@DEV
+    q = {}
+  }
+
+  return Funnels.find(q)
 })
 
-Meteor.publish('related-metrics', function(){
-  var q = {}
-  console.log("Returning Metric Data")
-  return Metrics.find()
+Meteor.publish('related-metrics', function(id){
+  var q = {};
+  console.log("Returning Metric Data", id)
+
+  if (id && AccountsHelper.fieldMatch("locations", id, this.userId)) {
+    q = { locationId: id }
+  } else {
+    return null;
+  }
+  return Metrics.find(q)
 })
 
-Meteor.publish('admin-companies', function() {
-  return Companies.find({});
+//@@DEV
+//@@Admin Use
+Meteor.publish('all-companies', function(){
+  var q = {}
+  var userId = this.userId
 
-});
+  if (!userId || !Roles.userIsInRole(userId, ['admin']))
+      throw new Meteor.Error(401, "You need to be an admin");
 
-Meteor.publish('admin-locations', function(id) {
-  return Locations.find({});
-});
+  return Companies.find(q);
+})
+
+Meteor.publish("admin-assignee", function(){
+  var userId = this.userId
+
+  if (!userId || !Roles.userIsInRole(userId, ['admin']))
+      throw new Meteor.Error(401, "You need to be an admin");
+
+  return Meteor.users.find({}, { fields:{"emails.address": 1 , "profile":1} })
+})

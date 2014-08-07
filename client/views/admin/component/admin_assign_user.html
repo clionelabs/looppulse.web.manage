@@ -1,0 +1,41 @@
+<template name="admin_assign_superuser">
+    <div class="form-group">
+        <div class="col-xs-2">
+          <label class="control-label">admin</label>
+        </div>
+        <div class="col-xs-10">
+        {{#with currentAdminUser ../../collectionName ../../data._id }}
+            {{#with defaultText "Admin Email Address" }}
+                {{> admin_user_input email=.. placeholder=this id="admin-email"}}
+            {{/with}}
+        {{/with}}
+        </div>
+    </div>
+</template>
+
+<template name="admin_assign_user">
+    <h3>Add User</h3>
+    <form class="admin-assign-user" data-collection="{{collectionName}}" data-id="{{data._id}}">
+        <div class="form-group">
+            <div class="col-xs-1">
+              <label class="control-label">User</label>
+            </div>
+            <div class="col-xs-6">
+                {{> admin_user_input email="" placeholder="User Email Address" id="new-user-email"}}
+            </div>
+            <div class="col-xs-2">
+                <button class="admin-assign-user action-btn btn btn-default">Add</button>
+            </div>
+        </div>
+    </form>
+</template>
+
+<template name="admin_user_input">
+    {{log this}}
+    {{> inputAutocomplete settings=settings id=id class="form-control" placeholder=placeholder value=email }}
+
+</template>
+
+<template name="userPill">
+    <span class="item">{{emails.[0].address}}</span>
+</template>

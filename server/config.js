@@ -22,6 +22,7 @@ ensureIndexes = function() {
   )
 }
 
+
 // TODO: We need to observe other changes in company.
 observeCompaniesFromFirebase = function() {
   var fbPath = Meteor.settings.firebase.config + '/companies';

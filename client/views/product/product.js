@@ -1,7 +1,4 @@
 Template.product.helpers({
-  log:function(v) {
-    console.log("product template", this, v)
-  },
   //funnel processor.
   totalVisit: function(){
     if (!this || !this.metric ) { return "--"; }

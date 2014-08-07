@@ -4,11 +4,16 @@
 # but you can also edit it by hand.
 
 standard-app-packages
-insecure
 Firebase
 bootstrap-3
 scss
 iron-router
+accounts-password
+accounts-ui
+accounts-entry
+roles
+autocomplete
+reactive-table
 http
 random
 velocity

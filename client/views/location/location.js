@@ -44,7 +44,7 @@ Template.location.helpers({
     } else {
       obj.metric = { totalVisit: 0 }
     }
-    //console.log("Processed", obj)
+    console.log("Processed", obj)
     return obj;
   },
   beacons: function() {
