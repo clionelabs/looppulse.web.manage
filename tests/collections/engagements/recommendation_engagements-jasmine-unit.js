@@ -92,18 +92,18 @@
       it("should return true if ready to trigger by visit", function () {
         var encounter = jasmine.createSpy("encounter");
         var engagement = new RecommendationEngagement();
-        spyOn(engagement, "readyToTriggerByVisit").andReturn(true);
+        spyOn(engagement, "readyToTriggerByStay").andReturn(true);
 
         var result = engagement.readyToTrigger(encounter);
 
         expect(result).toBe(true);
-        expect(engagement.readyToTriggerByVisit).toHaveBeenCalledWith(encounter);
+        expect(engagement.readyToTriggerByStay).toHaveBeenCalledWith(encounter);
       });
 
       it("should return false if nothing to trigger", function () {
         var encounter = jasmine.createSpy("encounter");
         var engagement = new RecommendationEngagement();
-        spyOn(engagement, "readyToTriggerByVisit").andReturn(false);
+        spyOn(engagement, "readyToTriggerByStay").andReturn(false);
 
         var result = engagement.readyToTrigger(encounter);
 
@@ -111,30 +111,30 @@
       });
     });
 
-    describe("readyToTriggerByVisit()", function () {
+    describe("readyToTriggerByStay()", function () {
       it("should return true if within trigger installations and not visit recommend installation recently", function () {
         var encounter = jasmine.createSpy("encounter");
         var engagement = new RecommendationEngagement();
         spyOn(engagement, "leavingTriggerInstallation").andReturn(true);
-        spyOn(engagement, "recentlyVisitedRecommendInstallation").andReturn(false);
+        spyOn(engagement, "recentlyStayedRecommendInstallation").andReturn(false);
 
-        var result = engagement.readyToTriggerByVisit(encounter);
+        var result = engagement.readyToTriggerByStay(encounter);
 
         expect(result).toBe(true);
         expect(engagement.leavingTriggerInstallation).toHaveBeenCalledWith(encounter);
-        expect(engagement.recentlyVisitedRecommendInstallation).toHaveBeenCalledWith(encounter);
+        expect(engagement.recentlyStayedRecommendInstallation).toHaveBeenCalledWith(encounter);
       });
 
       it("should return false if visit recommend installation recently", function () {
         var encounter = jasmine.createSpy("encounter");
         var engagement = new RecommendationEngagement();
         spyOn(engagement, "leavingTriggerInstallation").andReturn(true);
-        spyOn(engagement, "recentlyVisitedRecommendInstallation").andReturn(true);
+        spyOn(engagement, "recentlyStayedRecommendInstallation").andReturn(true);
 
-        var result = engagement.readyToTriggerByVisit(encounter);
+        var result = engagement.readyToTriggerByStay(encounter);
 
         expect(result).toBe(false);
-        expect(engagement.recentlyVisitedRecommendInstallation).toHaveBeenCalledWith(encounter);
+        expect(engagement.recentlyStayedRecommendInstallation).toHaveBeenCalledWith(encounter);
       });
 
       it("should return false if outside trigger installations", function () {
@@ -142,14 +142,14 @@
         var engagement = new RecommendationEngagement();
         spyOn(engagement, "leavingTriggerInstallation").andReturn(false);
 
-        var result = engagement.readyToTriggerByVisit(encounter);
+        var result = engagement.readyToTriggerByStay(encounter);
 
         expect(result).toBe(false);
         expect(engagement.leavingTriggerInstallation).toHaveBeenCalledWith(encounter);
       });
     });
 
-    describe("recentlyVisitedRecommendInstallation()", function () {
+    describe("recentlyStayedRecommendInstallation()", function () {
       it("should return true if having recent Encounter", function () {
         var encounter = jasmine.createSpyObj("encounter", ["enteredAt", "visitorId"]);
         encounter.findPrevious = Encounter.prototype.findPrevious;
@@ -159,7 +159,7 @@
         var engagement = new RecommendationEngagement();
         engagement.recommendInstallationIds = jasmine.createSpy("recommendInstallationIds");
 
-        var result = engagement.recentlyVisitedRecommendInstallation(encounter);
+        var result = engagement.recentlyStayedRecommendInstallation(encounter, 0);
 
         expect(result).toBe(true);
         expect(Encounters.findOne).toHaveBeenCalledWith({
@@ -178,7 +178,7 @@
         encounter.findPrevious = Encounter.prototype.findPrevious;
         var engagement = new RecommendationEngagement();
 
-        var result = engagement.recentlyVisitedRecommendInstallation(encounter);
+        var result = engagement.recentlyStayedRecommendInstallation(encounter);
 
         expect(result).toBe(false);
         expect(Encounters.findOne).toHaveBeenCalled();
