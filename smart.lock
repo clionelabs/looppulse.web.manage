@@ -14,7 +14,8 @@
       "autocomplete": {},
       "reactive-table": {},
       "velocity": {},
-      "jasmine-unit": {}
+      "jasmine-unit": {},
+      "iron-router-active": {}
     },
     "packages": {
       "Firebase": {
@@ -66,6 +67,11 @@
         "git": "https://github.com/xolvio/jasmine-unit.git",
         "tag": "v0.1.24",
         "commit": "885dde77a96390d0fd31b03756f837f482db2ef1"
+      },
+      "iron-router-active": {
+        "git": "https://github.com/XpressiveCode/iron-router-active.git",
+        "tag": "v0.2.0",
+        "commit": "1b05aad5325c3dfdb5186b9c288aa53013d767b8"
       },
       "iron-layout": {
         "git": "https://github.com/EventedMind/iron-layout.git",
