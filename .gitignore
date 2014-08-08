@@ -1,6 +1,7 @@
 .DS_Store
 
 /mup.json
+/out/
 /settings.json
 /server/settings.json
 /tests/.reports/
