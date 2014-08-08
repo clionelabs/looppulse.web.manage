@@ -109,6 +109,18 @@ Meteor.publish('related-metrics', function(id){
   return Metrics.find(q)
 })
 
+Meteor.publish('location-engagements', function(locationId) {
+  var q = {};
+  console.log("Returning location-engagements Data", locationId);
+
+  if (locationId && AccountsHelper.fieldMatch("locations", locationId, this.userId)) {
+    q = { locationId: locationId };
+  } else {
+    return null;
+  }
+  return Engagements.find(q);
+});
+
 //@@DEV
 //@@Admin Use
 Meteor.publish('all-companies', function(){
