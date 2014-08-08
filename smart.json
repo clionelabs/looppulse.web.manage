@@ -12,6 +12,7 @@
     "autocomplete": {},
     "reactive-table": {},
     "velocity": {},
-    "jasmine-unit": {}
+    "jasmine-unit": {},
+    "publish-counts": {}
   }
 }
