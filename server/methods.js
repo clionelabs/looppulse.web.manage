@@ -25,7 +25,7 @@ Meteor.methods({
     console.log("Called Update", collectionName, "for", _id, " with ", obj)
 
     var user = Meteor.user();
-    if (!user || !Roles.userIsInRole(user, ['admin'], group))
+    if (!user || !Roles.userIsInRole(user, ['admin']))
       throw new Meteor.Error(401, "You need to be an admin");
 
     //Should be a white list filtering but it can be process later

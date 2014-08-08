@@ -1,0 +1,13 @@
+{
+  "source": {
+    "include": ["lib/", "client/", "server/"]
+  },
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "opts": {
+    "destination": "./.out/",
+    "recurse": true,
+    "verbose": true
+  }
+}
