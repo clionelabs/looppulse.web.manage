@@ -2,7 +2,7 @@
     <header class="primary">
       <div class="container">
         <div class="row">
-          <nav class="navbar navbar-default col-lg-12" role="navigation">
+          <nav class="primary-navbar navbar navbar-default " role="navigation">
               <!-- Brand and toggle get grouped for better mobile display -->
               <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#primary-navbar-collapse">
@@ -36,6 +36,18 @@
         </div>
       </div>
     </header>
+
+    <nav class="secondary-navbar navbar navbar-default"  role="navigation">
+      <div class="container">
+          <div class="row navbar-wrapper">
+              <ul class="nav navbar-nav">
+                  <li class="{{ isActivePath 'dashboard' }}"><a href="/dashboard">dashboard</a></li>
+                  <li class="{{ isActivePath 'engagement' }}"><a href="/engagement">engagement</a></li>
+              </ul>
+          </div>
+        </div>
+    </nav>
+
     <main>
       <div class="container">
       {{> yield}}
