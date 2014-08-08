@@ -84,7 +84,7 @@
 
         expect(result).toBe(fakeCursor);
         // TODO test using mocha-web for filters
-        expect(Encounters.find).toHaveBeenCalled();
+        expect(Encounters.find).toHaveBeenCalledWith({exitedAt: {$type: 1}});
       });
     });
 
