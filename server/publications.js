@@ -109,7 +109,7 @@ Meteor.publish('related-metrics', function(id){
   return Metrics.find(q)
 })
 
-Meteor.publish('location-engagements', function(locationId) {
+Meteor.publish('location-engagements-with-metrics', function(locationId) {
   var q = {};
   console.log("Returning location-engagements Data", locationId);
 
