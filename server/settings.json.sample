@@ -1,7 +1,8 @@
 {
   "DEBUG": {
     "resetLocal": false,
-    "logVisitorToFirebase": false
+    "logVisitorToFirebase": false,
+    "deliveringMessagesFirebaseURL": "https://<YOUR_APP>.firebaseio.com/delivering_messages"
   },
 
   "firebase": {
