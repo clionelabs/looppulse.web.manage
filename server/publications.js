@@ -118,7 +118,14 @@ Meteor.publish('location-engagements', function(locationId) {
   } else {
     return null;
   }
-  return Engagements.find(q);
+  var engagements = Engagements.find(q);
+  var self = this;
+  engagements.forEach(function(engagement) {
+    var engagementId = engagement._id;
+    publishCount(self, MetricsHelper.counterNameOfSentMessage(engagementId), Messages.find({engagementId: engagementId}));
+  });
+
+  return engagements;
 });
 
 //@@DEV

@@ -88,5 +88,17 @@ Template.location.helpers({
   },
   funnel: function(installationId){
     return this.indexedFunnels(installationId)
+  },
+  engagementMetrics: function() {
+    console.log("Querying Engagement in Location", this._id);
+    var metrics = [];
+    Engagements.find({locationId: this._id}).forEach(function(engagement) {
+      var engagementId = engagement._id;
+      metrics.push({
+        engagementTitle: engagementId,
+        sentMessageCount: Counts.get(MetricsHelper.counterNameOfSentMessage(engagementId))
+      });
+    });
+    return metrics;
   }
 });
