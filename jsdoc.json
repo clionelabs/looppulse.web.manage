@@ -6,6 +6,7 @@
     "plugins/markdown"
   ],
   "opts": {
+    "destination": "./.out/",
     "recurse": true,
     "verbose": true
   }

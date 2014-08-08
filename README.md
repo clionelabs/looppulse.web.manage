@@ -49,4 +49,4 @@ Set up environment.
 
 2. Generate documentation: `jsdoc -c jsdoc.json`
 
-3. Open `out/index.html` in browser
+3. Open `.out/index.html` in browser
