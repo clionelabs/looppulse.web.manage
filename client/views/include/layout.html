@@ -11,11 +11,23 @@
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Loop Pulse</a>
+                <a class="navbar-brand" href="#"><span class="sr-only">Loop Pulse</span></a>
               </div>
 
               <!-- Collect the nav links, forms, and other content for toggling -->
               <div class="collapse navbar-collapse" id="primary-navbar-collapse">
+                <div class="title page-title">
+                {{#if title}}
+                  <h1>{{title}}</h1>
+                {{else}}
+                  <h1>Loop Pulse</h1>
+                {{/if}}
+                {{#if sub_title}}
+                  <h2>{{sub_title}}</h2>
+                {{else}}
+                  <h2>Welcome</h2>
+                {{/if}}
+                </div>
                 <ul class="nav navbar-nav navbar-right">
                   {{> login_box}}
                 </ul>
