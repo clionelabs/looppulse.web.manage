@@ -36,11 +36,18 @@ footer.primary {
   border:none;
   background-color:transparent;
   margin-bottom: 0;
+  padding: 10px;
+
   header.primary & {
     a {
       color: #fff;
     }
   }
+}
+.navbar-brand {
+  background: url(/images/logo_sm.png) left center no-repeat;
+  background-size: contain;
+  padding-left: (64px - 10px);
 }
 .copyright {
   margin-top: 10px;
