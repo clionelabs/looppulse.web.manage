@@ -31,7 +31,9 @@ observeEngagementEventsFromFirebase = function() {
 var processEngagementEventFromFirebase = function(snapshot, removeFromFirebase) {
   var engagementEventJSON = snapshot.val();
 
-  // FIXME process engagement event
+  Message.markAsRead({
+    _id: engagementEventJSON.message_id
+  }, Date.parse(engagementEventJSON.created_at));
 
   if (removeFromFirebase) {
     snapshot.ref().remove();
