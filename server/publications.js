@@ -122,7 +122,7 @@ Meteor.publish('location-engagements-with-metrics', function(locationId) {
   var self = this;
   engagements.forEach(function(engagement) {
     var engagementId = engagement._id;
-    publishCount(self, MetricsHelper.counterNameOfSentMessage(engagementId), Messages.find({engagementId: engagementId}));
+    publishCount(self, MetricsHelper.nameOfSentMessageCount(engagementId), Messages.find({engagementId: engagementId}));
   });
 
   return engagements;

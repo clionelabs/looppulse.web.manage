@@ -96,7 +96,7 @@ Template.location.helpers({
       var engagementId = engagement._id;
       metrics.push({
         engagementTitle: engagementId,
-        sentMessageCount: Counts.get(MetricsHelper.counterNameOfSentMessage(engagementId))
+        sentMessageCount: Counts.get(MetricsHelper.nameOfSentMessageCount(engagementId))
       });
     });
     return metrics;
