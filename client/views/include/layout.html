@@ -36,7 +36,7 @@
         </div>
       </div>
     </header>
-
+    {{#if currentUser }}
     <nav class="secondary-navbar navbar navbar-default"  role="navigation">
       <div class="container">
           <div class="row navbar-wrapper">
@@ -47,7 +47,7 @@
           </div>
         </div>
     </nav>
-
+    {{/if}}
     <main>
       <div class="container">
       {{> yield}}
