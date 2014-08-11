@@ -14,6 +14,9 @@ Meteor.startup(
       console.time("[startup] observeBeaconEventsFromFirebase");
       observeBeaconEventsFromFirebase();
       console.timeEnd("[startup] observeBeaconEventsFromFirebase");
+      console.time("[startup] observeEngagementEventsFromFirebase");
+      observeEngagementEventsFromFirebase();
+      console.timeEnd("[startup] observeEngagementEventsFromFirebase");
 
       console.time("[startup] Encounter");
       Encounter.startup();
