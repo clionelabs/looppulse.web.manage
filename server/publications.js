@@ -123,6 +123,10 @@ Meteor.publish('location-engagements-with-metrics', function(locationId) {
   engagements.forEach(function(engagement) {
     var engagementId = engagement._id;
     publishCount(self, MetricsHelper.nameOfSentMessageCount(engagementId), Messages.find({engagementId: engagementId}));
+    publishCount(self, MetricsHelper.nameOfViewedMessageCount(engagementId), Messages.find({
+      engagementId: engagementId,
+      viewedAt: {$type: 1}
+    }));
   });
 
   return engagements;
