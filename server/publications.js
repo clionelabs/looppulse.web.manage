@@ -127,6 +127,10 @@ Meteor.publish('location-engagements-with-metrics', function(locationId) {
       engagementId: engagementId,
       viewedAt: {$type: 1}
     }));
+    publishCount(self, MetricsHelper.nameOfVisitedMessageCount(engagementId), Messages.find({
+      engagementId: engagementId,
+      visitedAt: {$type: 1}
+    }));
   });
 
   return engagements;
