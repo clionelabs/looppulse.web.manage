@@ -24,6 +24,9 @@ Meteor.startup(
       console.time("[startup] Engagement");
       Engagement.startup();
       console.timeEnd("[startup] Engagement");
+      console.time("[startup] Message");
+      Message.startup();
+      console.timeEnd("[startup] Message");
     });
   })
 );
