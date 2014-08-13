@@ -13,6 +13,7 @@
     "reactive-table": {},
     "velocity": {},
     "jasmine-unit": {},
-    "iron-router-active": {}
+    "iron-router-active": {},
+    "publish-counts": {}
   }
 }

@@ -15,7 +15,8 @@
       "reactive-table": {},
       "velocity": {},
       "jasmine-unit": {},
-      "iron-router-active": {}
+      "iron-router-active": {},
+      "publish-counts": {}
     },
     "packages": {
       "Firebase": {
@@ -45,8 +46,8 @@
       },
       "roles": {
         "git": "https://github.com/alanning/meteor-roles.git",
-        "tag": "v1.2.10",
-        "commit": "7ccb35de0a6cb0c9a0c3666badd04757e39c09a6"
+        "tag": "v1.2.11",
+        "commit": "2d7dc91848ec874d3a0852c77f462d0fae749de5"
       },
       "autocomplete": {
         "git": "https://github.com/mizzao/meteor-autocomplete.git",
@@ -55,8 +56,8 @@
       },
       "reactive-table": {
         "git": "https://github.com/ecohealthalliance/reactive-table.git",
-        "tag": "v0.3.17",
-        "commit": "19ae3d81852a478ca873f90ff98aacee8d622da7"
+        "tag": "v0.3.20",
+        "commit": "f6da4bb8ce809a86230cf63753198c7e84a0bd15"
       },
       "velocity": {
         "git": "https://github.com/xolvio/velocity.git",
@@ -72,6 +73,11 @@
         "git": "https://github.com/XpressiveCode/iron-router-active.git",
         "tag": "v0.2.0",
         "commit": "1b05aad5325c3dfdb5186b9c288aa53013d767b8"
+      },
+      "publish-counts": {
+        "git": "https://github.com/percolatestudio/publish-counts.git",
+        "tag": "v0.2.2",
+        "commit": "45cf58d47a34b06d2788e30f140b6392644f6199"
       },
       "iron-layout": {
         "git": "https://github.com/EventedMind/iron-layout.git",

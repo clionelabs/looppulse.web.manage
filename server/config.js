@@ -45,7 +45,10 @@ var createCompany = function(snapshot, removeFromFirebase) {
   console.info("[Init] Company created:", company._id, company.name);
 
   _.each(companyConfig.products, function(productConfig, productKey) {
-    var p = new Product(productConfig.name, company._id);
+    var p = new Product({
+      name: productConfig.name,
+      companyId: company._id
+    });
     companyConfig.products[productKey]._id = p.save();
     console.info("[Init] Product created:", p._id, p.name);
   });
