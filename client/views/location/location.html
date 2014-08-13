@@ -4,6 +4,10 @@
        <h2>{{ company.name }} @ {{name}}</h2>
     </header>
 
+    {{! FIXME this example usage should be replaced }}
+    {{#each engagementMetrics}}
+      {{sentMessageCount}} -> {{viewedMessageCount}} -> {{visitedMessageCount}}
+    {{/each}}
 
     <div class="summary">
         <div class="row">

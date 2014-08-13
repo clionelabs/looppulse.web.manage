@@ -14,6 +14,32 @@ observeBeaconEventsFromFirebase = function() {
   );
 }
 
+observeEngagementEventsFromFirebase = function() {
+  var fbPath = Meteor.settings.firebase.root + '/engagement_events';
+  var engagementEventsRef = new Firebase(fbPath);
+  console.log('[Remote] Observing: ' + fbPath);
+  engagementEventsRef.on(
+    'child_added',
+    Meteor.bindEnvironment(
+      function(childSnapshot, prevChildName) {
+        processEngagementEventFromFirebase(childSnapshot, Meteor.settings.removeFromFirebase);
+      }
+    )
+  );
+};
+
+var processEngagementEventFromFirebase = function(snapshot, removeFromFirebase) {
+  var engagementEventJSON = snapshot.val();
+
+  Message.markAsRead({
+    _id: engagementEventJSON.message_id
+  }, Date.parse(engagementEventJSON.created_at));
+
+  if (removeFromFirebase) {
+    snapshot.ref().remove();
+  }
+};
+
 var processBeaconEventFromFirebase = function(snapshot, removeFromFirebase) {
   var beaconEventJSON = snapshot.val();
   var visitor = new Visitor(beaconEventJSON.visitor_uuid);
