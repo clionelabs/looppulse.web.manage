@@ -1,4 +1,32 @@
+<template name="dashboard_panel">
+  <div class="panel">
+    <div class="header">{{>yield region="dashboard-header"}}</div>
+    <div class="content">
+    {{!kick the extra content}}
+    {{>yield}}
+    {{>yield region="dashboard-content"}}
+    </div>
+  </div>
+</template>
+
+<template name="dashboard_charting_1">
+  {{#Layout template="dashboard_panel"}}
+    <p>hello.</p>
+    {{#contentFor region="dashboard-header"}}
+      <h3>My Header</h3>
+    {{/contentFor}}
+
+    {{#contentFor region="dashboard-content"}}
+      <div class="charting">:D</div>
+    {{/contentFor}}
+  {{/Layout}}
+</template>
+
 <template name="dashboard_home">
   Home.
-  <div class="charting"></div>
+  {{> dashboard_charting_1 }}
 </template>
+
+
+
+

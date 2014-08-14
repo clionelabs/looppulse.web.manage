@@ -112,8 +112,8 @@
       },
       "package-stubber": {
         "git": "https://github.com/alanning/meteor-package-stubber.git",
-        "tag": "v0.0.15",
-        "commit": "62ad08f8486aacbbc5ec22ea6e2a31573748b7d7"
+        "tag": "v0.0.16",
+        "commit": "e74747d1553044f2903fab0b33cbc6cada775f46"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
