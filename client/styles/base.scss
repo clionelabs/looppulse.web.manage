@@ -1,9 +1,15 @@
 //Basic CSS after bootstrap style
-$primary-color: #3DCBCB;
-$alt-dark-color: #494D59;
+@import "variable";
 html {
   position: relative;
   min-height: 100%;
+}
+
+// Override
+.navbar-default {
+  background-color:transparent;
+  border: none;
+  border-radius: 0;
 }
 
 main {
@@ -14,6 +20,7 @@ main {
 body {
   font-size: 16px;
   margin-bottom: 60px;
+  background-color: #EBEDF0;
 }
 
 footer.primary {
@@ -54,8 +61,6 @@ header.primary {
 
 
   .primary-navbar {
-    border:none;
-    background-color:transparent;
     margin-bottom: 0;
     padding: 10px;
 
@@ -79,6 +84,7 @@ header.primary {
 
 }
 .secondary-navbar {
+  background-color: $alt-light-color;
   .navbar-wrapper {
     text-align: center;
   }

@@ -1,16 +1,32 @@
-<template name="dashboard_panel">
-  <div class="panel">
-    <div class="header">{{>yield region="dashboard-header"}}</div>
+<template name="dashboard_widget">
+  <div class="widget-panel">
+    <header>{{>yield region="dashboard-header"}}</header>
     <div class="content">
-    {{!kick the extra content}}
-    {{>yield}}
-    {{>yield region="dashboard-content"}}
+      {{!kick the extra content}}
+      {{>yield}}
+      {{>yield region="dashboard-content"}}
+    </div>
+  </div>
+</template>
+
+<template name="dashboard_card">
+  <div class="card-panel">
+    <header>{{!header}}</header>
+    <div class="content">
+      <div class="row">
+        <div class="number col-sm-8">{{number}} 10</div>
+        <div class="diff col-sm-4">{{diff}} 0</div>
+      </div>
+      <div class="row">
+        <div class="heading col-sm-8">{{label}} Time</div>
+        <div class="period col-sm-4">{{period}} 1 week</div>
+      </div>
     </div>
   </div>
 </template>
 
 <template name="dashboard_charting_1">
-  {{#Layout template="dashboard_panel"}}
+  {{#Layout template="dashboard_widget"}}
     <p>hello.</p>
     {{#contentFor region="dashboard-header"}}
       <h3>My Header</h3>
@@ -23,7 +39,13 @@
 </template>
 
 <template name="dashboard_home">
-  Home.
+  <div class="dashboard">
+    <div class="highlights row">
+      <div class="col-sm-4">{{> dashboard_card }}</div>
+      <div class="col-sm-4">{{> dashboard_card }}</div>
+      <div class="col-sm-4">{{> dashboard_card }}</div>
+    </div>
+  </div>
   {{> dashboard_charting_1 }}
 </template>
 
