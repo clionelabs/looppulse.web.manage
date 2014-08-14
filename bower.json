@@ -1,0 +1,9 @@
+{
+  "name": "looppulse.web.manage",
+  "private": true,
+  "dependencies": {
+    "d4": "~0.8.9",
+    "d3": "~3.4.4"
+  },
+  "devDependencies": {}
+}
