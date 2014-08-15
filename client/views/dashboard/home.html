@@ -14,12 +14,12 @@
     <header>{{!header}}</header>
     <div class="content">
       <div class="row">
-        <div class="number col-sm-8">{{number}} 10</div>
-        <div class="diff col-sm-4">{{diff}} 0</div>
+        <div class="number col-sm-8">{{number}}</div>
+        <div class="diff col-sm-4">{{diff}}</div>
       </div>
       <div class="row">
-        <div class="heading col-sm-8">{{label}} Time</div>
-        <div class="period col-sm-4">{{period}} 1 week</div>
+        <div class="field heading col-sm-8">{{field}}</div>
+        <div class="duration col-sm-4">{{duration}}</div>
       </div>
     </div>
   </div>
@@ -40,10 +40,10 @@
 
 <template name="dashboard_home">
   <div class="dashboard">
-    <div class="highlights row">
-      <div class="col-sm-4">{{> dashboard_card }}</div>
-      <div class="col-sm-4">{{> dashboard_card }}</div>
-      <div class="col-sm-4">{{> dashboard_card }}</div>
+    <div class="summary highlights row">
+      <div class="col-sm-4">{{> dashboard_card number="10000" diff="+10" field="Total Visits" duration="1 week"}}</div>
+      <div class="col-sm-4">{{> dashboard_card number="10min" diff="+10" field="Avg Dwell Time" duration="1 week"}}</div>
+      <div class="col-sm-4">{{> dashboard_card number="10%" diff="+10" field="Revisits" duration="1 week"}}</div>
     </div>
   </div>
   {{> dashboard_charting_1 }}
