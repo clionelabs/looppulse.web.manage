@@ -31,3 +31,21 @@
 .highlights {
   margin-bottom: 1em;
 }
+
+
+.charting .d4 {
+  path {
+    fill: none;
+  }
+  .series0 path {
+        stroke: darkred;
+    }
+
+  .series1 path {
+        stroke: darkslategrey;
+    }
+
+  .series2 path {
+        stroke: steelblue;
+    }
+}
