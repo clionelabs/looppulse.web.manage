@@ -16,9 +16,6 @@ Meteor.startup(
 );
 
 var observeFirebase = function() {
-  console.time("[startup] observeCompaniesFromFirebase");
-  observeCompaniesFromFirebase();
-  console.timeEnd("[startup] observeCompaniesFromFirebase");
   console.time("[startup] observeBeaconEventsFromFirebase");
   observeBeaconEventsFromFirebase();
   console.timeEnd("[startup] observeBeaconEventsFromFirebase");
