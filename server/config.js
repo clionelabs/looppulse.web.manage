@@ -160,7 +160,7 @@ var removeCompanyFromFirebase = function(ref) {
   console.info('[Reset] Firebase Removed:',ref);
 }
 
-var configureDEBUG = function() {
+configureDEBUG = function() {
   var debugConfig = Meteor.settings.DEBUG;
   if (debugConfig && JSON.stringify(debugConfig) != "{}") {
     console.info("[Dev] Applying DEBUG options: ", debugConfig);
@@ -170,7 +170,7 @@ var configureDEBUG = function() {
   }
 
   Debug.observeChanges();
-}
+};
 
 var resetLocal = function() {
   var collections = [BeaconEvents, Encounters, Visitors, Metrics, Funnels, Messages];
