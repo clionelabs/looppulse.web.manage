@@ -40,7 +40,7 @@
 </template>
 
 <template name="dashboard_campaign_list">
-  <div class="campaipn-list widget-panel">
+  <div class="campaign-list widget-panel">
     <table class="table">
       <thead class="heading">
         <tr class="row" >
@@ -53,11 +53,22 @@
 
       <tbody class="content">
       {{#each campaigns}}
-        <tr class="row" data-id="{{id}}">
-          <td class="col-sm-7">{{name}}</td>
-          <td class="col-sm-2">{{sent}}</td>
-          <td class="col-sm-2">{{visited}}</td>
-          <td class="col-sm-1">{{conversion}}</td>
+        <tr class="row data-row" data-id="{{id}}">
+          <td class="name value col-sm-7">{{name}}</td>
+          <td class="sent value col-sm-2">{{sent}}</td>
+          <td class="visited value col-sm-2">{{visited}}</td>
+          <td class="conversion value col-sm-1">{{conversion}}</td>
+        </tr>
+        <tr class="row chart-row" data-id="{{id}}">
+          <td class="chart-area" colspan="4">
+            <div class="row">
+              <div class="desc value col-sm-6">{{desc}}</div>
+            </div>
+            <div class="row">
+              <div class="desc value col-sm-6">{{! summary_chart}}</div>
+              <div class="desc value col-sm-6">{{! diff_chart}}</div>
+            </div>
+          </td>
         </tr>
       {{/each}}
       </tbody>
@@ -68,9 +79,15 @@
 <template name="dashboard_home">
   <div class="dashboard">
     <div class="summary highlights row">
-      <div class="col-sm-4">{{> dashboard_card number="10000" diff="+10" field="Total Visits" duration="1 week"}}</div>
-      <div class="col-sm-4">{{> dashboard_card number="10min" diff="+10" field="Avg Dwell Time" duration="1 week"}}</div>
-      <div class="col-sm-4">{{> dashboard_card number="10%" diff="+10" field="Revisits" duration="1 week"}}</div>
+      <div class="col-sm-4">
+        {{> dashboard_card totalVisits}}
+      </div>
+      <div class="col-sm-4">
+        {{> dashboard_card avgDwellTime}}
+      </div>
+      <div class="col-sm-4">
+        {{> dashboard_card repeatedVisits}}
+      </div>
     </div>
   </div>
   {{> dashboard_charting_1 }}

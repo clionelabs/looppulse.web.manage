@@ -1,4 +1,8 @@
 // Helpers
+
+/**
+  All helpers need to get something from db should go to here
+*/
 Template.dashboard_home.helpers({
   /**
   Extract the campaigns data from engagements
@@ -30,6 +34,15 @@ Template.dashboard_home.helpers({
       { _id:"demo0003", name:"campaigns 3", sent:2000, visited: 400, conversion: 0.2 }
     ]
   },
+  totalVisits: function(period){
+    return { number:"10000", diff:"+10", field:"Total Visits", duration:"1 week" }
+  },
+  avgDwellTime: function(period){
+    return { number:"10min", diff:"+10", field:"Avg Dwell Time", duration:"1 week" }
+  },
+  repeatedVisits: function(period){
+    return { number:"10%", diff:"+10", field:"Revisits", duration:"1 week" }
+  }
 })
 
 // Autorun & Graph setup
