@@ -28,10 +28,11 @@ Template.dashboard_home.helpers({
     */
 
     //return dummy
+    //@@WARNING: ORDER IMPORTANTED
     return [
-      { _id:"demo0001", name:"campaigns 1", sent:1000, visited: 600, conversion: 0.6 },
-      { _id:"demo0002", name:"campaigns 2", sent:1200, visited: 600, conversion: 0.5 },
-      { _id:"demo0003", name:"campaigns 3", sent:2000, visited: 400, conversion: 0.2 }
+      { _id:"demo0001", name:"campaigns 1", sent:1000, viewed: 900, visited: 600, conversion: 0.6,viewConversion: 0.68  },
+      { _id:"demo0002", name:"campaigns 2", sent:1200, viewed: 800,  visited: 600, conversion: 0.5, viewConversion: 0.75 },
+      { _id:"demo0003", name:"campaigns 3", sent:2000, viewed: 1200, visited: 400, conversion: 0.2,  viewConversion: 0.33 }
     ]
   },
   totalVisits: function(period){
@@ -43,9 +44,36 @@ Template.dashboard_home.helpers({
   repeatedVisits: function(period){
     return { number:"10%", diff:"+10", field:"Revisits", duration:"1 week" }
   }
-})
+});
+
 
 // Autorun & Graph setup
+Template.dashboard_campaign_summary_chart.rendered = function(campaign){
+  if (!campaign) { campaign = this.data; }
+  var id = campaign._id
+  var name = campaign.name;
+  var conversion = campaign.conversion;
+  var viewConversion = campaign.viewConversion;
+  delete campaign._id;
+  delete campaign.name;
+  delete campaign.conversion;
+  delete campaign.viewConversion;
+
+  var data = d3.entries(campaign);
+  var columnChart = d4.charts.column()
+      .x(function(x) {
+          x.key('key')
+      })
+      .y(function(y){
+          y.key('value');
+      });
+
+  console.log("Rendering ", '.campaign-summary-chart[data-id="'+id+'"]', d3.select('.campaign-summary-chart[data-id="'+id+'"]'))
+
+  d3.select('.campaign-summary-chart[data-id="'+id+'"]')
+    .datum(data)
+    .call(columnChart);
+};
 Template.dashboard_home.rendered = function(){
   var data = [
       { hour: '1000', floor: '6/F', visits: 1000 },
