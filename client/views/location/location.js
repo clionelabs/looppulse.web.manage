@@ -89,19 +89,9 @@ Template.location.helpers({
   funnel: function(installationId){
     return this.indexedFunnels(installationId)
   },
-  engagementMetrics: function() {
-    console.log("Querying Engagement in Location", this._id);
-    var metrics = [];
-    Engagements.find({locationId: this._id}).forEach(function(engagement) {
-      var engagementId = engagement._id;
-      metrics.push({
-        engagementTitle: engagementId,
-        sentMessageCount: Counts.get(MetricsHelper.nameOfSentMessageCount(engagementId)),
-        viewedMessageCount: Counts.get(MetricsHelper.nameOfViewedMessageCount(engagementId)),
-        visitedMessageCount: Counts.get(MetricsHelper.nameOfVisitedMessageCount(engagementId))
-      });
-    });
-    return metrics;
+  engagementMetrics: function(){
+    console.log("Querying EngagementMetric in Location", this._id);
+    return EngagementMetric.find({ locationId: this._id });
   },
   forProfilePic: {
     name: "profilePic",
