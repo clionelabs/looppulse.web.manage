@@ -43,39 +43,10 @@ Template.dashboard_home.helpers({
   },
   repeatedVisits: function(period){
     return { number:"10%", diff:"+10", field:"Revisits", duration:"1 week" }
-  }
-});
-
-
-// Autorun & Graph setup
-Template.dashboard_campaign_summary_chart.rendered = function(campaign){
-  if (!campaign) { campaign = this.data; }
-  var id = campaign._id
-  var name = campaign.name;
-  var conversion = campaign.conversion;
-  var viewConversion = campaign.viewConversion;
-  delete campaign._id;
-  delete campaign.name;
-  delete campaign.conversion;
-  delete campaign.viewConversion;
-
-  var data = d3.entries(campaign);
-  var columnChart = d4.charts.column()
-      .x(function(x) {
-          x.key('key')
-      })
-      .y(function(y){
-          y.key('value');
-      });
-
-  console.log("Rendering ", '.campaign-summary-chart[data-id="'+id+'"]', d3.select('.campaign-summary-chart[data-id="'+id+'"]'))
-
-  d3.select('.campaign-summary-chart[data-id="'+id+'"]')
-    .datum(data)
-    .call(columnChart);
-};
-Template.dashboard_home.rendered = function(){
-  var data = [
+  },
+  performances: function(){
+    //fit something reactive here should trigger the graph update.
+    return [
       { hour: '1000', floor: '6/F', visits: 1000 },
       { hour: '1100', floor: '6/F', visits: 2000 },
       { hour: '1200', floor: '6/F', visits: 5000 },
@@ -113,6 +84,41 @@ Template.dashboard_home.rendered = function(){
       { hour: '2000', floor: '8/F', visits: 3000 },
       { hour: '2100', floor: '8/F', visits: 2000 },
     ];
+  }
+});
+
+
+// Autorun & Graph setup
+Template.dashboard_campaign_summary_chart.rendered = function(campaign){
+  if (!campaign) { campaign = this.data; }
+  var id = campaign._id
+  var name = campaign.name;
+  var conversion = campaign.conversion;
+  var viewConversion = campaign.viewConversion;
+  delete campaign._id;
+  delete campaign.name;
+  delete campaign.conversion;
+  delete campaign.viewConversion;
+
+  var data = d3.entries(campaign);
+  var columnChart = d4.charts.column()
+      .x(function(x) {
+          x.key('key')
+      })
+      .y(function(y){
+          y.key('value');
+      });
+
+  console.log("Rendering ", '.campaign-summary-chart[data-id="'+id+'"]', d3.select('.campaign-summary-chart[data-id="'+id+'"]'))
+
+  d3.select('.campaign-summary-chart[data-id="'+id+'"]')
+    .datum(data)
+    .call(columnChart);
+};
+Template.dashboard_performance_chart.rendered = function(){
+  var self = this;
+  self.handle =  Deps.autorun(function () {
+    var data = Template.dashboard_home.performances();
     var parsedData =
     d4.parsers.nestedGroup()
       .x(function(){
@@ -141,5 +147,10 @@ Template.dashboard_home.rendered = function(){
     d3.select('main .charting')
     .datum(parsedData.data)
     .call(chart);
+  })
 
 }
+
+Template.dashboard_performance_chart.destroyed = function () {
+  this.handle && this.handle.stop();
+};
