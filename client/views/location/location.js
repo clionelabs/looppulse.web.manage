@@ -102,5 +102,22 @@ Template.location.helpers({
       });
     });
     return metrics;
+  },
+  forProfilePic: {
+    name: "profilePic",
+    multiple: true,
+    accept: "image/*",
+    onSelection: function(fileList) {
+      console.log("on-selection", fileList);
+    },
+    onUpload: function(error, result) {
+      if (error) {
+        console.log("on-upload error", error);
+      }
+      if (result) {
+        console.log("on-upload", result);
+        console.log(result.url);
+      }
+    }
   }
 });

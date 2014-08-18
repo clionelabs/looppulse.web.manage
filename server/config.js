@@ -1,15 +1,23 @@
 configure = function() {
   console.info("Configuring with Meteor.settings: " + JSON.stringify(Meteor.settings));
 
-  if (JSON.stringify(Meteor.settings)=='{}') {
+  if (JSON.stringify(Meteor.settings) === '{}') {
     console.warn("Meteor.settings expected. Rerun: meteor --settings server/settings.json");
 
     // We can try to read the file using
     // https://gist.github.com/awatson1978/4625493
   }
 
-  configureDEBUG();
-}
+  if (Meteor.settings.aws) {
+    Uploader.config({
+      key: Meteor.settings.aws.accessKeyId,
+      secret: Meteor.settings.aws.secretAccessKey,
+      bucket: Meteor.settings.aws.s3bucket
+    });
+  } else {
+    console.warn("AWS settings missing");
+  }
+};
 
 ensureIndexes = function() {
   var classes = [BeaconEvent, Encounter, Installation, Visitor];
@@ -152,7 +160,7 @@ var removeCompanyFromFirebase = function(ref) {
   console.info('[Reset] Firebase Removed:',ref);
 }
 
-var configureDEBUG = function() {
+configureDEBUG = function() {
   var debugConfig = Meteor.settings.DEBUG;
   if (debugConfig && JSON.stringify(debugConfig) != "{}") {
     console.info("[Dev] Applying DEBUG options: ", debugConfig);
@@ -162,7 +170,7 @@ var configureDEBUG = function() {
   }
 
   Debug.observeChanges();
-}
+};
 
 var resetLocal = function() {
   var collections = [BeaconEvents, Encounters, Visitors, Metrics, Funnels, Messages];

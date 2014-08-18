@@ -15,7 +15,11 @@
       "reactive-table": {},
       "velocity": {},
       "jasmine-unit": {},
-      "publish-counts": {}
+      "publish-counts": {},
+      "uploader": {
+        "git": "https://github.com/ratsolean/meteor-uploader.git",
+        "branch": "master"
+      }
     },
     "packages": {
       "Firebase": {
@@ -45,8 +49,8 @@
       },
       "roles": {
         "git": "https://github.com/alanning/meteor-roles.git",
-        "tag": "v1.2.10",
-        "commit": "7ccb35de0a6cb0c9a0c3666badd04757e39c09a6"
+        "tag": "v1.2.11",
+        "commit": "2d7dc91848ec874d3a0852c77f462d0fae749de5"
       },
       "autocomplete": {
         "git": "https://github.com/mizzao/meteor-autocomplete.git",
@@ -55,8 +59,8 @@
       },
       "reactive-table": {
         "git": "https://github.com/ecohealthalliance/reactive-table.git",
-        "tag": "v0.3.17",
-        "commit": "19ae3d81852a478ca873f90ff98aacee8d622da7"
+        "tag": "v0.3.21",
+        "commit": "7068f1011b46b6312bd8c21c2d3b91d4e3cbcd59"
       },
       "velocity": {
         "git": "https://github.com/xolvio/velocity.git",
@@ -72,6 +76,11 @@
         "git": "https://github.com/percolatestudio/publish-counts.git",
         "tag": "v0.2.2",
         "commit": "45cf58d47a34b06d2788e30f140b6392644f6199"
+      },
+      "uploader": {
+        "git": "https://github.com/ratsolean/meteor-uploader.git",
+        "branch": "master",
+        "commit": "66df4d15aa2b6348ee354076cef79bd5c093794c"
       },
       "iron-layout": {
         "git": "https://github.com/EventedMind/iron-layout.git",
@@ -100,8 +109,18 @@
       },
       "package-stubber": {
         "git": "https://github.com/alanning/meteor-package-stubber.git",
-        "tag": "v0.0.15",
-        "commit": "62ad08f8486aacbbc5ec22ea6e2a31573748b7d7"
+        "tag": "v0.0.16",
+        "commit": "e74747d1553044f2903fab0b33cbc6cada775f46"
+      },
+      "handlebars-server": {
+        "git": "https://github.com/EventedMind/meteor-handlebars-server.git",
+        "tag": "v1.2.0",
+        "commit": "1b72c4e9d82af66293e50be4516c487d15d97464"
+      },
+      "streams": {
+        "git": "https://github.com/arunoda/meteor-streams.git",
+        "tag": "v0.1.17",
+        "commit": "9fcbbc9b7bf542827babc92089c19e730892a22f"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

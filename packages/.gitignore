@@ -26,3 +26,6 @@
 /velocity-html-reporter
 /mocha-web-sinon
 /publish-counts
+/uploader
+/handlebars-server
+/streams

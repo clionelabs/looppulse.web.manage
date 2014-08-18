@@ -1,8 +1,10 @@
+configure();
+
 Meteor.startup(
   Meteor.bindEnvironment(function () {
     Meteor.defer(function () {
       console.time("[startup] configure");
-      configure();
+      configureDEBUG();
       console.timeEnd("[startup] configure");
 
       console.time("[startup] ensureIndexes");
