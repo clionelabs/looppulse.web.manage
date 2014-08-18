@@ -6,8 +6,10 @@
 
     {{! FIXME this example usage should be replaced }}
     {{#each engagementMetrics}}
-      {{sentMessageCount}} -> {{viewedMessageCount}} -> {{visitedMessageCount}}
+      {{sentMessageCount}} -> {{viewedMessageCount}} -> {{visitedCount}}
     {{/each}}
+
+    {{> uploader settings=forProfilePic}}
 
     <div class="summary">
         <div class="row">

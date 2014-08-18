@@ -13,6 +13,10 @@
     "reactive-table": {},
     "velocity": {},
     "jasmine-unit": {},
-    "publish-counts": {}
+    "publish-counts": {},
+    "uploader": {
+      "git": "https://github.com/ratsolean/meteor-uploader.git",
+      "branch": "master"
+    }
   }
 }
