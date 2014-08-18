@@ -30,28 +30,21 @@ ensureIndexes = function() {
   )
 }
 
+var configureCompanyFromJSON = function (companyJSON) {
+  // companyJSON has to be a JSON file in /private
+  console.info("[Init] Configuring a company from: ", companyJSON);
+  var file = Assets.getText(companyJSON);
+  companyConfig = JSON.parse(file);
+  console.info("[Init] Configuring " + companyConfig.name + " with (" +
+                _.keys(companyConfig.products) + ") products and (" +
+                _.keys(companyConfig.locations) + ") locations.");
 
-// TODO: We need to observe other changes in company.
-observeCompaniesFromFirebase = function() {
-  var fbPath = Meteor.settings.firebase.config + '/companies';
-  var companiesRef = new Firebase(fbPath);
-  console.log("[Remote] Observing for company addition: "+ fbPath);
-  companiesRef.on(
-    "child_added",
-    Meteor.bindEnvironment(
-      function(childSnapshot, prevChildName) {
-        createCompany(childSnapshot, Meteor.settings.removeFromFirebase);
-      }
-    )
-  );
-}
-
-var createCompany = function(snapshot, removeFromFirebase) {
-  var companyConfig = snapshot.val();
+  // Company
   var company = new Company(companyConfig.name, companyConfig.logoUrl);
   companyConfig._id = company.save();
   console.info("[Init] Company created:", company._id, company.name);
 
+  // Products
   _.each(companyConfig.products, function(productConfig, productKey) {
     var p = new Product({
       name: productConfig.name,
@@ -61,81 +54,71 @@ var createCompany = function(snapshot, removeFromFirebase) {
     console.info("[Init] Product created:", p._id, p.name);
   });
 
-  _.each(companyConfig.entrances, function(entranceConfig, entranceKey) {
-    var p = new Entrance(entranceConfig.name, company._id);
-    companyConfig.entrances[entranceKey]._id = p.save();
-    console.info("[Init] Entrance created:", p._id, p.name);
-  });
-
-  _.each(companyConfig.cashiers, function(cashierConfig, cashierKey) {
-    var p = new Cashier(cashierConfig.name, company._id);
-    companyConfig.cashiers[cashierKey]._id = p.save();
-    console.info("[Init] Cashier created:", p._id, p.name);
-  });
-
-  _.each(companyConfig.beacons, function(beaconConfig, beaconKey) {
-    var b = new Beacon(beaconConfig.uuid, beaconConfig.major, beaconConfig.minor);
-    companyConfig.beacons[beaconKey]._id = b.save();
-    console.info("[Init] Beacon created:", JSON.stringify(b));
-  });
-
+  // Locations
   _.each(companyConfig.locations, function(locationConfig, locationKey) {
-    var l = new Location(locationConfig.name, locationConfig.address, company._id);
-    companyConfig.locations[locationKey]._id = l.save();
-    console.info("[Init] Location created:", l._id, l.name);
+    var location = new Location(locationConfig.name, locationConfig.address, company._id);
+    companyConfig.locations[locationKey]._id = location.save();
+    console.info("[Init] Location created:", location._id, location.name);
 
-    _.each(locationConfig.installations, function(installationConfig) {
-      var type = installationConfig.type;
-      var locationId = l._id;
-      var beaconId = companyConfig.beacons[installationConfig.beacon]._id;
-      var physicalId = null;
-      var name = installationConfig.name;
-      var coord = installationConfig.coord;
+    _.each(locationConfig.installations, function(installationConfig, installationKey) {
+      var type = installationConfig.type || "product";
       var data = null;
-
+      var physicalId = null;
       // load the data object according to its type
-      if (type === 'product') {
-        data = companyConfig.products[installationConfig.product]
-      } else if (type === 'entrance') {
-        data = companyConfig.entrances[installationConfig.entrance];
-      } else if (type === 'cashier') {
-        data = companyConfig.cashiers[installationConfig.cashier];
+      {
+        if (type === 'product') {
+          data = companyConfig.products[installationConfig.product]
+        } else if (type === 'entrance') {
+          data = companyConfig.entrances[installationConfig.entrance];
+        } else if (type === 'cashier') {
+          data = companyConfig.cashiers[installationConfig.cashier];
+        }
+
+        if (!data) {
+          console.error("[Init] Error creating installation", JSON.stringify(companyConfig))
+        }
+        physicalId = data._id;
       }
 
-      if (!data) {
-        console.error("[Init] Error creating installation", JSON.stringify(companyConfig))
-      }
-      //write the data
-      physicalId = data._id;
+      var locationId = location._id;
+      var name = installationConfig.name;
       name = !name ? data.name : name; // only override the name label if no given name
-      var insta = new Installation(type, locationId, beaconId, physicalId, name, coord);
-      insta.save();
-      console.info("[Init] Installation created:", JSON.stringify(insta));
+      var coord = installationConfig.coordinate;
+
+      var beaconId = null;
+      {
+        var beaconConfig = installationConfig.beacon;
+        var beacon = new Beacon(beaconConfig.proximityUUID, beaconConfig.major, beaconConfig.minor);
+        beaconId = beacon.save();
+      }
+      var installation = new Installation(type, locationId, beaconId, physicalId, name, coord);
+      locationConfig.installations[installationKey]._id = installation.save();
+      console.info("[Init] Installation created:", JSON.stringify(installation));
     });
 
+    // Engagements
     _.each(locationConfig.engagements, function(engagementConfig) {
-      var beaconKeyToInstallationId = function (beaconKey) {
-        var beaconId = companyConfig.beacons[beaconKey]._id;
-        var installation = Installations.findOne({ beaconId: beaconId });
-        return installation._id;
+      var installationKeyToId = function (key) {
+        return locationConfig.installations[key]._id;
       }
+      var triggerInstallationIds = _.map(engagementConfig.triggerInstallations,
+                                         installationKeyToId);
+      var recommendInstallationIds = _.map(engagementConfig.recommendInstallations,
+                                           installationKeyToId);
 
-      var triggerInstallationIds = _.map(engagementConfig.triggerBeacons,
-                                         beaconKeyToInstallationId);
-      var recommendInstallationIds = _.map(engagementConfig.recommendBeacons,
-                                           beaconKeyToInstallationId);
-      var replaceBeaconKeyWithInstallationIds = function (beaconKeyMessages) {
+      var replaceInstallationKeysWithIds = function (keyMessages) {
         var installationIdsToMessages = {};
         _.each(message, function(message, key) {
-          installationId = beaconKeyToInstallationId(key);
+          installationId = installationKeyToId(key);
           installationIdsToMessages[installationId] = message;
         })
         return installationIdsToMessages;
       }
       var message = engagementConfig.message;
       if (engagementConfig.type === RecommendationEngagement.type) {
-        message = replaceBeaconKeyWithInstallationIds(engagementConfig.message);
+        message = replaceInstallationKeysWithIds(engagementConfig.message);
       }
+
       var e = { type: engagementConfig.type,
                 locationId: companyConfig.locations[locationKey]._id,
                 message: message,
@@ -147,9 +130,6 @@ var createCompany = function(snapshot, removeFromFirebase) {
     })
   });
 
-  if (removeFromFirebase) {
-    removeCompanyFromFirebase(snapshot.ref());
-  }
 }
 
 // TODO: refactor w/ removeBeaconEventFromFirebase()
@@ -166,6 +146,9 @@ configureDEBUG = function() {
     console.info("[Dev] Applying DEBUG options: ", debugConfig);
     if (debugConfig.resetLocal) {
       resetLocal();
+    }
+    if (debugConfig.seedData) {
+      configureCompanyFromJSON(debugConfig.seedData);
     }
   }
 
