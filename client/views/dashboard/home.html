@@ -1,6 +1,6 @@
 <template name="dashboard_widget">
   <div class="widget-panel">
-    <header>{{>yield region="dashboard-header"}}</header>
+    <header class="heading">{{>yield region="dashboard-header"}}</header>
     <div class="content">
       {{!kick the extra content}}
       {{>yield}}
@@ -25,6 +25,7 @@
   </div>
 </template>
 
+<!-- Specific Template -->
 <template name="dashboard_charting_1">
   {{#Layout template="dashboard_widget"}}
     <p>hello.</p>
@@ -38,6 +39,32 @@
   {{/Layout}}
 </template>
 
+<template name="dashboard_campaign_list">
+  <div class="campaipn-list widget-panel">
+    <table class="table">
+      <thead class="heading">
+        <tr class="row" >
+          <th class="col-sm-7">Campaign</th>
+          <th class="col-sm-2">Sent</th>
+          <th class="col-sm-2">Visited</th>
+          <th class="col-sm-1">Conversion</th>
+        </tr>
+      </thead>
+
+      <tbody class="content">
+      {{#each campaigns}}
+        <tr class="row" data-id="{{id}}">
+          <td class="col-sm-7">{{name}}</td>
+          <td class="col-sm-2">{{sent}}</td>
+          <td class="col-sm-2">{{visited}}</td>
+          <td class="col-sm-1">{{conversion}}</td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </div>
+</template>
+
 <template name="dashboard_home">
   <div class="dashboard">
     <div class="summary highlights row">
@@ -48,7 +75,10 @@
   </div>
   {{> dashboard_charting_1 }}
 
+
   <div class="" id="example"></div>
+
+  {{> dashboard_campaign_list campaigns=campaigns }}
 </template>
 
 

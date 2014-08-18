@@ -10,14 +10,15 @@
   box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.12); //spread: 8px expand 0
   border-radius: 0px 0px 6px 6px;
   background: #fff;
+  margin-bottom: 0.5em;
 
-  & > header {
+  & .heading {
     background-color: $alt-light-color;
     h1, h2, h3, h4, h5 {
       margin: 0;
     }
   }
-  & > .content , & > header {
+  & .content , & .heading {
     padding: 0.8em 1em
   }
 }

@@ -1,3 +1,38 @@
+// Helpers
+Template.dashboard_home.helpers({
+  /**
+  Extract the campaigns data from engagements
+  @return Campaigns Data with object \{ _id, name, sent, visited, conversion \}
+  **/
+  campaigns: function(){
+    var campaigns = [];
+    var collection;
+
+    /* TODO: extract the campaign data from engagement
+    collection = {}.find({})
+    collection.map(function(){
+      return {
+      _id: _id,
+      name: "",
+      sent: 0,
+      visited: 0,
+      conversion: 0
+      }
+    })
+    campaigns = collection
+    return campaigns;
+    */
+
+    //return dummy
+    return [
+      { _id:"demo0001", name:"campaigns 1", sent:1000, visited: 600, conversion: 0.6 },
+      { _id:"demo0002", name:"campaigns 2", sent:1200, visited: 600, conversion: 0.5 },
+      { _id:"demo0003", name:"campaigns 3", sent:2000, visited: 400, conversion: 0.2 }
+    ]
+  },
+})
+
+// Autorun & Graph setup
 Template.dashboard_home.rendered = function(){
   var data = [
       { hour: '1000', floor: '6/F', visits: 1000 },
