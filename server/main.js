@@ -36,5 +36,10 @@ var observeCollections = function() {
   console.time("[startup] Engagement");
   Engagement.startup();
   console.timeEnd("[startup] Engagement");
+  console.time("[startup] EngagementMetric");
   EngagementMetric.startup();
+  console.timeEnd("[startup] EngagementMetric");
+  console.time("[startup] EngagementMetric");
+  ProductMetrics.startup();
+  console.timeEnd("[startup] EngagementMetric");
 };
