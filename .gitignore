@@ -2,6 +2,7 @@
 
 /mup.json
 /out/
+.out/
 /settings.json
 /server/settings.json
 /tests/.reports/
