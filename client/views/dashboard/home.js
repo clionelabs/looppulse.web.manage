@@ -87,20 +87,35 @@ Template.dashboard_home.helpers({
   }
 });
 
+Template.dashboard_campaign_list.helpers({
+  getStat: function(){
+    var campaign = this;
+    var c = {};
+    c._id = this._id;
+    c.name = this.name;
+    c.conversion = this.conversion;
+    c.viewConversion = this.conversion;
+
+
+    delete campaign._id;
+    delete campaign.name;
+    delete campaign.conversion;
+    delete campaign.viewConversion;
+
+    c.stat = campaign
+
+    return c;
+  }
+})
 
 // Autorun & Graph setup
-Template.dashboard_campaign_summary_chart.rendered = function(campaign){
-  if (!campaign) { campaign = this.data; }
+Template.dashboard_campaign_summary_chart.rendered = function(){
+  var self = this;
+  var campaign = this.data;
   var id = campaign._id
-  var name = campaign.name;
-  var conversion = campaign.conversion;
-  var viewConversion = campaign.viewConversion;
-  delete campaign._id;
-  delete campaign.name;
-  delete campaign.conversion;
-  delete campaign.viewConversion;
-
-  var data = d3.entries(campaign);
+  // var name = campaign.name;
+  // var conversion = campaign.conversion;
+  // var viewConversion = campaign.viewConversion;
   var columnChart = d4.charts.column()
       .x(function(x) {
           x.key('key')
@@ -109,18 +124,33 @@ Template.dashboard_campaign_summary_chart.rendered = function(campaign){
           y.key('value');
       });
 
-  console.log("Rendering ", '.campaign-summary-chart[data-id="'+id+'"]', d3.select('.campaign-summary-chart[data-id="'+id+'"]'))
 
-  d3.select('.campaign-summary-chart[data-id="'+id+'"]')
-    .datum(data)
-    .call(columnChart);
+  //autorun will run at least once.
+  self.handle =  Deps.autorun(function () {
+    console.log("[Autorun] Chart Updating: "+id)
+    var data = d3.entries(campaign.stat)
+
+    d3.select('.campaign-summary-chart[data-id="'+id+'"]')
+      .datum(data)
+      .call(columnChart);
+  })
+
+  //redraw();
 };
+Template.dashboard_campaign_summary_chart.destroyed = function(){
+  this.handle && this.handle.stop();
+}
 Template.dashboard_performance_chart.rendered = function(){
   var self = this;
-  self.handle =  Deps.autorun(function () {
-    var data = Template.dashboard_home.performances();
-    var parsedData =
-    d4.parsers.nestedGroup()
+  var chart = d4.charts.line()
+    .outerWidth($('main .charting').width())
+    .x(function(x){
+      x.key('hour');
+    })
+    .y(function(y){
+      y.key('visits');
+    });
+  var parser = d4.parsers.nestedGroup()
       .x(function(){
         return 'hour';
       })
@@ -132,17 +162,11 @@ Template.dashboard_performance_chart.rendered = function(){
       })
       .value(function(){
         return 'visits';
-      })(data);
-
-    var chart =
-    d4.charts.line()
-      .outerWidth($('main .charting').width())
-      .x(function(x){
-        x.key('hour');
       })
-      .y(function(y){
-        y.key('visits');
-      });
+
+  self.handle =  Deps.autorun(function () {
+    var data = Template.dashboard_home.performances();
+    var parsedData = parser(data);
 
     d3.select('main .charting')
     .datum(parsedData.data)
