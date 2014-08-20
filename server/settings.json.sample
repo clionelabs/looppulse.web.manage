@@ -12,8 +12,8 @@
     "s3bucket": ""
   },
   "firebase": {
-      "root": "",
-      "config": ""
+      "root": "https://<YOUR_APP>.firebaseio.com/",
+      "config": "https://<YOUR_APP>.firebaseio.com/"
   },
   "parse": {
     "applicationId": "",
