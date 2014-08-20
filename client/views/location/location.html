@@ -6,7 +6,7 @@
 
     {{! FIXME this example usage should be replaced }}
     {{#each engagementMetrics}}
-      {{sentMessageCount}} ->  {{viewedMessageCount}} -> {{visitedCount}}  ({{conversionRate}}%)
+      {{sentMessageCount}} ->  {{viewedMessageCount}} -> {{visitedCount}}  ({{conversionRates.sendMessageToVisited}}%)
     {{/each}}
 
     {{> uploader settings=forProfilePic}}
