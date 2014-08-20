@@ -97,12 +97,11 @@ Template.dashboard_campaign_list.helpers({
     c.viewConversion = this.conversion;
 
 
-    delete campaign._id;
-    delete campaign.name;
-    delete campaign.conversion;
-    delete campaign.viewConversion;
-
-    c.stat = campaign
+    c.stat = {
+      sent: this.sent,
+      viewed: this.viewed,
+      visited: this.visited,
+    };
 
     return c;
   }
