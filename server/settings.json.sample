@@ -2,6 +2,7 @@
   "DEBUG": {
     "resetLocal": false,
     "logVisitorToFirebase": false,
+    "seedData": "",
     "deliveringMessagesFirebaseURL": "https://<YOUR_APP>.firebaseio.com/delivering_messages"
   },
 
@@ -11,8 +12,8 @@
     "s3bucket": ""
   },
   "firebase": {
-      "root": "",
-      "config": ""
+      "root": "https://<YOUR_APP>.firebaseio.com/",
+      "config": "https://<YOUR_APP>.firebaseio.com/"
   },
   "parse": {
     "applicationId": "",
