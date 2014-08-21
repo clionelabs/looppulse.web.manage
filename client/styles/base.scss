@@ -17,6 +17,9 @@ main {
     padding: 20px 0;
 }
 
+table.table {
+  th { font-weight: normal }
+}
 //
 
 // Chart base CSS
@@ -67,10 +70,14 @@ svg.d4 {
 //Main
 
 body {
-  font-size: 16px;
-  color: $font-color;
   margin-bottom: 60px;
   background-color: #EBEDF0;
+  color: #9B9B9B;
+  // retina: 34px/40px (34/1.1764)
+  // half: 17px/1.18
+  // easy going: 16px/1.25
+  // vision correction: 18px/1.2
+  font: normal 18px/1.2 'Roboto', sans-serif;
 }
 
 footer.primary {
@@ -98,12 +105,12 @@ header.primary {
     width: 100%;
     margin-left: -($navbar-logo-width/2);
     h1 {
-      font-size: 1.6em;
+      font-size: 1em;
       margin: 0 0 0.3em;
 
     }
     h2 {
-      font-size: 1em;
+      font-size: 0.8em;
       margin: 0;
       font-weight: normal;
     }
@@ -114,6 +121,8 @@ header.primary {
     margin-bottom: 0;
     padding: 10px;
     color: #fafafa;
+    min-height: 40px;
+    max-height: 60px;
     a {
       color: #fafafa;
     }
@@ -121,15 +130,19 @@ header.primary {
       color: $alt-dark-color;
     }
 
-    .navbar-right {
+    .navbar-right > li > a {
       // margin-top: 20px;
+      padding-top:10px;
+      font-size: 0.8em;
     }
 
     .navbar-brand {
       background: url(/images/logo_sm.png) left center no-repeat;
       background-size: contain;
       padding-left: (64px - 10px);
+      max-height: 40px;
     }
+
   }
 
 }
