@@ -25,8 +25,17 @@
 
 
 .card-panel {
-  background-color: $alt-light-color;
+  background-color: #F7FBFC;
   padding: 1em;
+  .number {
+    font-weight: bold;
+  }
+  .field {
+    color: $primary-color
+  }
+  .duration {
+    color: $alt-font-color;
+  }
 }
 
 .highlights {

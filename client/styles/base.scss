@@ -68,6 +68,7 @@ svg.d4 {
 
 body {
   font-size: 16px;
+  color: $font-color;
   margin-bottom: 60px;
   background-color: #EBEDF0;
 }
@@ -112,9 +113,9 @@ header.primary {
   .primary-navbar {
     margin-bottom: 0;
     padding: 10px;
-
+    color: #fafafa;
     a {
-      color: #fff;
+      color: #fafafa;
     }
     .dropdown-menu a {
       color: $alt-dark-color;
@@ -141,5 +142,10 @@ header.primary {
     display: inline-block;
     float: none;
   }
-
+  &.navbar-default .navbar-nav > .active > a,
+  &.navbar-default .navbar-nav > .active > a:hover,
+  &.navbar-default .navbar-nav > .active > a:focus {
+    color: #555;
+    background-color: transparent;
+  }
 }
