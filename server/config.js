@@ -28,13 +28,29 @@ ensureIndexes = function() {
       }
     }
   )
-}
+};
+
+var observeCompaniesFromFirebase = function() {
+  var fbPath = Meteor.settings.firebase.config + '/companies';
+  var companiesRef = new Firebase(fbPath);
+  console.log("[Remote] Observing for company addition: "+ fbPath);
+  companiesRef.on(
+    "child_added",
+    Meteor.bindEnvironment(function(childSnapshot, prevChildName) {
+      configureCompany(childSnapshot.val());
+    })
+  );
+};
 
 var configureCompanyFromJSON = function (companyJSON) {
   // companyJSON has to be a JSON file in /private
   console.info("[Init] Configuring a company from: ", companyJSON);
   var file = Assets.getText(companyJSON);
   companyConfig = JSON.parse(file);
+  configureCompany(companyConfig);
+};
+
+var configureCompany= function (companyConfig) {
   console.info("[Init] Configuring " + companyConfig.name + " with (" +
                 _.keys(companyConfig.products) + ") products and (" +
                 _.keys(companyConfig.locations) + ") locations.");
@@ -130,7 +146,7 @@ var configureCompanyFromJSON = function (companyJSON) {
     })
   });
 
-}
+};
 
 // TODO: refactor w/ removeBeaconEventFromFirebase()
 var removeCompanyFromFirebase = function(ref) {
@@ -149,6 +165,8 @@ configureDEBUG = function() {
     }
     if (debugConfig.seedData) {
       configureCompanyFromJSON(debugConfig.seedData);
+    } else {
+      observeCompaniesFromFirebase();
     }
   }
 
