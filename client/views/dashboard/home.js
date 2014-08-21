@@ -36,13 +36,13 @@ Template.dashboard_home.helpers({
     ]
   },
   totalVisits: function(period){
-    return { number:"10000", diff:"+10", field:"Total Visits", duration:"1 week" }
+    return { number:"10,000", diffSign: "arrowup", diff:"+10%", field:"Total Visits", duration:"1 week ago" }
   },
   avgDwellTime: function(period){
-    return { number:"10min", diff:"+10", field:"Avg Dwell Time", duration:"1 week" }
+    return { number:"10", unit:"mins", diffSign: "arrowdown", diff:"-10%", field:"Avg Time", duration:"1 week ago" }
   },
   repeatedVisits: function(period){
-    return { number:"10%", diff:"+10", field:"Revisits", duration:"1 week" }
+    return { number:"10%", diffSign: "arrowup", diff:"+10%", field:"Repeat Visits", duration:"1 week ago" }
   },
   performances: function(){
     //fit something reactive here should trigger the graph update.

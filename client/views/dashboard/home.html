@@ -11,20 +11,23 @@
 
 <template name="dashboard_card">
   <div class="card-panel">
-    <header>{{!header}}</header>
     <div class="content">
       <div class="row">
-        <div class="number col-sm-8">{{number}}</div>
-        <div class="diff col-sm-4">
-        {{#with setSign diff}}
-          <span class="sign {{klass}}"></span>
-          <span class="value">{{value}}%</span>
-        {{/with}}
-        </div>
+        <div class="col-sm-1"></div>
+          <div class="number col-sm-6">{{number}}<span class="unit"> {{unit}}</span></div>
+          <div class="diff col-sm-4">
+            <div>
+            <div class="{{diffSign}}"></div>
+            </div>
+            <div class="number">{{diff}}</div>
+          </div>
+        <div class="col-sm-1"></div>
       </div>
       <div class="row">
-        <div class="field heading col-sm-8">{{field}}</div>
+        <div class="col-sm-1"></div>
+        <div class="field heading col-sm-6">{{field}}</div>
         <div class="duration col-sm-4">{{duration}}</div>
+        <div class="col-sm-1"></div>
       </div>
     </div>
   </div>

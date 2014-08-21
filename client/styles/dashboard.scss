@@ -29,44 +29,78 @@
 
 // Specific Section
 .dashboard {
+  .summary {
+    .card-panel {
+      .row {
+        margin:0 auto;
+      }
 
-  .summary .card-panel {
-    background-color: #F7FBFC;
-    padding: 1em;
-    .number {
-      font-weight: bold;
-      font-size: 36px;
-    }
-    .field {
-      color: $primary-color
-    }
-    .duration {
-      color: $alt-font-color;
-      font-size: 0.8em;
-      text-align: center;
-      margin-top: 0.2em;
-    }
-    .diff {
-      .sign:before, .value {
-        display: block;
-        text-align: center;
+      background-color: $alt-light-color;
+      padding: 1em;
+
+      .number {
+        font-size:36px;
+        height:42px;
+        font-weight:500;
+        
+        span.unit {
+          font-size: 24px;
+        }
+
       }
-      .sign.up:before {
-        content: "\25B2";
-        color: $primary-color;
+
+      .diff {
+        text-align:center;
+        .number {
+          padding:0;
+          font-size:18px;
+        }
+        
+        .arrowup, .arrowdown {
+          margin: 8px auto 0 auto;
+        }
+
       }
-      .sign.down:before {
-        content: "\25BC";
-        color: #FF6779;
+
+      .duration {
+        color: $alt-font-color;
+        font-size:12px;
+        line-height:28px;
+      }
+
+      .field {
+        color: $primary-color-2;
+        font-size:18px;
+
       }
     }
   }
+}
 
-  .highlights {
-    margin-bottom: 1em;
-  }
+.arrowup {
+  width: 0; 
+  height: 0; 
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+
+  border-bottom: 9px solid green;
 
 }
+
+.arrowdown {
+  width: 0; 
+  height: 0; 
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+
+  border-top: 9px solid red;
+
+}
+
+.highlights {
+  margin-bottom: 1em;
+}
+
 .campaign-list {
   tbody, tr.chart-row td, tbody > tr:first-child td {
     border-top: none;
