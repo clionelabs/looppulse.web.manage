@@ -15,7 +15,12 @@
     <div class="content">
       <div class="row">
         <div class="number col-sm-8">{{number}}</div>
-        <div class="diff col-sm-4">{{diff}}</div>
+        <div class="diff col-sm-4">
+        {{#with setSign diff}}
+          <span class="sign {{klass}}"></span>
+          <span class="value">{{value}}%</span>
+        {{/with}}
+        </div>
       </div>
       <div class="row">
         <div class="field heading col-sm-8">{{field}}</div>
@@ -95,9 +100,6 @@
     </div>
   </div>
   {{> dashboard_performance_chart }}
-
-
-  <div class="" id="example"></div>
 
   {{> dashboard_campaign_list campaigns=campaigns }}
 </template>
