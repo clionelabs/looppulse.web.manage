@@ -95,6 +95,13 @@
       line-height: 1.175
     }
   }
+
+  tr.campaign-summary.chart-row {
+    display: none;
+    &.live {
+      display: table-row;
+    }
+  }
 }
 
 .charting .d4 {

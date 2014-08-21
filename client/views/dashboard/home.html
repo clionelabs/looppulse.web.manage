@@ -58,32 +58,37 @@
 
       <tbody class="content">
       {{#each campaigns}}
+        {{#with getStat}}
         <tr class="row campaign-summary data-row" data-id="{{_id}}">
           <td class="name entity col-sm-7">{{name}}</td>
           <td class="sent value col-sm-2">{{sent}}</td>
           <td class="visited value col-sm-2">{{visited}}</td>
           <td class="conversion value col-sm-1">{{percentage conversion}}</td>
         </tr>
-        <tr class="row campaign-summary chart-row" data-id="{{id}}">
+        <tr class="row campaign-summary chart-row" data-id="{{_id}}">
           <td class="chart-area" colspan="4">
             <div class="row">
               <div class="desc value col-sm-6">{{desc}}</div>
             </div>
             <div class="row">
-              <div class="desc value col-sm-6">{{>dashboard_campaign_summary_chart getStat}}</div>
-              <div class="desc value col-sm-6">{{! dashboard_campaign_diff_chart}}</div>
+              <div class="desc value col-sm-6">
+                <div class="campaign-summary-chart">
+                  <div class="charting-area"></div>
+                </div>
+              </div>
+              <div class="desc value col-sm-6">
+                {{! dashboard_campaign_diff_chart}}
+              </div>
             </div>
           </td>
         </tr>
+        {{/with}}
       {{/each}}
       </tbody>
     </table>
   </div>
 </template>
 
-<template name="dashboard_campaign_summary_chart">
-  <div class="campaign-summary-chart" data-id="{{_id}}" data-header="{{name}}"></div>
-</template>
 
 <template name="dashboard_home">
   <div class="dashboard">

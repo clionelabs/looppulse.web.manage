@@ -90,12 +90,7 @@ Template.dashboard_home.helpers({
 Template.dashboard_campaign_list.helpers({
   getStat: function(){
     var campaign = this;
-    var c = {};
-    c._id = this._id;
-    c.name = this.name;
-    c.conversion = this.conversion;
-    c.viewConversion = this.conversion;
-
+    var c = this;
 
     c.stat = {
       sent: this.sent,
@@ -132,38 +127,53 @@ Template.dashboard_card.helpers({
   }
 })
 
+Template.dashboard_campaign_list.events({
+  "click .data-row": function(e, tmpl){ //e.currentTarget = .data-row, tmpl= this in template helpers and methods, this = tmple.data
+    //console.log("click",e,this,tmpl)
+    var self = tmpl;
+    var last = null;
+    var isLive = false;
+    if(self.handle){
+      console.log("Handle found, refreshing...")
+      self.handle.stop();
+      d3.select('.campaign-summary.chart-row.live .campaign-summary-chart .charting-area').remove();
+      last = jQuery('.campaign-summary.chart-row.live')
+      if(jQuery(e.currentTarget).data("id") === last.data("id")) { isLive = true; }
+      jQuery('.campaign-summary-chart', last).append("<div class='charting-area'></div>")
+      jQuery(last).removeClass("live")
+      self.handle = null;
+      if(isLive) { return false; }
+    }
+    var campaign = this;
+    var id = campaign._id
+    // var name = campaign.name;
+    // var conversion = campaign.conversion;
+    // var viewConversion = campaign.viewConversion;
+    var columnChart = d4.charts.column()
+        .x(function(x) {
+            x.key('key')
+        })
+        .y(function(y){
+            y.key('value');
+        });
+
+
+    //autorun will run at least once.
+    self.handle =  Deps.autorun(function () {
+      console.log("[Autorun] Chart Updating: "+id)
+      var data = d3.entries(campaign.stat)
+      var suffix = '[data-id="'+id+'"]';
+      jQuery('.campaign-summary.chart-row'+suffix+"").addClass("live");
+      d3.select('.campaign-summary.chart-row.live .campaign-summary-chart .charting-area')
+        .datum(data)
+        .call(columnChart);
+    })
+
+    //redraw();
+  }
+});
+
 // Autorun & Graph setup
-Template.dashboard_campaign_summary_chart.rendered = function(){
-  var self = this;
-  var campaign = this.data;
-  var id = campaign._id
-  // var name = campaign.name;
-  // var conversion = campaign.conversion;
-  // var viewConversion = campaign.viewConversion;
-  var columnChart = d4.charts.column()
-      .x(function(x) {
-          x.key('key')
-      })
-      .y(function(y){
-          y.key('value');
-      });
-
-
-  //autorun will run at least once.
-  self.handle =  Deps.autorun(function () {
-    console.log("[Autorun] Chart Updating: "+id)
-    var data = d3.entries(campaign.stat)
-
-    d3.select('.campaign-summary-chart[data-id="'+id+'"]')
-      .datum(data)
-      .call(columnChart);
-  })
-
-  //redraw();
-};
-Template.dashboard_campaign_summary_chart.destroyed = function(){
-  this.handle && this.handle.stop();
-}
 Template.dashboard_performance_chart.rendered = function(){
   var self = this;
   var chart = d4.charts.line()
