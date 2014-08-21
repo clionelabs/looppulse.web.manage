@@ -77,24 +77,12 @@ var configureCompany= function (companyConfig) {
     console.info("[Init] Location created:", location._id, location.name);
 
     _.each(locationConfig.installations, function(installationConfig, installationKey) {
-      var type = installationConfig.type || "product";
-      var data = null;
-      var physicalId = null;
-      // load the data object according to its type
-      {
-        if (type === 'product') {
-          data = companyConfig.products[installationConfig.product]
-        } else if (type === 'entrance') {
-          data = companyConfig.entrances[installationConfig.entrance];
-        } else if (type === 'cashier') {
-          data = companyConfig.cashiers[installationConfig.cashier];
-        }
-
-        if (!data) {
-          console.error("[Init] Error creating installation", JSON.stringify(companyConfig))
-        }
-        physicalId = data._id;
+      var data = companyConfig.products[installationConfig.product];
+      if (!data) {
+        console.error("[Init] Error creating installation", installationConfig.product, JSON.stringify(companyConfig))
       }
+      var type = data.type || "product";
+      var physicalId = data._id;
 
       var locationId = location._id;
       var name = installationConfig.name;
@@ -116,7 +104,7 @@ var configureCompany= function (companyConfig) {
     _.each(locationConfig.engagements, function(engagementConfig) {
       var installationKeyToId = function (key) {
         return locationConfig.installations[key]._id;
-      }
+      };
       var triggerInstallationIds = _.map(engagementConfig.triggerInstallations,
                                          installationKeyToId);
       var recommendInstallationIds = _.map(engagementConfig.recommendInstallations,
@@ -127,9 +115,9 @@ var configureCompany= function (companyConfig) {
         _.each(message, function(message, key) {
           installationId = installationKeyToId(key);
           installationIdsToMessages[installationId] = message;
-        })
+        });
         return installationIdsToMessages;
-      }
+      };
       var message = engagementConfig.message;
       if (engagementConfig.type === RecommendationEngagement.type) {
         message = replaceInstallationKeysWithIds(engagementConfig.message);
