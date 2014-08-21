@@ -9,7 +9,7 @@
         var expectedAvailableEngagements = {};
         spyOn(Engagements, "find").andReturn(expectedAvailableEngagements);
 
-        var availableEngagements = Engagement.availableEngagements("aLocationId");
+        var availableEngagements = Engagements.availableEngagements("aLocationId");
 
         expect(Engagements.find).toHaveBeenCalledWith({ locationId: "aLocationId" });
         expect(availableEngagements).toEqual(expectedAvailableEngagements);
