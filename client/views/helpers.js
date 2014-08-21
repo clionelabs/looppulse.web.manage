@@ -19,6 +19,21 @@ UI.registerHelper('invertedFraction',
   }
 );
 
+UI.registerHelper('percentage',
+  function(a,d){
+      var result = (a*100)
+      if (d)
+        result.toFixed(d)
+      else
+        Math.round(result)
+
+      if (!isNaN(result))
+        return result+"%";
+      else
+        return "0%"
+  }
+)
+
 UI.registerHelper('log',
   function(obj){
       console.log("UI object logging:", obj)
