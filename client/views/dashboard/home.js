@@ -30,9 +30,9 @@ Template.dashboard_home.helpers({
     //return dummy
     //@@WARNING: ORDER IMPORTANTED
     return [
-      { _id:"demo0001", name:"campaigns 1", sent:1000, viewed: 900, visited: 600, conversion: 0.6,viewConversion: 0.68  },
-      { _id:"demo0002", name:"campaigns 2", sent:1200, viewed: 800,  visited: 600, conversion: 0.5, viewConversion: 0.75 },
-      { _id:"demo0003", name:"campaigns 3", sent:2000, viewed: 1200, visited: 400, conversion: 0.2,  viewConversion: 0.33 }
+      { _id:"demo0001", name:"campaigns 1", desc: "Visit the elephant on UG and a chance to win 2 movie tickets Engage customers when it’s Monday, Wednesday between 7pm to 9pm When they’re entering zone 107", sent:1000, viewed: 900, visited: 600, conversion: 0.6,viewConversion: 0.68  },
+      { _id:"demo0002", name:"campaigns 2", desc: "Lucky Draw on purchase > $500", sent:1200, viewed: 800,  visited: 600, conversion: 0.5, viewConversion: 0.75 },
+      { _id:"demo0003", name:"campaigns 3", desc: "10% off for everything",sent:2000, viewed: 1200, visited: 400, conversion: 0.2,  viewConversion: 0.33 }
     ]
   },
   totalVisits: function(period){

@@ -58,13 +58,18 @@
   .table > tbody > tr > td {
     padding: 0.8em 1em;
   }
+  .desc {
+    color: $alt-font-color;
+    font-size: 0.8em;
+    margin-bottom: 2em;
+  }
   .data-row {
     .conversion {
       color: $primary-color;
     }
-    .desc {
-      color: $alt-font-color;
-      font-size: 0.8em;
+    .value {
+      font-size: 1.2em;
+      line-height: 1.175
     }
   }
 }
