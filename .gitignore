@@ -1,4 +1,5 @@
 .DS_Store
+.tern_project
 
 /mup.json
 /out/

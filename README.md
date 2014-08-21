@@ -3,6 +3,8 @@ looppulse.web.manage
 
 Set up environment.
 
+0. `npm install -g meteorite` & `mrt install`
+
 1. Set up two Firebase apps from https://www.firebase.com/account/
   1. one for storing company configuration like locations and beacon installtions.
   2. one for storing beacon events.
