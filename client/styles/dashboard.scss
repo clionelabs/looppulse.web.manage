@@ -8,17 +8,20 @@
 .widget-panel {
   border: none;
   box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.12); //spread: 8px expand 0
-  border-radius: 0px 0px 6px 6px;
+  border-radius: 6px;
   background: #fff;
   margin-bottom: 0.5em;
 
   & .heading {
     background-color: $alt-light-color;
-    h1, h2, h3, h4, h5 {
+    h1, h2, h3, h4, h5, h6 {
       margin: 0;
+      font-size: 1em;
+      line-height: 1.1;
+      font-weight: normal
     }
   }
-  & .content , & .heading {
+  & .content , & .heading, & .heading th {
     padding: 0.8em 1em
   }
 }
@@ -29,6 +32,7 @@
   padding: 1em;
   .number {
     font-weight: bold;
+    font-size: 36px;
   }
   .field {
     color: $primary-color
@@ -45,8 +49,23 @@
 
 // Specific Section
 .campaign-list {
-  tr.chart-row td {
+  tbody, tr.chart-row td, tbody > tr:first-child td {
     border-top: none;
+  }
+  .table > thead > tr > th {
+    border-bottom: none;
+  }
+  .table > tbody > tr > td {
+    padding: 0.8em 1em;
+  }
+  .data-row {
+    .conversion {
+      color: $primary-color;
+    }
+    .desc {
+      color: $alt-font-color;
+      font-size: 0.8em;
+    }
   }
 }
 
