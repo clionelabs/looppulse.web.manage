@@ -10,7 +10,7 @@
         spyOn(Installations, "findOne").andReturn(null);
         var beaconEvent = jasmine.createSpyObj("beaconEvent", ["beaconId"]);
 
-        var encounterId = Encounter.createOrUpdate(beaconEvent);
+        var encounterId = Encounters.createOrUpdate(beaconEvent);
 
         expect(Installations.findOne).toHaveBeenCalledWith({beaconId: beaconEvent.beaconId});
         expect(encounterId).toBeUndefined();
@@ -23,7 +23,7 @@
         beaconEvent.isEnter = function () { return false; };
         beaconEvent.isExit = function () { return false; };
 
-        var encounterId = Encounter.createOrUpdate(beaconEvent);
+        var encounterId = Encounters.createOrUpdate(beaconEvent);
 
         expect(Encounter.prototype.save).not.toHaveBeenCalled();
         expect(encounterId).toBeUndefined();
@@ -37,7 +37,7 @@
         beaconEvent.isEnter = function () { return true; };
         beaconEvent.isExit = function () { return false; };
 
-        var encounterId = Encounter.createOrUpdate(beaconEvent);
+        var encounterId = Encounters.createOrUpdate(beaconEvent);
 
         expect(Encounter.prototype.save).toHaveBeenCalled();
         expect(encounterId).toBe(expectedEncounterId);
@@ -55,7 +55,7 @@
         spyOn(Location, "load");
         spyOn(Metric, "update");
 
-        var encounterId = Encounter.createOrUpdate(beaconEvent);
+        var encounterId = Encounters.createOrUpdate(beaconEvent);
 
         expect(Encounters.findOne).toHaveBeenCalled();
         expect(expectedEncounter.close).toHaveBeenCalledWith(beaconEvent.createdAt);
