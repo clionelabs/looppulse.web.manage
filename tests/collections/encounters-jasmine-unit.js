@@ -10,7 +10,7 @@
         spyOn(Installations, "findOne").andReturn(null);
         var beaconEvent = jasmine.createSpyObj("beaconEvent", ["beaconId"]);
 
-        var encounterId = Encounter.createOrUpdate(beaconEvent);
+        var encounterId = Encounters.createOrUpdate(beaconEvent);
 
         expect(Installations.findOne).toHaveBeenCalledWith({beaconId: beaconEvent.beaconId});
         expect(encounterId).toBeUndefined();
@@ -23,7 +23,7 @@
         beaconEvent.isEnter = function () { return false; };
         beaconEvent.isExit = function () { return false; };
 
-        var encounterId = Encounter.createOrUpdate(beaconEvent);
+        var encounterId = Encounters.createOrUpdate(beaconEvent);
 
         expect(Encounter.prototype.save).not.toHaveBeenCalled();
         expect(encounterId).toBeUndefined();
@@ -37,7 +37,7 @@
         beaconEvent.isEnter = function () { return true; };
         beaconEvent.isExit = function () { return false; };
 
-        var encounterId = Encounter.createOrUpdate(beaconEvent);
+        var encounterId = Encounters.createOrUpdate(beaconEvent);
 
         expect(Encounter.prototype.save).toHaveBeenCalled();
         expect(encounterId).toBe(expectedEncounterId);
@@ -55,7 +55,7 @@
         spyOn(Location, "load");
         spyOn(Metric, "update");
 
-        var encounterId = Encounter.createOrUpdate(beaconEvent);
+        var encounterId = Encounters.createOrUpdate(beaconEvent);
 
         expect(Encounters.findOne).toHaveBeenCalled();
         expect(expectedEncounter.close).toHaveBeenCalledWith(beaconEvent.createdAt);
@@ -80,7 +80,7 @@
         var fakeCursor = "fakeCursor";
         spyOn(Encounters, "find").andReturn(fakeCursor);
 
-        var result = Encounter.findClosed();
+        var result = Encounters.findClosed();
 
         expect(result).toBe(fakeCursor);
         // TODO test using mocha-web for filters
@@ -101,7 +101,7 @@
         var expectedEncounter = "expectedEncounter";
         spyOn(Encounters, "findOne").andReturn(expectedEncounter);
 
-        var result = Encounter.findLastOpen(beaconEvent, installation);
+        var result = Encounters.findLastOpen(beaconEvent, installation);
 
         expect(result).toBe(expectedEncounter);
       });
@@ -109,7 +109,7 @@
       it("should find with correct filters", function () {
         spyOn(Encounters, "findOne");
 
-        Encounter.findLastOpen(beaconEvent, installation);
+        Encounters.findLastOpen(beaconEvent, installation);
 
         // TODO test filters with mocha-web
         expect(Encounters.findOne).toHaveBeenCalled();
@@ -118,7 +118,7 @@
       it("should find with descending enteredAt", function () {
         spyOn(Encounters, "findOne");
 
-        Encounter.findLastOpen(beaconEvent, installation);
+        Encounters.findLastOpen(beaconEvent, installation);
 
         expect(Encounters.findOne).toHaveBeenCalledWith(jasmine.any(Object), {sort: {enteredAt: -1}});
       });

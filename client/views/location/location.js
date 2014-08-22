@@ -91,12 +91,12 @@ Template.location.helpers({
   },
   engagementMetrics: function(){
     console.log("Querying EngagementMetric in Location", this._id);
-    return EngagementMetric.find({ locationId: this._id });
+    return EngagementMetrics.find({ locationId: this._id });
   },
 
   productMetrics: function(){
     console.log("Querying ProductMetric in Location", this._id);
-    return ProductMetric.find({ locationId: this._id });
+    return ProductMetrics.find({ locationId: this._id });
   },
   forProfilePic: {
     name: "profilePic",
