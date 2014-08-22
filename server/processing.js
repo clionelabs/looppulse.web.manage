@@ -1,31 +1,21 @@
 // Observe raw event from Firebase
 observeBeaconEventsFromFirebase = function() {
-  var fbPath = Meteor.settings.firebase.root + '/beacon_events';
-  var firebaseEventsRef = new Firebase(fbPath);
-  console.log('[Remote] Observing: ' + fbPath);
-  firebaseEventsRef.on(
-    'child_added',
-     Meteor.bindEnvironment(
-       function(childSnapshot, prevChildName) {
-         processBeaconEventFromFirebase(childSnapshot, Meteor.settings.removeFromFirebase);
-         // console.log("processed: "+JSON.stringify(childSnapshot.val()));
-       }
-     )
-  );
-}
+  observeCompanyChildAdded("beacon_events", function(childSnapshot, prevChildName) {
+    processBeaconEventFromFirebase(childSnapshot, Meteor.settings.removeFromFirebase);
+  });
+};
 
 observeEngagementEventsFromFirebase = function() {
-  var fbPath = Meteor.settings.firebase.root + '/engagement_events';
-  var engagementEventsRef = new Firebase(fbPath);
+  observeCompanyChildAdded("engagement_events", function(childSnapshot, prevChildName) {
+    processEngagementEventFromFirebase(childSnapshot, Meteor.settings.removeFromFirebase);
+  });
+};
+
+var observeCompanyChildAdded = function(path, callback) {
+  var fbPath = Meteor.settings.firebase.root + '/' + path;
+  var firebase = new Firebase(fbPath);
   console.log('[Remote] Observing: ' + fbPath);
-  engagementEventsRef.on(
-    'child_added',
-    Meteor.bindEnvironment(
-      function(childSnapshot, prevChildName) {
-        processEngagementEventFromFirebase(childSnapshot, Meteor.settings.removeFromFirebase);
-      }
-    )
-  );
+  firebase.on('child_added', Meteor.bindEnvironment(callback));
 };
 
 var processEngagementEventFromFirebase = function(snapshot, removeFromFirebase) {
