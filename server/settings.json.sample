@@ -13,7 +13,7 @@
   },
   "firebase": {
       "root": "https://<YOUR_APP>.firebaseio.com/",
-      "config": "https://<YOUR_APP>.firebaseio.com/"
+      "config": "https://looppulse-config.firebaseio.com/"
   },
   "parse": {
     "applicationId": "",
