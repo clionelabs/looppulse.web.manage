@@ -109,7 +109,7 @@ Meteor.publish('related-metrics', function(id){
   return Metrics.find(q)
 })
 
-Meteor.publish('location-engagements-with-metrics', function(locationId) {
+Meteor.publish('location-engagements', function(locationId) {
   var q = {};
   console.log("Returning location-engagements Data", locationId);
 
@@ -118,22 +118,8 @@ Meteor.publish('location-engagements-with-metrics', function(locationId) {
   } else {
     return null;
   }
-  var engagements = Engagements.find(q);
-  var self = this;
-  engagements.forEach(function(engagement) {
-    var engagementId = engagement._id;
-    publishCount(self, MetricsHelper.nameOfSentMessageCount(engagementId), Messages.find({engagementId: engagementId}));
-    publishCount(self, MetricsHelper.nameOfViewedMessageCount(engagementId), Messages.find({
-      engagementId: engagementId,
-      viewedAt: {$type: 1}
-    }));
-    publishCount(self, MetricsHelper.nameOfVisitedMessageCount(engagementId), Messages.find({
-      engagementId: engagementId,
-      visitedAt: {$type: 1}
-    }));
-  });
 
-  return engagements;
+  return Engagements.find(q);
 });
 
 //@@DEV

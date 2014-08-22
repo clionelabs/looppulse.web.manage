@@ -15,6 +15,10 @@
     "jasmine-unit": {},
     "iron-router-active": {},
     "publish-counts": {},
-    "bower": {}
+    "bower": {},
+    "uploader": {
+      "git": "https://github.com/ratsolean/meteor-uploader.git",
+      "branch": "master"
+    }
   }
 }

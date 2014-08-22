@@ -2,12 +2,18 @@
   "DEBUG": {
     "resetLocal": false,
     "logVisitorToFirebase": false,
+    "seedData": "",
     "deliveringMessagesFirebaseURL": "https://<YOUR_APP>.firebaseio.com/delivering_messages"
   },
 
+  "aws": {
+    "accessKeyId": "",
+    "secretAccessKey": "",
+    "s3bucket": ""
+  },
   "firebase": {
-      "root": "",
-      "config": ""
+      "root": "https://<YOUR_APP>.firebaseio.com/",
+      "config": "https://looppulse-config.firebaseio.com/"
   },
   "parse": {
     "applicationId": "",

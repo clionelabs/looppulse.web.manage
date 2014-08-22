@@ -53,6 +53,19 @@
       });
     });
 
+    describe("isNear()", function () {
+      it('should check against ["near", "intermediate"]', function () {
+        var expectedProximity = "p1";
+        var beaconEvent = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didRangeBeacons", proximity: expectedProximity });
+        spyOn(_, "contains").andReturn(false);
+
+        var result = beaconEvent.isNear();
+
+        expect(result).toBe(false);
+        expect(_.contains).toHaveBeenCalledWith(["near", "intermediate"], expectedProximity);
+      });
+    });
+
     describe("isEnter()", function () {
       it("should return true for didEnterRegion type", function () {
         var beaconEvent = new BeaconEvent("aVisitorId", "aBeaconId", { type: "didEnterRegion", proximity: "p1" });

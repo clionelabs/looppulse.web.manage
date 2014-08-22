@@ -9,7 +9,7 @@
         var expectedAvailableEngagements = {};
         spyOn(Engagements, "find").andReturn(expectedAvailableEngagements);
 
-        var availableEngagements = Engagement.availableEngagements("aLocationId");
+        var availableEngagements = Engagements.availableEngagements("aLocationId");
 
         expect(Engagements.find).toHaveBeenCalledWith({ locationId: "aLocationId" });
         expect(availableEngagements).toEqual(expectedAvailableEngagements);
@@ -19,27 +19,29 @@
     describe("dispatch()", function () {
       it("should not trigger encounter when not ready", function () {
         spyOn(Installations, "findOne").andReturn({ localtionId: "aLocationId" });
-        var fakeEngagement = jasmine.createSpyObj("engagement", ["readyToTrigger", "trigger"]);
-        spyOn(Engagement, "availableEngagements").andReturn([fakeEngagement]);
+        var fakeEngagement = jasmine.createSpyObj("engagement", ["readyToTrigger", "trigger", "save"]);
+        spyOn(Engagements, "availableEngagements").andReturn([fakeEngagement]);
         var expectedEncounter = {};
 
         Engagement.dispatch(expectedEncounter);
 
         expect(fakeEngagement.readyToTrigger).toHaveBeenCalledWith(expectedEncounter);
         expect(fakeEngagement.trigger).not.toHaveBeenCalled();
+        expect(fakeEngagement.save).not.toHaveBeenCalled();
       });
 
       it("should trigger encounter", function () {
         spyOn(Installations, "findOne").andReturn({ localtionId: "aLocationId" });
-        var fakeEngagement = jasmine.createSpyObj("engagement", ["readyToTrigger", "trigger"]);
+        var fakeEngagement = jasmine.createSpyObj("engagement", ["readyToTrigger", "trigger", "save"]);
         fakeEngagement.readyToTrigger.andReturn(true);
-        spyOn(Engagement, "availableEngagements").andReturn([fakeEngagement]);
+        spyOn(Engagements, "availableEngagements").andReturn([fakeEngagement]);
         var expectedEncounter = {};
 
         Engagement.dispatch(expectedEncounter);
 
         expect(fakeEngagement.readyToTrigger).toHaveBeenCalledWith(expectedEncounter);
         expect(fakeEngagement.trigger).toHaveBeenCalledWith(expectedEncounter);
+        expect(fakeEngagement.save).not.toHaveBeenCalled();
       });
     });
 

@@ -3,11 +3,23 @@
     <header>
        <h2>{{ company.name }} @ {{name}}</h2>
     </header>
+    {{! FIXME this example usage should be replaced }}
+    <b> 
+    {{#each productMetrics}}
+      productId: {{productId}}<br/>
+      Start Time: {{startTime}}<br/>
+      End Time: {{endTime}}<br/>
+      Total DwellTime: {{dwellTime}} <br/>
+      Total Visitors:  {{getVisitorsCount}} <br/>
+    {{/each}}
+    </b>
 
     {{! FIXME this example usage should be replaced }}
     {{#each engagementMetrics}}
-      {{sentMessageCount}} -> {{viewedMessageCount}} -> {{visitedMessageCount}}
+      {{sentMessageCount}} ->  {{viewedMessageCount}} -> {{visitedCount}}  ({{conversionRates.sendMessageToVisited}}%)
     {{/each}}
+
+    {{> uploader settings=forProfilePic}}
 
     <div class="summary">
         <div class="row">

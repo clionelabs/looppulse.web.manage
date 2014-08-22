@@ -45,7 +45,8 @@
     describe("atTriggerInstallation()", function () {
       it("should return true if Encounter happens within triggerInstallationIds", function () {
         var installationId = 1;
-        var encounter = jasmine.createSpyObj("encounter", ["installationId"]);
+        var encounter = jasmine.createSpyObj("encounter", ["installationId", "isQualified"]);
+        encounter.isQualified.andReturn(true);
         var engagement = new RecommendationEngagement();
         spyOn(_, "contains").andReturn(true);
 
@@ -53,6 +54,7 @@
 
         expect(result).toBe(true);
         expect(_.contains).toHaveBeenCalledWith(engagement.triggerInstallationIds, encounter.installationId);
+        expect(encounter.isQualified).toHaveBeenCalled();
       });
 
       it("should return false if Encounter happens outside triggerInstallationIds", function () {

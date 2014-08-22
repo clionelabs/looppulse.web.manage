@@ -1,7 +1,9 @@
 .DS_Store
+.tern_project
 
 /mup.json
 /out/
+.out/
 /settings.json
 /server/settings.json
 /tests/.reports/
