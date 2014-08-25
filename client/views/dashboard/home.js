@@ -4,6 +4,16 @@
   All helpers need to get something from db should go to here
 */
 Template.dashboard_home.helpers({
+
+  engagementMetrics: function(){
+    console.log("Querying EngagementMetric in Location", this._id);
+    return EngagementMetrics.find({ locationId: this._id });
+  },
+
+  productMetrics: function(){
+    console.log("Querying ProductMetric in Location", this._id);
+    return ProductMetrics.find({ locationId: this._id }).fetch();
+  },
   /**
   Extract the campaigns data from engagements
   @return Campaigns Data with object \{ _id, name, sent, visited, conversion \}
@@ -36,10 +46,27 @@ Template.dashboard_home.helpers({
     ]
   },
   totalVisits: function(period){
-    return { number:"10,000", diff:"+10%", field:"Total Visits", duration:"1 week ago" }
+    // this = with context = cursor
+    var data = this || []; //(this.data) ? this.data.fetch() : ProductMetrics.find({ locationId: this._id }).fetch();
+    var sum = 0;
+    data.forEach(function(m){
+      sum += (!isNaN(m.visitors.length)) ? m.visitors.length : 0;
+      console.log(sum, m,  m.visitors.length)
+    })
+    return { number:sum, diff:"+10%", field:"Total Visits", duration:"1 week ago" }
   },
   avgDwellTime: function(period){
-    return { number:"10", unit:"mins", diff:"-10%", field:"Avg Time", duration:"1 week ago" }
+    var data = this || []; //(this.data) ? this.data.fetch() : ProductMetrics.find({ locationId: this._id }).fetch();
+    var sum = 0;
+    data.forEach(function(m){
+      var avg = 0;
+      avg = (!isNaN(m.visitors.length)) ? m.dwellTime/m.visitors.length: 0;
+      sum += Math.round(avg);
+      console.log(avg, sum)
+    })
+    var time = (data.length > 0) ? ((sum/1000)/60)/data.length:0;
+    time = (time).toFixed(1)
+    return { number:time, unit:"min", diff:"-10%", field:"Avg Time", duration:"1 week ago" }
   },
   repeatedVisits: function(period){
     return { number:"10%", diff:"+10%", field:"Repeat Visits", duration:"1 week ago" }

@@ -24,7 +24,16 @@ Meteor.publish('owned-locations', function(id) {
   }
   return Locations.find(q);
 });
-
+Meteor.publish('current-location', function(id){
+  var q = {}
+  console.log("Returning Location Data (Current)", id)
+  if (id && AccountsHelper.fieldMatch("locations", id, this.userId)) {
+    q = { _id: id }
+  } else {
+    return null;
+  }
+  return Locations.find(q)
+})
 
 Meteor.publish('owned-products', function(id){
   var q = {}

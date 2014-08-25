@@ -91,21 +91,22 @@
 
 
 <template name="dashboard_home">
-  <div class="dashboard">
-    <div class="summary highlights row">
-      <div class="col-sm-4">
-        {{> dashboard_card totalVisits}}
-      </div>
-      <div class="col-sm-4">
-        {{> dashboard_card avgDwellTime}}
-      </div>
-      <div class="col-sm-4">
-        {{> dashboard_card repeatedVisits}}
+  {{#with productMetrics}}
+    <div class="dashboard">
+      <div class="summary highlights row">
+        <div class="col-sm-4">
+          {{> dashboard_card totalVisits }}
+        </div>
+        <div class="col-sm-4">
+          {{> dashboard_card avgDwellTime}}
+        </div>
+        <div class="col-sm-4">
+          {{> dashboard_card repeatedVisits}}
+        </div>
       </div>
     </div>
-  </div>
-  {{> dashboard_performance_chart }}
-
+    {{> dashboard_performance_chart }}
+  {{/with}}
   {{> dashboard_campaign_list campaigns=campaigns }}
 </template>
 
