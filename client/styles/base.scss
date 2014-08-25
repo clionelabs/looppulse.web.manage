@@ -77,7 +77,7 @@ body {
   // half: 17px/1.18
   // easy going: 16px/1.25
   // vision correction: 18px/1.2
-  font: normal 18px/1.2 'Roboto', sans-serif;
+  font: normal #{$base-font-size}/#{$base-line-height} $base-font-family;
 }
 
 footer.primary {

@@ -36,13 +36,13 @@ Template.dashboard_home.helpers({
     ]
   },
   totalVisits: function(period){
-    return { number:"10,000", diffSign: "arrowup", diff:"+10%", field:"Total Visits", duration:"1 week ago" }
+    return { number:"10,000", diff:"+10%", field:"Total Visits", duration:"1 week ago" }
   },
   avgDwellTime: function(period){
-    return { number:"10", unit:"mins", diffSign: "arrowdown", diff:"-10%", field:"Avg Time", duration:"1 week ago" }
+    return { number:"10", unit:"mins", diff:"-10%", field:"Avg Time", duration:"1 week ago" }
   },
   repeatedVisits: function(period){
-    return { number:"10%", diffSign: "arrowup", diff:"+10%", field:"Repeat Visits", duration:"1 week ago" }
+    return { number:"10%", diff:"+10%", field:"Repeat Visits", duration:"1 week ago" }
   },
   performances: function(){
     //fit something reactive here should trigger the graph update.
@@ -106,7 +106,7 @@ Template.dashboard_card.helpers({
   setSign: function(diff){
     var res = diff.match(/^([\+\-])/)
     var sign = (res.length > 0) ? res[0]:"";
-    var klass = "";
+    var klass = ""; //class of expected result
     var sybmol = "";
     switch (sign){
       case "+":
@@ -119,9 +119,9 @@ Template.dashboard_card.helpers({
         klass = "unchange";
 
     }
-
+    //process the number before it reach the frontend
     return {
-      klass: klass,
+      klass: "arrow-"+klass,
       value: diff
     }
   }

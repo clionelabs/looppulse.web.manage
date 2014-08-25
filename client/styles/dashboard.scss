@@ -31,71 +31,54 @@
 .dashboard {
   .summary {
     .card-panel {
-      .row {
-        margin:0 auto;
-      }
-
       background-color: $alt-light-color;
       padding: 1em;
 
       .number {
-        font-size:36px;
-        height:42px;
+        font-size: 2em; //36px
         font-weight:500;
-        
-        span.unit {
-          font-size: 24px;
+
+        .unit {
+          font-size: 0.7em; //24px/36px
         }
 
       }
 
       .diff {
-        text-align:center;
-        .number {
-          padding:0;
-          font-size:18px;
-        }
-        
-        .arrowup, .arrowdown {
-          margin: 8px auto 0 auto;
+        text-align: center;
+        .sign, .value {
+          display: block;
         }
 
+        .sign {
+          width: 0;
+          height: 0;
+          margin: 8px auto 0 auto;
+          border-left: 12px solid transparent;
+          border-right: 12px solid transparent;
+        }
+
+        .arrow-up {
+          border-bottom: 9px solid $primary-color;
+        }
+
+        .arrow-down {
+          border-top: 9px solid $primary-color-compliment;
+        }
       }
 
       .duration {
         color: $alt-font-color;
-        font-size:12px;
-        line-height:28px;
+        font-size: 0.8em
       }
 
       .field {
         color: $primary-color-2;
-        font-size:18px;
-
       }
     }
   }
 }
 
-.arrowup {
-  width: 0; 
-  height: 0; 
-  border-left: 12px solid transparent;
-  border-right: 12px solid transparent;
-
-  border-bottom: 9px solid green;
-
-}
-
-.arrowdown {
-  width: 0; 
-  height: 0; 
-  border-left: 12px solid transparent;
-  border-right: 12px solid transparent;
-
-  border-top: 9px solid red;
-
-}
 
 .highlights {
   margin-bottom: 1em;
