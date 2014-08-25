@@ -183,7 +183,8 @@ Template.dashboard_performance_chart.rendered = function(){
     })
     .y(function(y){
       y.key('visits');
-    });
+    })
+    .mixin({name : 'grid', feature : d4.features.grid, index: 0 });
   var parser = d4.parsers.nestedGroup()
       .x(function(){
         return 'hour';

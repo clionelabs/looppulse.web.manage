@@ -124,16 +124,36 @@
 .charting .d4 {
   path {
     fill: none;
+    stroke-width: 2px;
   }
   .series0 path {
-        stroke: darkred;
+        stroke: #F5A623;
     }
 
   .series1 path {
-        stroke: darkslategrey;
+        stroke: #BD10E0;
     }
 
   .series2 path {
-        stroke: steelblue;
+        stroke: #4A90E2;
     }
+
+ .grid.border rect {
+        fill: none;
+        stroke: none;
+    }
+
+  .grid.y {
+    line {
+        fill:none;
+        stroke: #ccc;
+        stroke-width: 1px;
+        // stroke-dasharray :3, 4;
+        // shape-rendering: crispEdges;
+    }
+    .domain {
+      display:none;
+    }
+  }
+  .axis .domain { display:none; }
 }
