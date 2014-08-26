@@ -39,7 +39,7 @@
     {{/contentFor}}
 
     {{#contentFor region="dashboard-content"}}
-      <div class="charting">:D</div>
+      <div class="charting"></div>
     {{/contentFor}}
   {{/Layout}}
 </template>
@@ -77,8 +77,13 @@
                 </div>
               </div>
               <div class="desc value col-sm-6">
-                {{! dashboard_campaign_diff_chart}}
-                {{! compare with locationMetric }}
+                {{! compare with locationMetric t1 t2 }}
+                {{!with locationMetrics startTime offset}}
+                  {{!context: array of object}}
+                  <div class="campaign-comparsion-chart">
+                    <div class="charting-area"></div>
+                  </div>
+                {{!with}}
               </div>
             </div>
           </td>
