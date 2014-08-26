@@ -60,6 +60,18 @@ var configureCompany= function (companyConfig) {
   companyConfig._id = company.save();
   console.info("[Init] Company created:", company._id, company.name);
 
+  // Application
+  _.each(companyConfig.applications, function(appConfig) {
+    var app = Applications.findOne({companyId: companyConfig._id, name: appConfig.name});
+    if (!app) {
+      app = new Application(companyConfig._id, appConfig.name);
+      Applications.upsert(app, app);
+
+      app = Applications.findOne({companyId: companyConfig._id, name: appConfig.name});
+    }
+    console.info("[Init] Application created: ", app._id, app.name);
+  });
+
   // Products
   _.each(companyConfig.products, function(productConfig, productKey) {
     var p = new Product({
