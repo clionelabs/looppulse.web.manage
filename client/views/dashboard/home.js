@@ -186,7 +186,10 @@ Template.dashboard_campaign_list.events({
         })
         .y(function(y){
             y.key('value');
-        });
+        })
+        .outerWidth(320)
+        .outerHeight(220)
+        .mixout('yAxis');
 
 
     //autorun will run at least once.
