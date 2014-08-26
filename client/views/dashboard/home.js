@@ -158,21 +158,25 @@ Template.dashboard_campaign_list.events({
   "click .data-row": function(e, tmpl){ //e.currentTarget = .data-row, tmpl= this in template helpers and methods, this = tmple.data
     //console.log("click",e,this,tmpl)
     var self = tmpl;
-    var last = null;
-    var isLive = false;
-    if(self.handle){
-      console.log("Handle found, refreshing...")
-      self.handle.stop();
-      d3.select('.campaign-summary.chart-row.live .campaign-summary-chart .charting-area').remove();
-      last = jQuery('.campaign-summary.chart-row.live')
-      if(jQuery(e.currentTarget).data("id") === last.data("id")) { isLive = true; }
-      jQuery('.campaign-summary-chart', last).append("<div class='charting-area'></div>")
-      jQuery(last).removeClass("live")
-      self.handle = null;
-      if(isLive) { return false; }
-    }
     var campaign = this;
     var id = campaign._id
+    if (!id) { return false; }
+
+    var toStop = function(self, id){
+      var last = null;
+      var isLive = false;
+      self.handle && self.handle[id] && self.handle[id].stop();
+      d3.select('.campaign-summary.chart-row[data-id="'+id+'"] .campaign-summary-chart .charting-area').remove();
+      last = jQuery('.campaign-summary.chart-row[data-id="'+id+'"]')
+      jQuery('.campaign-summary-chart', last).append("<div class='charting-area'></div>")
+      jQuery(last).removeClass("live")
+      delete self.handle[id]
+    }
+
+    if (self.handle && self.handle[id]) {
+      console.log("Handle for `"+id+"` found, leave it to be.")
+      return true;
+    }
     // var name = campaign.name;
     // var conversion = campaign.conversion;
     // var viewConversion = campaign.viewConversion;
@@ -186,12 +190,14 @@ Template.dashboard_campaign_list.events({
 
 
     //autorun will run at least once.
-    self.handle =  Deps.autorun(function () {
+    if (!self.handle) { self.handle = [] }
+
+    self.handle[id] =  Deps.autorun(function () {
       console.log("[Autorun] Chart Updating: "+id)
       var data = d3.entries(campaign.stat)
       var suffix = '[data-id="'+id+'"]';
       jQuery('.campaign-summary.chart-row'+suffix+"").addClass("live");
-      d3.select('.campaign-summary.chart-row.live .campaign-summary-chart .charting-area')
+      d3.select('.campaign-summary.chart-row'+suffix+' .campaign-summary-chart .charting-area')
         .datum(data)
         .call(columnChart);
     })
@@ -240,3 +246,8 @@ Template.dashboard_performance_chart.rendered = function(){
 Template.dashboard_performance_chart.destroyed = function () {
   this.handle && this.handle.stop();
 };
+Template.dashboard_campaign_list.destroyed = function(){
+  this.handle.forEach(function(h){
+    h.stop();
+  })
+}
