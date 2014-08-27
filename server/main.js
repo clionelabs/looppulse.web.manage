@@ -30,7 +30,10 @@ var observeFirebase = function() {
 };
 
 var observeCollections = function() {
-  var classes = [Encounter, Engagement, EngagementMetric, ProductMetric];
+  var classes = [
+    Encounter, Engagement,
+    EngagementMetric, InstallationMetric, ProductMetric
+  ];
   classes.forEach(function(objectClass) {
     if (objectClass.hasOwnProperty('startup')) {
       objectClass.startup();
