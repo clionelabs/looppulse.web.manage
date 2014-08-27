@@ -35,7 +35,14 @@
   {{#Layout template="dashboard_widget"}}
 
     {{#contentFor region="dashboard-header"}}
-      <h4>Performance</h4>
+      <h4 class="headline">Performance</h4>
+      <div class="widget-nav pull-right performance-nav">
+        <ul class="">
+          <li class="active"><a href="#"><i class="fa fa-building-o"></i></a></li>
+          <li><a href="#"><i class="fa fa-line-chart"></i></a></li>
+          <li><a href="#"><span class="glyphicon glyphicon-th-large"></span></a></li>
+        </ul>
+      </div>
     {{/contentFor}}
 
     {{#contentFor region="dashboard-content"}}

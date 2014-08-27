@@ -18,12 +18,19 @@
       margin: 0;
       font-size: 1em;
       line-height: 1.1;
-      font-weight: normal
+      font-weight: normal;
+      display: inline-block;
     }
   }
   & .content , & .heading, & .heading th {
     padding: 0.8em 1em
   }
+  .widget-nav {
+    &, & li {
+      display: inline-block;
+    }
+  }
+
 }
 
 
@@ -79,6 +86,17 @@
   }
 }
 
+.performance-nav {
+  ul li > a {
+  }
+  ul > li {
+    border: 1px solid #ccc;
+    width: 32px;
+    height: 32px;
+    text-align:center;
+    line-height: 32px;
+  }
+}
 
 .highlights {
   margin-bottom: 1em;
