@@ -121,7 +121,11 @@
   }
 }
 
-.charting .d4 {
+.charting .d4, .charting-area .d4 {
+  .tick text {
+      font-size: 1em;
+      fill: #333;
+  }
   path {
     fill: none;
     stroke-width: 2px;
@@ -138,22 +142,33 @@
         stroke: #4A90E2;
     }
 
- .grid.border rect {
-        fill: none;
-        stroke: none;
-    }
+}
+.charting .d4 {
 
-  .grid.y {
-    line {
-        fill:none;
-        stroke: #ccc;
-        stroke-width: 1px;
-        // stroke-dasharray :3, 4;
-        // shape-rendering: crispEdges;
-    }
-    .domain {
-      display:none;
-    }
+  .grid.border rect {
+         fill: none;
+         stroke: none;
+     }
+
+   .grid.y {
+     line {
+         fill:none;
+         stroke: #ccc;
+         stroke-width: 1px;
+         // stroke-dasharray :3, 4;
+         // shape-rendering: crispEdges;
+     }
+     .domain {
+       display:none;
+     }
+   }
+   .axis .domain { display:none; }
+}
+.campaign-comparsion-chart {
+  .tick {
+    display: none;
   }
-  .axis .domain { display:none; }
+  .subtitle, .title {
+    // text-anchor: middle;
+  }
 }

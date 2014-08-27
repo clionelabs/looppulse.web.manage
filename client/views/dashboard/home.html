@@ -58,7 +58,7 @@
 
       <tbody class="content">
       {{#each campaigns}}
-        {{#with getStat}}
+        {{#with _id=_id name=name sent=sent visited=visited conversion=conversion desc=desc stat=getStat m=getMetrics traceOffset=traceOffset}}
         <tr class="row campaign-summary data-row" data-id="{{_id}}">
           <td class="name entity col-sm-7">{{name}}</td>
           <td class="sent value col-sm-2">{{sent}}</td>
@@ -71,17 +71,19 @@
               <div class="desc value col-sm-6">{{desc}}</div>
             </div>
             <div class="row">
-              <div class="desc value col-sm-6">
+              <div class="desc value col-sm-5">
                 <div class="campaign-summary-chart">
                   <div class="charting-area"></div>
                 </div>
               </div>
-              <div class="desc value col-sm-6">
+              <div class="desc value col-sm-7">
                 {{! compare with locationMetric t1 t2 }}
                 {{!with locationMetrics startTime offset}}
-                  {{!context: array of object}}
+                  {{! Change`data-entity` if helper changes }}
                   <div class="campaign-comparsion-chart">
-                    <div class="charting-area"></div>
+                    <div class="charting-area total-visits col-xs-4" data-entity="totalVisits"></div>
+                    <div class="charting-area dwell-time col-xs-4" data-entity="avgDwellTime"></div>
+                    <div class="charting-area repeated-visits col-xs-4" data-entity="repeatedVisits"></div>
                   </div>
                 {{!with}}
               </div>

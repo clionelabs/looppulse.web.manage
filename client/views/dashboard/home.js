@@ -40,9 +40,9 @@ Template.dashboard_home.helpers({
     //return dummy
     //@@WARNING: ORDER IMPORTANTED
     return [
-      { _id:"demo0001", name:"Elephant Parade", startTime: "", endTime: "", desc: "Visit the elephant on UG and a chance to win 2 movie tickets Engage customers when it’s Monday, Wednesday between 7pm to 9pm When they’re entering zone 107", sent:1000, viewed: 900, visited: 600, conversion: 0.6,viewConversion: 0.68  },
-      { _id:"demo0002", name:"Super Weekend", startTime: "", endTime: "", desc: "Lucky Draw on purchase > $500", sent:1200, viewed: 800,  visited: 600, conversion: 0.5, viewConversion: 0.75 },
-      { _id:"demo0003", name:"Summer Festival", startTime: "", endTime: "", desc: "10% off for everything", sent:2000, viewed: 1200, visited: 400, conversion: 0.2,  viewConversion: 0.33 }
+      { _id:"demo0001", name:"Elephant Parade", startTime: "", endTime: "", traceOffset: 100000, desc: "Visit the elephant on UG and a chance to win 2 movie tickets Engage customers when it’s Monday, Wednesday between 7pm to 9pm When they’re entering zone 107", sent:1000, viewed: 900, visited: 600, conversion: 0.6,viewConversion: 0.68  },
+      { _id:"demo0002", name:"Super Weekend", startTime: "", endTime: "", traceOffset: 100000, desc: "Lucky Draw on purchase > $500", sent:1200, viewed: 800,  visited: 600, conversion: 0.5, viewConversion: 0.75 },
+      { _id:"demo0003", name:"Summer Festival", startTime: "", endTime: "", traceOffset: 100000, desc: "10% off for everything", sent:2000, viewed: 1200, visited: 400, conversion: 0.2,  viewConversion: 0.33 }
     ]
   },
   totalVisits: function(period){
@@ -117,9 +117,9 @@ Template.dashboard_home.helpers({
 Template.dashboard_campaign_list.helpers({
   getStat: function(){
     var campaign = this;
-    var c = this;
+    var c = {};
 
-    c.stat = {
+    c = {
       sent: this.sent,
       viewed: this.viewed,
       visited: this.visited,
@@ -127,19 +127,25 @@ Template.dashboard_campaign_list.helpers({
 
     return c;
   },
-  locationMetrics: function(t, offset){
+  getMetrics: function(t, offset){
+    if (!t) { t = this.startTime || 0; }
+    if (!offset) { offset = this.traceOffset || 0 }
     //Return location Metric base on the time with/without offset
     //Due to the nature of the range query better return the range
     return [{
-      totalVisits: "1000",
-      avgDwellTime: "10",
-      repeatedVisits: "100",
+      stat: {
+        totalVisits: "1000",
+        avgDwellTime: "10",
+        repeatedVisits: "100"
+      },
       startTime: t
-    }, {
-      totalVisits: "2000",
-      avgDwellTime: "10",
-      repeatedVisits: "100",
-      startTime: t-offset
+    },{
+      stat: {
+        totalVisits: "1900",
+        avgDwellTime: "18",
+        repeatedVisits: "1000"
+      },
+      startTime: t + offset
     }]
   }
 })
@@ -171,10 +177,10 @@ Template.dashboard_card.helpers({
 
 Template.dashboard_campaign_list.events({
   "click .data-row": function(e, tmpl){ //e.currentTarget = .data-row, tmpl= this in template helpers and methods, this = tmple.data
-    //console.log("click",e,this,tmpl)
+    console.log("click",e,this,tmpl)
     var self = tmpl;
     var campaign = this;
-    var id = campaign._id
+    var id = campaign._id;
     if (!id) { return false; }
 
     var toStop = function(self, id){
@@ -195,7 +201,7 @@ Template.dashboard_campaign_list.events({
     // var name = campaign.name;
     // var conversion = campaign.conversion;
     // var viewConversion = campaign.viewConversion;
-    var columnChart = d4.charts.column()
+    var mainColumnChart = d4.charts.column()
         .x(function(x) {
             x.key('key')
         })
@@ -207,17 +213,56 @@ Template.dashboard_campaign_list.events({
         .mixout('yAxis');
 
 
+    var miniColumnChart = d4.charts.column()
+        .x(function(x) {
+            x.key('key')
+        })
+        .y(function(y){
+            y.key('value');
+        })
+        .outerWidth(220)
+        .outerHeight(220)
+        .mixout('yAxis');
+
     //autorun will run at least once.
     if (!self.handle) { self.handle = [] }
+    if (!self.locationHandle) { self.locationHandle = [] }
+
+
+    var suffix = '[data-id="'+id+'"]';
+    jQuery('.campaign-summary.chart-row'+suffix+"").addClass("live");
 
     self.handle[id] =  Deps.autorun(function () {
       console.log("[Autorun] Chart Updating: "+id)
       var data = d3.entries(campaign.stat)
-      var suffix = '[data-id="'+id+'"]';
-      jQuery('.campaign-summary.chart-row'+suffix+"").addClass("live");
       d3.select('.campaign-summary.chart-row'+suffix+' .campaign-summary-chart .charting-area')
         .datum(data)
-        .call(columnChart);
+        .call(mainColumnChart);
+    })
+
+    self.locationHandle[id] =  Deps.autorun(function () {
+      console.log("[Autorun] Chart Updating: "+id)
+      var prefix = '.campaign-summary.chart-row'+suffix+' .campaign-comparsion-chart .charting-area'
+      var orders = ["totalVisits", "avgDwellTime","repeatedVisits"]
+      orders.forEach(function(f){
+        console.log(campaign.m)
+        var data = [{
+          key: "now",
+          value: campaign.m[0].stat[f]
+        },
+        {
+          key: "past",
+          value: campaign.m[1].stat[f]
+        }]
+        d3.select(prefix+"[data-entity='"+f+"']")
+          .datum(data)
+          .call(
+            miniColumnChart.using('xAxis', function(axis){
+              console.log(axis)
+              axis.align('bottom').title(f)
+            })
+          );
+        })
     })
 
     //redraw();
