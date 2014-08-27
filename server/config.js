@@ -60,11 +60,28 @@ var configureCompany= function (companyConfig) {
   companyConfig._id = company.save();
   console.info("[Init] Company created:", company._id, company.name);
 
+  // Categories
+  _.each(companyConfig.categories, function(categoryConfig, categoryKey) {
+    var category = new Category({
+      companyId: company._id,
+      name: categoryConfig.name
+    });
+    companyConfig.categories[categoryKey]._id = category.save();
+    console.info("[Init] Category created:", category._id, category.name);
+  });
+
   // Products
   _.each(companyConfig.products, function(productConfig, productKey) {
+    var categoryConfig = companyConfig.categories[productConfig.category];
+    if (!categoryConfig) {
+      console.error("[Init] Can not find category [%s] for product [%s]", productConfig.category, productConfig.name);
+      return;
+    }
+    var categoryId = categoryConfig._id;
     var p = new Product({
       name: productConfig.name,
-      companyId: company._id
+      companyId: company._id,
+      categoryId: categoryId
     });
     companyConfig.products[productKey]._id = p.save();
     console.info("[Init] Product created:", p._id, p.name);
