@@ -269,7 +269,16 @@ Template.dashboard_campaign_list.events({
   }
 });
 
+Template.dashboard_performance_chart.helpers({
+  showChart: function(){
+    return Session.get("view-chart")
+  }
+})
+
 // Autorun & Graph setup
+Template.dashboard_performance_chart.created = function(){
+  Session.set("view-chart", true)
+}
 Template.dashboard_performance_chart.rendered = function(){
   var self = this;
   var chart = d4.charts.line()
@@ -308,6 +317,7 @@ Template.dashboard_performance_chart.rendered = function(){
 
 Template.dashboard_performance_chart.destroyed = function () {
   this.handle && this.handle.stop();
+  //Clear Session
 };
 Template.dashboard_campaign_list.destroyed = function(){
   this.handle.forEach(function(h){

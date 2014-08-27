@@ -38,15 +38,27 @@
       <h4 class="headline">Performance</h4>
       <div class="widget-nav pull-right performance-nav">
         <ul class="">
-          <li class="active"><a href="#"><i class="fa fa-building-o"></i></a></li>
-          <li><a href="#"><i class="fa fa-line-chart"></i></a></li>
-          <li><a href="#"><span class="glyphicon glyphicon-th-large"></span></a></li>
+          <li class="active"><a href="#" data-session-target="view-building"><i class="fa fa-building-o"></i></a></li>
+          <li><a href="#" data-session-target="view-chart"><i class="fa fa-line-chart"></i></a></li>
+          <li><a href="#" data-session-target="view-grid"><span class="glyphicon glyphicon-th-large"></span></a></li>
         </ul>
       </div>
     {{/contentFor}}
 
     {{#contentFor region="dashboard-content"}}
-      <div class="charting"></div>
+      <div class="chart-wrapper">
+        {{#if showChart}}
+        <div class="performance charting"></div>
+        {{/if}}
+
+        {{#if showGrid}}
+        <div class="performance matrix"></div>
+        {{/if}}
+
+        {{#if showFloor}}
+        <div class="performance floor"></div>
+        {{/if}}
+      </div>
     {{/contentFor}}
   {{/Layout}}
 </template>
