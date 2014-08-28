@@ -38,8 +38,8 @@
       <h4 class="headline">Performance</h4>
       <div class="widget-nav pull-right performance-nav">
         <ul class="">
-          <li class="active"><a href="#" data-session-target="view-building"><i class="fa fa-building-o"></i></a></li>
-          <li><a href="#" data-session-target="view-chart"><i class="fa fa-line-chart"></i></a></li>
+          <li><a href="#" data-session-target="view-building"><i class="fa fa-building-o"></i></a></li>
+          <li class="active"><a href="#" data-session-target="view-chart"><i class="fa fa-line-chart"></i></a></li>
           <li><a href="#" data-session-target="view-grid"><span class="glyphicon glyphicon-th-large"></span></a></li>
         </ul>
       </div>
@@ -47,20 +47,37 @@
 
     {{#contentFor region="dashboard-content"}}
       <div class="chart-wrapper">
+        {{! context : this.data = performances }}
         {{#if showChart}}
-        <div class="performance charting"></div>
+          {{> dashboard_performance_charting}}
         {{/if}}
 
         {{#if showGrid}}
-        <div class="performance matrix"></div>
+          {{> dashboard_performance_matrix}}
         {{/if}}
 
         {{#if showFloor}}
-        <div class="performance floor"></div>
+          {{> dashboard_performance_floor}}
         {{/if}}
       </div>
     {{/contentFor}}
   {{/Layout}}
+</template>
+
+<template name="dashboard_performance_charting">
+  <div class="performance charting"></div>
+</template>
+
+<template name="dashboard_performance_matrix">
+  <div class="performance matrix">
+    Coming Soon...
+  </div>
+</template>
+
+<template name="dashboard_performance_floor">
+  <div class="performance floor">
+    Floor map
+  </div>
 </template>
 
 <template name="dashboard_campaign_list">

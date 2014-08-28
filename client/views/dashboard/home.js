@@ -312,6 +312,33 @@ Template.dashboard_campaign_list.events({
 Template.dashboard_performance_chart.helpers({
   showChart: function(){
     return Session.get("view-chart")
+  },
+  showGrid: function(){
+    return Session.get("view-grid")
+  },
+  showFloor: function(){
+    return Session.get("view-building")
+  }
+});
+Template.dashboard_performance_chart.events({
+  "click .widget-nav a": function(e, tmpl){
+    e.preventDefault();
+    e.stopPropagation()
+    var target = $(e.currentTarget)
+    var prop = target.data("session-target")
+
+    var active = $(".widget-nav li.active a",e.delegateTarget)
+    var prev = active.data("session-target")
+
+    Session.set(prev, false)
+    Session.set(prop, true)
+
+    active.parent().removeClass("active")
+    target.parent().addClass("active")
+
+    console.log("Change from", prev, " to ", prop, "Element ", active.parent(), " & ", target.parent())
+
+    return false;
   }
 })
 
@@ -319,9 +346,9 @@ Template.dashboard_performance_chart.helpers({
 Template.dashboard_performance_chart.created = function(){
   Session.set("view-chart", true)
 }
-Template.dashboard_performance_chart.rendered = function(){
-
+Template.dashboard_performance_charting.rendered = function(){
   var self = this;
+  console.log("re-rendering",this)
   var chart = d4.charts.line()
     .outerWidth($('main .charting').width())
     .x(function(x){
