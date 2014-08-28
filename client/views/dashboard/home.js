@@ -2,17 +2,19 @@
 
 /**
   All helpers need to get something from db should go to here
+  context: this = `Location`
 */
 Template.dashboard_home.helpers({
-
   engagementMetrics: function(){
     console.log("Querying EngagementMetric in Location", this._id);
     return EngagementMetrics.find({ locationId: this._id });
   },
-
   productMetrics: function(){
     console.log("Querying ProductMetric in Location", this._id);
     return ProductMetrics.find({ locationId: this._id }).fetch();
+  },
+  locationMetric: function(){
+    return LocationMetrics.findOne({ locationId: this._id })
   },
   /**
   Extract the campaigns data from engagements
@@ -59,13 +61,18 @@ Template.dashboard_home.helpers({
     return { number:sum, diff:"+10%", field:"Total Visits", duration:"1 week ago" }
     */
 
-    var locationMetric = LocationMetrics.findOne({ locationId: this._id });
-    var diff = locationMetric.visitPercentageChangeSinceLastWeek + "%";
-    if (locationMetric.visitPercentageChangeSinceLastWeek > 0) {
-      diff = "+" + diff;
-    }
+    var locationMetric = this;
+    console.log(locationMetric)
 
-    return { number: locationMetric.visitCount, diff:diff, field:"Total Visits", duration:"1 week ago" };
+    //check the sign
+    var diff = locationMetric.visitPercentageChangeSinceLastWeek;
+
+    return {
+      number: locationMetric.visitCount,
+      diff: locationMetric.visitPercentageChangeSinceLastWeek,
+      field:"Total Visits",
+      duration:"1 week ago"
+    };
   },
   avgDwellTime: function(period){
     /*
@@ -82,23 +89,26 @@ Template.dashboard_home.helpers({
     return { number:time, unit:"min", diff:"-10%", field:"Avg Time", duration:"1 week ago" }
     */
 
-    var locationMetric = LocationMetrics.findOne({ locationId: this._id });
-    var diff = locationMetric.dwellTimeAveragePercentageChangeSinceLastWeek + "%";
-    if (locationMetric.dwellTimeAveragePercentageChangeSinceLastWeek > 0) {
-      diff = "+" + diff;
-    }
+    var locationMetric = this;
 
-    return { number:locationMetric.dwellTimeAverageInMinutes(), unit:"min", diff:diff, field:"Avg Time", duration:"1 week ago" };
+    return {
+      number:locationMetric.dwellTimeAverageInMinutes(),
+      unit:"min",
+      diff: locationMetric.dwellTimeAveragePercentageChangeSinceLastWeek,
+      field:"Avg Time",
+      duration:"1 week ago"
+    };
   },
   repeatedVisits: function(period){
-    var locationMetric = LocationMetrics.findOne({ locationId: this._id });
-    var number = locationMetric.repeatedVisitPercentage() + "%";
-    var diff = locationMetric.repeatedVisitPercentageChangeSinceLastWeek + "%";
-    if (locationMetric.repeatedVisitPercentageChangeSinceLastWeek > 0) {
-      diff = "+" + diff;
-    }
+    var locationMetric = this;
 
-    return { number:number, diff:diff, field:"Repeat Visits", duration:"1 week ago" }
+    return {
+      number:locationMetric.repeatedVisitPercentage(),
+      unit: "%",
+      diff: locationMetric.repeatedVisitPercentageChangeSinceLastWeek,
+      field:"Repeat Visits",
+      duration:"1 week ago"
+    }
   },
   performances: function(){
     //fit something reactive here should trigger the graph update.
@@ -181,8 +191,8 @@ Template.dashboard_campaign_list.helpers({
 
 Template.dashboard_card.helpers({
   setSign: function(diff){
-    var res = diff.match(/^([\+\-])/)
-    var sign = (res.length > 0) ? res[0]:"";
+    var sign = (diff > 0) ? "+" :
+                                  (diff < 0) ? "-": "" ;
     var klass = ""; //class of expected result
     var sybmol = "";
     switch (sign){
@@ -199,7 +209,8 @@ Template.dashboard_card.helpers({
     //process the number before it reach the frontend
     return {
       klass: "arrow-"+klass,
-      value: diff
+      value: diff,
+      unit: "%"
     }
   }
 })

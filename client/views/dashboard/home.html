@@ -1,5 +1,5 @@
 <template name="dashboard_widget">
-  <div class="widget-panel">
+  <div class="widget-panel {{klass}}">
     <header class="heading">{{>yield region="dashboard-header"}}</header>
     <div class="content">
       {{!kick the extra content}}
@@ -18,7 +18,7 @@
             {{! change the context into the result object of setSign }}
             {{#with setSign diff}}
             <span class="sign {{klass}}"></span>
-            <span class="value">{{value}}</span>
+            <span class="value">{{value}} {{unit}}</span>
             {{/with}}
           </div>
       </div>
@@ -32,7 +32,7 @@
 
 <!-- Specific Template -->
 <template name="dashboard_performance_chart">
-  {{#Layout template="dashboard_widget"}}
+  {{#Layout template="dashboard_widget" klass="dashboard-performance"}}
 
     {{#contentFor region="dashboard-header"}}
       <h4 class="headline">Performance</h4>
@@ -118,23 +118,25 @@
 
 
 <template name="dashboard_home">
-    <div class="dashboard">
-      <div class="summary highlights row">
-        <div class="col-sm-4">
-          {{> dashboard_card totalVisits }}
-        </div>
-        <div class="col-sm-4">
-          {{> dashboard_card avgDwellTime}}
-        </div>
-        <div class="col-sm-4">
-          {{> dashboard_card repeatedVisits}}
-        </div>
+  <div class="dashboard">
+  {{#with locationMetric}}
+    <div class="summary highlights row">
+      <div class="col-sm-4">
+        {{> dashboard_card totalVisits }}
+      </div>
+      <div class="col-sm-4">
+        {{> dashboard_card avgDwellTime}}
+      </div>
+      <div class="col-sm-4">
+        {{> dashboard_card repeatedVisits}}
       </div>
     </div>
-  {{#with performances}}
+  {{/with}}
+  {{#with performances }}
     {{> dashboard_performance_chart }}
   {{/with}}
   {{> dashboard_campaign_list campaigns=campaigns }}
+  </div>
 </template>
 
 
