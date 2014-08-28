@@ -106,6 +106,17 @@ var configureCompany= function (companyConfig) {
       name = !name ? data.name : name; // only override the name label if no given name
       var coord = installationConfig.coordinate;
 
+      // Floor
+      // TODO create floor definitions dictionary + attach floorId to Installation?
+      if (coord.z) {
+        var floor = new Floor({
+          locationId: location._id,
+          level: coord.z,
+          name: coord.z + "/F"
+        });
+        floor.save();
+      }
+
       var beaconId = null;
       {
         var beaconConfig = installationConfig.beacon;
