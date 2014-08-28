@@ -128,6 +128,17 @@ var configureCompany= function (companyConfig) {
       console.info("[Init] Installation created:", JSON.stringify(installation));
     });
 
+    // Segments
+    var segments = {};
+    {
+      var segmentOfAllVisitors = new Segment({
+        companyId: company._id,
+        name: "All visitors"
+      });
+      segmentOfAllVisitors.save();
+      segments['visitor'] = segmentOfAllVisitors;
+    }
+
     // Engagements
     _.each(locationConfig.engagements, function(engagementConfig) {
       var installationKeyToId = function (key) {
@@ -151,11 +162,21 @@ var configureCompany= function (companyConfig) {
         message = replaceInstallationKeysWithIds(engagementConfig.message);
       }
 
-      var e = { type: engagementConfig.type,
-                locationId: companyConfig.locations[locationKey]._id,
-                message: message,
-                triggerInstallationIds: triggerInstallationIds,
-                recommendInstallationIds: recommendInstallationIds };
+      var segmentId = segments[engagementConfig.segment]._id;
+      var validPeriod = {
+        start: Date.parse(engagementConfig.validPeriod.start),
+        end: Date.parse(engagementConfig.validPeriod.end)
+      };
+      var e = {
+        type: engagementConfig.type,
+        name: engagementConfig.name,
+        validPeriod: validPeriod,
+        segmentId: segmentId,
+        locationId: companyConfig.locations[locationKey]._id,
+        message: message,
+        triggerInstallationIds: triggerInstallationIds,
+        recommendInstallationIds: recommendInstallationIds
+      };
       Engagements.upsert(e, e);
       var reloaded = Engagements.findOne(e);
       console.info("[Init] Engagement created:", JSON.stringify(reloaded));
