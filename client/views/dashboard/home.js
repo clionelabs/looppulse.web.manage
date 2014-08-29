@@ -21,23 +21,22 @@ Template.dashboard_home.helpers({
   @return Campaigns Data with object \{ _id, name, sent, visited, conversion \}
   **/
   campaigns: function(){
-    var campaigns = [];
     var collection;
 
     //@@DEMO: return real stuff or dummy
     //@@WARNING: ORDER IMPORTANTED
-    Engagements.find().forEach(function(engagement) {
+    var campaigns = Engagements.find().map(function(engagement) {
       var metric = EngagementMetrics.findOne({ engagementId: engagement._id });
-      campaigns.push({
+      return {
         _id: engagement._id,
         name: engagement.name,
         desc: engagement.description,
         sent: metric.sentMessageCount,
         viewed: metric.viewedMessageCount,
         visited: metric.visitedCount,
-        conversion: metric.conversionRates.sentMessageToVisited,
+        conversion: metric.conversionRates().sentMessageToVisited,
         startTime: "", endTime: "", traceOffset: 100000
-      });
+      };
     });
 
     if (campaigns.length === 0){
