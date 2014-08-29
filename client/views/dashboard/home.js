@@ -347,6 +347,8 @@ Template.dashboard_performance_chart.events({
 // Autorun & Graph setup
 Template.dashboard_performance_chart.created = function(){
   Session.set("view-chart", true)
+  Session.set("view-grid", false)
+  Session.set("view-building", false)
 }
 Template.dashboard_performance_charting.rendered = function(){
   var self = this;
@@ -394,3 +396,28 @@ Template.dashboard_campaign_list.destroyed = function(){
     h.stop();
   })
 }
+
+
+Template.dashboard_performance_floor.helpers({
+    datum: function(key) {
+      // `key` = 'floor', should be appear in first column
+      return [
+          { 'floor': "1/F", 'totalVisits': 9000, 'avgDwellTime': 30, 'repeatedVisits': 0.6 },
+          { 'floor': "2/F", 'totalVisits': 8000, 'avgDwellTime': 30, 'repeatedVisits': 0.5 },
+          { 'floor': "3/F", 'totalVisits': 7000, 'avgDwellTime': 32, 'repeatedVisits': 0.2 },
+          { 'floor': "4/F", 'totalVisits': 6000, 'avgDwellTime': 20, 'repeatedVisits': 0.4 },
+          { 'floor': "5/F", 'totalVisits': 5000, 'avgDwellTime': 45, 'repeatedVisits': 0.6 },
+          { 'floor': "6/F", 'totalVisits': 4000, 'avgDwellTime': 40, 'repeatedVisits': 0.3 },
+          { 'floor': "7/F", 'totalVisits': 7000, 'avgDwellTime': 120, 'repeatedVisits': 0.3 },
+          { 'floor': "8/F", 'totalVisits': 3000, 'avgDwellTime': 90, 'repeatedVisits': 0.2 }
+        ]
+    },
+    settings: function() {
+        return {
+            rowsPerPage: 10,
+            showFilter: true,
+            fields: ['totalVisits', 'avgDwellTime', 'repeatedVisits'],
+            key: "floor"
+        };
+    }
+});

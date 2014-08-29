@@ -77,7 +77,37 @@
 
 <template name="dashboard_performance_floor">
   <div class="performance floor">
-    Floor map
+    {{#with data=datum settings=settings}}
+    {{log this}}
+    <div class="row">
+      <div class="performance-table-wrapper col-sm-5 ">
+        <table class="table performance-table stat-table">
+          <thead>
+            <tr>
+              {{#each settings.fields}}
+              <th>{{this}}</th>
+              {{/each}}
+            </tr>
+          </thead>
+          <tbody>
+            {{#each data}}
+            <tr class="legend" data-id="{{_id}}">
+              <td colspan="{{size settings.fields}}">{{obtain this settings.key}}</td>
+            </tr>
+            <tr class="entry" data-id="{{_id}}">
+             {{#each settings.fields}}
+              <td>{{obtain .. this}}</td>
+             {{/each}}
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-sm-7">
+        <div class="floor maplet" data-floor=""></div>
+      </div>
+    </div>
+    {{/with}}
   </div>
 </template>
 

@@ -190,3 +190,29 @@
     // text-anchor: middle;
   }
 }
+
+.performance-table {
+  &.table > thead > tr > th,
+  &.table > tbody > tr.entry > td {
+    border:none;
+  }
+
+  &.table > thead > tr > th,
+  &.table > tbody > tr.legend > td {
+    font-size: 0.8em;
+  }
+  &.table > tbody > tr.entry > td {
+    font-size: 1.1em;
+    padding-top:0.2em;
+  }
+
+  &.table > tbody > tr.legend > td {
+    padding-bottom:0.2em
+  }
+  &.table > tbody {
+    border-bottom:1px solid #ddd;
+  }
+}
+.performance-table-wrapper {
+  border-right: 1px solid #ddd;
+}

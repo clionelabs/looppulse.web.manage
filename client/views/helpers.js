@@ -55,3 +55,7 @@ UI.registerHelper('obtain',
     }
   }
 )
+
+UI.registerHelper('size', function(arr){
+  return arr.length;
+})
