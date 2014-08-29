@@ -317,6 +317,9 @@ Template.dashboard_performance_chart.helpers({
   },
   showFloor: function(){
     return Session.get("view-building")
+  },
+  transform: function(){
+    return { klass:"dashboard-performance-chart", data: this }
   }
 });
 Template.dashboard_performance_chart.events({

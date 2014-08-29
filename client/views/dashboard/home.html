@@ -1,4 +1,5 @@
 <template name="dashboard_widget">
+{{log this}}
   <div class="widget-panel {{klass}}">
     <header class="heading">{{>yield region="dashboard-header"}}</header>
     <div class="content">
@@ -32,7 +33,7 @@
 
 <!-- Specific Template -->
 <template name="dashboard_performance_chart">
-  {{#Layout template="dashboard_widget" klass="dashboard-performance"}}
+  {{#Layout template="dashboard_widget" data=transform }}
 
     {{#contentFor region="dashboard-header"}}
       <h4 class="headline">Performance</h4>
@@ -45,7 +46,7 @@
       </div>
     {{/contentFor}}
 
-    {{#contentFor region="dashboard-content"}}
+    {{#contentFor region="dashboard-content" data=this.data}}
       <div class="chart-wrapper">
         {{! context : this.data = performances }}
         {{#if showChart}}
