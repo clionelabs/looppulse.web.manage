@@ -81,12 +81,15 @@
     });
 
     describe("save()", function () {
-      it("should do nothing for unknown proximity", function () {
+      it("should warn for unknown proximity", function () {
         var beaconEvent = new BeaconEvent("aVisitorId", "aBeaconId", { type: "t1" });
+        spyOn(beaconEvent, 'warnAboutUnknownProximity');
+        spyOn(BeaconEvents, "upsert").andReturn({insertedId: 1});
 
         beaconEvent.proximity = "unknown";
+        beaconEvent.save();
 
-        expect(beaconEvent.save()).toBe(undefined);
+        expect(beaconEvent.warnAboutUnknownProximity).toHaveBeenCalled();
       });
 
       it("should return ID after save", function () {
