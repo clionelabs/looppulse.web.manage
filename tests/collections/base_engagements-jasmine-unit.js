@@ -44,12 +44,8 @@
     });
 
     describe("customizedEngagementContext", function () {
-      it("should create context based on recommend installation ID", function () {
-      });
-
-      it("should return a EngagementContext", function () {
-
-      });
+      it("should create context based on recommend installation ID");
+      it("should return a EngagementContext");
     });
 
     describe("trigger()", function () {
