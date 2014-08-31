@@ -58,7 +58,7 @@ var configureCompany= function (companyConfig, configurationJSON) {
                 configurationJSON);
 
   // Company
-  var company = new Company(companyConfig.name, companyConfig.logoUrl, configurationJSON);
+  var company = new Company(companyConfig.name, companyConfig.system, configurationJSON);
   companyConfig._id = company.save();
   console.info("[Init] Company created:", company._id, company.name);
 
