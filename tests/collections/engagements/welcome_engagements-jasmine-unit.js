@@ -39,7 +39,7 @@
       });
     });
 
-    describe("readyToTrigger()", function () {
+    xdescribe("readyToTrigger()", function () {
       it("should return true if at non-recently visited trigger installation", function () {
         var encounter = jasmine.createSpy("encounter");
         var engagement = new WelcomeEngagement();
