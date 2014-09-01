@@ -3,7 +3,8 @@
     "resetLocal": false,
     "logVisitorToFirebase": false,
     "seedData": "",
-    "deliveringMessagesFirebaseURL": "https://<YOUR_APP>.firebaseio.com/delivering_messages"
+    "deliveringMessagesFirebaseURL": "https://<YOUR_APP>.firebaseio.com/delivering_messages",
+    "visitorsFirebaseURL": "https://<YOUR_APP>.firebaseio.com/visitors"
   },
 
   "aws": {
