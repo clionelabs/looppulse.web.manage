@@ -37,7 +37,8 @@ var observeCompaniesFromFirebase = function() {
   companiesRef.on(
     "child_added",
     Meteor.bindEnvironment(function(childSnapshot, prevChildName) {
-      configureCompany(childSnapshot.val());
+      var configurationJSON = childSnapshot.ref().toString()+".json";
+      configureCompany(childSnapshot.val(), configurationJSON);
     })
   );
 };
@@ -47,18 +48,31 @@ var configureCompanyFromJSON = function (companyJSON) {
   console.info("[Init] Configuring a company from: ", companyJSON);
   var file = Assets.getText(companyJSON);
   companyConfig = JSON.parse(file);
-  configureCompany(companyConfig);
+  configureCompany(companyConfig, companyJSON);
 };
 
-var configureCompany= function (companyConfig) {
+var configureCompany= function (companyConfig, configurationJSON) {
   console.info("[Init] Configuring " + companyConfig.name + " with (" +
                 _.keys(companyConfig.products) + ") products and (" +
-                _.keys(companyConfig.locations) + ") locations.");
+                _.keys(companyConfig.locations) + ") locations from " +
+                configurationJSON);
 
   // Company
-  var company = new Company(companyConfig.name, companyConfig.logoUrl);
+  var company = new Company(companyConfig.name, companyConfig.system, configurationJSON);
   companyConfig._id = company.save();
   console.info("[Init] Company created:", company._id, company.name);
+
+  // Application
+  _.each(companyConfig.applications, function(appConfig) {
+    var app = Applications.findOne({companyId: companyConfig._id, name: appConfig.name});
+    if (!app) {
+      app = new Application(companyConfig._id, appConfig.name);
+      Applications.upsert(app, app);
+
+      app = Applications.findOne({companyId: companyConfig._id, name: appConfig.name});
+    }
+    console.info("[Init] Application created: ", app._id, app.name);
+  });
 
   // Categories
   _.each(companyConfig.categories, function(categoryConfig, categoryKey) {
