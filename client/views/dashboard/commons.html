@@ -1,0 +1,45 @@
+<template name="dashboard_widget">
+  <div class="widget-panel {{klass}}">
+    <header class="heading">{{>yield region="dashboard-header"}}</header>
+    <div class="content">
+      {{!kick the extra content}}
+      {{>yield}}
+      {{>yield region="dashboard-content"}}
+    </div>
+  </div>
+</template>
+
+<template name="dashboard_card">
+  <div class="card-panel">
+    <div class="content">
+      <div class="row">
+          <div class="number col-sm-8">{{number}} <span class="unit">{{unit}}</span></div>
+          <div class="diff col-sm-4">
+            {{! change the context into the result object of setSign }}
+            {{#with setSign diff}}
+            <span class="sign {{klass}}"></span>
+            <span class="value">{{value}} {{unit}}</span>
+            {{/with}}
+          </div>
+      </div>
+      <div class="row">
+        <div class="field heading col-sm-8">{{field}}</div>
+        <div class="duration col-sm-4">{{duration}}</div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="dashboard_summary">
+    <div class="summary highlights row">
+      <div class="col-sm-4">
+        {{> dashboard_card first }}
+      </div>
+      <div class="col-sm-4">
+        {{> dashboard_card second }}
+      </div>
+      <div class="col-sm-4">
+        {{> dashboard_card third }}
+      </div>
+    </div>
+</template>
