@@ -16,18 +16,12 @@
 
               <!-- Collect the nav links, forms, and other content for toggling -->
               <div class="collapse navbar-collapse" id="primary-navbar-collapse">
-                <div class="title page-title">
-                {{#if title}}
-                  <h1>{{title}}</h1>
-                {{else}}
-                  <h1>Loop Pulse</h1>
+                {{#if currentUser }}
+                <ul class="nav navbar-nav">
+                  <li class="{{ isActivePath 'dashboard' }}"><a href="/dashboard">dashboard</a></li>
+                  <li class="{{ isActivePath 'engagement' }}"><a href="/engagement">engagement</a></li>
+                </ul>
                 {{/if}}
-                {{#if sub_title}}
-                  <h2>{{sub_title}}</h2>
-                {{else}}
-                  <h2>Welcome</h2>
-                {{/if}}
-                </div>
                 <ul class="nav navbar-nav navbar-right">
                   {{> login_box}}
                 </ul>
@@ -40,9 +34,34 @@
     <nav class="secondary-navbar navbar navbar-default"  role="navigation">
       <div class="container">
           <div class="row navbar-wrapper">
-              <ul class="nav navbar-nav">
-                  <li class="{{ isActivePath 'dashboard' }}"><a href="/dashboard">dashboard</a></li>
-                  <li class="{{ isActivePath 'engagement' }}"><a href="/engagement">engagement</a></li>
+
+              <div class="title page-title">
+              {{#if title}}
+                <h1>{{title}}</h1>
+              {{else}}
+                <h1>Loop Pulse</h1>
+              {{/if}}
+              {{#if subtitle}}
+                <h2>{{subtitle}}</h2>
+              {{else}}
+                <h2>Welcome</h2>
+              {{/if}}
+              </div>
+              <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown locations-dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="dropdown-label">
+                      {{currentLabel}}
+                    </span>
+                    <span class="caret"></span>
+                  </a>
+                  {{! locations menu }}
+                  <ul class="dropdown-menu" role="menu">
+                    {{#each menus}}
+                      <li class=""><a href="{{href}}">{{label}}</a></li>
+                    {{/each}}
+                  </ul>
+                </li>
               </ul>
           </div>
         </div>

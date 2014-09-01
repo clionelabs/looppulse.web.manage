@@ -10,6 +10,18 @@ html {
   background-color:transparent;
   border: none;
   border-radius: 0;
+  .navbar-nav {
+    & > li > a {
+      padding: 0.5em;
+    }
+
+    & > .active > a,
+    & > .active > a:hover,
+    & > .active > a:focus {
+      color: #fff;
+      background-color: transparent;
+    }
+  }
 }
 
 main {
@@ -146,19 +158,28 @@ header.primary {
   }
 
 }
+
 .secondary-navbar {
   background-color: $alt-light-color;
   .navbar-wrapper {
-    text-align: center;
+    padding-left: 10px;
+    padding-right: 22px;
   }
+  .page-title ,
   .navbar-nav {
     display: inline-block;
-    float: none;
   }
-  &.navbar-default .navbar-nav > .active > a,
-  &.navbar-default .navbar-nav > .active > a:hover,
-  &.navbar-default .navbar-nav > .active > a:focus {
-    color: #555;
-    background-color: transparent;
+  h1, h2, h3, h4, h5 {
+    display: inline-block;
+    font-size: 1em;
+    margin: 0.5em 0;
+    line-height: 1.6;
+  }
+  h1 {
+    font-size: 1.2em;
+  }
+  li.dropdown > a {
+    padding: { top: 1em; bottom: 1em };
+    font-size: 1em;
   }
 }
