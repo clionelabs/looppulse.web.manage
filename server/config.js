@@ -112,20 +112,17 @@ var configureCompany= function (companyConfig) {
 
       var replaceInstallationKeysWithIds = function (keyMessages) {
         var installationIdsToMessages = {};
-        _.each(message, function(message, key) {
+        _.each(keyMessages, function(message, key) {
           installationId = installationKeyToId(key);
           installationIdsToMessages[installationId] = message;
         });
         return installationIdsToMessages;
       };
-      var message = engagementConfig.message;
-      if (engagementConfig.type === RecommendationEngagement.type) {
-        message = replaceInstallationKeysWithIds(engagementConfig.message);
-      }
 
+      var context = replaceInstallationKeysWithIds(engagementConfig.context);
       var e = { type: engagementConfig.type,
                 locationId: companyConfig.locations[locationKey]._id,
-                message: message,
+                context: context,
                 triggerInstallationIds: triggerInstallationIds,
                 recommendInstallationIds: recommendInstallationIds };
       Engagements.upsert(e, e);

@@ -103,20 +103,6 @@
       });
     });
 
-    describe("trigger()", function () {
-      it("should deliver Message", function () {
-        spyOn(Message, "deliver");
-        var encounter = jasmine.createSpyObj("encounter", ["visitorId"]);
-        var engagement = new WelcomeEngagement();
-        engagement._id = 1;
-        engagement.message = "aMessage";
-
-        engagement.trigger(encounter);
-
-        expect(Message.deliver).toHaveBeenCalledWith(encounter.visitorId, engagement.message, engagement._id);
-      });
-    });
-
   });
 
 }());
