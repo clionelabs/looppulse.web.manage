@@ -1,8 +1,8 @@
 configure();
 
 Meteor.startup(
-  Meteor.bindEnvironment(function () {
-    Meteor.defer(function () {
+  Meteor.bindEnvironment(function() {
+    Meteor.defer(function() {
       console.time("[startup] configure");
       configureDEBUG();
       console.timeEnd("[startup] configure");
@@ -12,7 +12,10 @@ Meteor.startup(
       console.timeEnd("[startup] ensureIndexes");
 
       observeFirebase();
+
+      console.time("[startup] observeCollections");
       observeCollections();
+      console.timeEnd("[startup] observeCollections");
     });
   })
 );
@@ -27,16 +30,13 @@ var observeFirebase = function() {
 };
 
 var observeCollections = function() {
-  console.time("[startup] Encounter");
-  Encounter.startup();
-  console.timeEnd("[startup] Encounter");
-  console.time("[startup] Engagement");
-  Engagement.startup();
-  console.timeEnd("[startup] Engagement");
-  console.time("[startup] EngagementMetric");
-  EngagementMetric.startup();
-  console.timeEnd("[startup] EngagementMetric");
-  console.time("[startup] EngagementMetric");
-  ProductMetric.startup();
-  console.timeEnd("[startup] EngagementMetric");
+  var classes = [
+    Encounter, Engagement,
+    EngagementMetric, InstallationMetric, ProductMetric
+  ];
+  classes.forEach(function(objectClass) {
+    if (objectClass.hasOwnProperty('startup')) {
+      objectClass.startup();
+    }
+  });
 };

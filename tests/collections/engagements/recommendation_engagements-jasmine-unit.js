@@ -67,7 +67,7 @@
       });
     });
 
-    describe("customizedMessage()", function () {
+    xdescribe("customizedMessage()", function () {
       it("should return customized message", function () {
         var installationId = 1;
         var engagement = new RecommendationEngagement();
@@ -187,7 +187,7 @@
       });
     });
 
-    describe("trigger()", function () {
+    xdescribe("trigger()", function () {
       it("should call customizedMessage with recommended installation Ids", function () {
         spyOn(Message, "deliver");
         var encounter = jasmine.createSpyObj("encounter", ["visitorId"]);
@@ -203,7 +203,7 @@
         expect(engagement.customizedMessage).toHaveBeenCalledWith(expectedInstallationId);
       });
 
-      xit("should deliver Message", function () {
+      it("should deliver Message", function () {
         spyOn(Message, "deliver");
         var encounter = jasmine.createSpyObj("encounter", ["visitorId"]);
         var engagement = new RecommendationEngagement();
