@@ -74,11 +74,28 @@ var configureCompany= function (companyConfig, configurationJSON) {
     console.info("[Init] Application created: ", app._id, app.name);
   });
 
+  // Categories
+  _.each(companyConfig.categories, function(categoryConfig, categoryKey) {
+    var category = new Category({
+      companyId: company._id,
+      name: categoryConfig.name
+    });
+    companyConfig.categories[categoryKey]._id = category.save();
+    console.info("[Init] Category created:", category._id, category.name);
+  });
+
   // Products
   _.each(companyConfig.products, function(productConfig, productKey) {
+    var categoryConfig = companyConfig.categories[productConfig.category];
+    if (!categoryConfig) {
+      console.error("[Init] Can not find category [%s] for product [%s]", productConfig.category, productConfig.name);
+      return;
+    }
+    var categoryId = categoryConfig._id;
     var p = new Product({
       name: productConfig.name,
-      companyId: company._id
+      companyId: company._id,
+      categoryId: categoryId
     });
     companyConfig.products[productKey]._id = p.save();
     console.info("[Init] Product created:", p._id, p.name);
@@ -103,6 +120,17 @@ var configureCompany= function (companyConfig, configurationJSON) {
       name = !name ? data.name : name; // only override the name label if no given name
       var coord = installationConfig.coordinate;
 
+      // Floor
+      // TODO create floor definitions dictionary + attach floorId to Installation?
+      if (coord.z) {
+        var floor = new Floor({
+          locationId: location._id,
+          level: coord.z,
+          name: coord.z + "/F"
+        });
+        floor.save();
+      }
+
       var beaconId = null;
       {
         var beaconConfig = installationConfig.beacon;
@@ -113,6 +141,17 @@ var configureCompany= function (companyConfig, configurationJSON) {
       locationConfig.installations[installationKey]._id = installation.save();
       console.info("[Init] Installation created:", JSON.stringify(installation));
     });
+
+    // Segments
+    var segments = {};
+    {
+      var segmentOfAllVisitors = new Segment({
+        companyId: company._id,
+        name: "All visitors"
+      });
+      segmentOfAllVisitors.save();
+      segments['visitor'] = segmentOfAllVisitors;
+    }
 
     // Engagements
     _.each(locationConfig.engagements, function(engagementConfig) {
@@ -126,22 +165,29 @@ var configureCompany= function (companyConfig, configurationJSON) {
 
       var replaceInstallationKeysWithIds = function (keyMessages) {
         var installationIdsToMessages = {};
-        _.each(message, function(message, key) {
+        _.each(keyMessages, function(message, key) {
           installationId = installationKeyToId(key);
           installationIdsToMessages[installationId] = message;
         });
         return installationIdsToMessages;
       };
-      var message = engagementConfig.message;
-      if (engagementConfig.type === RecommendationEngagement.type) {
-        message = replaceInstallationKeysWithIds(engagementConfig.message);
-      }
 
-      var e = { type: engagementConfig.type,
-                locationId: companyConfig.locations[locationKey]._id,
-                message: message,
-                triggerInstallationIds: triggerInstallationIds,
-                recommendInstallationIds: recommendInstallationIds };
+      var segmentId = segments[engagementConfig.segment]._id;
+      var validPeriod = {
+        start: Date.parse(engagementConfig.validPeriod.start),
+        end: Date.parse(engagementConfig.validPeriod.end)
+      };
+      var context = replaceInstallationKeysWithIds(engagementConfig.context);
+      var e = {
+        type: engagementConfig.type,
+        name: engagementConfig.name,
+        validPeriod: validPeriod,
+        segmentId: segmentId,
+        locationId: companyConfig.locations[locationKey]._id,
+		context: context,
+        triggerInstallationIds: triggerInstallationIds,
+        recommendInstallationIds: recommendInstallationIds
+      };
       Engagements.upsert(e, e);
       var reloaded = Engagements.findOne(e);
       console.info("[Init] Engagement created:", JSON.stringify(reloaded));
