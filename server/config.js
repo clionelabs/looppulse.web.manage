@@ -151,29 +151,26 @@ var configureCompany= function (companyConfig) {
 
       var replaceInstallationKeysWithIds = function (keyMessages) {
         var installationIdsToMessages = {};
-        _.each(message, function(message, key) {
+        _.each(keyMessages, function(message, key) {
           installationId = installationKeyToId(key);
           installationIdsToMessages[installationId] = message;
         });
         return installationIdsToMessages;
       };
-      var message = engagementConfig.message;
-      if (engagementConfig.type === RecommendationEngagement.type) {
-        message = replaceInstallationKeysWithIds(engagementConfig.message);
-      }
 
       var segmentId = segments[engagementConfig.segment]._id;
       var validPeriod = {
         start: Date.parse(engagementConfig.validPeriod.start),
         end: Date.parse(engagementConfig.validPeriod.end)
       };
+      var context = replaceInstallationKeysWithIds(engagementConfig.context);
       var e = {
         type: engagementConfig.type,
         name: engagementConfig.name,
         validPeriod: validPeriod,
         segmentId: segmentId,
         locationId: companyConfig.locations[locationKey]._id,
-        message: message,
+		context: context,
         triggerInstallationIds: triggerInstallationIds,
         recommendInstallationIds: recommendInstallationIds
       };

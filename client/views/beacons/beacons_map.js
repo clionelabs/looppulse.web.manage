@@ -32,7 +32,10 @@ Template.beacons_map_marker.rendered = function(){
   //jQuery('.beacon-map').trigger("beacon-rendered", beaconId)
   var beaconId = this.data.beacon.beaconId
   //console.log("Setting Up Query Listener", this, beaconId)
-  var config = Meteor.settings.public.view.beaconsMap || {};
+  var config = Meteor.settings.public.view.beaconsMap || {
+        "limit": 50,
+        "forwardBufferInSec": 5
+      };
   var lim = config.limit || 10;
   var now = (new Date()).getTime();
   var t = now - (config.forwardBufferInSec * 60 * 1000); // js timestamp is in ms

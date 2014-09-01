@@ -7,11 +7,7 @@ Session.set('sessionId', Meteor.default_connection._lastSessionId);
 
   var config = Meteor.settings["public"];
 
-  if (config.DEBUG && config.testId){
-    console.log("Welcome to DEBUG mode")
-    console.log("company for testing: ", config.testId)
-    Session.set("companyId", config.testId)
-  }
+
 
 })();
 
