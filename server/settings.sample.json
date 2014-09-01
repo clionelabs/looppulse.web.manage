@@ -30,14 +30,6 @@
     }
   },
   "public": {
-    "DEBUG": true,
-    "testId": "rSZ6gszkurBQzfpai",
-    "view": {
-      "beaconsMap": {
-        "limit": 50,
-        "forwardBufferInSec": 5
-      }
-    }
   },
   "performance": {
   }
