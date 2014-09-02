@@ -1,8 +1,30 @@
 //Basic CSS after bootstrap style
 @import "variable";
-html {
-  position: relative;
+html, body {
+  height: 100%;
+}
+.wrapper {
   min-height: 100%;
+  /* equal to footer height */
+  margin-bottom: -60px;
+}
+.wrapper {
+  background-color: #EBEDF0;
+  &.dry {
+    background-color: #fff;
+    .inverted-layer {
+      background-color: #EBEDF0;
+    }
+  }
+
+  &:after {
+    content: "";
+  }
+}
+.wrapper:after, footer.primary {
+  /* .push must be the same height as footer */
+  height: 60px;
+  display: block;
 }
 
 // Override
@@ -26,7 +48,9 @@ html {
 
 main {
     line-height: 1.4;
-    padding: 20px 0;
+    & > .container {
+      padding: 20px 0;
+    }
 }
 
 table.table {
@@ -82,8 +106,6 @@ svg.d4 {
 //Main
 
 body {
-  margin-bottom: 60px;
-  background-color: #EBEDF0;
   color: #9B9B9B;
   // retina: 34px/40px (34/1.1764)
   // half: 17px/1.18
@@ -96,11 +118,11 @@ footer.primary {
   background-color: $alt-dark-color;
   color: #fff;
 
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 60px;
-  width: 100%
+  // position: relative;
+  // left: 0;
+  // bottom: 0;
+  // height: 60px;
+  // width: 100%
 }
 
 .copyright {
@@ -161,6 +183,7 @@ header.primary {
 
 .secondary-navbar {
   background-color: $alt-light-color;
+  margin-bottom: 0;
   .navbar-wrapper {
     padding-left: 10px;
     padding-right: 22px;
@@ -182,4 +205,12 @@ header.primary {
     padding: { top: 1em; bottom: 1em };
     font-size: 1em;
   }
+}
+
+.page-wrapper {
+  background-color: #fff;
+  & > header {
+    background-color: $alt-light-color;
+  }
+
 }

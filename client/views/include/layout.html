@@ -1,4 +1,5 @@
 <template name="layout">
+  <div class="wrapper {{#if dryLayout}}dry{{/if}}">
     <header class="primary">
       <div class="container">
         <div class="row">
@@ -69,14 +70,22 @@
     </nav>
     {{/if}}
     <main>
-      <div class="container">
-      {{> yield}}
-      </div>
+      {{!if not useContainer}}
+      {{#unless dryLayout}}
+        <div class="container">
+        {{> yield}}
+        </div>
+      {{else}}
+        <div class="dry-container">
+        {{> yield}}
+        </div>
+      {{/unless}}
     </main>
 
-    <footer class="primary">
-      <div class="container">
-        <p class="copyright">Looppulse by Clione Labs</p>
-      </div>
-    </footer>
+  </div>
+  <footer class="primary">
+    <div class="container">
+      <p class="copyright">Looppulse by Clione Labs</p>
+    </div>
+  </footer>
 </template>

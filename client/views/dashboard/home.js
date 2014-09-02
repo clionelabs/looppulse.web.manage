@@ -392,9 +392,16 @@ Template.dashboard_performance_chart.destroyed = function () {
   //Clear Session
 };
 Template.dashboard_campaign_list.destroyed = function(){
-  this.handle.forEach(function(h){
-    h.stop();
-  })
+  if(this.handle){
+    this.handle.forEach(function(h){
+      h.stop();
+    })
+  }
+  if(this.locationHandle){
+    this.locationHandle.forEach(function(h){
+      h.stop();
+    })
+  }
 }
 
 

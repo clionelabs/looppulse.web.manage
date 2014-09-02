@@ -1,3 +1,18 @@
+<template name="dashboard_page">
+<div class="page-wrapper">
+  <header class="inverted-layer">
+    <div class="container">
+    {{>yield region="main-header"}}
+    </div>
+  </header>
+  <section>
+    <div class="container">
+    {{>yield}}
+    </div>
+  </section>
+</div>
+</template>
+
 <template name="dashboard_widget">
   <div class="widget-panel {{klass}}">
     <header class="heading">{{>yield region="dashboard-header"}}</header>
