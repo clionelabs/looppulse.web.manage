@@ -16,38 +16,6 @@ Template.dashboard_home.helpers({
   locationMetric: function(){
     return LocationMetrics.findOne({ locationId: this._id })
   },
-  /**
-  Extract the campaigns data from engagements
-  @return Campaigns Data with object \{ _id, name, sent, visited, conversion \}
-  **/
-  campaigns: function(){
-    var collection;
-
-    //@@DEMO: return real stuff or dummy
-    //@@WARNING: ORDER IMPORTANTED
-    var campaigns = Engagements.find().map(function(engagement) {
-      var metric = EngagementMetrics.findOne({ engagementId: engagement._id });
-      return {
-        _id: engagement._id,
-        name: engagement.name,
-        desc: engagement.description,
-        sent: metric.sentMessageCount,
-        viewed: metric.viewedMessageCount,
-        visited: metric.visitedCount,
-        conversion: metric.conversionRates().sentMessageToVisited,
-        startTime: "", endTime: "", traceOffset: 100000
-      };
-    });
-
-    if (campaigns.length === 0){
-      return [
-        { _id:"demo0001", name:"Elephant Parade", startTime: "", endTime: "", traceOffset: 100000, desc: "Visit the elephant on UG and a chance to win 2 movie tickets Engage customers when it’s Monday, Wednesday between 7pm to 9pm When they’re entering zone 107", sent:1000, viewed: 900, visited: 600, conversion: 0.6,viewConversion: 0.68  },
-        { _id:"demo0002", name:"Super Weekend", startTime: "", endTime: "", traceOffset: 100000, desc: "Lucky Draw on purchase > $500", sent:1200, viewed: 800,  visited: 600, conversion: 0.5, viewConversion: 0.75 },
-        { _id:"demo0003", name:"Summer Festival", startTime: "", endTime: "", traceOffset: 100000, desc: "10% off for everything", sent:2000, viewed: 1200, visited: 400, conversion: 0.2,  viewConversion: 0.33 }
-      ]
-    }
-    return campaigns;
-  },
   totalVisits: function(period){
     // this = with context = cursor
     /*
@@ -152,6 +120,33 @@ Template.dashboard_home.helpers({
   }
 });
 
+
+Template.dashboard_card.helpers({
+  setSign: function(diff){
+    var sign = (diff > 0) ? "+" :
+                                  (diff < 0) ? "-": "" ;
+    var klass = ""; //class of expected result
+    var sybmol = "";
+    switch (sign){
+      case "+":
+        klass = "up";
+        break;
+      case "-":
+        klass = "down";
+        break;
+      default:
+        klass = "unchange";
+
+    }
+    //process the number before it reach the frontend
+    return {
+      klass: "arrow-"+klass,
+      value: diff,
+      unit: "%"
+    }
+  }
+})
+
 Template.dashboard_campaign_list.helpers({
   getStat: function(){
     var campaign = this;
@@ -185,34 +180,42 @@ Template.dashboard_campaign_list.helpers({
       },
       startTime: t + offset
     }]
+  },
+
+  /**
+  Extract the campaigns data from engagements
+  @return Campaigns Data with object \{ _id, name, sent, visited, conversion \}
+  **/
+  campaigns: function(){
+    var collection;
+
+    //@@DEMO: return real stuff or dummy
+    //@@WARNING: ORDER IMPORTANTED
+    var campaigns = Engagements.find().map(function(engagement) {
+      var metric = EngagementMetrics.findOne({ engagementId: engagement._id });
+      return {
+        _id: engagement._id,
+        name: engagement.name,
+        desc: engagement.description,
+        sent: metric.sentMessageCount,
+        viewed: metric.viewedMessageCount,
+        visited: metric.visitedCount,
+        conversion: metric.conversionRates().sentMessageToVisited,
+        startTime: "", endTime: "", traceOffset: 100000
+      };
+    });
+
+    if (campaigns.length === 0){
+      return [
+        { _id:"demo0001", name:"Elephant Parade", startTime: "", endTime: "", traceOffset: 100000, desc: "Visit the elephant on UG and a chance to win 2 movie tickets Engage customers when it’s Monday, Wednesday between 7pm to 9pm When they’re entering zone 107", sent:1000, viewed: 900, visited: 600, conversion: 0.6,viewConversion: 0.68  },
+        { _id:"demo0002", name:"Super Weekend", startTime: "", endTime: "", traceOffset: 100000, desc: "Lucky Draw on purchase > $500", sent:1200, viewed: 800,  visited: 600, conversion: 0.5, viewConversion: 0.75 },
+        { _id:"demo0003", name:"Summer Festival", startTime: "", endTime: "", traceOffset: 100000, desc: "10% off for everything", sent:2000, viewed: 1200, visited: 400, conversion: 0.2,  viewConversion: 0.33 }
+      ]
+    }
+    return campaigns;
   }
 })
 
-Template.dashboard_card.helpers({
-  setSign: function(diff){
-    var sign = (diff > 0) ? "+" :
-                                  (diff < 0) ? "-": "" ;
-    var klass = ""; //class of expected result
-    var sybmol = "";
-    switch (sign){
-      case "+":
-        klass = "up";
-        break;
-      case "-":
-        klass = "down";
-        break;
-      default:
-        klass = "unchange";
-
-    }
-    //process the number before it reach the frontend
-    return {
-      klass: "arrow-"+klass,
-      value: diff,
-      unit: "%"
-    }
-  }
-})
 
 Template.dashboard_campaign_list.events({
   "click .data-row": function(e, tmpl){ //e.currentTarget = .data-row, tmpl= this in template helpers and methods, this = tmple.data
@@ -308,6 +311,19 @@ Template.dashboard_campaign_list.events({
   }
 });
 
+Template.dashboard_campaign_list.destroyed = function(){
+  if(this.handle){
+    this.handle.forEach(function(h){
+      h.stop();
+    })
+  }
+  if(this.locationHandle){
+    this.locationHandle.forEach(function(h){
+      h.stop();
+    })
+  }
+}
+
 Template.dashboard_performance_chart.helpers({
   showChart: function(){
     return Session.get("view-chart")
@@ -350,6 +366,11 @@ Template.dashboard_performance_chart.created = function(){
   Session.set("view-grid", false)
   Session.set("view-building", false)
 }
+Template.dashboard_performance_chart.destroyed = function () {
+  this.handle && this.handle.stop();
+  //Clear Session
+};
+
 Template.dashboard_performance_charting.rendered = function(){
   var self = this;
   console.log("re-rendering",this)
@@ -385,23 +406,6 @@ Template.dashboard_performance_charting.rendered = function(){
     .call(chart);
   })
 
-}
-
-Template.dashboard_performance_chart.destroyed = function () {
-  this.handle && this.handle.stop();
-  //Clear Session
-};
-Template.dashboard_campaign_list.destroyed = function(){
-  if(this.handle){
-    this.handle.forEach(function(h){
-      h.stop();
-    })
-  }
-  if(this.locationHandle){
-    this.locationHandle.forEach(function(h){
-      h.stop();
-    })
-  }
 }
 
 

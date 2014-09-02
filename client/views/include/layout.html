@@ -38,13 +38,10 @@
           <div class="row navbar-wrapper">
 
               <div class="title page-title">
-              {{#if title}}
-                <h1>{{title}}</h1>
+              {{#if companyName}}
+                <h1>{{companyName}}</h1>
               {{else}}
                 <h1>Loop Pulse</h1>
-              {{/if}}
-              {{#if subtitle}}
-                <h2>{{subtitle}}</h2>
               {{/if}}
               </div>
               <ul class="nav navbar-nav navbar-right">
@@ -70,7 +67,7 @@
     <main>
       {{!if not useContainer}}
       {{#unless dryLayout}}
-        <div class="container">
+        <div class="container page-wrapper">
         {{> yield}}
         </div>
       {{else}}

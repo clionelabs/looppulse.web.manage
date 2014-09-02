@@ -9,11 +9,11 @@ html, body {
   margin-bottom: -60px;
 }
 .wrapper {
-  background-color: #EBEDF0;
+  background-color: $background-color;
   &.dry {
-    background-color: #fff;
+    background-color: $content-background-color;
     .inverted-layer {
-      background-color: #EBEDF0;
+      background-color: $background-color;
     }
   }
 
@@ -48,7 +48,7 @@ html, body {
 
 main {
     line-height: 1.4;
-    & > .container {
+    & > .container, .page-wrapper, .wrapped-content {
       padding: 20px 0;
     }
 }
@@ -207,10 +207,17 @@ header.primary {
   }
 }
 
-.page-wrapper {
+.page-content {
   background-color: #fff;
   & > header {
-    background-color: $alt-light-color;
+    background-color: $background-color;
+    padding-bottom: 1em;
+    h1, h2, h3, h4,h5, .toolbox {
+      display:inline-block
+    }
+    .toolbox {
+      margin-top: 1em;
+    }
   }
 
 }

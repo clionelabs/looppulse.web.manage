@@ -1,12 +1,16 @@
 <template name="dashboard_engagement">
-<div class="page-wrapper">
+<div class="page-content">
   <header>
     <div class="container">
-    engage
+      <div class="row">
+        <h3>Engagement {{ campaignCount }} Campaigns</h3>
+        <div class="toolbox pull-right"><button class="create-btn action-btn btn btn-primary">New</button></div>
+      </div>
     </div>
   </header>
   <section>
-    <div class="container">
+    <div class="container wrapped-content">
+    {{> dashboard_campaign_list campaigns=campaigns }}
     </div>
   </section>
 </div>
