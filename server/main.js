@@ -12,8 +12,8 @@ Meteor.startup(
 );
 
 var observeFirebase = function() {
-  Benchmark.time(observeBeaconEventsFromFirebase, "[Startup] observeBeaconEventsFromFirebase");
-  Benchmark.time(observeEngagementEventsFromFirebase, "[Startup] observeEngagementEventsFromFirebase");
+  observeBeaconEventsFromFirebase();
+  observeEngagementEventsFromFirebase();
 };
 
 var observeCollections = function() {
