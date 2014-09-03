@@ -108,10 +108,10 @@ Meteor.publish('related-metrics', function(id){
       // TODO allow this to be set on client-side?
       $or: [{
         resolution: "daily",
-        startTime: { $gte: MetricsHelper.truncatedDateToDate(MetricsHelper.nDaysAgo(now, 30)) }
+        startTime: { $gte: MetricsHelper.nDaysAgoTruncatedTime(now, 30) }
       }, {
         resolution: "hourly",
-        startTime: { $gte: MetricsHelper.truncatedDateToHours(MetricsHelper.nHoursAgo(now, 24)) }
+        startTime: { $gte: MetricsHelper.nHoursAgoTruncatedTime(now, 24) }
       }, {
         resolution: { $exists: false }
       }]
