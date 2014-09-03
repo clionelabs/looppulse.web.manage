@@ -162,6 +162,8 @@ var configureCompany= function (companyConfig, configurationJSON) {
                                          installationKeyToId);
       var recommendInstallationIds = _.map(engagementConfig.recommendInstallations,
                                            installationKeyToId);
+      var stopInstallationIds = _.map(engagementConfig.stopInstallations,
+                                      installationKeyToId);
 
       var replaceInstallationKeysWithIds = function (keyMessages) {
         var installationIdsToMessages = {};
@@ -184,9 +186,10 @@ var configureCompany= function (companyConfig, configurationJSON) {
         validPeriod: validPeriod,
         segmentId: segmentId,
         locationId: companyConfig.locations[locationKey]._id,
-		context: context,
+        context: context,
         triggerInstallationIds: triggerInstallationIds,
-        recommendInstallationIds: recommendInstallationIds
+        recommendInstallationIds: recommendInstallationIds,
+        stopInstallationIds: stopInstallationIds
       };
       Engagements.upsert(e, e);
       var reloaded = Engagements.findOne(e);
