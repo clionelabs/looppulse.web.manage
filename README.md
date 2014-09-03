@@ -56,7 +56,7 @@ Set up environment.
   2. mongo looppulse_manage
  
 3. SSH tunnel for Jenkins
-  1. ssh -v -i keys/dev.pem -L localhost8080:localhost:8080 ubuntu@54.254.192.191
+  1. ssh -v -i keys/dev.pem -L 8080:localhost:8080 ubuntu@jenkins.looppulse.com
   2. open http://localhost:8080
 
 
