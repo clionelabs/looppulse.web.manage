@@ -13,8 +13,9 @@ Template.dashboard_home.helpers({
     console.log("Querying ProductMetric in Location", this._id);
     return ProductMetrics.find({ locationId: this._id }).fetch();
   },
-  locationMetric: function(){
-    return LocationMetrics.findOne({ locationId: this._id })
+  locationMetric: function() {
+    var locationId = Session.get("currentLocation") || this._id;
+    return LocationMetrics.findOneForThisWeek({ locationId: locationId });
   },
   totalVisits: function(period){
     // this = with context = cursor
