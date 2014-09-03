@@ -144,6 +144,19 @@ Meteor.publish('location-engagements', function(locationId) {
   return Engagements.find(q);
 });
 
+Meteor.publish('location-floors', function(locationId) {
+  var q = {};
+  console.log("Returning location-floors Data", locationId);
+
+  if (locationId && AccountsHelper.fieldMatch("locations", locationId, this.userId)) {
+    q = { locationId: locationId };
+  } else {
+    return null;
+  }
+
+  return Floors.find(q);
+});
+
 //@@DEV
 //@@Admin Use
 Meteor.publish('all-companies', function(){
