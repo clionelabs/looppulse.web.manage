@@ -15,7 +15,7 @@ var observeCompanyChildAdded = function(path, callback) {
   Companies.find().observe({
     "added": function(company) {
       var companyId = company._id;
-      var fbPath = Meteor.settings.firebase.root + '/companies/' + companyId + '/' +  path;
+      var fbPath = company.systemConfig.firebase.root + '/companies/' + companyId + '/' +  path;
       var firebase = new Firebase(fbPath);
       console.log('[Remote] Observing company child_added:', companyId, fbPath);
       firebase.on('child_added', Meteor.bindEnvironment(callback));
