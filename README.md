@@ -44,6 +44,21 @@ Set up environment.
   2. Reboot server
   3. Run `mup deploy` to deploy code to server
 
+## Debugging
+
+1. View Log
+  1. ssh -i keys/jenkins.pem ubuntu@beta.looppulse.com
+  2. sudo less /var/log/upstart/looppulse_manage.log
+  3. sudo tail -f /var/log/upstart/looppulse_manage.log
+
+2. Access Mongo console
+  1. ssh -i keys/jenkins.pem ubuntu@beta.looppulse.com
+  2. mongo looppulse_manage
+ 
+3. SSH tunnel for Jenkins
+  1. ssh -v -i keys/dev.pem -L localhost8080:localhost:8080 ubuntu@54.254.192.191
+  2. open http://localhost:8080
+
 
 ## Documentation
 
