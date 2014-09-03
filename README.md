@@ -59,6 +59,12 @@ Set up environment.
   1. ssh -v -i keys/dev.pem -L 8080:localhost:8080 ubuntu@jenkins.looppulse.com
   2. open http://localhost:8080
 
+4. Dropping database
+  1. In mongo shell/console, `db.dropDatabase()`
+
+5. Force restart
+  1. `sudo service restart looppulse_manage` or simply trigger build in jenkins
+
 
 ## Documentation
 
