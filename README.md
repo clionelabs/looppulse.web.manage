@@ -63,7 +63,7 @@ Set up environment.
   1. In mongo shell/console, `db.dropDatabase()`
 
 5. Force restart
-  1. `sudo service restart looppulse_manage` or simply trigger build in jenkins
+  1. `sudo service looppulse_manage restart` or simply trigger build in jenkins
 
 
 ## Documentation
