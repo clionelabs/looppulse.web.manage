@@ -59,3 +59,7 @@ UI.registerHelper('obtain',
 UI.registerHelper('size', function(arr){
   return arr.length;
 })
+
+UI.registerHelper('getSession', function(key){
+  return Session.get(key);
+})

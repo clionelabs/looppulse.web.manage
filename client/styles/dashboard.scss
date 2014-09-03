@@ -220,3 +220,28 @@
 .performance-table-wrapper {
   border-right: 1px solid #ddd;
 }
+
+// Engagement
+.engagement-create {
+  header .heading {
+    margin-bottom: 1.2em;
+  }
+  .item-pager {
+    margin: 0;
+    padding: 10px 15px;
+    li { list-style: none; }
+    a  {
+      color: #428bca;
+      text-decoration: none;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 0.2em 0.6em;
+      margin: 0.4em 0;
+      display: inline-block;
+    }
+  }
+  .select-picker {
+    border: 1px solid #ccc;
+    padding: 0.2em 0.4em;
+  }
+}

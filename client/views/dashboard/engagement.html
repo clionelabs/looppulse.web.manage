@@ -1,17 +1,104 @@
-<template name="dashboard_engagement">
-<div class="page-content">
+<template name="collection_manage">
+<div class="page-content {{klass}}">
   <header>
     <div class="container">
-      <div class="row">
-        <h3>Engagement {{ campaignCount }} Campaigns</h3>
-        <div class="toolbox pull-right"><button class="create-btn action-btn btn btn-primary">New</button></div>
+      <div class="row heading">
+        {{>yield region="view-header"}}
       </div>
+      {{>yield region="view-subheader"}}
     </div>
   </header>
   <section>
     <div class="container wrapped-content">
-    {{> dashboard_campaign_list campaigns=campaigns }}
+    {{>yield }}
     </div>
   </section>
+  {{>yield region="view-footer"}}
 </div>
+</template>
+
+<template name="dashboard_engagement">
+{{#Layout template="collection_manage" }}
+  {{#contentFor region="view-header"}}
+    <div class="col-sm-9"><h3>Engagement {{ campaignCount }} Campaigns</h3></div>
+    <div class="col-sm-3"><div class="actions pull-right"><button class="create-btn action-btn btn btn-primary">New</button></div></div>
+  {{/contentFor}}
+
+  {{! yield content. just a clickable table ? }}
+  {{> dashboard_campaign_list campaigns=campaigns }}
+
+
+{{/Layout}}
+</template>
+
+<template name="dashboard_engagement_create">
+{{#Layout template="collection_manage" data=transform }}
+  {{#contentFor region="view-header"}}
+    <div class="col-sm-9"><h3>Engagement {{ campaignCount }} Campaigns</h3></div>
+    <div class="col-sm-3"><div class="actions pull-right"><button class="create-btn action-btn btn btn-primary">Create Campaign</button></div></div>
+  {{/contentFor}}
+  {{#contentFor region="view-subheader"}}
+    <div class="row">
+      <div class="col-sm-9">
+
+        {{! segmentation_list }}
+        <span class="select-picker">To: + add recipient </span>
+      </div>
+      <div class="col-sm-3">
+        <div class="actions pull-right"><a class="create-canel-btn action-link">Cancel</a></div>
+      </div>
+    </div>
+  {{/contentFor}}
+
+  <div class="inner-nav no-col">
+    <ul class="nav nav-pills">
+      <li class="active"><a href="#">smart routing</a></li>
+      <li><a href="#">digital coupon</a></li>
+    </ul>
+  </div>
+  <hr>
+  {{#if getSession "view-routing"}}
+    <div class="row">
+      <div class="col-sm-2">
+        <ul class="item-pager">
+          <li class="active item"><a href="#">1</a></li>
+          <li class="action add"><a href="#">+</a></li>
+        </ul>
+      </div>
+      {{#with activeItem}}
+        <div class="col-sm-8">
+          <div class="row">
+            {{!PushPreview}}
+            <div class="phone-preview col-sm-6">
+              <img src="/images/iphone.png">
+            </div>
+            {{!PushDetailPreview}}
+            <div class="phone-preview col-sm-6">
+              <img src="/images/iphone.png">
+            </div>
+          </div>
+          <div class="row">
+
+            {{! Trigger Location(Floor)}}
+            {{! floor_list }}
+            <span class="select-picker col-sm-11">+ Add destination</span>
+          </div>
+        </div>
+      {{/with}}
+
+      <div class="col-sm-2">
+        {{!pager}}
+      </div>
+    </div>
+    {{!Trigger(Details)}}
+    <hr>
+    <div class="row no-col">
+      <span class="select-picker col-sm-8">+ Add Trigger</span>
+    </div>
+  {{/if}}
+
+  {{#if getSession "view-coupon"}}
+    <span>Coming Soon...</span>
+  {{/if}}
+{{/Layout}}
 </template>

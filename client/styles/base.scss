@@ -56,6 +56,14 @@ main {
 table.table {
   th { font-weight: normal }
 }
+
+//a rowless container for alignment.
+.no-col {
+  position: relative;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
 //
 
 // Chart base CSS
@@ -212,10 +220,10 @@ header.primary {
   & > header {
     background-color: $background-color;
     padding-bottom: 1em;
-    h1, h2, h3, h4,h5, .toolbox {
+    h1, h2, h3, h4,h5, .actions {
       display:inline-block
     }
-    .toolbox {
+    .heading .actions {
       margin-top: 1em;
     }
   }
