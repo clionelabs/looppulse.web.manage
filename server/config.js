@@ -187,6 +187,7 @@ var configureCompany= function (companyConfig, configurationJSON) {
         segmentId: segmentId,
         locationId: companyConfig.locations[locationKey]._id,
         context: context,
+        triggerWhen :engagementConfig.triggerWhen,
         triggerInstallationIds: triggerInstallationIds,
         recommendInstallationIds: recommendInstallationIds,
         stopInstallationIds: stopInstallationIds
