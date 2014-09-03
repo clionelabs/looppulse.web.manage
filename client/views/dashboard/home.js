@@ -413,7 +413,18 @@ Template.dashboard_performance_charting.rendered = function(){
 Template.dashboard_performance_floor.helpers({
     datum: function(key) {
       // `key` = 'floor', should be appear in first column
-      return [
+      var locationId = Session.get("currentLocation");
+      var data = FloorMetrics.find({ locationId: locationId }).map(function(floorMetric) {
+        var floor = floorMetric.getFloor();
+        return {
+          floor: floor.name,
+          totalVisits: floorMetric.visitCount,
+          avgDwellTime: floorMetric.dwellTimeAverage,
+          repeatedVisits: floorMetric.repeatedVisitCount
+        }
+      });
+      // FIXME remove dummy data
+      return data ? data : [
           { 'floor': "1/F", 'totalVisits': 9000, 'avgDwellTime': 30, 'repeatedVisits': 0.6 },
           { 'floor': "2/F", 'totalVisits': 8000, 'avgDwellTime': 30, 'repeatedVisits': 0.5 },
           { 'floor': "3/F", 'totalVisits': 7000, 'avgDwellTime': 32, 'repeatedVisits': 0.2 },
