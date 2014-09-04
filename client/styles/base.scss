@@ -1,7 +1,38 @@
 //Basic CSS after bootstrap style
 @import "variable";
+
+
+// Override
+.navbar-default {
+  background-color:transparent;
+  border: none;
+  border-radius: 0;
+  .navbar-nav {
+    & > li > a {
+      padding: 0.5em;
+    }
+
+    & > .active > a,
+    & > .active > a:hover,
+    & > .active > a:focus {
+      color: #fff;
+      background-color: transparent;
+    }
+  }
+}
+.page-header {
+  margin: 0 0 1em;
+  // padding-bottom:
+}
+
+table.table {
+  th { font-weight: normal }
+}
+
+// Base CSS
+// Sticky footer 2013
 html, body {
-  height: 100%;
+  height: 100%; //they will stretch with page content
 }
 .wrapper {
   min-height: 100%;
@@ -27,25 +58,8 @@ html, body {
   display: block;
 }
 
-// Override
-.navbar-default {
-  background-color:transparent;
-  border: none;
-  border-radius: 0;
-  .navbar-nav {
-    & > li > a {
-      padding: 0.5em;
-    }
 
-    & > .active > a,
-    & > .active > a:hover,
-    & > .active > a:focus {
-      color: #fff;
-      background-color: transparent;
-    }
-  }
-}
-
+// Our content
 main {
     line-height: 1.4;
     & > .container, .page-wrapper, .wrapped-content {
@@ -53,11 +67,8 @@ main {
     }
 }
 
-table.table {
-  th { font-weight: normal }
-}
-
-//a rowless container for alignment.
+// Utility
+// Rowless container for padding alignment
 .no-col {
   position: relative;
   min-height: 1px;
@@ -111,8 +122,8 @@ svg.d4 {
   }
 }
 
-//Main
-
+// Layout CSS
+// @@NOTE: avoid setting CSS in body as body doesn't accept any attribute - set in `.wrapper` instead
 body {
   color: #9B9B9B;
   // retina: 34px/40px (34/1.1764)
