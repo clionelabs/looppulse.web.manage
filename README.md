@@ -44,6 +44,27 @@ Set up environment.
   2. Reboot server
   3. Run `mup deploy` to deploy code to server
 
+## Debugging
+
+1. View Log
+  1. ssh -i keys/jenkins.pem ubuntu@beta.looppulse.com
+  2. sudo less /var/log/upstart/looppulse_manage.log
+  3. sudo tail -f /var/log/upstart/looppulse_manage.log
+
+2. Access Mongo console
+  1. ssh -i keys/jenkins.pem ubuntu@beta.looppulse.com
+  2. mongo looppulse_manage
+ 
+3. SSH tunnel for Jenkins
+  1. ssh -v -i keys/dev.pem -L 8080:localhost:8080 ubuntu@jenkins.looppulse.com
+  2. open http://localhost:8080
+
+4. Dropping database
+  1. In mongo shell/console, `db.dropDatabase()`
+
+5. Force restart
+  1. `sudo service looppulse_manage restart` or simply trigger build in jenkins
+
 
 ## Documentation
 
