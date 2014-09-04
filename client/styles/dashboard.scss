@@ -240,8 +240,29 @@
       display: inline-block;
     }
   }
-  .select-picker {
-    border: 1px solid #ccc;
-    padding: 0.2em 0.4em;
+  .bootstrap-select.select-picker, .select-picker-link  {
+    padding: 0;
+    margin-bottom: 0;
+  }
+  .select-picker button, .select-picker-link {
+       border: 1px solid #ccc;
+       padding: 0.8em 1.2em;
+       border-radius: 0;
+  }
+  .select-picker-link {
+    font-size: 0.8em;
+    text-decoration: none;
+    display: block;
+    position: relative;
+    .caret {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      margin-top: -2px;
+      vertical-align: middle;
+    }
+  }
+  .create-canel-btn {
+    line-height: 2.8
   }
 }

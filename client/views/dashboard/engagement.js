@@ -21,6 +21,11 @@ Template.dashboard_engagement_create.created = function(){
   Session.set("view-routing", true)
   Session.set("view-coupon", false)
 }
+Template.dashboard_engagement_create.rendered = function(){
+  jQuery(".select-picker").selectpicker().on("show", function(){
+    console.log("Select", this)
+  });
+}
 Template.dashboard_engagement_create.destroyed = function(){
   delete Session.keys["view-routing"]
   delete Session.keys["view-coupon"]

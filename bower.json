@@ -3,7 +3,11 @@
   "private": true,
   "dependencies": {
     "d4": "~0.8.9",
-    "d3": "~3.4.4"
+    "d3": "~3.4.4",
+    "c3": "~0.3.0",
+    "bootstrap-select": "~1.6.2",
+    "bootstrap-switch": "~3.0.2",
+    "yamm3": "~1.0.0"
   },
   "devDependencies": {}
 }

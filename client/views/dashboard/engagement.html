@@ -42,7 +42,14 @@
       <div class="col-sm-9">
 
         {{! segmentation_list }}
-        <span class="select-picker">To: + add recipient </span>
+        <select class="select-picker col-sm-4" multiple title="To: + add recipients">
+          <!-- collection: categories -->
+          <option value="{{_id}}">Group {{name}}</option>
+          <option value="{{_id}}">Group {{name}}</option>
+          <option value="{{_id}}">Group {{name}}</option>
+          <option value="{{_id}}">Group {{name}}</option>
+          <option value="{{_id}}">Group {{name}}</option>
+        </select>
       </div>
       <div class="col-sm-3">
         <div class="actions pull-right"><a class="create-canel-btn action-link">Cancel</a></div>
@@ -81,7 +88,27 @@
 
             {{! Trigger Location(Floor)}}
             {{! floor_list }}
-            <span class="select-picker col-sm-11">+ Add destination</span>
+            <select class="select-picker col-sm-11 dropup" multiple title="+ Add destination">
+              <!-- collection: categories -->
+              <optgroup label="Category" class="cat">
+                <option class="cat" value="a"><span class='cat'>Deli</span></option>
+                <option class="cat" value="b"><span class='cat'>Book</span></option>
+                <option class="cat" value="c"><span class='cat'>Cafe</span></option>
+              </optgroup>
+              <!-- collections: floors -->
+              <optgroup label="Floor">
+                <option>1/F</option>
+                <option>2/F</option>
+                <option>3/F</option>
+              </optgroup>
+              <!-- collections: products -->
+              <optgroup label="Shops">
+                <option>Apes</option>
+                <option>Brooks</option>
+                <option>ChaCha</option>
+              </optgroup>
+
+            </select>
           </div>
         </div>
       {{/with}}
@@ -93,12 +120,52 @@
     {{!Trigger(Details)}}
     <hr>
     <div class="row no-col">
-      <span class="select-picker col-sm-8">+ Add Trigger</span>
+      <div class="yamm col-sm-8 dropup">
+        <div class="dropdown yamm-fw">
+          <a href="#" data-toggle="dropdown" class="dropdown-toggle select-picker-link">+ Add Trigger <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li class="grid-demo">
+              <div class="yamm-content">
+                <div class="row">
+                  <div class="col-sm-12">Trigger</div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-1">item</div>
+                  <div class="col-sm-1">item</div>
+                  <div class="col-sm-1">item</div>
+                  <div class="col-sm-1">item</div>
+                  <div class="col-sm-1">item</div>
+                  <div class="col-sm-1">item</div>
+                  <div class="col-sm-1">item</div>
+                  <div class="col-sm-1">item</div>
+                  <div class="col-sm-1">item</div>
+                  <div class="col-sm-1">item</div>
+                  <div class="col-sm-1">item</div>
+                  <div class="col-sm-1">item</div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   {{/if}}
 
   {{#if getSession "view-coupon"}}
     <span>Coming Soon...</span>
   {{/if}}
+{{/Layout}}
+</template>
+
+<template name="dashboard_engagement_view">
+{{#Layout template="collection_manage" }}
+  {{#contentFor region="view-header"}}
+    <div class="col-sm-9"><h3>{{name}}</h3></div>
+    <div class="col-sm-3"><div class="actions pull-right"></div></div>
+  {{/contentFor}}
+
+  {{! yield content }}
+  Coming soon...
+
 {{/Layout}}
 </template>
