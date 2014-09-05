@@ -86,10 +86,14 @@ Template.dashboard_home.helpers({
       startTime: { $gte: MetricsHelper.nHoursAgoTruncatedTime(new Date(), 24) }
     }).map(function(floorMetric) {
       var floor = floorMetric.getFloor();
+      var date = new Date(floorMetric.startTime);
+      var visits = floorMetric.visitedCount;
+      // FIXME d3 hate zeros
+      visits = visits ? visits : 0.1;
       return {
-        hour: floorMetric.startTime,
+        hour: date.getHours().toString(),
         floor: floor.name,
-        visits: floorMetric.visitedCount
+        visits: visits
       }
     });
     // FIXME remove dummy data
