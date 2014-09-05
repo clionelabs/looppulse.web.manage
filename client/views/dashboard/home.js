@@ -80,7 +80,20 @@ Template.dashboard_home.helpers({
   },
   performances: function(){
     //fit something reactive here should trigger the graph update.
-    return [
+    var locationId = Session.get("currentLocation");
+    var data = FloorMetrics.findHourly({
+      locationId: locationId,
+      startTime: { $gte: MetricsHelper.nHoursAgoTruncatedTime(new Date(), 24) }
+    }).map(function(floorMetric) {
+      var floor = floorMetric.getFloor();
+      return {
+        hour: floorMetric.startTime,
+        floor: floor.name,
+        visits: floorMetric.visitedCount
+      }
+    });
+    // FIXME remove dummy data
+    return data ? data : [
       { hour: '1000', floor: '6/F', visits: 1000 },
       { hour: '1100', floor: '6/F', visits: 2000 },
       { hour: '1200', floor: '6/F', visits: 5000 },
