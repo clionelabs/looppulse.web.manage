@@ -119,15 +119,17 @@
     </div>
     {{!Trigger(Details)}}
     <hr>
-    <div class="row no-col">
+    <div class="row">
       <div class="yamm col-sm-8 dropup">
         <div class="dropdown yamm-fw">
           <a href="#" data-toggle="dropdown" class="dropdown-toggle select-picker-link">+ Add Trigger <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li class="grid-demo">
               <div class="yamm-content">
-                <div class="row no-col">
-                  <h4 class="page-header">Add Trigger</h4>
+                <div class="row heading">
+
+                  <div class="col-sm-9"><h4>Add Trigger</h4></div>
+                  <div class="col-sm-3"><div class="pull-right"><button class="btn btn-primary">Add</button></div></div>
                 </div>
                 <div class="row no-col">
                   From {startDate} to {endDate}
@@ -141,6 +143,53 @@
         </div>
       </div>
     </div>
+
+    <hr>
+
+    <section class="triggers">
+
+      <div class="row heading ">
+        <div class="col-sm-9"><h4>Add Trigger</h4></div>
+        <div class="col-sm-3"><div class="pull-right"><button class="btn btn-primary">Add</button></div></div>
+      </div>
+      <div class="row no-col">
+        From {startDate} to {endDate}
+        engage { Segment || Customer}
+        every {RecurrDay} between {startTime} to {endTime}
+        when they're {entering || leaving } {location}
+      </div>
+    </section>
+
+    <hr>
+
+    <section class="triggers-modal">
+      <!-- Button trigger modal -->
+      <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+        Add Trigger
+      </button>
+
+      <!-- Modal -->
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="myModalLabel">AddTrigger</h4>
+            </div>
+            <div class="modal-body">
+              From {startDate} to {endDate}
+              engage { Segment || Customer}
+              every {RecurrDay} between {startTime} to {endTime}
+              when they're {entering || leaving } {location}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   {{/if}}
 
   {{#if getSession "view-coupon"}}
