@@ -17,17 +17,42 @@
 </div>
 </template>
 
+<template name="dashboard_modal">
+
+  <div class="modal fade {{klass}}" id="{{modalId}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+        </div>
+        <div class="modal-body">
+          <input class="form-input" name="{{name}}" placeholder="{{placeholder}}">
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+          <button type="button" class="btn btn-primary">{{confirmText}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
 <template name="dashboard_engagement">
 {{#Layout template="collection_manage" }}
   {{#contentFor region="view-header"}}
     <div class="col-sm-9"><h3>Engagement {{ campaignCount }} Campaigns</h3></div>
-    <div class="col-sm-3"><div class="actions pull-right"><button class="create-btn action-btn btn btn-primary">New</button></div></div>
+    <div class="col-sm-3">
+      <div class="actions pull-right">
+        <button class="create-btn action-btn btn btn-primary" data-toggle="modal" data-target="#engagement-create-modal">New</button>
+      </div>
+    </div>
   {{/contentFor}}
 
   {{! yield content. just a clickable table ? }}
   {{> dashboard_campaign_list campaigns=campaigns }}
 
-
+  {{> dashboard_modal modalId="engagement-create-modal" title="Create a New Campaign" confirmText="Create Campaign" action="./create" form=form }}
 {{/Layout}}
 </template>
 
@@ -43,7 +68,6 @@
 
         {{! segmentation_list }}
         <select class="select-picker col-sm-4" multiple title="To: + add recipients">
-          <!-- collection: categories -->
           <option value="{{_id}}">Group {{name}}</option>
           <option value="{{_id}}">Group {{name}}</option>
           <option value="{{_id}}">Group {{name}}</option>
