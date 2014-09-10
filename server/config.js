@@ -151,6 +151,7 @@ var configureCompany= function (companyConfig, configurationJSON) {
       });
       segment.save();
       companyConfig.segments[segmentKey]._id = segment._id;
+      console.info("[Init] Segment created:", JSON.stringify(segment));
     });
 
     // Engagements
