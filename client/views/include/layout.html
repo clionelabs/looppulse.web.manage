@@ -66,15 +66,21 @@
     {{/if}}
     <main>
       {{!if not useContainer}}
-      {{#unless dryLayout}}
+      {{#if useContainer}}
         <div class="container page-wrapper">
         {{> yield}}
         </div>
       {{else}}
-        <div class="dry-container">
-        {{> yield}}
-        </div>
-      {{/unless}}
+        {{#if dryLayout}}
+          <div class="dry-container">
+          {{> yield}}
+          </div>
+        {{else}}
+          <div class="container default-wrapper">
+          {{>yield}}
+          </div>
+        {{/if}}
+      {{/if}}
     </main>
 
   </div>

@@ -65,6 +65,11 @@ main {
     & > .container, .page-wrapper, .wrapped-content {
       padding: 20px 0;
     }
+    & > .default-wrapper {
+      background: #fff;
+      padding: 20px;
+      margin: 20px auto;
+    }
 }
 
 // Utility
@@ -75,7 +80,8 @@ main {
   padding-right: 15px;
   padding-left: 15px;
 }
-//
+// Default Layout Container
+
 
 // Chart base CSS
 svg.d4 {
