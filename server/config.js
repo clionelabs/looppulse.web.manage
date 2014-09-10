@@ -153,6 +153,7 @@ var configureCompany= function (companyConfig, configurationJSON) {
       segments['visitor'] = segmentOfAllVisitors;
     }
 
+
     // Engagements
     _.each(locationConfig.engagements, function(engagementConfig) {
       var installationKeyToId = function (key) {
@@ -173,8 +174,9 @@ var configureCompany= function (companyConfig, configurationJSON) {
         });
         return installationIdsToMessages;
       };
-
-      var segmentId = segments[engagementConfig.segment]._id;
+      var seg = segments[engagementConfig.segment];
+      if(!seg){ console.error("Segment not found: ", engagementConfig.segment, "; in object: ", segments ) }
+      var segmentId = (seg) ? seg._id : null;
       var validPeriod = {
         start: Date.parse(engagementConfig.validPeriod.start),
         end: Date.parse(engagementConfig.validPeriod.end)
