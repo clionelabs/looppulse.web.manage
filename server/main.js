@@ -18,7 +18,7 @@ var observeFirebase = function() {
 
 var observeCollections = function() {
   var classes = [
-    Encounter, Engagement,
+    Encounter, Engagement, SegmentVisitor,
     EngagementMetric, InstallationMetric, ProductMetric
   ];
   classes.forEach(function(objectClass) {

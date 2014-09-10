@@ -143,15 +143,16 @@ var configureCompany= function (companyConfig, configurationJSON) {
     });
 
     // Segments
-    var segments = {};
-    {
-      var segmentOfAllVisitors = new Segment({
+    _.each(companyConfig.segments, function(segmentConfig, segmentKey) {
+      var segment = new Segment({
         companyId: company._id,
-        name: "All visitors"
+        name: segmentConfig.name,
+        criteria: segmentConfig.criteria
       });
-      segmentOfAllVisitors.save();
-      segments['visitor'] = segmentOfAllVisitors;
-    }
+      segment.save();
+      companyConfig.segments[segmentKey]._id = segment._id;
+      console.info("[Init] Segment created:", JSON.stringify(segment));
+    });
 
 
     // Engagements
@@ -174,9 +175,8 @@ var configureCompany= function (companyConfig, configurationJSON) {
         });
         return installationIdsToMessages;
       };
-      var seg = segments[engagementConfig.segment];
-      if(!seg){ console.error("Segment not found: ", engagementConfig.segment, "; in object: ", segments ) }
-      var segmentId = (seg) ? seg._id : null;
+
+      var segmentId = companyConfig.segments[engagementConfig.segment]._id;
       var validPeriod = {
         start: Date.parse(engagementConfig.validPeriod.start),
         end: Date.parse(engagementConfig.validPeriod.end)
