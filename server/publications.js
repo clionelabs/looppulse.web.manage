@@ -99,15 +99,28 @@ Meteor.publish('related-funnels', function(ids){
 
 Meteor.publish('related-metrics', function(id){
   var q = {};
-  console.log("Returning Metric Data", id)
+  console.log("Returning Metric Data", id);
 
   if (id && AccountsHelper.fieldMatch("locations", id, this.userId)) {
-    q = { locationId: id }
+    var now = new Date();
+    q = {
+      locationId: id,
+      // TODO allow this to be set on client-side?
+      $or: [{
+        resolution: Metric.daily,
+        startTime: { $gte: MetricsHelper.nDaysAgoTruncatedTime(now, 30) }
+      }, {
+        resolution: Metric.hourly,
+        startTime: { $gte: MetricsHelper.nHoursAgoTruncatedTime(now, 24) }
+      }, {
+        resolution: { $exists: false }
+      }]
+    };
   } else {
     return null;
   }
-  return Metrics.find(q)
-})
+  return Metrics.find(q);
+});
 
 Meteor.publish('location-engagements', function(locationId) {
   var q = {};
