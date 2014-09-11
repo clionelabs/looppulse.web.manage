@@ -12,6 +12,7 @@ existing `settings.sample.json` (Since settings.json is not in the repo)
     "resetLocal": false, //reset local database everytime you start the app
     "logVisitorToFirebase": false,
     "seedData": "", // file path to your local data company config file
+    "visitorsFirebaseURL": "", // Firebase path for logging visitors actions
     "deliveringMessagesFirebaseURL": "https://<YOUR_APP>.firebaseio.com/delivering_messages"
   },
   //API key setup, only the firebase is a must
