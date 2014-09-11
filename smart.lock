@@ -1,0 +1,18 @@
+{
+  "meteor": {},
+  "dependencies": {
+    "basePackages": {
+      "sanjo:jasmine": {
+        "git": "https://github.com/Sanjo/meteor-jasmine.git",
+        "tag": "v0.2.0-pre1"
+      }
+    },
+    "packages": {
+      "sanjo:jasmine": {
+        "git": "https://github.com/Sanjo/meteor-jasmine.git",
+        "tag": "v0.2.0-pre1",
+        "commit": "f6394cd1188ac38b35310bc4821e1b7c8f03f133"
+      }
+    }
+  }
+}

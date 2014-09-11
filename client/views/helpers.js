@@ -1,5 +1,5 @@
 // Common Helper function please go here.
-UI.registerHelper('fraction',
+Template.registerHelper('fraction',
   function(a,b){
       var result = (a/b*100).toFixed(2)
       if (!isNaN(result))
@@ -9,7 +9,7 @@ UI.registerHelper('fraction',
   }
 );
 
-UI.registerHelper('invertedFraction',
+Template.registerHelper('invertedFraction',
   function(a,b){
       var result = (((b-a)/b)*100).toFixed(2)
       if (!isNaN(result))
@@ -19,7 +19,7 @@ UI.registerHelper('invertedFraction',
   }
 );
 
-UI.registerHelper('percentage',
+Template.registerHelper('percentage',
   function(a,d){
       var result = (a*100)
       if (d)
@@ -34,19 +34,19 @@ UI.registerHelper('percentage',
   }
 )
 
-UI.registerHelper('log',
+Template.registerHelper('log',
   function(obj){
       console.log("UI object logging:", obj)
   }
 );
 
-UI.registerHelper('rand',
+Template.registerHelper('rand',
   function(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 )
 
-UI.registerHelper('obtain',
+Template.registerHelper('obtain',
   function(obj, prop) {
     if (obj) {
       return obj[prop]
@@ -56,10 +56,59 @@ UI.registerHelper('obtain',
   }
 )
 
-UI.registerHelper('size', function(arr){
+Template.registerHelper('size', function(arr){
   return arr.length;
 })
 
-UI.registerHelper('getSession', function(key){
+Template.registerHelper('getSession', function(key){
   return Session.get(key);
 })
+
+//copy from https://github.com/XpressiveCode/iron-router-active/blob/master/lib/client/helpers.js
+var routeUtils = {
+  context: function() {
+    return Router.current();
+  },
+
+  regex: function(expression) {
+    return new RegExp(expression, 'i');
+  },
+
+  testRoutes: function(routeNames) {
+    var reg = this.regex(routeNames);
+    return this.context() && reg.test(this.context().route.name);
+  },
+
+  testPaths: function(paths) {
+    var reg = this.regex(paths);
+    return this.context() && reg.test(this.context().path);
+  }
+};
+
+Template.registerHelper('isActiveRoute', function(routes, className) {
+  if (className.hash)
+    className = 'active';
+
+  return routeUtils.testRoutes(routes) ? className : '';
+});
+
+Template.registerHelper('isActivePath', function(paths, className) {
+  if (className.hash)
+    className = 'active';
+
+  return routeUtils.testPaths(paths) ? className : '';
+});
+
+Template.registerHelper('isNotActiveRoute', function(routes, className) {
+  if (className.hash)
+    className = 'disabled';
+
+  return ! routeUtils.testRoutes(routes) ? className : '';
+});
+
+Template.registerHelper('isNotActivePath', function(paths, className) {
+  if (className.hash)
+    className = 'disabled';
+
+  return ! routeUtils.testPaths(paths) ? className : '';
+});
