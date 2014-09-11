@@ -11,8 +11,6 @@
     "roles": {},
     "autocomplete": {},
     "reactive-table": {},
-    "velocity": {},
-    "jasmine-unit": {},
     "publish-counts": {},
     "uploader": {
       "git": "https://github.com/ratsolean/meteor-uploader.git",

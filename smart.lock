@@ -13,7 +13,6 @@
       "roles": {},
       "autocomplete": {},
       "reactive-table": {},
-      "velocity": {},
       "jasmine-unit": {},
       "publish-counts": {},
       "uploader": {
@@ -61,16 +60,6 @@
         "git": "https://github.com/ecohealthalliance/reactive-table.git",
         "tag": "v0.3.21",
         "commit": "7068f1011b46b6312bd8c21c2d3b91d4e3cbcd59"
-      },
-      "velocity": {
-        "git": "https://github.com/xolvio/velocity.git",
-        "tag": "v0.1.18",
-        "commit": "1958c117417e832c3e9025088cca845b4a82728f"
-      },
-      "jasmine-unit": {
-        "git": "https://github.com/xolvio/jasmine-unit.git",
-        "tag": "v0.1.24",
-        "commit": "885dde77a96390d0fd31b03756f837f482db2ef1"
       },
       "publish-counts": {
         "git": "https://github.com/percolatestudio/publish-counts.git",
