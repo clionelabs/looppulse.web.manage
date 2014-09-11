@@ -13,12 +13,7 @@
     "s3bucket": ""
   },
   "firebase": {
-      "root": "https://<YOUR_APP>.firebaseio.com/",
       "config": "https://looppulse-config.firebaseio.com/"
-  },
-  "parse": {
-    "applicationId": "",
-    "restKey": ""
   },
   "removeFromFirebase": false,
   "accounts": {

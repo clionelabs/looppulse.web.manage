@@ -22,12 +22,7 @@ existing `settings.sample.json` (Since settings.json is not in the repo)
     "s3bucket": ""
   },
   "firebase": {
-      "root": "https://<YOUR_APP>.firebaseio.com/", //beacon event datastore (since it will be removed from firebase)
       "config": "https://looppulse-config.firebaseio.com/" //common share configs
-  },
-  "parse": {
-    "applicationId": "",
-    "restKey": ""
   },
   //App settings
   "removeFromFirebase": false, //remove the beacon event/messages from firebase or not
