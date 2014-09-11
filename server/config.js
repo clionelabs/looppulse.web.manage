@@ -66,8 +66,11 @@ var configureCompany= function (companyConfig, configurationJSON) {
   _.each(companyConfig.applications, function(appConfig) {
     var app = Applications.findOne({companyId: companyConfig._id, name: appConfig.name});
     if (!app) {
-      app = new Application(companyConfig._id, appConfig.name);
-      Applications.upsert(app, app);
+      app = new Application({ companyId: companyConfig._id,
+                              name: appConfig.name,
+                              token: appConfig.token,
+                              applicationId: appConfig.applicationId});
+      app.save();
 
       app = Applications.findOne({companyId: companyConfig._id, name: appConfig.name});
     }
