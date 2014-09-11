@@ -1,0 +1,241 @@
+<template name="collection_manage">
+<div class="page-content {{klass}}">
+  <header>
+    <div class="container">
+      <div class="row heading">
+        {{>yield region="view-header"}}
+      </div>
+      {{>yield region="view-subheader"}}
+    </div>
+  </header>
+  <section>
+    <div class="container wrapped-content">
+    {{>yield }}
+    </div>
+  </section>
+  {{>yield region="view-footer"}}
+</div>
+</template>
+
+<template name="dashboard_modal">
+
+  <div class="modal fade {{klass}}" id="{{modalId}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form action="{{action}}" method="POST">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+          </div>
+          <div class="modal-body">
+              {{#each fields}}
+              <input class="form-input" name="{{name}}" placeholder="{{placeholder}}">
+              {{/each}}
+          </div>
+          <div class="modal-footer">
+            <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+            <button type="submit" class="confirm-btn btn btn-primary">{{confirmText}}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="dashboard_engagement">
+{{#Layout template="collection_manage" }}
+  {{#contentFor region="view-header"}}
+    <div class="col-sm-9"><h3>Engagement {{ campaignCount }} Campaigns</h3></div>
+    <div class="col-sm-3">
+      <div class="actions pull-right">
+        <button class="create-btn action-btn btn btn-primary" data-toggle="modal" data-target="#engagement-create-modal">New</button>
+      </div>
+    </div>
+  {{/contentFor}}
+
+  {{! yield content. just a clickable table ? }}
+  {{> dashboard_campaign_list campaigns=campaigns }}
+
+  {{> dashboard_modal modalId="engagement-create-modal" title="Create a New Campaign" confirmText="Create Campaign" action="./create" fields=getForm }}
+
+{{/Layout}}
+</template>
+
+<template name="dashboard_engagement_create">
+{{#Layout template="collection_manage" data=transform }}
+  {{#contentFor region="view-header"}}
+    <div class="col-sm-9"><h3>Creating: {{newEngagementName}}</h3></div>
+    <div class="col-sm-3"><div class="actions pull-right"><button class="create-btn action-btn btn btn-primary">Create Campaign</button></div></div>
+  {{/contentFor}}
+  {{#contentFor region="view-subheader"}}
+    <div class="row">
+      <div class="col-sm-9">
+
+        {{! segmentation_list }}
+        <select class="select-picker col-sm-4" multiple title="To: + add recipients">
+          <option value="{{_id}}">Group {{name}}</option>
+          <option value="{{_id}}">Group {{name}}</option>
+          <option value="{{_id}}">Group {{name}}</option>
+          <option value="{{_id}}">Group {{name}}</option>
+          <option value="{{_id}}">Group {{name}}</option>
+        </select>
+      </div>
+      <div class="col-sm-3">
+        <div class="actions pull-right"><a class="create-canel-btn action-link">Cancel</a></div>
+      </div>
+    </div>
+  {{/contentFor}}
+
+  <div class="inner-nav no-col">
+    <ul class="nav nav-pills">
+      <li class="active"><a href="#">smart routing</a></li>
+      <li><a href="#">digital coupon</a></li>
+    </ul>
+  </div>
+  <hr>
+  {{#if getSession "view-routing"}}
+    <div class="row">
+      <div class="col-sm-2">
+        <ul class="item-pager">
+          <li class="active item"><a href="#">1</a></li>
+          <li class="action add"><a href="#">+</a></li>
+        </ul>
+      </div>
+      {{#with activeItem}}
+        <div class="col-sm-8">
+          <div class="row">
+            {{!PushPreview}}
+            <div class="phone-preview col-sm-6">
+              <img src="/images/iphone.png">
+            </div>
+            {{!PushDetailPreview}}
+            <div class="phone-preview col-sm-6">
+              <img src="/images/iphone.png">
+            </div>
+          </div>
+          <div class="row">
+
+            {{! Trigger Location(Floor)}}
+            {{! floor_list }}
+            <select class="select-picker col-sm-11 dropup" multiple title="+ Add destination">
+              <!-- collection: categories -->
+              <optgroup label="Category" class="cat">
+                <option class="cat" value="a"><span class='cat'>Deli</span></option>
+                <option class="cat" value="b"><span class='cat'>Book</span></option>
+                <option class="cat" value="c"><span class='cat'>Cafe</span></option>
+              </optgroup>
+              <!-- collections: floors -->
+              <optgroup label="Floor">
+                <option>1/F</option>
+                <option>2/F</option>
+                <option>3/F</option>
+              </optgroup>
+              <!-- collections: products -->
+              <optgroup label="Shops">
+                <option>Apes</option>
+                <option>Brooks</option>
+                <option>ChaCha</option>
+              </optgroup>
+
+            </select>
+          </div>
+        </div>
+      {{/with}}
+
+      <div class="col-sm-2">
+        {{!pager}}
+      </div>
+    </div>
+    {{!Trigger(Details)}}
+    <hr>
+    <div class="row">
+      <div class="yamm col-sm-8 dropup">
+        <div class="dropdown yamm-fw">
+          <a href="#" data-toggle="dropdown" class="dropdown-toggle select-picker-link">+ Add Trigger <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li class="grid-demo">
+              <div class="yamm-content">
+                <div class="row heading">
+
+                  <div class="col-sm-9"><h4>Add Trigger</h4></div>
+                  <div class="col-sm-3"><div class="pull-right"><button class="btn btn-primary">Add</button></div></div>
+                </div>
+                <div class="row no-col">
+                  From {startDate} to {endDate}
+                  engage { Segment || Customer}
+                  every {RecurrDay} between {startTime} to {endTime}
+                  when they're {entering || leaving } {location}
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <section class="triggers">
+
+      <div class="row heading ">
+        <div class="col-sm-9"><h4>Add Trigger</h4></div>
+        <div class="col-sm-3"><div class="pull-right"><button class="btn btn-primary">Add</button></div></div>
+      </div>
+      <div class="row no-col">
+        From {startDate} to {endDate}
+        engage { Segment || Customer}
+        every {RecurrDay} between {startTime} to {endTime}
+        when they're {entering || leaving } {location}
+      </div>
+    </section>
+
+    <hr>
+
+    <section class="triggers-modal">
+      <!-- Button trigger modal -->
+      <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+        Add Trigger
+      </button>
+
+      <!-- Modal -->
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="myModalLabel">AddTrigger</h4>
+            </div>
+            <div class="modal-body">
+              From {startDate} to {endDate}
+              engage { Segment || Customer}
+              every {RecurrDay} between {startTime} to {endTime}
+              when they're {entering || leaving } {location}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {{/if}}
+
+  {{#if getSession "view-coupon"}}
+    <span>Coming Soon...</span>
+  {{/if}}
+{{/Layout}}
+</template>
+
+<template name="dashboard_engagement_view">
+{{#Layout template="collection_manage" }}
+  {{#contentFor region="view-header"}}
+    <div class="col-sm-9"><h3>{{name}}</h3></div>
+    <div class="col-sm-3"><div class="actions pull-right"></div></div>
+  {{/contentFor}}
+
+  {{! yield content }}
+  Coming soon...
+
+{{/Layout}}
+</template>

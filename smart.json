@@ -1,20 +1,8 @@
 {
   "packages": {
-    "Firebase": {},
-    "bootstrap-3": {},
-    "scss": {},
-    "iron-router": {},
-    "accounts-entry": {
-      "git": "https://github.com/Differential/accounts-entry.git",
-      "branch": "master"
-    },
-    "roles": {},
-    "autocomplete": {},
-    "reactive-table": {},
-    "publish-counts": {},
-    "uploader": {
-      "git": "https://github.com/ratsolean/meteor-uploader.git",
-      "branch": "master"
+    "sanjo:jasmine": {
+      "git": "https://github.com/Sanjo/meteor-jasmine.git",
+      "tag": "v0.2.0-pre1"
     }
   }
 }

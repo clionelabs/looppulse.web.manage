@@ -25,7 +25,10 @@
 /mirror
 /velocity-html-reporter
 /mocha-web-sinon
+/iron-router-active
 /publish-counts
+/bower
 /uploader
 /handlebars-server
 /streams
+/sanjo:jasmine

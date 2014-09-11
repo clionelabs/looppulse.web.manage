@@ -4,17 +4,18 @@
 # but you can also edit it by hand.
 
 standard-app-packages
-Firebase
-bootstrap-3
-scss
-iron-router
+mrt:bootstrap-3
+fourseven:scss
+iron:router
 accounts-password
 accounts-ui
-accounts-entry
-roles
-autocomplete
-reactive-table
+alanning:roles
+mizzao:autocomplete
 http
 random
-publish-counts
-uploader
+tmeasday:publish-counts
+mquandalle:bower
+mrt:firebase
+joshowens:accounts-entry
+schnie:uploader
+

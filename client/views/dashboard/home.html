@@ -1,0 +1,151 @@
+
+
+<!-- Specific Template -->
+<template name="dashboard_performance_chart">
+  {{#Layout template="dashboard_widget" data=transform }}
+
+    {{#contentFor region="dashboard-header"}}
+      <h4 class="headline">Performance</h4>
+      <div class="widget-nav pull-right performance-nav">
+        <ul class="">
+          <li><a href="#" data-session-target="view-building"><i class="fa fa-building-o"></i></a></li>
+          <li class="active"><a href="#" data-session-target="view-chart"><i class="fa fa-line-chart"></i></a></li>
+          <li><a href="#" data-session-target="view-grid"><span class="glyphicon glyphicon-th-large"></span></a></li>
+        </ul>
+      </div>
+    {{/contentFor}}
+
+    {{#contentFor region="dashboard-content" data=this.data}}
+      <div class="chart-wrapper">
+        {{! context : this.data = performances }}
+        {{#if showChart}}
+          {{> dashboard_performance_charting}}
+        {{/if}}
+
+        {{#if showGrid}}
+          {{> dashboard_performance_matrix}}
+        {{/if}}
+
+        {{#if showFloor}}
+          {{> dashboard_performance_floor}}
+        {{/if}}
+      </div>
+    {{/contentFor}}
+  {{/Layout}}
+</template>
+
+<template name="dashboard_performance_charting">
+  <div class="performance charting"></div>
+</template>
+
+<template name="dashboard_performance_matrix">
+  <div class="performance matrix">
+    Coming Soon...
+  </div>
+</template>
+
+<template name="dashboard_performance_floor">
+  <div class="performance floor">
+    {{#with data=datum settings=settings}}
+    {{log this}}
+    <div class="row">
+      <div class="performance-table-wrapper col-sm-5 ">
+        <table class="table performance-table stat-table">
+          <thead>
+            <tr>
+              {{#each settings.fields}}
+              <th>{{this}}</th>
+              {{/each}}
+            </tr>
+          </thead>
+          <tbody>
+            {{#each data}}
+            <tr class="legend" data-id="{{_id}}">
+              <td colspan="{{size settings.fields}}">{{obtain this settings.key}}</td>
+            </tr>
+            <tr class="entry" data-id="{{_id}}">
+             {{#each settings.fields}}
+              <td>{{obtain .. this}}</td>
+             {{/each}}
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-sm-7">
+        <div class="floor maplet" data-floor=""></div>
+      </div>
+    </div>
+    {{/with}}
+  </div>
+</template>
+
+<template name="dashboard_campaign_list">
+  <div class="campaign-list widget-panel">
+    <table class="table">
+      <thead class="heading">
+        <tr class="row" >
+          <th class="col-sm-7">Campaign</th>
+          <th class="col-sm-2">Sent</th>
+          <th class="col-sm-2">Visited</th>
+          <th class="col-sm-1">Conversion</th>
+        </tr>
+      </thead>
+
+      <tbody class="content">
+      {{#each campaigns}}
+        {{#with _id=_id name=name sent=sent visited=visited conversion=conversion desc=desc stat=getStat m=getMetrics traceOffset=traceOffset}}
+        <tr class="row campaign-summary data-row" data-id="{{_id}}">
+          <td class="name entity col-sm-7">{{name}}</td>
+          <td class="sent value col-sm-2">{{sent}}</td>
+          <td class="visited value col-sm-2">{{visited}}</td>
+          <td class="conversion value col-sm-1">{{percentage conversion}}</td>
+        </tr>
+        <tr class="row campaign-summary chart-row" data-id="{{_id}}">
+          <td class="chart-area" colspan="4">
+            <div class="row">
+              <div class="desc value col-sm-6">{{desc}}</div>
+            </div>
+            <div class="row">
+              <div class="desc value col-sm-5">
+                <div class="campaign-summary-chart">
+                  <div class="charting-area"></div>
+                </div>
+              </div>
+              <div class="desc value col-sm-7">
+                {{! compare with locationMetric t1 t2 }}
+                {{!with locationMetrics startTime offset}}
+                  {{! Change`data-entity` if helper changes }}
+                  <div class="campaign-comparsion-chart">
+                    <div class="charting-area total-visits col-xs-4" data-entity="totalVisits"></div>
+                    <div class="charting-area dwell-time col-xs-4" data-entity="avgDwellTime"></div>
+                    <div class="charting-area repeated-visits col-xs-4" data-entity="repeatedVisits"></div>
+                  </div>
+                {{!with}}
+              </div>
+            </div>
+          </td>
+        </tr>
+        {{/with}}
+      {{/each}}
+      </tbody>
+    </table>
+  </div>
+</template>
+
+
+<template name="dashboard_home">
+  <div class="dashboard">
+  {{#with locationMetric}}
+    {{> dashboard_summary first=totalVisits second=avgDwellTime third=repeatedVisits }}
+  {{/with}}
+  {{#with performances }}
+    {{> dashboard_performance_chart }}
+  {{/with}}
+  {{> dashboard_campaign_list }}
+  </div>
+</template>
+
+
+
+

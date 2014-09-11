@@ -1,0 +1,21 @@
+// All CSS variable should go here
+$primary-color: #00BCD4; //header, hyperlink, etc
+$primary-color-2: #3DCBCB;
+$primary-color-compliment: #FF6779;
+
+$alt-light-color:#F5F8F9; //secondary navbar, panel/widget title
+$alt-dark-color: #494D59; //footer
+
+$background-color: #EBEDF0;
+$content-background-color: #FFF;
+
+$font-color: #9B9B9B;
+$alt-font-color: #B6B6B6;
+$alt-font-color-2: #DADADA;
+
+$link-color: $primary-color;
+
+
+$base-font-size: 18px;
+$base-line-height: 1.2;
+$base-font-family: 'Roboto', sans-serif;
