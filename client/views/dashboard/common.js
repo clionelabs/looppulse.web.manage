@@ -25,7 +25,7 @@ Template.dashboard_collection_create.helpers({
     return "Create a New "+this.context
   },
   confirm:function(){
-    return "Create"+this.context
+    return "Create "+this.context
   }
 })
 
