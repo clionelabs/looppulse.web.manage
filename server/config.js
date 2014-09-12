@@ -145,7 +145,8 @@ var configureCompany= function (companyConfig, configurationJSON) {
     // Segments
     _.each(companyConfig.segments, function(segmentConfig, segmentKey) {
       // convert `triggerLocations` to use "ids"
-      if (segmentConfig.criteria && segmentConfig.criteria.triggerLocations) {
+      var criteria = segmentConfig.criteria || {};
+      if (criteria.triggerLocations) {
         var replaceCategoryKeyWithId = function(triggerLocationConfig) {
           if (triggerLocationConfig.categoryName) {
             var category = Categories.findOne({companyId: company._id, name: triggerLocationConfig.categoryName});
@@ -165,11 +166,17 @@ var configureCompany= function (companyConfig, configurationJSON) {
           replaceProductKeyWithId(triggerLocationConfig);
         });
       }
+      if (criteria.days.start) {
+        criteria.start = Date.parse(criteria.start);
+      }
+      if (criteria.days.end) {
+        criteria.end = Date.parse(criteria.end);
+      }
 
       var segment = new Segment({
         companyId: company._id,
         name: segmentConfig.name,
-        criteria: segmentConfig.criteria
+        criteria: criteria
       });
       segment.save();
       companyConfig.segments[segmentKey]._id = segment._id;
