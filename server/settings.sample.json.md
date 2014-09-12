@@ -10,8 +10,8 @@ existing `settings.sample.json` (Since settings.json is not in the repo)
   //Debug settings
   "DEBUG": {
     "resetLocal": false, //reset local database everytime you start the app
-    "logVisitorToFirebase": false,
-    "seedData": "", //turn into true if you want to use your local data
+    "seedData": "", // your local data company config file in /private
+    "visitorsFirebaseURL": "", // Firebase path for visitors actions. Logging is disabled if empty.
     "deliveringMessagesFirebaseURL": "https://<YOUR_APP>.firebaseio.com/delivering_messages"
   },
   //API key setup, only the firebase is a must
@@ -21,12 +21,7 @@ existing `settings.sample.json` (Since settings.json is not in the repo)
     "s3bucket": ""
   },
   "firebase": {
-      "root": "https://<YOUR_APP>.firebaseio.com/", //beacon event datastore (since it will be removed from firebase)
       "config": "https://looppulse-config.firebaseio.com/" //common share configs
-  },
-  "parse": {
-    "applicationId": "",
-    "restKey": ""
   },
   //App settings
   "removeFromFirebase": false, //remove the beacon event/messages from firebase or not
