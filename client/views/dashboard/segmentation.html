@@ -1,9 +1,9 @@
-<template name="dashboard_segmentation">
+<template name="dashboard_segment_manage">
 {{log counts}}
 {{> dashboard_collection_manage context="segments" count=counts listItems=segments modalContent=modal }}
 </template>
 
-<template name="dashboard_segmentation_create">
+<template name="dashboard_segment_create">
 {{#Layout template="collection_manage" data=transform }}
   {{#contentFor region="view-header"}}
     <div class="col-sm-9"><h3>Creating: {{newItemName}}</h3></div>

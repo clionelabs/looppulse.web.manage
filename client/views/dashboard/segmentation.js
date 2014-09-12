@@ -1,4 +1,4 @@
-Template.dashboard_segmentation.helpers({
+Template.dashboard_segment_manage.helpers({
   counts: function(){
     return 7
   },
@@ -12,8 +12,10 @@ Template.dashboard_segmentation.helpers({
   },
   modal:function(){
     return {
-      context: "segments",
-      fields:[{a:"b"}]
+      modalId: "collection-create-modal",
+      context: "segment",
+      collectionName: "Segments",
+      fields:[{"name": "newItemName", "placeholder": "Enter a Segment name"}]
     }
   }
 })
