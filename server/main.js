@@ -7,6 +7,7 @@ Meteor.startup(
       Benchmark.time(ensureIndexes, "[Startup] ensureIndexes");
       Benchmark.time(observeFirebase, "[Startup] observeFirebase");
       Benchmark.time(observeCollections, "[Startup] observeCollections");
+      Benchmark.time(Scheduler.startup, "[Startup] startScheduler");
     });
   })
 );
