@@ -45,7 +45,9 @@
   </div>
 </template>
 
-<template name="dashboard_table"></template>
+<template name="dashboard_expandable_list">
+
+</template>
 
 <template name="dashboard_summary">
     <div class="summary highlights row">
@@ -59,4 +61,45 @@
         {{> dashboard_card third }}
       </div>
     </div>
+</template>
+
+<template name="dashboard_collection_header">
+
+  <div class="col-sm-9"><h3>{{count}} {{context}}</h3></div>
+  <div class="col-sm-3">
+    <div class="actions pull-right">
+      <button class="create-btn action-btn btn btn-primary" data-toggle="modal" data-target="#collection-create-modal">New</button>
+    </div>
+  </div>
+</template>
+<template name="dashboard_collection_create">
+  hello.
+  {{> dashboard_modal modalId="collection-create-modal" title=title confirmText=confirm action="./create" fields=fields }}
+</template>
+
+<template name="dashboard_collection_manage">
+  {{log this}}
+{{#Layout template="collection_manage" data=this }}
+  {{log this}}
+  {{! context should provide the following }}
+  {{! write your own header if you must, or using default }}
+  {{#contentFor region="view-header"}}
+    {{#if useCustomHeader}}
+      {{> yield region="custom-view-header" }}
+    {{else}}
+      {{> dashboard_collection_header }}
+    {{/if}}
+  {{/contentFor}}
+
+  {{! yield content. just a clickable table ? }}
+
+  {{! provide content and actions: listItems() }}
+  {{log listItems}}
+  {{> dashboard_campaign_list campaigns=listItems }}
+
+
+   {{> dashboard_collection_create modalContent }}
+
+
+{{/Layout}}
 </template>
