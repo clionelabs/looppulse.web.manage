@@ -166,11 +166,13 @@ var configureCompany= function (companyConfig, configurationJSON) {
           replaceProductKeyWithId(triggerLocationConfig);
         });
       }
-      if (criteria.days.start) {
-        criteria.start = Date.parse(criteria.start);
-      }
-      if (criteria.days.end) {
-        criteria.end = Date.parse(criteria.end);
+      if (criteria.days) {
+        if (criteria.days.start) {
+          criteria.start = Date.parse(criteria.start);
+        }
+        if (criteria.days.end) {
+          criteria.end = Date.parse(criteria.end);
+        }
       }
 
       var segment = new Segment({
