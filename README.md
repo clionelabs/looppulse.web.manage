@@ -44,7 +44,7 @@ Set up environment.
   2. Reboot server
   3. Run `mup deploy` to deploy code to server
 
-## Debugging
+## Remote Debugging
 
 1. View Log
   1. ssh -i keys/jenkins.pem ubuntu@beta.looppulse.com
@@ -54,7 +54,7 @@ Set up environment.
 2. Access Mongo console
   1. ssh -i keys/jenkins.pem ubuntu@beta.looppulse.com
   2. mongo looppulse_manage
- 
+
 3. SSH tunnel for Jenkins
   1. ssh -v -i keys/dev.pem -L 8080:localhost:8080 ubuntu@jenkins.looppulse.com
   2. open http://localhost:8080
@@ -65,6 +65,13 @@ Set up environment.
 5. Force restart
   1. `sudo service looppulse_manage restart` or simply trigger build in jenkins
 
+
+## Local Debugging
+
+1. Create test account
+  1. Access the users database in mongo. (There should be an account with eamil admin@example.com.)
+  2. Enter `admin@example.com` in the [forget password link](http://localhost:3000/forgot-password)
+  3. Check console log and get the password reset link in password recovery email.
 
 ## Documentation
 
