@@ -5,8 +5,8 @@
 <template name="collection_create_view">
 {{! prefix: collection-create }}
 {{> yield region="view-header" }}
+<h2 class="page-header">{{title}}</h2>
 <div class="row">
-  <h2 class="page-header">{{title}}</h2>
   <form class="collection-create-form collection-processing-form form-horizontal col-md-6" role="form" data-collection="{{collectionName}}">
     {{#if ../fields }}
       {{#each ../fields }}

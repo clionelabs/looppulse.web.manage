@@ -1,7 +1,10 @@
-<template name="company">
-  <div class="locations">
-  {{#each locations}}
-      {{> location }}
-  {{/each}}
+<template name="company_view">
+  <div class="location-list">
+    <h2 class="page-header">Location Dashboards:</h2>
+    <ul class="locations">
+    {{#each locations}}
+        <li><a href="{{pathFor 'dashboard_home' locationId=this._id}}">{{name}}</a></li>
+    {{/each}}
+    </ul>
   </div>
 </template>

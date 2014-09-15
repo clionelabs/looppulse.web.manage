@@ -29,6 +29,10 @@ table.table {
   th { font-weight: normal }
 }
 
+form label {
+  font-weight: 500;
+}
+
 // Base CSS
 // Sticky footer 2013
 html, body {
@@ -60,6 +64,17 @@ html, body {
 
 
 // Our content
+
+// @@NOTE: avoid setting CSS in body as body doesn't accept any attribute - set in `.wrapper` instead
+body {
+  color: #9B9B9B;
+  // retina: 34px/40px (34/1.1764)
+  // half: 17px/1.18
+  // easy going: 16px/1.25
+  // vision correction: 18px/1.2
+  font: normal #{$base-font-size}/#{$base-line-height} $base-font-family;
+}
+
 main {
     line-height: 1.4;
     & > .container, .page-wrapper, .wrapped-content {
@@ -70,6 +85,28 @@ main {
       padding: 20px;
       margin: 20px auto;
     }
+}
+
+// Default Style
+.default-wrapper {
+  h1, h2, h3, h4, h5 {
+    display:inline-block;
+  }
+  h1 {
+    font-size: 1.4em;
+  }
+  h2 {
+    font-size: 1.2em;
+    font-weight: 600;
+  }
+  h3 {
+    font-size: 1.1em;
+    font-weight: 500;
+  }
+  h4, h5, h6 {
+    font-size: 1em;
+    font-weight: 300;
+  }
 }
 
 // Utility
@@ -129,15 +166,6 @@ svg.d4 {
 }
 
 // Layout CSS
-// @@NOTE: avoid setting CSS in body as body doesn't accept any attribute - set in `.wrapper` instead
-body {
-  color: #9B9B9B;
-  // retina: 34px/40px (34/1.1764)
-  // half: 17px/1.18
-  // easy going: 16px/1.25
-  // vision correction: 18px/1.2
-  font: normal #{$base-font-size}/#{$base-line-height} $base-font-family;
-}
 
 footer.primary {
   background-color: $alt-dark-color;
@@ -238,11 +266,16 @@ header.primary {
     background-color: $background-color;
     padding-bottom: 1em;
     h1, h2, h3, h4,h5, .actions {
-      display:inline-block
+      display:inline-block;
     }
     .heading .actions {
       margin-top: 1em;
     }
   }
 
+}
+
+.page-header {
+  font-size: 1.1em;
+  margin: 0 0 1em;
 }
