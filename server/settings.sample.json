@@ -1,10 +1,9 @@
 {
   "DEBUG": {
     "resetLocal": false,
-    "logVisitorToFirebase": false,
     "seedData": "",
-    "deliveringMessagesFirebaseURL": "https://<YOUR_APP>.firebaseio.com/delivering_messages",
-    "visitorsFirebaseURL": "https://<YOUR_APP>.firebaseio.com/visitors"
+    "visitorsFirebaseURL": "https://<YOUR_APP>.firebaseio.com/visitors",
+    "deliveringMessagesFirebaseURL": "https://<YOUR_APP>.firebaseio.com/delivering_messages"
   },
 
   "aws": {
@@ -13,12 +12,7 @@
     "s3bucket": ""
   },
   "firebase": {
-      "root": "https://<YOUR_APP>.firebaseio.com/",
       "config": "https://looppulse-config.firebaseio.com/"
-  },
-  "parse": {
-    "applicationId": "",
-    "restKey": ""
   },
   "removeFromFirebase": false,
   "accounts": {
