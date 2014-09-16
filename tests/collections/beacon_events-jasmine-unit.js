@@ -53,6 +53,7 @@
       });
     });
 
+    // TODO rewrite this test for BeaconEvent.nearProximities
     describe("isNear()", function () {
       it('should check against ["near", "intermediate"]', function () {
         var expectedProximity = "p1";

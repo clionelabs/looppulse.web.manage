@@ -152,7 +152,11 @@ var configureCompany= function (companyConfig, configurationJSON) {
       if (criteria.triggerLocations) {
         var replaceCategoryKeyWithId = function(triggerLocationConfig) {
           if (triggerLocationConfig.categoryName) {
-            var category = Categories.findOne({companyId: company._id, name: triggerLocationConfig.categoryName});
+            var selector = {companyId: company._id, name: triggerLocationConfig.categoryName};
+            var category = Categories.findOne(selector);
+            if (!category) {
+              console.log("Can not find category:", selector);
+            }
             triggerLocationConfig.categoryId = category._id;
             delete triggerLocationConfig.categoryName;
           }
