@@ -157,6 +157,33 @@ Meteor.publish('location-engagements', function(locationId) {
   return Engagements.find(q);
 });
 
+Meteor.publish('owned-segments', function(id) {
+  var q = {};
+  var userId = this.userId;
+  console.log("Returning Segment Data", id)
+  if (id && AccountsHelper.companyMatch(id, this.userId)) {
+    q = { companyId: id }
+  } else {
+    if (!userId || !Roles.userIsInRole(userId, ['admin']))
+        return null;
+  }
+  return Segments.find(q);
+});
+
+Meteor.publish('owned-campaigns', function(id) {
+  var q = {};
+  var userId = this.userId;
+
+  console.log("Returning Campaign Data", id)
+  if (id && AccountsHelper.companyMatch(id, this.userId)) {
+    q = { companyId: id }
+  } else {
+    if (!userId || !Roles.userIsInRole(userId, ['admin']))
+        return null;
+  }
+  return Engagements.find(q);
+});
+
 Meteor.publish('location-floors', function(locationId) {
   var q = {};
   console.log("Returning location-floors Data", locationId);
