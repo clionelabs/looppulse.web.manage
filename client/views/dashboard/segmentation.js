@@ -29,7 +29,12 @@ Template.dashboard_segment_manage.helpers({
 Template.dashboard_segment_create.helpers({
   criteriaInputs: function(companyId){
     //get All Locations under the company
-    var locationList = []
+    var locationList = [
+      {"Mall 101": "s1"},
+      {"City Spot": "s2"},
+      {"Sunny Vale": "s3"}
+    ]
+    //Locations.find({companyId: companyId}).fetch()
     //get All product and floor for each locations
     var floorMap = [
       {"1/F": 1},
@@ -37,14 +42,14 @@ Template.dashboard_segment_create.helpers({
       {"3/F": 3},
     ]
     var productMap = [
-      {"alpha idea": "1"},
-      {"x generation": "2"},
-      {"clan master": "3"}
+      {"alpha idea": "p1"},
+      {"x generation": "p2"},
+      {"clan master": "p3"}
     ]
     var categoryMap = [
-      {"supermarket": "1"},
-      {"book": "2"},
-      {"cafe": "3"}
+      {"supermarket": "c1"},
+      {"book": "c2"},
+      {"cafe": "c3"}
     ]
     // Floors.find({locationId:locationId}, {fields:{_id:1, level: 1, name:1}}).fetch()
     return {
@@ -60,7 +65,6 @@ Template.dashboard_segment_create.helpers({
       },
       "triggerLocations": {
         "field":"triggerLocations",
-        "isMultiple": true,
         "filters": [
           {
             "key": "categoryName",
@@ -148,8 +152,8 @@ Template.dashboard_segment_create.helpers({
       },
       "triggerPoints": {
         "field": "triggerPoints",
-        "isMultiple": true,
-        "values": Locations.find({companyId: companyId}).fetch(),
+        "multiple": true,
+        "values": locationList,
         "type": "list"
       }
     }
@@ -158,17 +162,11 @@ Template.dashboard_segment_create.helpers({
 })
 
 Template._field.helpers({
-  isList:function(){
-    return this.type === "list"
-  },
-  isRange: function(){
-    return this.type === "range"
-  },
   isDefault: function(){
-    return this.type !== "list" && this.type !== "range" && this.type !== "filterInput"
+    return this.type !== "list" && this.type !== "filterList" && this.type !== "filterInput"
   },
-  decompose: function(){
-    return this.values.map(function(o){
+  decompose: function(values){
+    return values.map(function(o){
       if (typeof o === "object") {
         for (k in o) {
           return {
@@ -186,11 +184,17 @@ Template._field.helpers({
   },
   isSelected: function(){
     return this.selected
+  },
+  isMultiple: function(){
+    return this.multiple
   }
 })
 Template._field.rendered = function(){
   var self = this;
   this.$('.input-daterange').datepicker({
+  });
+
+  this.$('.select-picker').selectpicker({
   });
 
   //data-filter-toggle changes -> data-filter toggle display
@@ -207,7 +211,7 @@ Template._field.rendered = function(){
     $(selector + ".visible").removeClass("visible").hide();
     $(selector+"[data-filter='"+targetField+"']").addClass("visible").show();
   }
-  var $select = this.$("select")
+  var $select = this.$("select.select-filter")
   $select.on("change", function(e){
     _selecting(e.currentTarget)
   })
@@ -215,6 +219,4 @@ Template._field.rendered = function(){
   _selecting($select)
 
 
-  this.$('.select-picker').selectpicker({
-  });
 }
