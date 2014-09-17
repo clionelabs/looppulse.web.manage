@@ -11,6 +11,7 @@
     <div class="col-sm-3"><div class="actions pull-right"><button class="create-btn action-btn btn btn-primary">Create {{context}}</button></div></div>
   {{/contentFor}}
   <section>
+  <form class="form-inline" role="form">
   {{#with criteriaInputs companyId}}
   Includes anyone who have {{> _field hasBeen }} to {{> _field to }} of these {{> _field triggerLocations }}:
 
@@ -18,6 +19,7 @@
 
   in {{> _field days }} days every {{>_field every }} only
   {{/with}}
+  </form>
   </section>
 {{/Layout}}
 </template>
@@ -28,9 +30,9 @@
 {{/if}}
 
 {{#if isList }}
-<select>
+<select class="select-picker span2">
   {{#each decompose}}
-  <option value="{{key}}">{{val}}</option>
+  <option value="{{val}}">{{key}}</option>
   {{/each}}
 </select>
 {{/if}}
@@ -38,21 +40,21 @@
 
 {{#if equals this.type "filterInput" }}
 <span class="filter-group filter-input" data-key="{{field}}">
-  <select data-key="{{field}}">
+  <select class="select-picker span2" data-key="{{field}}">
   {{#each filters}}
     <option value="{{this.key}}" data-filter-toggle="{{this.key}}" selected={{isSelected}}>{{this.label}}</option>
   {{/each}}
   </select>
   {{#each filters}}
       {{#if equals this.style "Number"}}
-      <input type="text" value="" class="filter-input-group" placeholder="" size="2" data-filter="{{this.key}}"  data-key="{{../field}}">
+      <input type="text" value="" class="filter-input-group input-md form-control" placeholder="{{this.placeholder}}" size="2" data-filter="{{this.key}}"  data-key="{{../field}}">
       {{/if}}
 
       {{#if equals this.style "DatetimeRange"}}
-      <span class="input-daterange filter-input-group" id="datepicker-{{this.key}}"  data-filter="{{this.key}}" data-key="{{../field}}">
-          <input type="text" class="input-xs form-control" name="{{this.field.start}}" data-key="{{../field}}" />
+      <span class="input-daterange filter-input-group input-group" id="datepicker-{{this.key}}"  data-filter="{{this.key}}" data-key="{{../field}}">
+          <input type="text" class="input-md form-control" name="{{this.field.start}}" data-key="{{../field}}" />
           <span class="input-group-addon"> - </span>
-          <input type="text" class="input-xs form-control" name="{{this.field.end}}" data-key="{{../field}}" />
+          <input type="text" class="input-md form-control" name="{{this.field.end}}" data-key="{{../field}}" />
       </span>
       {{/if}}
   {{/each}}

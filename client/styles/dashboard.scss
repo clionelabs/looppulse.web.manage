@@ -43,7 +43,8 @@
 
 // Forms
 .filter-input-group {
-  display: none;
+  &.form-control, & {
+  }
 }
 
 // Specific Section

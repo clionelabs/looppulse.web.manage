@@ -31,9 +31,21 @@ Template.dashboard_segment_create.helpers({
     //get All Locations under the company
     var locationList = []
     //get All product and floor for each locations
-    var floorMap = []
-    var productMap = []
-    var categoryMap = []
+    var floorMap = [
+      {"1/F": 1},
+      {"2/F": 2},
+      {"3/F": 3},
+    ]
+    var productMap = [
+      {"alpha idea": "1"},
+      {"x generation": "2"},
+      {"clan master": "3"}
+    ]
+    var categoryMap = [
+      {"supermarket": "1"},
+      {"book": "2"},
+      {"cafe": "3"}
+    ]
     // Floors.find({locationId:locationId}, {fields:{_id:1, level: 1, name:1}}).fetch()
     return {
       "hasBeen": {
@@ -77,12 +89,14 @@ Template.dashboard_segment_create.helpers({
           {
             "key": "atLeast",
             "label": "at least",
-            "style": "Number"
+            "style": "Number",
+            "placeholder": 1
           },
           {
             "key": "atMost",
             "label": "at most",
             "style": "Number",
+            "placeholder": 99,
             "selected": true
           }
         ],
@@ -96,11 +110,13 @@ Template.dashboard_segment_create.helpers({
             "key": "atLeast",
             "label": "at least",
             "style": "Number",
+            "placeholder": 1,
             "selected": true
           },
           {
             "key": "atMost",
             "label": "at most",
+            "placeholder": 90,
             "style": "Number"
           }
         ],
@@ -173,6 +189,7 @@ Template._field.helpers({
   }
 })
 Template._field.rendered = function(){
+  var self = this;
   this.$('.input-daterange').datepicker({
   });
 
@@ -180,17 +197,24 @@ Template._field.rendered = function(){
   //delegation
   //may be can save some data field
   var _selecting = function(elem){
+    // self.$(".filter-input-group.visible").removeClass("visible")
+    // console.log(self, self.$(".filter-input-group"), self.$(".visible"))
     var selected = $("option:selected", elem)
     var targetField = selected.data("filter-toggle");
-    var targetKey = elem.data("key")
+    var targetKey = $(elem).data("key")
     if (!targetField || !targetKey) { return false; }
-    var input = $(".filter-input-group[data-filter='"+targetField+"'][data-key='"+targetKey+"']")
-
-    input.show();
+    var selector = ".filter-input-group[data-key='"+targetKey+"']"
+    $(selector + ".visible").removeClass("visible").hide();
+    $(selector+"[data-filter='"+targetField+"']").addClass("visible").show();
   }
   var $select = this.$("select")
   $select.on("change", function(e){
-    _selecting(this)
+    _selecting(e.currentTarget)
   })
+  this.$(".filter-input-group").hide();
   _selecting($select)
+
+
+  this.$('.select-picker').selectpicker({
+  });
 }
