@@ -13,12 +13,12 @@ Scheduler.init = function () {
 
 Scheduler.start = function () {
   SyncedCron.start();
-}
+};
 
 Scheduler.startup = function () {
   Scheduler.init();
   Scheduler.start();
-}
+};
 
 // Refer https://github.com/percolatestudio/meteor-synced-cron for formatting.
 Scheduler.jobs = [
@@ -30,6 +30,7 @@ Scheduler.jobs = [
     },
     job: function () {
       console.log("Running scheduled task");
+      return UpdateSegmentVisitors();
     }
   }
 ];
