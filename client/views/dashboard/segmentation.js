@@ -31,8 +31,9 @@ Template.dashboard_segment_create.helpers({
     //get All Locations under the company
     var locationList = []
     //get All product and floor for each locations
-    var floorMap = {}
-    var productMap = {}
+    var floorMap = []
+    var productMap = []
+    var categoryMap = []
     // Floors.find({locationId:locationId}, {fields:{_id:1, level: 1, name:1}}).fetch()
     return {
       "hasBeen": {
@@ -48,59 +49,80 @@ Template.dashboard_segment_create.helpers({
       "triggerLocations": {
         "field":"triggerLocations",
         "isMultiple": true,
-        "filters": ["categoryName", "productName", "floorLevel"],
-        "filterLabel":["category", "shop", "floor"],
-        "values":{
-          "categoryName" : Categories.find({ companyId: companyId }, { fields: {_id:1, name:1}}).fetch(),
-          "productName" : productMap,
-          "floorLevel": floorMap
-        },
-
+        "filters": [
+          {
+            "key": "categoryName",
+            "label": "category",
+            "values": categoryMap,
+            "style": "MultiSelect"
+          },
+          {
+            "key": "productName",
+            "label": "product",
+            "values": productMap,
+            "style": "MultiSelect"
+          },
+          {
+            "key": "floorLevel",
+            "label": "floor",
+            "values": floorMap, //when it is list, give me values
+            "style": "MultiSelect"
+          }
+        ],
         "type": "fliterList"
       },
       "times":{
         "field":"times",
-        "filter": ["atLeast", "atMost"],
-        "filterLabel": {
-          "atLeast":"at least",
-          "atMost": "at most"
-        },
-        "style": {
-          "atLeast":"Number",
-          "atMost": "Number"
-        },
+        "filters": [
+          {
+            "key": "atLeast",
+            "label": "at least",
+            "style": "Number"
+          },
+          {
+            "key": "atMost",
+            "label": "at most",
+            "style": "Number",
+            "selected": true
+          }
+        ],
         "values":{ "atLeast":0, "atMost": 100 }, //label: value
         "type": "filterInput"
       },
       "durantionInMinutes":{
         "field":"durantionInMinutes",
-        "filter": ["atLeast", "atMost"],
-        "filterLabel": {
-          "atLeast":"at least",
-          "atMost": "at most"
-        },
-        "style": {
-          "atLeast":"Number",
-          "atMost": "Number"
-        },
+        "filters": [
+          {
+            "key": "atLeast",
+            "label": "at least",
+            "style": "Number",
+            "selected": true
+          },
+          {
+            "key": "atMost",
+            "label": "at most",
+            "style": "Number"
+          }
+        ],
         "values": { "atLeast":0, "atMost": 1440 },
         "type": "filterInput"
       },
       "days":{
         "field": "days",
-        "filter": ["dateTime", "inLast"],
-        "values": {
-          "dateTime": {"start":0, "end":0},
-          "inLast": {"inLast":1}
-        },
-        "filterLabel": {
-          "dateTime":"time...",
-          "inLast": "last"
-        },
-        "style": {
-          "dateTime":"DatetimeRange",
-          "inLast": "Number"
-        },
+        "filters": [
+          {
+            "key": "dateTime",
+            "label": "time period",
+            "style": "DatetimeRange",
+            "field": {"start":"start", "end":"end"} //special: anything needs extra field name
+          },
+          {
+            "key": "inLast",
+            "label": "last",
+            "style": "Number",
+            "selected": true
+          }
+        ],
         "type": "filterInput"
       },
       "every":{
@@ -146,12 +168,29 @@ Template._field.helpers({
       }
     })
   },
-  getStyle: function(){
-    console.log("style",this)
-    return this.style
+  isSelected: function(){
+    return this.selected
   }
 })
 Template._field.rendered = function(){
-  $('.input-daterange').datepicker({
+  this.$('.input-daterange').datepicker({
   });
+
+  //data-filter-toggle changes -> data-filter toggle display
+  //delegation
+  //may be can save some data field
+  var _selecting = function(elem){
+    var selected = $("option:selected", elem)
+    var targetField = selected.data("filter-toggle");
+    var targetKey = elem.data("key")
+    if (!targetField || !targetKey) { return false; }
+    var input = $(".filter-input-group[data-filter='"+targetField+"'][data-key='"+targetKey+"']")
+
+    input.show();
+  }
+  var $select = this.$("select")
+  $select.on("change", function(e){
+    _selecting(this)
+  })
+  _selecting($select)
 }

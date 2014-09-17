@@ -16,14 +16,13 @@
 
   for {{> _field times }} times and stayed for {{> _field durantionInMinutes }} minutes
 
-  in {{> _field days }} 60 days every {{>_field every }} only
+  in {{> _field days }} days every {{>_field every }} only
   {{/with}}
   </section>
 {{/Layout}}
 </template>
 
 <template name="_field">
-{{log this}}
 {{#if isDefault}}
 <span class="form-label">{{this.field}}</span>
 {{/if}}
@@ -38,25 +37,25 @@
 
 
 {{#if equals this.type "filterInput" }}
-  <select>
-  {{#each filter}}
-    <option value="{{this}}" data-filter="{{this}}">{{obtain ../filterLabel this}}</option>
+<span class="filter-group filter-input" data-key="{{field}}">
+  <select data-key="{{field}}">
+  {{#each filters}}
+    <option value="{{this.key}}" data-filter-toggle="{{this.key}}" selected={{isSelected}}>{{this.label}}</option>
   {{/each}}
   </select>
-  {{#each filter}}
-    {{#with obtain ../style this}}
-      {{#if equals this "Number"}}
-      <input type="text" value="" placeholder="" size="2" data-filter-toggle="{{..}}">
+  {{#each filters}}
+      {{#if equals this.style "Number"}}
+      <input type="text" value="" class="filter-input-group" placeholder="" size="2" data-filter="{{this.key}}"  data-key="{{../field}}">
       {{/if}}
 
-      {{#if equals this "DatetimeRange"}}
-      <span class="input-daterange input-group" id="datepicker-{{..}}"  data-filter-toggle="{{..}}">
-          <input type="text" class="input-xs form-control" name="start" />
+      {{#if equals this.style "DatetimeRange"}}
+      <span class="input-daterange filter-input-group" id="datepicker-{{this.key}}"  data-filter="{{this.key}}" data-key="{{../field}}">
+          <input type="text" class="input-xs form-control" name="{{this.field.start}}" data-key="{{../field}}" />
           <span class="input-group-addon"> - </span>
-          <input type="text" class="input-xs form-control" name="end" />
+          <input type="text" class="input-xs form-control" name="{{this.field.end}}" data-key="{{../field}}" />
       </span>
       {{/if}}
-    {{/with}}
   {{/each}}
+</span>
 {{/if}}
 </template>

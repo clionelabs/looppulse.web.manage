@@ -69,7 +69,6 @@ Template.registerHelper('keys', function(o){
 })
 
 Template.registerHelper("equals", function (a, b) {
-  console.log("iEquals",a,b,a === b)
   return a+"" === b+"";
 });
 //copy from https://github.com/XpressiveCode/iron-router-active/blob/master/lib/client/helpers.js
