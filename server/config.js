@@ -215,10 +215,15 @@ var configureCompany= function (companyConfig, configurationJSON) {
       };
 
       var segmentId = companyConfig.segments[engagementConfig.segment]._id;
-      var validPeriod = {
-        start: Date.parse(engagementConfig.validPeriod.start),
-        end: Date.parse(engagementConfig.validPeriod.end)
-      };
+      var validPeriod = engagementConfig.validPeriod;
+      if (validPeriod) {
+        if (validPeriod.start) {
+          validPeriod.start = Date.parse(validPeriod.start)
+        }
+        if (validPeriod.end) {
+          validPeriod.end = Date.parse(validPeriod.end);
+        }
+      }
       var context = replaceInstallationKeysWithIds(engagementConfig.context);
       var e = {
         type: engagementConfig.type,
