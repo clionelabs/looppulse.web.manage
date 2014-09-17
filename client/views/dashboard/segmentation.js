@@ -37,7 +37,7 @@ Template.dashboard_segment_create.helpers({
     return {
       "hasBeen": {
         "field": "hasBeen",
-        "values": [true,false],
+        "values": [{ "has been": true},{ "has not been":false}],
         "type": "list"
       },
       "to": {
@@ -60,22 +60,52 @@ Template.dashboard_segment_create.helpers({
       },
       "times":{
         "field":"times",
-        "values":{ "atLeast":0, "atMost": 100 },
-        "type": "range"
+        "filter": ["atLeast", "atMost"],
+        "filterLabel": {
+          "atLeast":"at least",
+          "atMost": "at most"
+        },
+        "style": {
+          "atLeast":"Number",
+          "atMost": "Number"
+        },
+        "values":{ "atLeast":0, "atMost": 100 }, //label: value
+        "type": "filterInput"
       },
       "durantionInMinutes":{
         "field":"durantionInMinutes",
+        "filter": ["atLeast", "atMost"],
+        "filterLabel": {
+          "atLeast":"at least",
+          "atMost": "at most"
+        },
+        "style": {
+          "atLeast":"Number",
+          "atMost": "Number"
+        },
         "values": { "atLeast":0, "atMost": 1440 },
-        "type": "range"
+        "type": "filterInput"
       },
       "days":{
         "field": "days",
-        "values": [{"start":0, "end":0}, {"inLast":1}],
-        "type": "timeWithLast"
+        "filter": ["dateTime", "inLast"],
+        "values": {
+          "dateTime": {"start":0, "end":0},
+          "inLast": {"inLast":1}
+        },
+        "filterLabel": {
+          "dateTime":"time...",
+          "inLast": "last"
+        },
+        "style": {
+          "dateTime":"DatetimeRange",
+          "inLast": "Number"
+        },
+        "type": "filterInput"
       },
       "every":{
         "field": "every",
-        "values": ["day","weekdays"],
+        "values": ["day","weekdays", "weekends"],
         "type": "list"
       },
       "triggerPoints": {
@@ -91,11 +121,13 @@ Template.dashboard_segment_create.helpers({
 
 Template._field.helpers({
   isList:function(){
-    console.log("type checking", (this.type === "list"))
     return this.type === "list"
   },
   isRange: function(){
     return this.type === "range"
+  },
+  isDefault: function(){
+    return this.type !== "list" && this.type !== "range" && this.type !== "filterInput"
   },
   decompose: function(){
     return this.values.map(function(o){
@@ -103,15 +135,23 @@ Template._field.helpers({
         for (k in o) {
           return {
             key: k,
-            val: o[k]
+            val: o[k]+""
           }
         }
       } else {
         return {
           key: o,
-          val: o,
+          val: o+"",
         }
       }
     })
+  },
+  getStyle: function(){
+    console.log("style",this)
+    return this.style
   }
 })
+Template._field.rendered = function(){
+  $('.input-daterange').datepicker({
+  });
+}

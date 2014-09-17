@@ -12,11 +12,11 @@
   {{/contentFor}}
   <section>
   {{#with criteriaInputs companyId}}
-  Includes anyone who have {{> _field hasBeen}} to {{> _field to}} of these {{> _field triggerLocations}}:
+  Includes anyone who have {{> _field hasBeen }} to {{> _field to }} of these {{> _field triggerLocations }}:
 
-  for {{> _field times}} times and stayed for {{> _field durantionInMinutes}} minutes
+  for {{> _field times }} times and stayed for {{> _field durantionInMinutes }} minutes
 
-  in last 60 days every {{>_field every}} only
+  in {{> _field days }} 60 days every {{>_field every }} only
   {{/with}}
   </section>
 {{/Layout}}
@@ -24,7 +24,10 @@
 
 <template name="_field">
 {{log this}}
-<span>[ {{this.field}} ]</span>
+{{#if isDefault}}
+<span class="form-label">{{this.field}}</span>
+{{/if}}
+
 {{#if isList }}
 <select>
   {{#each decompose}}
@@ -33,6 +36,27 @@
 </select>
 {{/if}}
 
-{{#if isRange}}
+
+{{#if equals this.type "filterInput" }}
+  <select>
+  {{#each filter}}
+    <option value="{{this}}" data-filter="{{this}}">{{obtain ../filterLabel this}}</option>
+  {{/each}}
+  </select>
+  {{#each filter}}
+    {{#with obtain ../style this}}
+      {{#if equals this "Number"}}
+      <input type="text" value="" placeholder="" size="2" data-filter-toggle="{{..}}">
+      {{/if}}
+
+      {{#if equals this "DatetimeRange"}}
+      <span class="input-daterange input-group" id="datepicker-{{..}}"  data-filter-toggle="{{..}}">
+          <input type="text" class="input-xs form-control" name="start" />
+          <span class="input-group-addon"> - </span>
+          <input type="text" class="input-xs form-control" name="end" />
+      </span>
+      {{/if}}
+    {{/with}}
+  {{/each}}
 {{/if}}
 </template>
