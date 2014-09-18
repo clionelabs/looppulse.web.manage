@@ -94,6 +94,7 @@ Template.dashboard_segment_create.helpers({
             "placeholder": "..."
           }
         ],
+        "baseIndex": 0,
         "type": "filterList"
       },
       "times":{

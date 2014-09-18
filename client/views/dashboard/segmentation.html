@@ -42,7 +42,7 @@
 {{#if equals this.type "filterList" }}
 
 <div class="filter-group filter-list form-group" data-key="{{field}}">
-  <select class="select-picker span2 select-filter" data-key="{{field}}"  data-filter-type="select" multiple={{isMultiple}} name="{{field}}[_filter]{{#if isMultiple}}[]{{/if}}">
+  <select class="select-picker span2 select-filter" data-key="{{field}}"  data-filter-type="select" multiple={{isMultiple}} name="{{field}}[{{baseIndex}}][_filter]{{#if isMultiple}}[]{{/if}}">
     {{#each filters}}
     <option value="{{key}}" data-filter-toggle="{{this.key}}" selected={{isSelected}}>{{label}}</option>
     {{/each}}
@@ -50,7 +50,7 @@
 
   {{#each filters}}
         {{#if equals this.style "MultiSelect"}}
-        <select class="select-picker span2 filter-input-group data-group-{{../field}} data-input-{{this.key}}" data-filter="{{this.key}}" data-key="{{../field}}" title="{{this.placeholder}}" multiple name="{{../field}}[{{this.key}}][]">
+        <select class="select-picker span2 filter-input-group data-group-{{../field}} data-input-{{this.key}}" data-filter="{{this.key}}" data-key="{{../field}}" title="{{this.placeholder}}" multiple name="{{../field}}[{{../baseIndex}}][{{this.key}}][]">
           {{#each decompose this.values}}
           <option value="{{val}}" selected={{isFirst}}>{{key}}</option>
           {{/each}}
