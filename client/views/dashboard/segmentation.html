@@ -50,6 +50,7 @@
 
   {{#each filters}}
         {{#if equals this.style "MultiSelect"}}
+        {{!the source data- will not be copied to the dropdown }}
         <select class="select-picker span2 filter-input-group data-group-{{../field}} data-input-{{this.key}}" data-filter="{{this.key}}" data-key="{{../field}}" title="{{this.placeholder}}" multiple name="{{../field}}[{{../baseIndex}}][{{this.key}}][]">
           {{#each decompose this.values}}
           <option value="{{val}}" selected={{isFirst}}>{{key}}</option>
