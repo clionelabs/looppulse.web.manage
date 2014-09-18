@@ -141,7 +141,14 @@ var configureCompany= function (companyConfig, configurationJSON) {
         var beacon = new Beacon(beaconConfig.proximityUUID, beaconConfig.major, beaconConfig.minor);
         beaconId = beacon.save();
       }
-      var installation = new Installation(type, locationId, beaconId, physicalId, name, coord);
+      var installation = new Installation({
+        type: type,
+        locationId: locationId,
+        beaconId: beaconId,
+        physicalId: physicalId,
+        name: name,
+        coord: coord
+      });
       locationConfig.installations[installationKey]._id = installation.save();
       console.info("[Init] Installation created:", JSON.stringify(installation));
     });
