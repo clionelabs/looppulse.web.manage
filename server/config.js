@@ -98,7 +98,8 @@ var configureCompany= function (companyConfig, configurationJSON) {
     var p = new Product({
       name: productConfig.name,
       companyId: company._id,
-      categoryId: categoryId
+      categoryId: categoryId,
+      type: productConfig.type || "product"
     });
     companyConfig.products[productKey]._id = p.save();
     console.info("[Init] Product created:", p._id, p.name);
