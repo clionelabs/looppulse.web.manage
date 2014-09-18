@@ -29,7 +29,7 @@ Scheduler.jobs = [
       return parser.recur().on(3).hour();
     },
     job: function () {
-      console.log("Running scheduled task");
+      console.log("[Scheduler] Running scheduled task: UpdateSegmentVisitors");
       return UpdateSegmentVisitors();
     }
   }
