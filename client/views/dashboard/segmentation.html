@@ -26,21 +26,21 @@
 
 <template name="_field">
 {{#if isDefault}}
-<span class="form-label">{{this.field}}</span>
+<span class="form-label">{{field}}</span>
 {{/if}}
 
 {{#if equals this.type "list" }}
-<select class="select-picker span2" multiple={{isMultiple}}>
+<select class="select-picker span2" title="{{placeholder}}" multiple={{isMultiple}}>
   {{#each decompose this.values}}
   <option value="{{val}}">{{key}}</option>
   {{/each}}
 </select>
 {{/if}}
 
-{{#if equals this.type "fliterList" }}
+{{#if equals this.type "filterList" }}
 
 <span class="filter-group filter-list" data-key="{{field}}">
-  <select class="select-picker span2 select-filter" data-key="{{field}}" multiple={{isMultiple}}>
+  <select class="select-picker span2 select-filter" data-key="{{field}}"  data-filter-type="select" multiple={{isMultiple}}>
     {{#each filters}}
     <option value="{{key}}" data-filter-toggle="{{this.key}}" selected={{isSelected}}>{{label}}</option>
     {{/each}}
@@ -48,7 +48,7 @@
 
   {{#each filters}}
         {{#if equals this.style "MultiSelect"}}
-        <select class="select-picker span2 filter-input-group"  data-filter="{{this.key}}" data-key="{{../field}}" multiple>
+        <select class="select-picker span2 filter-input-group data-group-{{../field}} data-input-{{this.key}}" data-filter="{{this.key}}" data-key="{{../field}}" title="{{this.placeholder}}" multiple>
           {{#each decompose this.values}}
           <option value="{{val}}">{{key}}</option>
           {{/each}}

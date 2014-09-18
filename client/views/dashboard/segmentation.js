@@ -70,22 +70,25 @@ Template.dashboard_segment_create.helpers({
             "key": "categoryName",
             "label": "category",
             "values": categoryMap,
-            "style": "MultiSelect"
+            "style": "MultiSelect",
+            "placeholder": "..."
           },
           {
             "key": "productName",
             "label": "product",
             "values": productMap,
-            "style": "MultiSelect"
+            "style": "MultiSelect",
+            "placeholder": "..."
           },
           {
             "key": "floorLevel",
             "label": "floor",
             "values": floorMap, //when it is list, give me values
-            "style": "MultiSelect"
+            "style": "MultiSelect",
+            "placeholder": "..."
           }
         ],
-        "type": "fliterList"
+        "type": "filterList"
       },
       "times":{
         "field":"times",
@@ -154,7 +157,8 @@ Template.dashboard_segment_create.helpers({
         "field": "triggerPoints",
         "multiple": true,
         "values": locationList,
-        "type": "list"
+        "type": "list",
+        "placeholder": "Locations..."
       }
     }
   },
@@ -191,6 +195,8 @@ Template._field.helpers({
 })
 Template._field.rendered = function(){
   var self = this;
+
+  console.log(this)
   this.$('.input-daterange').datepicker({
   });
 
@@ -201,16 +207,24 @@ Template._field.rendered = function(){
   //delegation
   //may be can save some data field
   var _selecting = function(elem){
-    // self.$(".filter-input-group.visible").removeClass("visible")
-    // console.log(self, self.$(".filter-input-group"), self.$(".visible"))
     var selected = $("option:selected", elem)
     var targetField = selected.data("filter-toggle");
     var targetKey = $(elem).data("key")
+    var type = $(elem).data("filter-type")
+    var selector = ""
+    var toggle = ""
     if (!targetField || !targetKey) { return false; }
-    var selector = ".filter-input-group[data-key='"+targetKey+"']"
+    if (!type) {
+      selector = ".filter-input-group[data-key='"+targetKey+"']"
+      toggle = selector+"[data-filter='"+targetField+"']"
+    } else {
+      selector = ".filter-input-group.data-group-"+targetKey
+      toggle = "div"+selector+".data-input-"+targetField
+    }
     $(selector + ".visible").removeClass("visible").hide();
-    $(selector+"[data-filter='"+targetField+"']").addClass("visible").show();
+    $(toggle).addClass("visible").show();
   }
+
   var $select = this.$("select.select-filter")
   $select.on("change", function(e){
     _selecting(e.currentTarget)
