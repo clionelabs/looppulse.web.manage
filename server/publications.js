@@ -184,6 +184,20 @@ Meteor.publish('owned-campaigns', function(id) {
   return Engagements.find(q);
 });
 
+Meteor.publish('owned-categories', function(id) {
+  var q = {};
+  var userId = this.userId;
+
+  console.log("Returning Categories Data", id)
+  if (id && AccountsHelper.companyMatch(id, this.userId)) {
+    q = { companyId: id }
+  } else {
+    if (!userId || !Roles.userIsInRole(userId, ['admin']))
+        return null;
+  }
+  return Categories.find(q);
+});
+
 Meteor.publish('location-floors', function(locationId) {
   var q = {};
   console.log("Returning location-floors Data", locationId);
@@ -195,6 +209,23 @@ Meteor.publish('location-floors', function(locationId) {
   }
 
   return Floors.find(q);
+});
+
+Meteor.publish('owned-floors', function(id) {
+  var q = {};
+  var userId = this.userId;
+
+  console.log("Returning Categories Data", id)
+  if (id && AccountsHelper.companyMatch(id, this.userId)) {
+    q = { companyId: id }
+  } else {
+    if (!userId || !Roles.userIsInRole(userId, ['admin']))
+        return null;
+  }
+
+  var locations = Locations.find(q).fetch();
+  var locationIds = _.pluck(locations, "_id");
+  return Floors.find({locationId:{$in:locationIds}});
 });
 
 //@@DEV
