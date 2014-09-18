@@ -30,16 +30,18 @@
 {{/if}}
 
 {{#if equals this.type "list" }}
-<select class="select-picker span2" title="{{placeholder}}" multiple={{isMultiple}}>
-  {{#each decompose this.values}}
-  <option value="{{val}}">{{key}}</option>
-  {{/each}}
-</select>
+<div class="form-list form-group" data-key="{{field}}">
+  <select class="select-picker span2" title="{{placeholder}}" multiple={{isMultiple}}>
+    {{#each decompose this.values}}
+    <option value="{{val}}">{{key}}</option>
+    {{/each}}
+  </select>
+</div>
 {{/if}}
 
 {{#if equals this.type "filterList" }}
 
-<span class="filter-group filter-list" data-key="{{field}}">
+<div class="filter-group filter-list form-group" data-key="{{field}}">
   <select class="select-picker span2 select-filter" data-key="{{field}}"  data-filter-type="select" multiple={{isMultiple}}>
     {{#each filters}}
     <option value="{{key}}" data-filter-toggle="{{this.key}}" selected={{isSelected}}>{{label}}</option>
@@ -56,11 +58,11 @@
         {{/if}}
 
   {{/each}}
-</span>
+</div>
 {{/if}}
 
 {{#if equals this.type "filterInput" }}
-<span class="filter-group filter-input" data-key="{{field}}">
+<div class="filter-group filter-input form-group" data-key="{{field}}">
   <select class="select-picker span2 select-filter" data-key="{{field}}">
   {{#each filters}}
     <option value="{{this.key}}" data-filter-toggle="{{this.key}}" selected={{isSelected}}>{{this.label}}</option>
@@ -79,6 +81,6 @@
       </span>
       {{/if}}
   {{/each}}
-</span>
+</div>
 {{/if}}
 </template>

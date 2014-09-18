@@ -29,11 +29,9 @@ Template.dashboard_segment_manage.helpers({
 Template.dashboard_segment_create.helpers({
   criteriaInputs: function(companyId){
     //get All Locations under the company
-    var locationList = [
-      {"Mall 101": "s1"},
-      {"City Spot": "s2"},
-      {"Sunny Vale": "s3"}
-    ]
+    console.log(companyId)
+    var locationList = Locations.find({companyId: companyId}).fetch()
+    var isDynamic = locationList > 1 ? true : false;
     //Locations.find({companyId: companyId}).fetch()
     //get All product and floor for each locations
     var floorMap = [
@@ -51,6 +49,10 @@ Template.dashboard_segment_create.helpers({
       {"book": "c2"},
       {"cafe": "c3"}
     ]
+    var prefix = "segmentCreateLocations";
+    Session.set(prefix+"FloorMap", floorMap)
+    Session.set(prefix+"ProductMap", productMap)
+    Session.set(prefix+"CategoryMap", categoryMap)
     // Floors.find({locationId:locationId}, {fields:{_id:1, level: 1, name:1}}).fetch()
     return {
       "hasBeen": {
@@ -69,21 +71,21 @@ Template.dashboard_segment_create.helpers({
           {
             "key": "categoryName",
             "label": "category",
-            "values": categoryMap,
+            "values": Session.get(prefix+"CategoryMap"),
             "style": "MultiSelect",
             "placeholder": "..."
           },
           {
             "key": "productName",
             "label": "product",
-            "values": productMap,
+            "values": Session.get(prefix+"ProductMap"),
             "style": "MultiSelect",
             "placeholder": "..."
           },
           {
             "key": "floorLevel",
             "label": "floor",
-            "values": floorMap, //when it is list, give me values
+            "values": Session.get(prefix+"FloorMap"), //when it is list, give me values
             "style": "MultiSelect",
             "placeholder": "..."
           }
@@ -158,7 +160,10 @@ Template.dashboard_segment_create.helpers({
         "multiple": true,
         "values": locationList,
         "type": "list",
-        "placeholder": "Locations..."
+        "placeholder": "Locations...",
+        "trigger": ".filter-list[data-key='triggerLocations']",
+        "sessionKeyPrefix": prefix,
+        "triggerDynamicUpdate": isDynamic
       }
     }
   },
@@ -195,8 +200,6 @@ Template._field.helpers({
 })
 Template._field.rendered = function(){
   var self = this;
-
-  console.log(this)
   this.$('.input-daterange').datepicker({
   });
 
@@ -213,6 +216,8 @@ Template._field.rendered = function(){
     var type = $(elem).data("filter-type")
     var selector = ""
     var toggle = ""
+    var present = ""
+    var prefix = ""
     if (!targetField || !targetKey) { return false; }
     if (!type) {
       selector = ".filter-input-group[data-key='"+targetKey+"']"
@@ -233,4 +238,19 @@ Template._field.rendered = function(){
   _selecting($select)
 
 
+
+  if (this.data.trigger) {
+   present = this.data.trigger
+   prefix = this.data.sessionKeyPrefix
+   console.log("present", present, this.$("select"))
+   $(present).hide()
+   this.$("select").change(function(){
+    var selected = $("option:selected", this)
+    console.log("Selected Location: ")
+    //do something with prefix
+    //LocationsHelper.getCommonLocationMap(selected, prefix)
+
+    $(present).show()
+   })
+  }
 }
