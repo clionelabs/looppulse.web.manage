@@ -116,8 +116,7 @@ var configureCompany= function (companyConfig, configurationJSON) {
       if (!data) {
         console.error("[Init] Error creating installation", installationConfig.product, JSON.stringify(companyConfig))
       }
-      var type = data.type || "product";
-      var physicalId = data._id;
+      var productId = data._id;
 
       var locationId = location._id;
       var name = installationConfig.name;
@@ -142,10 +141,9 @@ var configureCompany= function (companyConfig, configurationJSON) {
         beaconId = beacon.save();
       }
       var installation = new Installation({
-        type: type,
         locationId: locationId,
         beaconId: beaconId,
-        physicalId: physicalId,
+        productId: productId,
         name: name,
         coord: coord
       });
