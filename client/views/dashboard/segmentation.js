@@ -29,30 +29,36 @@ Template.dashboard_segment_manage.helpers({
 Template.dashboard_segment_create.helpers({
   criteriaInputs: function(companyId){
     //get All Locations under the company
-    console.log(companyId)
-    var locationList = Locations.find({companyId: companyId}).fetch()
-    var isDynamic = locationList > 1 ? true : false;
+    console.log("Generating...",companyId)
+    var pairUp = function(o){
+        var d = {}
+        d[o.name] = o._id
+        return d
+    };
+
+    var locationList = Locations.find({ companyId: companyId }).fetch().map(pairUp)
+    var isDynamic = locationList.length > 1 ? true : false;
     //Locations.find({companyId: companyId}).fetch()
     //get All product and floor for each locations
-    var floorMap = [
-      {"1/F": 1},
-      {"2/F": 2},
-      {"3/F": 3},
-    ]
-    var productMap = [
-      {"alpha idea": "p1"},
-      {"x generation": "p2"},
-      {"clan master": "p3"}
-    ]
-    var categoryMap = [
-      {"supermarket": "c1"},
-      {"book": "c2"},
-      {"cafe": "c3"}
-    ]
+    var floors = Floors.find({})
+    var floorMap = Floors.find({}).fetch().map(pairUp)
+    var productMap = Products.find({companyId: companyId}).fetch().map(pairUp)
+    var categoryMap = Categories.find({companyId: companyId}).fetch().map(pairUp)
+    console.log("All Maps", locationList, floorMap, productMap, categoryMap)
+    if (locationList.length === 0 || floorMap.length === 0 || productMap.length === 0 || categoryMap.length === 0) {
+      console.warn("Data not ready")
+      return null
+    } else {
+      console.info("Data ready")
+    }
+
+
     var prefix = "segmentCreateLocations";
     Session.set(prefix+"FloorMap", floorMap)
     Session.set(prefix+"ProductMap", productMap)
     Session.set(prefix+"CategoryMap", categoryMap)
+
+
     // Floors.find({locationId:locationId}, {fields:{_id:1, level: 1, name:1}}).fetch()
     return {
       "hasBeen": {
@@ -199,12 +205,13 @@ Template._field.helpers({
   }
 })
 Template._field.rendered = function(){
+  console.info("Rendered", this)
   var self = this;
-  this.$('.input-daterange').datepicker({
-  });
+  this.$('.input-daterange').datepicker({});
 
-  this.$('.select-picker').selectpicker({
-  });
+  this.$('.select-picker').selectpicker({});
+
+  this.$('.select-picker').selectpicker('refresh')
 
   //data-filter-toggle changes -> data-filter toggle display
   //delegation
@@ -246,7 +253,7 @@ Template._field.rendered = function(){
    $(present).hide()
    this.$("select").change(function(){
     var selected = $("option:selected", this)
-    console.log("Selected Location: ")
+    console.log("Selected Location: ", selected)
     //do something with prefix
     //LocationsHelper.getCommonLocationMap(selected, prefix)
 
