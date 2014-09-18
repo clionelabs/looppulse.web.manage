@@ -98,7 +98,8 @@ var configureCompany= function (companyConfig, configurationJSON) {
     var p = new Product({
       name: productConfig.name,
       companyId: company._id,
-      categoryId: categoryId
+      categoryId: categoryId,
+      type: productConfig.type || "product"
     });
     companyConfig.products[productKey]._id = p.save();
     console.info("[Init] Product created:", p._id, p.name);
@@ -115,8 +116,7 @@ var configureCompany= function (companyConfig, configurationJSON) {
       if (!data) {
         console.error("[Init] Error creating installation", installationConfig.product, JSON.stringify(companyConfig))
       }
-      var type = data.type || "product";
-      var physicalId = data._id;
+      var productId = data._id;
 
       var locationId = location._id;
       var name = installationConfig.name;
@@ -140,7 +140,13 @@ var configureCompany= function (companyConfig, configurationJSON) {
         var beacon = new Beacon(beaconConfig.proximityUUID, beaconConfig.major, beaconConfig.minor);
         beaconId = beacon.save();
       }
-      var installation = new Installation(type, locationId, beaconId, physicalId, name, coord);
+      var installation = new Installation({
+        locationId: locationId,
+        beaconId: beaconId,
+        productId: productId,
+        name: name,
+        coord: coord
+      });
       locationConfig.installations[installationKey]._id = installation.save();
       console.info("[Init] Installation created:", JSON.stringify(installation));
     });
@@ -271,7 +277,7 @@ configureDEBUG = function() {
 };
 
 var resetLocal = function() {
-  var collections = [BeaconEvents, Encounters, Visitors, Metrics, Funnels, Messages];
+  var collections = [BeaconEvents, Encounters, Visitors, Metrics, Messages];
   collections.forEach(function(collection) {
     collection.remove({});
     console.info("[Reset] Removed all data in:", collection._name);
