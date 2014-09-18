@@ -11,7 +11,7 @@
     <div class="col-sm-3"><div class="actions pull-right"><button class="create-btn action-btn btn btn-primary">Create {{context}}</button></div></div>
   {{/contentFor}}
   <section>
-  <form class="form-inline rule-form" role="form">
+  <form class="form-inline rule-form" role="form" method="POST">
   {{#with criteriaInputs companyId}}
     Includes anyone who have {{> _field hasBeen }} to {{> _field to }} of these {{> _field triggerPoints }}{{> _field triggerLocations }}:
 
@@ -31,9 +31,9 @@
 
 {{#if equals this.type "list" }}
 <div class="form-list form-group" data-key="{{field}}">
-  <select class="select-picker span2" title="{{placeholder}}" multiple={{isMultiple}}>
+  <select class="select-picker span2" title="{{placeholder}}" multiple={{isMultiple}} name="{{field}}{{#if isMultiple}}[]{{/if}}">
     {{#each decompose this.values}}
-    <option value="{{val}}">{{key}}</option>
+    <option value="{{val}}" selected={{isFirst}}>{{key}}</option>
     {{/each}}
   </select>
 </div>
@@ -42,7 +42,7 @@
 {{#if equals this.type "filterList" }}
 
 <div class="filter-group filter-list form-group" data-key="{{field}}">
-  <select class="select-picker span2 select-filter" data-key="{{field}}"  data-filter-type="select" multiple={{isMultiple}}>
+  <select class="select-picker span2 select-filter" data-key="{{field}}"  data-filter-type="select" multiple={{isMultiple}} name="{{field}}[_filter]{{#if isMultiple}}[]{{/if}}">
     {{#each filters}}
     <option value="{{key}}" data-filter-toggle="{{this.key}}" selected={{isSelected}}>{{label}}</option>
     {{/each}}
@@ -50,9 +50,9 @@
 
   {{#each filters}}
         {{#if equals this.style "MultiSelect"}}
-        <select class="select-picker span2 filter-input-group data-group-{{../field}} data-input-{{this.key}}" data-filter="{{this.key}}" data-key="{{../field}}" title="{{this.placeholder}}" multiple>
+        <select class="select-picker span2 filter-input-group data-group-{{../field}} data-input-{{this.key}}" data-filter="{{this.key}}" data-key="{{../field}}" title="{{this.placeholder}}" multiple name="{{../field}}[{{this.key}}][]">
           {{#each decompose this.values}}
-          <option value="{{val}}">{{key}}</option>
+          <option value="{{val}}" selected={{isFirst}}>{{key}}</option>
           {{/each}}
         </select>
         {{/if}}
@@ -63,21 +63,21 @@
 
 {{#if equals this.type "filterInput" }}
 <div class="filter-group filter-input form-group" data-key="{{field}}">
-  <select class="select-picker span2 select-filter" data-key="{{field}}">
+  <select class="select-picker span2 select-filter" data-key="{{field}}" name="{{field}}[_filter]">
   {{#each filters}}
     <option value="{{this.key}}" data-filter-toggle="{{this.key}}" selected={{isSelected}}>{{this.label}}</option>
   {{/each}}
   </select>
   {{#each filters}}
       {{#if equals this.style "Number"}}
-      <input type="text" value="" class="filter-input-group input-md form-control" placeholder="{{this.placeholder}}" size="2" data-filter="{{this.key}}"  data-key="{{../field}}">
+      <input type="text" value="" class="filter-input-group input-md form-control" placeholder="{{this.placeholder}}" size="2" data-filter="{{this.key}}"  data-key="{{../field}}" name="{{../field}}[{{this.key}}]">
       {{/if}}
 
       {{#if equals this.style "DatetimeRange"}}
-      <span class="input-daterange filter-input-group input-group" id="datepicker-{{this.key}}"  data-filter="{{this.key}}" data-key="{{../field}}">
-          <input type="text" class="input-md form-control" name="{{this.field.start}}" data-key="{{../field}}" />
+      <span class="input-daterange filter-input-group input-group" id="datepicker-{{this.key}}"  data-filter="{{this.key}}" data-key="{{../field}}" name="{{this.key}}">
+          <input type="text" class="input-md form-control" name="{{../field}}[{{this.key}}][{{this.field.start}}]" data-key="{{../field}}" >
           <span class="input-group-addon"> - </span>
-          <input type="text" class="input-md form-control" name="{{this.field.end}}" data-key="{{../field}}" />
+          <input type="text" class="input-md form-control" name="{{../field}}[{{this.key}}][{{this.field.end}}]" data-key="{{../field}}">
       </span>
       {{/if}}
   {{/each}}

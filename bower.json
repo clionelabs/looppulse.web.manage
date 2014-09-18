@@ -6,7 +6,9 @@
     "d3": "~3.4.4",
     "bootstrap-select": "~1.6.2",
     "yamm3": "~1.0.0",
-    "bootstrap-datepicker": "~1.3.0"
+    "bootstrap-datepicker": "~1.3.0",
+    "jquery.serializeJSON": "~2.2.0",
+    "deepmerge": "~0.2.9"
   },
   "devDependencies": {}
 }

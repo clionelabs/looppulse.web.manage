@@ -49,7 +49,7 @@ Template.dashboard_segment_create.helpers({
       console.warn("Data not ready")
       return null
     } else {
-      console.info("Data ready")
+      console.info("Data ready", this)
     }
 
 
@@ -58,9 +58,7 @@ Template.dashboard_segment_create.helpers({
     Session.set(prefix+"ProductMap", productMap)
     Session.set(prefix+"CategoryMap", categoryMap)
 
-
-    // Floors.find({locationId:locationId}, {fields:{_id:1, level: 1, name:1}}).fetch()
-    return {
+    var plot = {
       "hasBeen": {
         "field": "hasBeen",
         "values": [{ "has been": true},{ "has not been":false}],
@@ -172,27 +170,73 @@ Template.dashboard_segment_create.helpers({
         "triggerDynamicUpdate": isDynamic
       }
     }
+    this.plot = plot
+    // Floors.find({locationId:locationId}, {fields:{_id:1, level: 1, name:1}}).fetch()
+    return plot
   },
 
 })
+Template.dashboard_segment_create.events({
+  "submit .rule-form": function(e,tmpl){
+    var $form = $(e.currentTarget)
+    var formData = $form.serializeObject()
+    var plot = this.plot
+    var fields = Object.keys(plot)
+    var submitData = {}
+    fields.forEach(function(f){
+      var obj = formData[f];
+      var o = {}
+      var value;
+      var key;
+      if (!obj)
+        throw Error("Missing field: "+ f)
+      console.log("On", f, obj)
+      // if (o._filter) {
+      //   key = o[o._filter]
+      //   value = o[key]
+      //   submitData[f] = {}
+      //   submitData[f][key] = value
 
+      // } else {
+      //   submitData[f] = o
+      // }
+      if (obj._filter) {
+        key = obj._filter
+        value = obj[key]
+        o[key] = value
+        submitData[f] = o
+      }else{
+        submitData[f] = obj
+      }
+
+    })
+    console.log("Data Ready",submitData)
+    // Submit to server
+    return false;
+  }
+})
+Template.dashboard_segment_create.destroyed = function(){
+  //Unset session key here.
+}
 Template._field.helpers({
   isDefault: function(){
     return this.type !== "list" && this.type !== "filterList" && this.type !== "filterInput"
   },
   decompose: function(values){
-    return values.map(function(o){
+    return values.map(function(o, i){
       if (typeof o === "object") {
         for (k in o) {
           return {
             key: k,
-            val: o[k]+""
+            val: o[k]+"",
+            idx: i
           }
         }
       } else {
         return {
           key: o,
           val: o+"",
+          idx: i
         }
       }
     })
@@ -202,6 +246,9 @@ Template._field.helpers({
   },
   isMultiple: function(){
     return this.multiple
+  },
+  isFirst: function(){
+    return !isNaN(this.i) && this.idx === 0
   }
 })
 Template._field.rendered = function(){
@@ -261,3 +308,4 @@ Template._field.rendered = function(){
    })
   }
 }
+
