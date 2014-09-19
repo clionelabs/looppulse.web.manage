@@ -178,6 +178,13 @@ Template.dashboard_segment_create.helpers({
 
 })
 Template.dashboard_segment_create.events({
+  "click .create-btn": function(e,tmpl){
+    try {
+      $(".rule-form").submit()
+    } catch (e) {
+      Notifications.error("Error", e.message)
+    }
+  },
   "submit .rule-form": function(e,tmpl){
     var $form = $(e.currentTarget)
     var formData = $form.serializeObject()
@@ -189,7 +196,7 @@ Template.dashboard_segment_create.events({
       "criteria" : null
     }
     //Process other field first
-    submitData.name = $("input[name='segment.name']").val()
+    submitData.name = $("input[name='segments.name']").val()
     if (!submitData.name) { // and other validation...
       throw Error("Missing Segment Name")
     }
@@ -235,8 +242,13 @@ Template.dashboard_segment_create.events({
     Meteor.call("createInCollection", "Segments", submitData, function(err, res){
       if (err) {
         console.error(err)
+        Notifications.error("Segment", "Segment Creation failed -- "+err+" --")
       } else {
         console.info(res)
+        Notifications.success("Segment", "Segment Created ("+res+")")
+        // dashboard_segment_view', {
+        // path:'/segmentation/:locationId/view/:segmentId',
+        Router.go('dashboard_segment_view', { segmentId:res })
       }
     })
     // Submit to server

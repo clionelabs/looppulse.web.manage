@@ -285,3 +285,28 @@ header.primary {
   font-weight: 500;
   padding:0.2em 0.5em;
 }
+
+//Notifications
+ul.notifications {
+  z-index: 10001 !important;
+  top: 0;
+  right: 0;
+  left:0;
+  width: 100%;
+  li.notification {
+    margin: 0;
+    border-radius: 0;
+    padding: 0.9em;
+    text-align: center;
+    .title, .message {
+      display: inline-block;
+      vertical-align: baseline;
+    }
+    .message {
+      text-decoration: underline
+    }
+    .closeButton {
+      top: 25%;
+    }
+  }
+}
