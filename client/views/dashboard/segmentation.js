@@ -21,7 +21,7 @@ Template.dashboard_segment_manage.helpers({
       modalId: "collection-create-modal",
       context: "segment",
       collectionName: "Segments",
-      fields:[{"name": "newItemName", "placeholder": "Enter a Segment name"}]
+      fields:[{"name": "new-collection-name", "placeholder": "Enter a Segment name"}]
     }
   }
 });
@@ -29,7 +29,7 @@ Template.dashboard_segment_manage.helpers({
 Template.dashboard_segment_create.helpers({
   criteriaInputs: function(companyId){
     //get All Locations under the company
-    console.log("Generating...",companyId)
+    // console.log("Generating...",companyId)
     var pairUp = function(o){
         var d = {}
         d[o.name] = o._id
@@ -44,7 +44,7 @@ Template.dashboard_segment_create.helpers({
     var floorMap = Floors.find({}).fetch().map(pairUp)
     var productMap = Products.find({companyId: companyId}).fetch().map(pairUp)
     var categoryMap = Categories.find({companyId: companyId}).fetch().map(pairUp)
-    console.log("All Maps", locationList, floorMap, productMap, categoryMap)
+    // console.log("All Maps", locationList, floorMap, productMap, categoryMap)
     if (locationList.length === 0 || floorMap.length === 0 || productMap.length === 0 || categoryMap.length === 0) {
       console.warn("Data not ready")
       return null
@@ -292,7 +292,7 @@ Template._field.helpers({
   },
   getName: function(name){
     if (!_.isString(name)) return null;
-    console.log("Naming", arguments, this)
+    // console.log("Naming", arguments, this)
     // Note: the first is the base name, the last is the argument hash
     for (var i = 1, length = arguments.length-1; i < length; i++) {
       key = arguments[i];
@@ -310,13 +310,13 @@ Template._field.helpers({
   }
 })
 Template._field.rendered = function(){
-  console.info("Rendered", this)
+  // console.info("Rendered", this)
   var self = this;
   this.$('.input-daterange').datepicker({});
 
   this.$('.select-picker').selectpicker({});
 
-  this.$('.select-picker').selectpicker('refresh')
+  // this.$('.select-picker').selectpicker('refresh')
 
   //data-filter-toggle changes -> data-filter toggle display
   //delegation

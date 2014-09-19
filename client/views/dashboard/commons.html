@@ -73,14 +73,11 @@
   </div>
 </template>
 <template name="dashboard_collection_create">
-  hello.
   {{> dashboard_modal modalId="collection-create-modal" title=title confirmText=confirm action="./create" fields=fields context=context }}
 </template>
 
 <template name="dashboard_collection_manage">
-  {{log this}}
 {{#Layout template="collection_manage" data=this }}
-  {{log this}}
   {{! context should provide the following }}
   {{! write your own header if you must, or using default }}
   {{#contentFor region="view-header"}}
@@ -94,11 +91,9 @@
   {{! yield content. just a clickable table ? }}
 
   {{! provide content and actions: listItems() }}
-  {{log listItems}}
   {{> dashboard_campaign_list campaigns=listItems }}
 
-
-   {{> dashboard_collection_create modalContent }}
+  {{> dashboard_collection_create modalContent }}
 
 
 {{/Layout}}

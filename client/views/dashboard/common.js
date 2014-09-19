@@ -3,7 +3,7 @@ Template.dashboard_collection_manage.helpers({
 })
 Template.dashboard_collection_manage.events({
   "submit #collection-create-modal form": function(e, tmpl){
-    console.log("on submit",this, e, tmpl)
+    console.log("manage: on submit",this, e, tmpl)
     e.preventDefault();
     var key = "new-"+this.context+"-name"
     var path = "dashboard_"+this.context+"_create"

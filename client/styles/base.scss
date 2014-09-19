@@ -286,6 +286,18 @@ header.primary {
   padding:0.2em 0.5em;
 }
 
+$state-success-text:  #3c763d;
+$state-success-bg:    #dff0d8;
+
+$state-info-text:     #31708f;
+$state-info-bg:       #d9edf7;
+
+$state-warning-text:  #8a6d3b;
+$state-warning-bg:    #fcf8e3;
+
+$state-danger-text:   #a94442;
+$state-danger-bg:     #f2dede;
+
 //Notifications
 ul.notifications {
   z-index: 10001 !important;
@@ -307,6 +319,23 @@ ul.notifications {
     }
     .closeButton {
       top: 25%;
+    }
+
+    &.success {
+      background-color: $state-success-bg;
+      color: $state-success-text
+    }
+    &.error {
+      background-color: $state-danger-bg;
+      color: $state-danger-text;
+    }
+    &.warn {
+      background-color: $state-warning-bg;
+      color: $state-warning-text;
+    }
+    &.info {
+      background-color: $state-info-bg;
+      color: $state-info-text;
     }
   }
 }
