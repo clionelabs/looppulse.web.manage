@@ -155,9 +155,10 @@ var configureCompany= function (companyConfig, configurationJSON) {
     _.each(companyConfig.segments, function(segmentConfig, segmentKey) {
       var criteria = segmentConfig.criteria || {};
       if (criteria.locations) {
-        criteria.locations = _.map(criteria.locations, function(locationKey) {
+        criteria.locationIds = _.map(criteria.locations, function(locationKey) {
           return companyConfig.locations[locationKey]._id;
         });
+        delete criteria.locations;
       }
       // convert `triggerLocations` to use "ids"
       if (criteria.triggerLocations) {
