@@ -184,8 +184,8 @@ Template.dashboard_segment_create.events({
     var plot = this.plot
     var fields = Object.keys(plot)
     var submitData = {
-      "companyId" : null
-      "name" : null
+      "companyId" : null,
+      "name" : null,
       "criteria" : null
     }
     //Process other field first
