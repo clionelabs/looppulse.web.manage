@@ -13,7 +13,7 @@ Template.dashboard_segment_manage.helpers({
     var tmpl = Template.instance()
     var companyId = this.companyId
     var cursor = Segments.find({companyId: companyId}).fetch()
-    console.log(tmpl, companyId, this, cursor)
+    // console.log(tmpl, companyId, this, cursor)
     return cursor || data;
   },
   modal:function(){
@@ -73,14 +73,14 @@ Template.dashboard_segment_create.helpers({
         "field":"triggerLocations",
         "filters": [
           {
-            "key": "categoryName",
+            "key": "categoryId",
             "label": "category",
             "values": Session.get(prefix+"CategoryMap"),
             "style": "MultiSelect",
             "placeholder": "..."
           },
           {
-            "key": "productName",
+            "key": "productId",
             "label": "product",
             "values": Session.get(prefix+"ProductMap"),
             "style": "MultiSelect",
@@ -184,30 +184,33 @@ Template.dashboard_segment_create.events({
     var plot = this.plot
     var fields = Object.keys(plot)
     var submitData = {}
-    fields.forEach(function(f){
-      var obj = formData[f];
+    var filtering = function(obj, field){
       var o = {}
       var value;
       var key;
-      if (!obj)
-        throw Error("Missing field: "+ f)
-      console.log("On", f, obj)
-      // if (o._filter) {
-      //   key = o[o._filter]
-      //   value = o[key]
-      //   submitData[f] = {}
-      //   submitData[f][key] = value
-
-      // } else {
-      //   submitData[f] = o
-      // }
       if (obj._filter) {
         key = obj._filter
         value = obj[key]
         o[key] = value
-        submitData[f] = o
-      }else{
-        submitData[f] = obj
+        return o;
+      } else {
+        return obj;
+      }
+    }
+    fields.forEach(function(f){
+      var obj = formData[f];
+      var arr;
+      var type = plot[f] ? plot[f].type : "";
+      if (!obj)
+        throw Error("Missing field: "+ f)
+
+      if(type === "filterList" && _.isArray(obj)) {
+        arr = obj.map(function(elem){
+          return filtering(elem)
+        })
+        submitData[f] = arr
+      } else {
+        submitData[f] = filtering(obj)
       }
 
     })
@@ -250,6 +253,24 @@ Template._field.helpers({
   },
   isFirst: function(){
     return !isNaN(this.i) && this.idx === 0
+  },
+  getName: function(name){
+    if (!_.isString(name)) return null;
+    console.log("Naming", arguments, this)
+    // Note: the first is the base name, the last is the argument hash
+    for (var i = 1, length = arguments.length-1; i < length; i++) {
+      key = arguments[i];
+      if (_.isBoolean(key) && key){
+        key = ""
+      }
+      if (!isNaN(key)) { //only a number shall pass. undefined/null, gone.
+        key += "" //cast to string
+      }
+
+      if (_.isString(key))
+        name += "["+key+"]"
+    }
+    return name;
   }
 })
 Template._field.rendered = function(){
