@@ -183,7 +183,23 @@ Template.dashboard_segment_create.events({
     var formData = $form.serializeObject()
     var plot = this.plot
     var fields = Object.keys(plot)
-    var submitData = {}
+    var submitData = {
+      "companyId" : null
+      "name" : null
+      "criteria" : null
+    }
+    //Process other field first
+    submitData.name = $("input[name='segment.name']").val()
+    if (!submitData.name) { // and other validation...
+      throw Error("Missing Segment Name")
+    }
+
+    submitData.companyId = LocationsHelper.getCompanyId()
+
+    //May be we need to check companyId too...
+
+    //criteria
+    var criteriaData = {}
     var filtering = function(obj, field){
       var o = {}
       var value;
@@ -208,13 +224,21 @@ Template.dashboard_segment_create.events({
         arr = obj.map(function(elem){
           return filtering(elem)
         })
-        submitData[f] = arr
+        criteriaData[f] = arr
       } else {
-        submitData[f] = filtering(obj)
+        criteriaData[f] = filtering(obj)
       }
 
     })
-    console.log("Data Ready",submitData)
+    submitData.criteria = criteriaData;
+    console.log("Data Ready", submitData)
+    Meteor.call("createInCollection", "Segments", submitData, function(err, res){
+      if (err) {
+        console.error(err)
+      } else {
+        console.info(res)
+      }
+    })
     // Submit to server
     return false;
   }
