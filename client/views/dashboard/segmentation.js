@@ -252,7 +252,6 @@ Template.dashboard_segment_create.events({
     })
     submitData.criteria = criteriaData;
     console.log("Data Ready", submitData)
-    return false;
     Meteor.call("createInCollection", "Segments", submitData, function(err, res){
       if (err) {
         console.error(err)
