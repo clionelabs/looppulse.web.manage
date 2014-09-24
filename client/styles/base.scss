@@ -285,6 +285,10 @@ header.primary {
   font-weight: 500;
   padding:0.2em 0.5em;
 }
+.inline-input-group {
+  display: inline-block;
+  vertical-align: middle;
+}
 
 $state-success-text:  #3c763d;
 $state-success-bg:    #dff0d8;

@@ -88,11 +88,13 @@
       {{/if}}
 
       {{#if equals this.style "DatetimeRange"}}
-      <span class="input-daterange filter-input-group input-group" id="datepicker-{{this.key}}"  data-filter="{{this.key}}" data-key="{{../field}}" name="{{this.key}}">
-          <input type="text" class="input-md form-control" name="{{../field}}[{{this.key}}][{{this.field.start}}]" data-key="{{../field}}" >
-          <span class="input-group-addon"> - </span>
-          <input type="text" class="input-md form-control" name="{{../field}}[{{this.key}}][{{this.field.end}}]" data-key="{{../field}}">
-      </span>
+      <div class="filter-input-group inline-input-group" data-filter="{{this.key}}" data-key="{{../field}}" name="{{this.key}}">
+        <span class="input-daterange input-group"  id="datepicker-{{this.key}}" >
+            <input type="text" class="input-md form-control" name="{{../field}}[{{this.key}}][{{this.field.start}}]" data-key="{{../field}}" >
+            <span class="input-group-addon"> - </span>
+            <input type="text" class="input-md form-control" name="{{../field}}[{{this.key}}][{{this.field.end}}]" data-key="{{../field}}">
+        </span>
+      </div>
       {{/if}}
   {{/each}}
 </div>
