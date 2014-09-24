@@ -22,10 +22,27 @@ var updateSegmentVisitors = function(encounter) {
   });
 };
 
+var handleSegmentAdded = function(segment) {
+  Visitors.find().map(function(visitor) {
+    var visitorId = visitor._id;
+    var selector = {
+      segmentId: segment._id,
+      visitorId: visitorId
+    };
+    if (segment.match(visitorId)) {
+      SegmentVisitors.upsert(selector, { $setOnInsert: selector });
+    }
+  });
+};
+
 SegmentVisitor.startup = function() {
   Encounters.find().observe({
     _suppress_initial: true,
     "added": handleEncounterAdded,
     "changed": handleEncounterChanged
+  });
+  Segments.find().observe({
+    _suppress_initial: true,
+    "added": handleSegmentAdded
   });
 };
