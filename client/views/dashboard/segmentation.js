@@ -95,6 +95,10 @@ Template.dashboard_segment_create.helpers({
           }
         ],
         "baseIndex": 0,
+        "filterClass":"filter-item-list",
+        // "klass": "zone-filter",
+        // "filterClass":"zone-item-list",
+        // "trigger": ".filter-list.zone-filter[data-key='triggerLocations']",
         "type": "filterList"
       },
       "times":{
