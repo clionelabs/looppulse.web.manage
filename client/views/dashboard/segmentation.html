@@ -90,9 +90,9 @@
       {{#if equals this.style "DatetimeRange"}}
       <div class="filter-input-group inline-input-group" data-filter="{{this.key}}" data-key="{{../field}}" name="{{this.key}}">
         <span class="input-daterange input-group"  id="datepicker-{{this.key}}" >
-            <input type="text" class="input-md form-control" name="{{../field}}[{{this.key}}][{{this.field.start}}]" data-key="{{../field}}" >
+            <input type="text" class="input-md form-control" name="{{../field}}[{{this.key}}][{{this.field.start}}]" data-key="{{../field}}" data-type="datetime">
             <span class="input-group-addon"> - </span>
-            <input type="text" class="input-md form-control" name="{{../field}}[{{this.key}}][{{this.field.end}}]" data-key="{{../field}}">
+            <input type="text" class="input-md form-control" name="{{../field}}[{{this.key}}][{{this.field.end}}]" data-key="{{../field}}" data-type="datetime">
         </span>
       </div>
       {{/if}}

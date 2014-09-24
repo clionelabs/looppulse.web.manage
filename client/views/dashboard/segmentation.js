@@ -195,6 +195,15 @@ Template.dashboard_segment_create.events({
       "name" : null,
       "criteria" : null
     }
+
+    //Data Translation
+    $("input[data-type='datetime']").each(function(){
+      var $elem = $(this);
+      //@@WARN: timezone ignored
+      $elem.val(new Date($elem.val()).toISOString());
+    })
+
+
     //Process other field first
     submitData.name = $("input[name='segments.name']").val()
     if (!submitData.name) { // and other validation...
@@ -203,11 +212,13 @@ Template.dashboard_segment_create.events({
 
     submitData.companyId = LocationsHelper.getCompanyId()
 
+
+
     //May be we need to check companyId too...
 
     //criteria
     var criteriaData = {}
-    var filtering = function(obj, field){
+    var filtering = function(obj){
       var o = {}
       var value;
       var key;
@@ -215,15 +226,17 @@ Template.dashboard_segment_create.events({
         key = obj._filter
         value = obj[key]
         o[key] = value
-        return o;
       } else {
-        return obj;
+        o = obj
       }
-    }
+      return o;
+    };
+
     fields.forEach(function(f){
       var obj = formData[f];
+      var schema = plot[f];
       var arr;
-      var type = plot[f] ? plot[f].type : "";
+      var type = schema ? schema.type : "";
       if (!obj)
         throw Error("Missing field: "+ f)
 
@@ -239,6 +252,7 @@ Template.dashboard_segment_create.events({
     })
     submitData.criteria = criteriaData;
     console.log("Data Ready", submitData)
+    return false;
     Meteor.call("createInCollection", "Segments", submitData, function(err, res){
       if (err) {
         console.error(err)
