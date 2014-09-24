@@ -52,9 +52,9 @@
 
 {{#if equals this.type "filterList" }}
 
-<div class="filter-group filter-list form-group {{klass}}" data-key="{{field}}">
+<div class="filter-group filter-list form-group main-filter" data-key="{{field}}">
   <!-- name="{{field}}[{{baseIndex}}][_filter]{{#if isMultiple}}[]{{/if}}" -->
-  <select class="select-picker span2 select-filter" data-key="{{field}}"  data-filter-type="select" multiple={{isMultiple}}  name="{{getName field baseIndex "_filter" isMultiple}}">
+  <select class="select-picker span2 select-filter main-selector" data-key="{{field}}"  data-filter-type="select" multiple={{isMultiple}}  name="{{getName field baseIndex "_filter" isMultiple}}">
     {{#each filters}}
     <option value="{{key}}" data-filter-toggle="{{this.key}}" selected={{isSelected}}>{{label}}</option>
     {{/each}}

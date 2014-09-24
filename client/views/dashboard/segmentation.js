@@ -96,6 +96,7 @@ Template.dashboard_segment_create.helpers({
         ],
         "baseIndex": 0,
         "filterClass":"filter-item-list",
+        "trigger": ".filter-item-list[data-key='triggerLocations']",
         // "klass": "zone-filter",
         // "filterClass":"zone-item-list",
         // "trigger": ".filter-list.zone-filter[data-key='triggerLocations']",
@@ -170,7 +171,7 @@ Template.dashboard_segment_create.helpers({
         "values": locationList,
         "type": "list",
         "placeholder": "Locations...",
-        "trigger": ".filter-list[data-key='triggerLocations']",
+        "trigger": ".filter-list.main-filter[data-key='triggerLocations']",
         "sessionKeyPrefix": prefix,
         "triggerDynamicUpdate": isDynamic
       }
@@ -329,15 +330,8 @@ Template._field.helpers({
 Template._field.rendered = function(){
   // console.info("Rendered", this)
   var self = this;
-  this.$('.input-daterange').datepicker({});
-
-  this.$('.select-picker').selectpicker({});
-
-  // this.$('.select-picker').selectpicker('refresh')
-
-  //data-filter-toggle changes -> data-filter toggle display
-  //delegation
-  //may be can save some data field
+  var present;
+  var $select;
   var _selecting = function(elem){
     var selected = $("option:selected", elem)
     var targetField = selected.data("filter-toggle");
@@ -345,8 +339,6 @@ Template._field.rendered = function(){
     var type = $(elem).data("filter-type")
     var selector = ""
     var toggle = ""
-    var present = ""
-    var prefix = ""
     if (!targetField || !targetKey) { return false; }
     if (!type) {
       selector = ".filter-input-group[data-key='"+targetKey+"']"
@@ -359,7 +351,17 @@ Template._field.rendered = function(){
     $(toggle).addClass("visible").show();
   }
 
-  var $select = this.$("select.select-filter")
+  this.$('.input-daterange').datepicker({});
+
+  this.$('.select-picker').selectpicker({});
+
+  // this.$('.select-picker').selectpicker('refresh')
+
+  //data-filter-toggle changes -> data-filter toggle display
+  //delegation
+  //may be can save some data field
+
+  $select = this.$("select.select-filter")
   $select.on("change", function(e){
     _selecting(e.currentTarget)
   })
@@ -370,12 +372,11 @@ Template._field.rendered = function(){
 
   if (this.data.trigger) {
    present = this.data.trigger
-   prefix = this.data.sessionKeyPrefix
-   console.log("present", present, this.$("select"))
+   console.log("Hiding ", present)
    $(present).hide()
-   this.$("select").change(function(){
+   this.$("select.main-selector").change(function(){
     var selected = $("option:selected", this)
-    console.log("Selected Location: ", selected)
+    console.log("Selected ", selected, "; Showing", present)
     //do something with prefix
     //LocationsHelper.getCommonLocationMap(selected, prefix)
 
