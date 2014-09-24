@@ -46,6 +46,15 @@
   line-height: 2.6;
   .filter-item-list {
     display: block;
+
+  }
+  .filter-list-container[data-key="triggerLocations"]{
+    position:relative;
+  }
+  .data-group-triggerLocations.visible .dropdown-menu {
+    position: static;
+    top: 0 !important;
+    display: block !important;
   }
 }
 

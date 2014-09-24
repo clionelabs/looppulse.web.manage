@@ -97,9 +97,7 @@ Template.dashboard_segment_create.helpers({
         "baseIndex": 0,
         "filterClass":"filter-item-list",
         "trigger": ".filter-item-list[data-key='triggerLocations']",
-        // "klass": "zone-filter",
-        // "filterClass":"zone-item-list",
-        // "trigger": ".filter-list.zone-filter[data-key='triggerLocations']",
+        "filteredTextFormat": "count",
         "type": "filterList"
       },
       "times":{
@@ -180,7 +178,12 @@ Template.dashboard_segment_create.helpers({
     // Floors.find({locationId:locationId}, {fields:{_id:1, level: 1, name:1}}).fetch()
     return plot
   },
-
+  config: function(){
+    var settings = {
+      klass: "segment-create"
+    }
+    return _.extend({}, this, settings)
+  }
 })
 Template.dashboard_segment_create.events({
   "click .create-btn": function(e,tmpl){
@@ -273,6 +276,9 @@ Template.dashboard_segment_create.events({
     return false;
   }
 })
+Template.dashboard_segment_create.rendered = function(){
+  console.log("Page Rendered Called")
+}
 Template.dashboard_segment_create.destroyed = function(){
   //Unset session key here.
 }
