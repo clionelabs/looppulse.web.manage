@@ -95,6 +95,7 @@ Template.dashboard_segment_create.helpers({
           }
         ],
         "baseIndex": 0,
+        "notSelected": true,
         "filterClass":"filter-item-list",
         "trigger": ".filter-item-list[data-key='triggerLocations']",
         "filteredTextFormat": "count",
@@ -306,13 +307,14 @@ Template._field.helpers({
     })
   },
   isSelected: function(){
-    return this.selected
+    console.log("isSelected?",!this.notSelected ? this.selected : false)
+    return  !this.notSelected ? this.selected : false
   },
   isMultiple: function(){
     return this.multiple
   },
   isFirst: function(){
-    return !isNaN(this.i) && this.idx === 0
+    return !this.notSelected ? (!isNaN(this.i) && this.idx === 0) : false
   },
   getName: function(name){
     if (!_.isString(name)) return null;
