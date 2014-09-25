@@ -275,6 +275,15 @@ Template.dashboard_segment_create.events({
     })
     // Submit to server
     return false;
+  },
+  "click .done-btn[data-key='triggerLocations'] ": function(e, tmpl){
+    e.preventDefault();
+    e.stopPropagation();
+    $(".data-group-triggerLocations.visible .dropdown-menu li:not(.selected)").hide()
+    return false;
+  },
+  "click .data-group-triggerLocations.visible": function(e, tmpl){
+    $(".data-group-triggerLocations.visible .dropdown-menu li:not(.selected)").show()
   }
 })
 Template.dashboard_segment_create.rendered = function(){

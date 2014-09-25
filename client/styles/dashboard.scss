@@ -73,8 +73,10 @@
     display: block;
 
   }
-  .filter-list-container[data-key="triggerLocations"]{
-    position:relative;
+  .filter-item-list[data-key="triggerLocations"] {
+    .done-btn {
+      vertical-align: top;
+    }
   }
   .data-group-triggerLocations.visible {
     .dropdown-menu {
