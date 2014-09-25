@@ -19,4 +19,5 @@ mrt:firebase
 joshowens:accounts-entry
 schnie:uploader
 percolatestudio:synced-cron
+mrt:firebase-token-generator
 

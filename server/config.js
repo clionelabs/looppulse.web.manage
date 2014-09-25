@@ -30,7 +30,7 @@ ensureIndexes = function() {
   )
 };
 
-var observeCompaniesFromFirebase = function() {
+observeCompaniesFromFirebaseDEBUG = function() {
   var fbPath = Meteor.settings.firebase.config + '/companies';
   var companiesRef = new Firebase(fbPath);
   console.log("[Remote] Observing for company addition: "+ fbPath);
@@ -274,8 +274,6 @@ configureDEBUG = function() {
     }
     if (debugConfig.seedData) {
       configureCompanyFromJSON(debugConfig.seedData);
-    } else {
-      observeCompaniesFromFirebase();
     }
   }
 

@@ -12,7 +12,8 @@
     "s3bucket": ""
   },
   "firebase": {
-      "config": "https://looppulse-config.firebaseio.com/"
+      "config": "https://looppulse-config.firebaseio.com/",
+      "configSecret": "<SEE README::Firebase Security>"
   },
   "removeFromFirebase": false,
   "accounts": {

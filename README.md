@@ -73,6 +73,31 @@ Set up environment.
   2. Enter `admin@example.com` in the [forget password link](http://localhost:3000/forgot-password)
   3. Check console log and get the password reset link in password recovery email.
 
+
+## Firbase Security
+
+Go to `Manage App` -> `Security Rules` in Firebase, set the rules as following,
+
+```
+{
+    "rules": {
+        ".read": false,
+        ".write": false
+    }
+}
+```
+
+Copy `Manage App` -> `Secrets` to corresponding configuration files, here are list of files may need to be updated,
+
+- looppulse.web.configurator/private/megabox.json:system.firebase.rootSecret
+- looppulse.web.configurator/server/configuration.sample.json:firebase.rootSecret
+- looppulse.web.manage/server/settings.sample.json:firebase.configSecret
+- looppulse.web.simulator/server/settings.continuous.live.sample.json:firebase.configSecret
+- looppulse.web.simulator/server/settings.continuous.debug.sample.json:firebase.rootSecret
+- looppulse.web.simulator/server/settings.fixed.debug.sample.json:firebase.rootSecret
+
+Firebase generated token will be expired in certain period of time, clients observing Firebase should re-authendicate themselves to retrive new valid token. `Manage App` -> `Login & Auth` could see `Session Length` for how long a token should be valid.
+
 ## Documentation
 
 1. Install jsdoc: `npm install -g jsdoc`
