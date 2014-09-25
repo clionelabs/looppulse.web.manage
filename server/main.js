@@ -13,8 +13,18 @@ Meteor.startup(
 );
 
 var observeFirebase = function() {
-  observeBeaconEventsFromFirebase();
-  observeEngagementEventsFromFirebase();
+  var firebaseRef = new Firebase(Meteor.settings.firebase.config);
+  firebaseRef.auth(Meteor.settings.firebase.configSecret, Meteor.bindEnvironment(function(error, result) {
+    if (error) {
+      console.error('Login Failed!', error);
+    } else {
+      console.info('Authenticated successfully with payload:', result.auth);
+      console.info('Auth expires at:', new Date(result.expires * 1000));
+      observeCompaniesFromFirebaseDEBUG();
+      observeBeaconEventsFromFirebase();
+      observeEngagementEventsFromFirebase();
+    }
+  }));
 };
 
 var observeCollections = function() {
