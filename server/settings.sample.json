@@ -13,7 +13,7 @@
   },
   "firebase": {
       "config": "https://looppulse-config.firebaseio.com/",
-      "configSecret": "xcZrkQNUsYIs09PncAI8u69a8ZPiP7yGkaqoZR6b"
+      "configSecret": "<SEE README::Firebase Security>"
   },
   "removeFromFirebase": false,
   "accounts": {
