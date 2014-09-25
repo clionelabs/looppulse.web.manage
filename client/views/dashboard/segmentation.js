@@ -365,10 +365,20 @@ Template._field.rendered = function(){
       toggle = selector+"[data-filter='"+targetField+"']"
     } else {
       selector = ".filter-input-group.data-group-"+targetKey
-      toggle = "div"+selector+".data-input-"+targetField
+      toggle = ""+selector+".data-input-"+targetField
     }
+    console.log("selector", selector, toggle)
+    console.log("set?", type)
     $(selector + ".visible").removeClass("visible").hide();
-    $(toggle).addClass("visible").show();
+
+    if (type === "select") {
+      $("select" + toggle).val([])
+      $("select" + toggle).selectpicker("refresh")
+      toggle = "div" + toggle
+    }
+    if (toggle) {
+      $(toggle).addClass("visible").show();
+    }
   }
 
   this.$('.input-daterange').datepicker({});
