@@ -51,12 +51,12 @@
 {{/if}}
 
 {{#if equals this.type "filterList" }}
-
+{{log this}}
 <div class="filter-group filter-list form-group main-filter" data-key="{{field}}">
   <!-- name="{{field}}[{{baseIndex}}][_filter]{{#if isMultiple}}[]{{/if}}" -->
   <select class="select-picker span2 select-filter main-selector" data-key="{{field}}"  data-filter-type="select" multiple={{isMultiple}}  name="{{getName field baseIndex "_filter" isMultiple}}">
-    {{#if notSelected}}
-      <option>Choose One...</option>
+    {{#if placeholder}}
+      <option class="select-header">{{placeholder}}</option>
     {{/if}}
     {{#each filters}}
     <option value="{{key}}" data-filter-toggle="{{this.key}}" selected={{isSelected}}>{{label}}</option>

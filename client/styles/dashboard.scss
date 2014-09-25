@@ -62,6 +62,9 @@
   .dropdown-menu li > a {
     outline: none;
   }
+  .select-header {
+    pointer-events: none;
+  }
 }
 
 .rule-form {

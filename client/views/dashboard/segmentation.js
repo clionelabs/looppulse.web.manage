@@ -95,7 +95,7 @@ Template.dashboard_segment_create.helpers({
           }
         ],
         "baseIndex": 0,
-        "notSelected": true,
+        "placeholder": "Pick One",
         "filterClass":"filter-item-list",
         "trigger": ".filter-item-list[data-key='triggerLocations']",
         "filteredTextFormat": "count",
