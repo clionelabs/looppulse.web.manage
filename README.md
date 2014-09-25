@@ -96,6 +96,7 @@ Copy `Manage App` -> `Secrets` to corresponding configuration files, here are li
 - looppulse.web.simulator/server/settings.continuous.debug.sample.json:firebase.rootSecret
 - looppulse.web.simulator/server/settings.fixed.debug.sample.json:firebase.rootSecret
 
+Firebase generated token will be expired in certain period of time, clients observing Firebase should re-authendicate themselves to retrive new valid token. `Manage App` -> `Login & Auth` could see `Session Length` for how long a token should be valid.
 
 ## Documentation
 
