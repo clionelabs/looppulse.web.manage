@@ -61,7 +61,7 @@ Template.dashboard_segment_create.helpers({
     var plot = {
       "hasBeen": {
         "field": "hasBeen",
-        "values": [{ "has been": true},{ "has not been":false}],
+        "values": [{ "been": true},{ "not been":false}],
         "type": "list"
       },
       "to": {
@@ -340,6 +340,9 @@ Template._field.rendered = function(){
   var self = this;
   var present;
   var $select;
+
+  //data-filter-toggle changes -> data-filter toggle display
+  //may be can save some data field
   var _selecting = function(elem){
     var selected = $("option:selected", elem)
     var targetField = selected.data("filter-toggle");
@@ -365,9 +368,7 @@ Template._field.rendered = function(){
 
   // this.$('.select-picker').selectpicker('refresh')
 
-  //data-filter-toggle changes -> data-filter toggle display
-  //delegation
-  //may be can save some data field
+
 
   $select = this.$("select.select-filter")
   $select.on("change", function(e){
@@ -375,7 +376,6 @@ Template._field.rendered = function(){
   })
   this.$(".filter-input-group").hide();
   _selecting($select)
-
 
 
   if (this.data.trigger) {
