@@ -306,6 +306,23 @@ Template.dashboard_segment_create.rendered = function(){
 Template.dashboard_segment_create.destroyed = function(){
   //Unset session key here.
 }
+
+Template.dashboard_segment_view.events({
+  "click .export-btn": function(e, tmpl) {
+    // FIXME set currentSegmentId somewhere or get segmentId from template data
+    var segmentId = Session.get('currentSegmentId');
+    Meteor.call('getSegmentCsvData', segmentId, function(error, result) {
+      if (error) {
+        console.error(error);
+        Notifications.error('Segment', 'Segment CSV Export failed -- ' + error + ' --');
+      } else {
+        var csv = json2csv(result, true, true);
+        window.open("data:text/csv;charset=utf-8," + escape(csv));
+      }
+    })
+  }
+});
+
 Template._field.helpers({
   isDefault: function(){
     return this.type !== "list" && this.type !== "filterList" && this.type !== "filterInput"

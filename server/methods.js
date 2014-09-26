@@ -90,5 +90,20 @@ Meteor.methods({
 
     var res = Meteor.users.update(userId,{ $set:{ profile: data  } });
     return res;
+  },
+  getSegmentCsvData: function(segmentId) {
+    if (!AccountsHelper.canViewSegment(segmentId)) {
+      throw new Meteor.Error(401, 'User is not allowed to view segment: ' + segmentId);
+    }
+
+    var data = [];
+
+    SegmentVisitors.find({ segmentId: segmentId }).forEach(function(segmentVisitor) {
+      data.push({
+        'ID': segmentVisitor.visitorId
+      });
+    });
+
+    return data;
   }
 });
