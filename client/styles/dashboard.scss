@@ -74,7 +74,7 @@
 
   }
   .filter-item-list[data-key="triggerLocations"] {
-    .done-btn {
+    .action-btn {
       vertical-align: top;
     }
   }
@@ -89,6 +89,7 @@
     }
     button.btn.dropdown-toggle.selectpicker {
       pointer-events: none;
+      display: none;
     }
   }
 }

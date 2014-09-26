@@ -279,12 +279,26 @@ Template.dashboard_segment_create.events({
   "click .done-btn[data-key='triggerLocations'] ": function(e, tmpl){
     e.preventDefault();
     e.stopPropagation();
+    console.log(this)
     $(".data-group-triggerLocations.visible .dropdown-menu li:not(.selected)").hide()
+    // $(".data-group-triggerLocations.visible btn.dropdown-toggle").hide()
+    $(".edit-btn[data-key='triggerLocations']").removeClass("hidden").show()
+    $(e.currentTarget).hide();
     return false;
   },
-  "click .data-group-triggerLocations.visible": function(e, tmpl){
+  "click .edit-btn[data-key='triggerLocations']": function(e, tmpl){
+    $(e.currentTarget).hide();
+    $(".done-btn[data-key='triggerLocations']").show();
+    // $(".data-group-triggerLocations.visible btn.dropdown-toggle").show()
     $(".data-group-triggerLocations.visible .dropdown-menu li:not(.selected)").show()
-  }
+  },
+  'click .main-filter[data-key="triggerLocations"] .main-selector': function(e, tmpl){
+    console.log("clicked",e)
+
+    $(".edit-btn[data-key='triggerLocations']").hide();
+    $(".done-btn[data-key='triggerLocations']").show();
+    $(".data-group-triggerLocations.visible .dropdown-menu li:not(.selected)").show()
+  },
 })
 Template.dashboard_segment_create.rendered = function(){
   console.log("Page Rendered Called")
@@ -374,6 +388,7 @@ Template._field.rendered = function(){
     if (type === "select") {
       $("select" + toggle).val([])
       $("select" + toggle).selectpicker("refresh")
+      console.info("Filtered List reset: "+toggle)
       toggle = "div" + toggle
     }
     if (toggle) {
