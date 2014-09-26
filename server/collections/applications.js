@@ -58,7 +58,7 @@ Application.prototype.save = function() {
     self._id = Applications.findOne(selector)._id;
   }
   return self._id;
-}
+};
 
 Application.prototype.authenticatedResponse = function(token) {
   self = this;
@@ -75,9 +75,10 @@ Application.prototype.authenticatedResponse = function(token) {
     response["system"] = company.authenticatedResponse();
   }
   return response;
-}
+};
 
-UnauthenticatedApplication = function () {};
+UnauthenticatedApplication = function() {
+};
 UnauthenticatedApplication.prototype.authenticatedResponse = function(token) {
   var app = new Application();
   return app.authenticatedResponse(token);

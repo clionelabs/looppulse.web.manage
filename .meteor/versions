@@ -49,11 +49,13 @@ mongo@1.0.4
 mquandalle:bower@0.1.11
 mrt:accounts-t9n@0.0.13
 mrt:bootstrap-3@0.3.8
+mrt:firebase-token-generator@0.1.4
 mrt:firebase@0.6.15
 mrt:underscore-string-latest@2.3.3
 npm-bcrypt@0.7.7
 observe-sequence@1.0.2
 ordered-dict@1.0.0
+percolatestudio:synced-cron@0.3.0
 random@1.0.0
 reactive-dict@1.0.2
 reactive-var@1.0.1

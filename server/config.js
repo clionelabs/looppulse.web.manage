@@ -30,7 +30,7 @@ ensureIndexes = function() {
   )
 };
 
-var observeCompaniesFromFirebase = function() {
+observeCompaniesFromFirebaseDEBUG = function() {
   var fbPath = Meteor.settings.firebase.config + '/companies';
   var companiesRef = new Firebase(fbPath);
   console.log("[Remote] Observing for company addition: "+ fbPath);
@@ -98,7 +98,8 @@ var configureCompany= function (companyConfig, configurationJSON) {
     var p = new Product({
       name: productConfig.name,
       companyId: company._id,
-      categoryId: categoryId
+      categoryId: categoryId,
+      type: productConfig.type || "product"
     });
     companyConfig.products[productKey]._id = p.save();
     console.info("[Init] Product created:", p._id, p.name);
@@ -115,8 +116,7 @@ var configureCompany= function (companyConfig, configurationJSON) {
       if (!data) {
         console.error("[Init] Error creating installation", installationConfig.product, JSON.stringify(companyConfig))
       }
-      var type = data.type || "product";
-      var physicalId = data._id;
+      var productId = data._id;
 
       var locationId = location._id;
       var name = installationConfig.name;
@@ -140,15 +140,27 @@ var configureCompany= function (companyConfig, configurationJSON) {
         var beacon = new Beacon(beaconConfig.proximityUUID, beaconConfig.major, beaconConfig.minor);
         beaconId = beacon.save();
       }
-      var installation = new Installation(type, locationId, beaconId, physicalId, name, coord);
+      var installation = new Installation({
+        locationId: locationId,
+        beaconId: beaconId,
+        productId: productId,
+        name: name,
+        coord: coord
+      });
       locationConfig.installations[installationKey]._id = installation.save();
       console.info("[Init] Installation created:", JSON.stringify(installation));
     });
 
     // Segments
     _.each(companyConfig.segments, function(segmentConfig, segmentKey) {
-      // convert `triggerLocations` to use "ids"
       var criteria = segmentConfig.criteria || {};
+      if (criteria.locations) {
+        criteria.locationIds = _.map(criteria.locations, function(locationKey) {
+          return companyConfig.locations[locationKey]._id;
+        });
+        delete criteria.locations;
+      }
+      // convert `triggerLocations` to use "ids"
       if (criteria.triggerLocations) {
         var replaceCategoryKeyWithId = function(triggerLocationConfig) {
           if (triggerLocationConfig.categoryName) {
@@ -215,10 +227,15 @@ var configureCompany= function (companyConfig, configurationJSON) {
       };
 
       var segmentId = companyConfig.segments[engagementConfig.segment]._id;
-      var validPeriod = {
-        start: Date.parse(engagementConfig.validPeriod.start),
-        end: Date.parse(engagementConfig.validPeriod.end)
-      };
+      var validPeriod = engagementConfig.validPeriod;
+      if (validPeriod) {
+        if (validPeriod.start) {
+          validPeriod.start = Date.parse(validPeriod.start)
+        }
+        if (validPeriod.end) {
+          validPeriod.end = Date.parse(validPeriod.end);
+        }
+      }
       var context = replaceInstallationKeysWithIds(engagementConfig.context);
       var e = {
         type: engagementConfig.type,
@@ -257,8 +274,6 @@ configureDEBUG = function() {
     }
     if (debugConfig.seedData) {
       configureCompanyFromJSON(debugConfig.seedData);
-    } else {
-      observeCompaniesFromFirebase();
     }
   }
 
@@ -266,7 +281,7 @@ configureDEBUG = function() {
 };
 
 var resetLocal = function() {
-  var collections = [BeaconEvents, Encounters, Visitors, Metrics, Funnels, Messages];
+  var collections = [BeaconEvents, Encounters, Visitors, Metrics, Messages];
   collections.forEach(function(collection) {
     collection.remove({});
     console.info("[Reset] Removed all data in:", collection._name);

@@ -101,24 +101,6 @@ Meteor.publish('related-beacon-events', function(ids){
   return BeaconEvents.find(q)
 })
 
-Meteor.publish('related-funnels', function(ids){
-  var q = {}
-  console.log("Returning Funnel Data", ids)
-
-  if (ids && AccountsHelper.fieldMatch("installations", ids, this.userId)) {
-    if (typeof ids == "string") {
-      q = { installationId: ids }
-    } else if (ids.length) {
-      q = { installationId: { $in:  ids } }
-    }
-  } else {
-    //@@DEV
-    q = {}
-  }
-
-  return Funnels.find(q)
-})
-
 Meteor.publish('related-metrics', function(id){
   var q = {};
   console.log("Returning Metric Data", id);
