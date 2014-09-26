@@ -11,7 +11,7 @@ observeAllEventsFromFirebase = function() {
           console.info('Auth expires at:', new Date(result.expires * 1000));
           observeBeaconEventsFromFirebase(company);
           observeEngagementEventsFromFirebase(company);
-          observeUserEventsFromFirebase(company);
+          observeVisitorEventsFromFirebase(company);
         }
       }));
     }
@@ -30,9 +30,9 @@ observeEngagementEventsFromFirebase = function(company) {
   });
 };
 
-observeUserEventsFromFirebase = function(company) {
-  observeCompanyChildAdded("user_events", company, function(childSnapshot, prevChildName) {
-    processUserEventFromFirebase(childSnapshot, Meteor.settings.removeFromFirebase);
+observeVisitorEventsFromFirebase = function(company) {
+  observeCompanyChildAdded("visitor_events", company, function(childSnapshot, prevChildName) {
+    processVisitorEventFromFirebase(childSnapshot, Meteor.settings.removeFromFirebase);
   });
 };
 
@@ -44,14 +44,14 @@ var observeCompanyChildAdded = function(path, company, callback) {
   firebase.on('child_added', Meteor.bindEnvironment(callback));
 };
 
-var processUserEventFromFirebase = function(snapshot, removeFromFirebase) {
-  var userEventJSON = snapshot.val();
+var processVisitorEventFromFirebase = function(snapshot, removeFromFirebase) {
+  var visitorEventJSON = snapshot.val();
  
-  console.log('[Remote] processing user events:', JSON.stringify(userEventJSON));
+  console.log('[Remote] processing visitor events:', JSON.stringify(visitorEventJSON));
 
-  if (userEventJSON.type == "setExternalId") {
-    var visitor = new Visitor(userEventJSON.visitor_uuid);
-    visitor.setExternalId(userEventJSON.external_id);
+  if (visitorEventJSON.type == "setExternalId") {
+    var visitor = new Visitor(visitorEventJSON.visitor_uuid);
+    visitor.setExternalId(visitorEventJSON.external_id);
     visitor.save();
   }
 
