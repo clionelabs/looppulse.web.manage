@@ -21,8 +21,7 @@ var observeFirebase = function() {
       console.info('Authenticated successfully with payload:', result.auth);
       console.info('Auth expires at:', new Date(result.expires * 1000));
       observeCompaniesFromFirebaseDEBUG();
-      observeBeaconEventsFromFirebase();
-      observeEngagementEventsFromFirebase();
+      observeAllEventsFromFirebase();
     }
   }));
 };
