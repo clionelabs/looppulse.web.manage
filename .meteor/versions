@@ -6,6 +6,7 @@ alanning:roles@1.2.13
 application-configuration@1.0.1
 arunoda:streams@0.1.17
 autoupdate@1.0.6
+axw:json2csv@0.1.0
 binary-heap@1.0.0
 blaze-tools@1.0.0
 blaze@2.0.0
