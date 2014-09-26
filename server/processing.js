@@ -14,18 +14,18 @@ observeEngagementEventsFromFirebase = function() {
 var observeCompanyChildAdded = function(path, callback) {
   Companies.find().observe({
     "added": function(company) {
-      var firebaseRef = new Firebase(company.systemConfig.firebase.root);
+      var companyId = company._id;
+      var firebaseUrl = company.systemConfig.firebase.root + '/companies/' + companyId + '/' +  path;
+      var firebaseRef = new Firebase(firebaseUrl);
+      console.log('Authenticating Firebase:', firebaseUrl);
       firebaseRef.auth(company.systemConfig.firebase.rootSecret, Meteor.bindEnvironment(function(error, result) {
         if (error) {
           console.error('Login Failed!', error);
         } else {
           console.info('Authenticated successfully with payload:', result.auth);
           console.info('Auth expires at:', new Date(result.expires * 1000));
-          var companyId = company._id;
-          var fbPath = company.systemConfig.firebase.root + '/companies/' + companyId + '/' +  path;
-          var firebase = new Firebase(fbPath);
-          console.log('[Remote] Observing company child_added:', companyId, fbPath);
-          firebase.on('child_added', Meteor.bindEnvironment(callback));
+          console.log('[Remote] Observing company child_added:', companyId, firebaseUrl);
+          firebaseRef.on('child_added', Meteor.bindEnvironment(callback));
         }
       }));
     }
