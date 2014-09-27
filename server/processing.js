@@ -49,7 +49,7 @@ var processVisitorEventFromFirebase = function(snapshot, removeFromFirebase) {
  
   console.log('[Remote] processing visitor events:', JSON.stringify(visitorEventJSON));
 
-  if (visitorEventJSON.type == "setExternalId") {
+  if (visitorEventJSON.type === "setExternalId") {
     var visitor = new Visitor(visitorEventJSON.visitor_uuid);
     visitor.setExternalId(visitorEventJSON.external_id);
     visitor.save();
