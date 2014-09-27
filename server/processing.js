@@ -2,10 +2,7 @@
 observeAllEventsFromFirebase = function() {
   Companies.find().observe({
     "added": function(company) {
-      var companyId = company._id;
-      var firebaseUrl = company.systemConfig.firebase.root + '/companies/' + companyId + '/' +  path;
-      var firebaseRef = new Firebase(firebaseUrl);
-      console.log('Authenticating Firebase:', firebaseUrl);
+      var firebaseRef = new Firebase(company.systemConfig.firebase.root);
       firebaseRef.auth(company.systemConfig.firebase.rootSecret, Meteor.bindEnvironment(function(error, result) {
         if (error) {
           console.error("Login Failed!", error);
