@@ -265,6 +265,10 @@ var removeCompanyFromFirebase = function(ref) {
   console.info('[Reset] Firebase Removed:',ref);
 }
 
+useSeedData = function() {
+  return Meteor.settings.DEBUG.seedData;
+}
+
 configureDEBUG = function() {
   var debugConfig = Meteor.settings.DEBUG;
   if (debugConfig && JSON.stringify(debugConfig) != "{}") {
@@ -272,7 +276,7 @@ configureDEBUG = function() {
     if (debugConfig.resetLocal) {
       resetLocal();
     }
-    if (debugConfig.seedData) {
+    if (useSeedData()) {
       configureCompanyFromJSON(debugConfig.seedData);
     }
   }
