@@ -1,35 +1,61 @@
 // Observe raw event from Firebase
-observeBeaconEventsFromFirebase = function() {
-  observeCompanyChildAdded("beacon_events", function(childSnapshot, prevChildName) {
-    processBeaconEventFromFirebase(childSnapshot, Meteor.settings.removeFromFirebase);
-  });
-};
-
-observeEngagementEventsFromFirebase = function() {
-  observeCompanyChildAdded("engagement_events", function(childSnapshot, prevChildName) {
-    processEngagementEventFromFirebase(childSnapshot, Meteor.settings.removeFromFirebase);
-  });
-};
-
-var observeCompanyChildAdded = function(path, callback) {
+observeAllEventsFromFirebase = function() {
   Companies.find().observe({
     "added": function(company) {
       var firebaseRef = new Firebase(company.systemConfig.firebase.root);
       firebaseRef.auth(company.systemConfig.firebase.rootSecret, Meteor.bindEnvironment(function(error, result) {
         if (error) {
-          console.error('Login Failed!', error);
+          console.error("Login Failed!", error);
         } else {
           console.info('Authenticated successfully with payload:', result.auth);
           console.info('Auth expires at:', new Date(result.expires * 1000));
-          var companyId = company._id;
-          var fbPath = company.systemConfig.firebase.root + '/companies/' + companyId + '/' +  path;
-          var firebase = new Firebase(fbPath);
-          console.log('[Remote] Observing company child_added:', companyId, fbPath);
-          firebase.on('child_added', Meteor.bindEnvironment(callback));
+          observeBeaconEventsFromFirebase(company);
+          observeEngagementEventsFromFirebase(company);
+          observeVisitorEventsFromFirebase(company);
         }
       }));
     }
   });
+};
+
+observeBeaconEventsFromFirebase = function(company) {
+  observeCompanyChildAdded("beacon_events", company, function(childSnapshot, prevChildName) {
+    processBeaconEventFromFirebase(childSnapshot, Meteor.settings.removeFromFirebase);
+  });
+};
+
+observeEngagementEventsFromFirebase = function(company) {
+  observeCompanyChildAdded("engagement_events", company, function(childSnapshot, prevChildName) {
+    processEngagementEventFromFirebase(childSnapshot, Meteor.settings.removeFromFirebase);
+  });
+};
+
+observeVisitorEventsFromFirebase = function(company) {
+  observeCompanyChildAdded("visitor_events", company, function(childSnapshot, prevChildName) {
+    processVisitorEventFromFirebase(childSnapshot, Meteor.settings.removeFromFirebase);
+  });
+};
+
+var observeCompanyChildAdded = function(path, company, callback) {
+  var companyId = company._id;
+  var fbPath = company.systemConfig.firebase.root + '/companies/' + companyId + '/' +  path;
+  var firebase = new Firebase(fbPath);
+  console.log('[Remote] Observing company child_added:', companyId, fbPath);
+  firebase.on('child_added', Meteor.bindEnvironment(callback));
+};
+
+var processVisitorEventFromFirebase = function(snapshot, removeFromFirebase) {
+  var visitorEventJSON = snapshot.val();
+ 
+  console.log('[Remote] processing visitor events:', JSON.stringify(visitorEventJSON));
+
+  if (visitorEventJSON.type === "identify") {
+    Visitor.identifyUser(visitorEventJSON.visitor_uuid, visitorEventJSON.external_id);
+  }
+
+  if (removeFromFirebase) {
+    snapshot.ref().remove();
+  }
 };
 
 var processEngagementEventFromFirebase = function(snapshot, removeFromFirebase) {

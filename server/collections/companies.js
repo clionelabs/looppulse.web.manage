@@ -10,6 +10,10 @@ Company.prototype.generateEngagementEventsRef = function() {
   return this.firebaseRef() + "/engagement_events";
 };
 
+Company.prototype.generateVisitorEventsRef = function() {
+  return this.firebaseRef() + "/visitor_events";
+}
+
 // This is a JSON returned after successfully authenticated
 Company.prototype.authenticatedResponse = function() {
   var systemConfig = this.systemConfig;
@@ -23,7 +27,8 @@ Company.prototype.authenticatedResponse = function() {
     "firebase": {
       "token": token,
       "beacon_events": this.generateBeaconEventsRef(),
-      "engagement_events": this.generateEngagementEventsRef()
+      "engagement_events": this.generateEngagementEventsRef(),
+      "visitor_events": this.generateVisitorEventsRef()
     }
   });
   return systemConfig;

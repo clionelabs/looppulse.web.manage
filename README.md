@@ -13,6 +13,10 @@ Set up environment.
   1. Configure `server/configuration.json` in https://github.com/clionelabs/looppulse.web.configurator  
   2. In `looppulse.web.configurator`, run `meteor --settings server/configuration.json`
 
+Alternatively 2.:
+  1. mkdir private/
+  2. cp looppulse.web.configurator/private/megabox.json private/local.json
+
 3. Start the dashboard  
   1. Configure `server/settings.json` in `https://github.com/clionelabs/looppulse.web.manage` to point to the two Firebase apps created in Step 1.  
   2. In `looppulse.web.manage`, run `meteor --settings server/settings.json`

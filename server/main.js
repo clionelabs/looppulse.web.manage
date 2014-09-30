@@ -12,7 +12,12 @@ Meteor.startup(
   })
 );
 
-var observeFirebase = function() {
+var observeConfigFirebase = function() {
+  // When using seedData, we won't need to observe changes from config server
+  if (useSeedData()) {
+    return;
+  }
+
   var firebaseRef = new Firebase(Meteor.settings.firebase.config);
   firebaseRef.auth(Meteor.settings.firebase.configSecret, Meteor.bindEnvironment(function(error, result) {
     if (error) {
@@ -21,11 +26,14 @@ var observeFirebase = function() {
       console.info('Authenticated successfully with payload:', result.auth);
       console.info('Auth expires at:', new Date(result.expires * 1000));
       observeCompaniesFromFirebaseDEBUG();
-      observeBeaconEventsFromFirebase();
-      observeEngagementEventsFromFirebase();
     }
   }));
 };
+
+var observeFirebase = function () {
+  observeConfigFirebase();
+  observeAllEventsFromFirebase();
+}
 
 var observeCollections = function() {
   var classes = [
