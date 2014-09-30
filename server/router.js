@@ -1,12 +1,19 @@
 Router.map(function() {
+  var isGetRequest = function(request, response) {
+    var requestMethod = request.method;
+    if (requestMethod !== "GET") {
+      response.writeHead(405, {'Content-Type': 'text/html'});
+      response.end('<html><body>Unsupported method: ' + requestMethod + '</body></html>');
+      return false;
+    }
+    return true;
+  };
+
   this.route('authenticate', {
     path: '/api/authenticate/applications/:applicationId',
     where: 'server',
     action: function() {
-      var requestMethod = this.request.method;
-      if (requestMethod != "GET") {
-        this.response.writeHead(403, {'Content-Type': 'text/html'});
-        this.response.end('<html><body>Unsupported method: ' + requestMethod + '</body></html>');
+      if (!isGetRequest(this.request, this.response)) {
         return;
       }
 

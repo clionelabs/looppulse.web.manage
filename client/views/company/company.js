@@ -1,5 +1,5 @@
-Template.company.helpers({ 
+Template.company_view.helpers({
   locations: function() {
-    return Locations.find(); 
+    return Locations.find();
   }
 });

@@ -1,10 +1,14 @@
 Meteor.methods({
-  createInCollection: function(collectionName, obj) {
+  createInCollection: function(collectionName, obj, companyId) {
     console.log("Called Create", collectionName, obj)
 
     var user = Meteor.user();
-    if (!user || !Roles.userIsInRole(user, ['admin']))
-      throw new Meteor.Error(401, "You need to be an admin");
+    var userId = user._id
+    var isAdmin = Roles.userIsInRole(user, ['admin'])
+    if (!user
+      || (!isAdmin && (companyId && AccountsHelper.companyMatch(companyId, userId)))
+      )
+      throw new Meteor.Error(401, "You need to be an authorized person for this action");
 
     //Should be a white list filtering but it can be process later
     if (collectionName === "Users" || collectionName === "users" || collectionName === "Roles")
@@ -86,5 +90,20 @@ Meteor.methods({
 
     var res = Meteor.users.update(userId,{ $set:{ profile: data  } });
     return res;
+  },
+  getSegmentCsvData: function(segmentId) {
+    if (!AccountsHelper.canViewSegment(segmentId)) {
+      throw new Meteor.Error(401, 'User is not allowed to view segment: ' + segmentId);
+    }
+
+    var data = [];
+
+    SegmentVisitors.find({ segmentId: segmentId }).forEach(function(segmentVisitor) {
+      data.push({
+        'ID': segmentVisitor.visitorId
+      });
+    });
+
+    return data;
   }
 });

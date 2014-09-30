@@ -25,6 +25,14 @@ Session.set('sessionId', Meteor.default_connection._lastSessionId);
 //   }
 // });
 
+
+Meteor.startup(function () {
+    _.extend(Notifications.defaultOptions, {
+        timeout: 5000
+    });
+})
+
+
 Deps.autorun(function(computation){
   //var companyId = Session.get("companyId");
   var locationId = null;

@@ -41,6 +41,59 @@
   padding: 1em;
 }
 
+// Forms
+.bootstrap-select {
+  .dropdown-toggle.selectpicker, .dropdown-menu {
+    border-radius: 0;
+  }
+  &.btn-group.show-tick .dropdown-menu .inner  {
+    li a span.text {
+      margin: {
+        left: 10px;
+        right: 10px;
+      }
+    }
+    li.selected a i.check-mark {
+      left: 10px;
+      right: 0;
+    }
+
+  }
+  .dropdown-menu li > a {
+    outline: none;
+  }
+  .select-header {
+    pointer-events: none;
+  }
+}
+
+.rule-form {
+  line-height: 2.6;
+  .filter-item-list {
+    display: block;
+
+  }
+  .filter-item-list[data-key="triggerLocations"] {
+    .action-btn {
+      vertical-align: top;
+    }
+  }
+  .data-group-triggerLocations.visible {
+    .dropdown-menu {
+      position: static;
+      top: 0 !important;
+      display: block !important;
+      border-width: 0 0 0 5px;
+      box-shadow: none;
+      margin-top: 5px;
+    }
+    button.btn.dropdown-toggle.selectpicker {
+      pointer-events: none;
+      display: none;
+    }
+  }
+}
+
 // Specific Section
 .dashboard {
   .summary {

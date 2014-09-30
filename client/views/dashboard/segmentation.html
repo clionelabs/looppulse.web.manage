@@ -1,11 +1,108 @@
-<template name="dashboard_segmentation">
-{{#Layout template="collection_manage" }}
-  {{#contentFor region="view-header"}}
-    <div class="col-sm-9"><h3>Segementation</h3></div>
-    <div class="col-sm-3"><div class="actions pull-right"><button class="create-btn action-btn btn btn-primary">New</button></div></div>
-  {{/contentFor}}
+<template name="dashboard_segment_manage">
+{{log counts}}
+{{> dashboard_collection_manage context="segments" count=counts listItems=segments modalContent=modal }}
+</template>
 
-  {{! yield content. just a clickable table ? }}
-  <b>Coming Soon...</b>
+<template name="dashboard_segment_view">
+{{#Layout template="collection_manage" data=transform }}
+  {{#contentFor region="view-header"}}
+    <div class="col-sm-9"><h3>Segment: {segment}</h3></div>
+    <div class="col-sm-3"><div class="actions pull-right"><button class="export-btn action-btn btn btn-primary">Export</button></div></div>
+  {{/contentFor}}
+  <section class="view-content">
+  Coming Soon...
+  </section>
 {{/Layout}}
+</template>
+
+<template name="dashboard_segment_create">
+{{#Layout template="collection_manage" data=config }}
+  {{#contentFor region="view-header"}}
+    <div class="col-sm-9"><h3>Creating: <input name="segments.name" type="text" value="{{getSession "new-segment-name"}}" placeholder=""></h3></div>
+    <div class="col-sm-3"><div class="actions pull-right"><button class="create-btn action-btn btn btn-primary">Create {{context}}</button></div></div>
+  {{/contentFor}}
+  <section class="view-content {{klass}}">
+    <form class="form-inline rule-form" role="form" method="POST">
+    {{#with criteriaInputs companyId}}
+      Includes anyone who have {{> _field hasBeen }} to {{> _field to }} of these {{> _field triggerPoints }}{{> _field triggerLocations }}
+
+      <p>for {{> _field times }} times and stayed for {{> _field durantionInMinutes }} minutes
+
+      in {{> _field days }} days every {{>_field every }} only</p>
+    {{/with}}
+    </form>
+  </section>
+{{/Layout}}
+</template>
+
+<template name="_field">
+{{#if isDefault}}
+<span class="form-label">{{field}}</span>
+{{/if}}
+
+{{#if equals this.type "list" }}
+<div class="form-list form-group" data-key="{{field}}">
+  <select class="select-picker main-selector span2" title="{{placeholder}}" multiple={{isMultiple}} name="{{getName field isMultiple}}">
+    {{#each decompose this.values}}
+    <option value="{{val}}" selected={{isFirst}}>{{key}}</option>
+    {{/each}}
+  </select>
+</div>
+{{/if}}
+
+{{#if equals this.type "filterList" }}
+<div class="filter-group filter-list form-group main-filter" data-key="{{field}}">
+  <!-- name="{{field}}[{{baseIndex}}][_filter]{{#if isMultiple}}[]{{/if}}" -->
+  <select class="select-picker span2 select-filter main-selector" data-key="{{field}}"  data-filter-type="select" multiple={{isMultiple}}  name="{{getName field baseIndex "_filter" isMultiple}}">
+    {{#if placeholder}}
+      <option class="select-header">{{placeholder}}</option>
+    {{/if}}
+    {{#each filters}}
+    <option value="{{key}}" data-filter-toggle="{{this.key}}" selected={{isSelected}}>{{label}}</option>
+    {{/each}}
+  </select>
+
+</div>
+<div class="filter-list filter-group form-group {{filterClass}}"  data-key="{{field}}">
+        <!-- name="{{../field}}[{{../baseIndex}}][{{this.key}}][]" -->
+  {{#each filters}}
+        {{#if equals this.style "MultiSelect"}}
+        {{!the source data- will not be copied to the dropdown }}
+        <select class="select-picker span2 filter-input-group data-group-{{../field}} data-input-{{this.key}}" data-filter="{{this.key}}" data-key="{{../field}}" title="{{this.placeholder}}" multiple name="{{getName ../field ../baseIndex this.key true }}" data-selected-text-format="{{../filteredTextFormat}}">
+          {{#each decompose this.values}}
+          <option value="{{val}}" selected={{isFirst}}>{{key}}</option>
+          {{/each}}
+        </select>
+        {{/if}}
+
+  {{/each}}
+  <button class="btn btn-default action-btn done-btn" data-key="{{field}}" type="button">Done</button>
+  <button class="btn btn-default action-btn edit-btn hidden" data-key="{{field}}" type="button">Edit</button>
+</div>
+{{/if}}
+
+{{#if equals this.type "filterInput" }}
+<div class="filter-group filter-input form-group" data-key="{{field}}">
+  <select class="select-picker span2 select-filter" data-key="{{field}}" name="{{field}}[_filter]">
+  {{#each filters}}
+    <option value="{{this.key}}" data-filter-toggle="{{this.key}}" selected={{isSelected}}>{{this.label}}</option>
+  {{/each}}
+  </select>
+  {{#each filters}}
+      {{#if equals this.style "Number"}}
+      <input type="text" value="" class="filter-input-group input-md form-control" placeholder="{{this.placeholder}}" size="2" data-filter="{{this.key}}"  data-key="{{../field}}" name="{{../field}}[{{this.key}}]">
+      {{/if}}
+
+      {{#if equals this.style "DatetimeRange"}}
+      <div class="filter-input-group inline-input-group" data-filter="{{this.key}}" data-key="{{../field}}" name="{{this.key}}">
+        <span class="input-daterange input-group"  id="datepicker-{{this.key}}" >
+            <input type="text" class="input-md form-control" name="{{../field}}[{{this.key}}][{{this.field.start}}]" data-key="{{../field}}" data-type="datetime">
+            <span class="input-group-addon"> - </span>
+            <input type="text" class="input-md form-control" name="{{../field}}[{{this.key}}][{{this.field.end}}]" data-key="{{../field}}" data-type="datetime">
+        </span>
+      </div>
+      {{/if}}
+  {{/each}}
+</div>
+{{/if}}
 </template>

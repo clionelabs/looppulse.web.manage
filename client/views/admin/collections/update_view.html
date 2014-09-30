@@ -6,8 +6,10 @@
 <template name="collection_update_view">
 {{! prefix: collection-update }}
 {{> yield region="view-header"}}
+
+<h2 class="page-header">{{title}}</h2>
+
 <div class="row">
-  <h2 class="page-header">{{title}}</h2>
   <form class="collection-update-form collection-processing-form form-horizontal col-md-6" role="form" data-collection="{{collectionName}}" data-id="{{data._id}}">
     {{#if ../fields }}
       {{#each ../fields }}

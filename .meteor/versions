@@ -6,6 +6,7 @@ alanning:roles@1.2.13
 application-configuration@1.0.2
 arunoda:streams@0.1.17
 autoupdate@1.1.1
+axw:json2csv@0.1.0
 base64@1.0.0
 binary-heap@1.0.0
 blaze-tools@1.0.0
@@ -25,6 +26,7 @@ fastclick@1.0.0
 follower-livedata@1.0.1
 fourseven:scss@0.9.5
 geojson-utils@1.0.0
+gfk:notifications@1.0.9
 handlebars@1.0.0
 html-tools@1.0.1
 htmljs@1.0.1
