@@ -10,12 +10,15 @@ Set up environment.
   2. one for storing beacon events.
 
 2. Configure initial beacon installation  
-  1. Configure `server/configuration.json` in https://github.com/clionelabs/looppulse.web.configurator  
-  2. In `looppulse.web.configurator`, run `meteor --settings server/configuration.json`
+  Two ways:
 
-Alternatively 2.:
-  1. mkdir private/
-  2. cp looppulse.web.configurator/private/megabox.json private/local.json
+  1.  Configure `server/configuration.json` in https://github.com/clionelabs/looppulse.web.configurator  
+  2.  In `looppulse.web.configurator`, run `meteor --settings server/configuration.json`  
+  
+  Alternatively,
+
+  1.  mkdir private/  
+  2.  cp looppulse.web.configurator/private/megabox.json private/local.json  
 
 3. Start the dashboard  
   1. Configure `server/settings.json` in `https://github.com/clionelabs/looppulse.web.manage` to point to the two Firebase apps created in Step 1.  
