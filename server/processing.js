@@ -50,7 +50,7 @@ var processVisitorEventFromFirebase = function(snapshot, removeFromFirebase) {
   console.log('[Remote] processing visitor events:', JSON.stringify(visitorEventJSON));
 
   if (visitorEventJSON.type === "identify") {
-    Visitor.identifyUser(visitorEventJSON.visitor_uuid, visitorEventJSON.external_id);
+    Visitors.identifyUser(visitorEventJSON.visitor_uuid, visitorEventJSON.external_id);
   }
 
   if (removeFromFirebase) {
