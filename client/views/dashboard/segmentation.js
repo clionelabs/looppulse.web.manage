@@ -309,8 +309,7 @@ Template.dashboard_segment_create.destroyed = function(){
 
 Template.dashboard_segment_view.events({
   "click .export-btn": function(e, tmpl) {
-    // FIXME set currentSegmentId somewhere or get segmentId from template data
-    var segmentId = Session.get('currentSegmentId');
+    var segmentId = tmpl.data.segmentId;
     Meteor.call('getSegmentCsvData', segmentId, function(error, result) {
       if (error) {
         console.error(error);
