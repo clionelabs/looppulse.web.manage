@@ -8,7 +8,7 @@ UpdateSegmentVisitors = function() {
         visitorId: visitorId
       };
       if (segment.match(visitorId)) {
-        var upsertResult = SegmentVisitors.upsert(selector, { $setOnInsert: selector });
+        var upsertResult = SegmentVisitors.upsertBySelector(selector);
         result.added += upsertResult.numberAffected;
         result.matched += 1;
       } else {
