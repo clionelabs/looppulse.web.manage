@@ -14,7 +14,7 @@ Set up environment.
 
   1.  Configure `server/configuration.json` in https://github.com/clionelabs/looppulse.web.configurator  
   2.  In `looppulse.web.configurator`, run `meteor --settings server/configuration.json`  
-  
+
   Alternatively,
 
   1.  mkdir private/  
@@ -27,6 +27,15 @@ Set up environment.
 4. Configure beacon events  
   1. Configure `server/simulation.json` in https://github.com/clionelabs/looppulse.web.simulator. Please ensure to match the beacon described in `looppulse.web.configurator/server/configuration.json`  
   2. In `looppulse.web.simulatr`, run `meteor --settings server/simulation.json`
+
+## Coding Style
+
+Follow the [Meteor Style Guide](https://github.com/meteor/meteor/wiki/Meteor-Style-Guide) whenever possible.
+
+Here are some few points for reference,
+- Use camelCase for template name, Reference
+  [1](https://github.com/meteor/meteor/wiki/Meteor-Style-Guide#use-camelcase-for-identifiers),
+  [2](https://github.com/meteor/meteor/wiki/Using-Blaze#new-pattern-for-defining-custom-block-helpers)
 
 
 ## Deployment
