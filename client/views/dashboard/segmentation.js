@@ -315,8 +315,12 @@ Template.dashboard_segment_view.events({
         console.error(error);
         Notifications.error('Segment', 'Segment CSV Export failed -- ' + error + ' --');
       } else {
-        var csv = json2csv(result, true, true);
-        window.open("data:text/csv;charset=utf-8," + escape(csv));
+        if (result.length === 0) {
+          Notifications.warn('Segment', 'No data to export');
+        } else {
+          var csv = json2csv(result, true, true);
+          window.open("data:text/csv;charset=utf-8," + escape(csv));
+        }
       }
     })
   }
