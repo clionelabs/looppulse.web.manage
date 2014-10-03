@@ -96,14 +96,17 @@ Meteor.methods({
       throw new Meteor.Error(401, 'User is not allowed to view segment: ' + segmentId);
     }
 
-    var data = [];
+    return SegmentVisitors.find({ segmentId: segmentId }, {
+      sort: { addedAt: -1 },
+      transform: function(doc) {
+        var visitor = Visitors.findOne(doc.visitorId);
+        return {
+          'ID': doc.visitorId,
+          'External ID': visitor.externalId,
+          'Added At': new Date(doc.addedAt).toISOString()
+        };
+      }
+    }).fetch();
 
-    SegmentVisitors.find({ segmentId: segmentId }).forEach(function(segmentVisitor) {
-      data.push({
-        'ID': segmentVisitor.visitorId
-      });
-    });
-
-    return data;
   }
 });

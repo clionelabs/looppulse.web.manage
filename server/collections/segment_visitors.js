@@ -1,3 +1,10 @@
+SegmentVisitors.upsertBySelector = function(selector) {
+  var modifier = {
+    $setOnInsert: _.extend({}, selector, { addedAt: _.now() })
+  };
+  return SegmentVisitors.upsert(selector, modifier);
+};
+
 var handleEncounterAdded = function(encounter) {
   updateSegmentVisitors(encounter);
   Engagement.dispatch(encounter);
@@ -15,7 +22,7 @@ var updateSegmentVisitors = function(encounter) {
       visitorId: encounter.visitorId
     };
     if (segment.match(encounter.visitorId, encounter)) {
-      SegmentVisitors.upsert(selector, { $setOnInsert: selector });
+      SegmentVisitors.upsertBySelector(selector);
     } else {
       SegmentVisitors.remove(selector);
     }
@@ -30,7 +37,7 @@ var handleSegmentAdded = function(segment) {
       visitorId: visitorId
     };
     if (segment.match(visitorId)) {
-      SegmentVisitors.upsert(selector, { $setOnInsert: selector });
+      SegmentVisitors.upsertBySelector(selector);
     }
   });
 };
