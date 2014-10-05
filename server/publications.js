@@ -244,7 +244,6 @@ Meteor.publish('watch-base', function(){
   ]
 })
 
-
 Meteor.publish('segments', function () {
   var self = this;
   console.log("Returning Segments Data", self.userId);
@@ -254,8 +253,23 @@ Meteor.publish('segments', function () {
   }
 
   var companyIds = [];
-  // FiXME add relationship between User and Company,
+  // FIXME add relationship between User and Company,
   // so can find companyIds by userId
 
   return Segments.find({ companyId: { $in: companyIds } });
+});
+
+Meteor.publish('segmentMetrics', function () {
+  var self = this;
+  console.log("Returning Segment Metrics Data", self.userId);
+
+  if (Roles.userIsInRole(self.userId, ['admin'])) {
+    return SegmentMetrics.find();
+  }
+
+  var segmentIds = [];
+  // FIXME find relationship between User and Segment,
+  // so can find segmentIds by userId
+
+  return SegmentMetrics.find({ segmentId: { $in: segmentIds } });
 });

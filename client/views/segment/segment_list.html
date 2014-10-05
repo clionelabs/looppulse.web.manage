@@ -3,6 +3,8 @@
     <thead>
     <tr>
       <th>Segment</th>
+      <th>Visit Count</th>
+      <th>Dwell Time</th>
     </tr>
     </thead>
     <tbody>
@@ -11,6 +13,8 @@
       <td>
         <a href="{{pathFor 'segment.detail' segmentId=_id }}">{{ name }}</a>
       </td>
+      <td>{{ visitCount }}</td>
+      <td>{{ dwellTime }}</td>
     </tr>
     {{/each}}
     </tbody>
