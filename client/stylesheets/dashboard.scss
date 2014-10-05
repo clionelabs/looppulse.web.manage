@@ -1,0 +1,321 @@
+@import "variable";
+.charting {
+  font-size:10px;
+  line-height: 1;
+  letter-spacing: normal;
+}
+
+.widget-panel, .card-panel {
+  box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.12);
+}
+
+.widget-panel {
+  border: none; //spread: 8px expand 0
+  border-radius: 6px;
+  background: #fff;
+  margin-bottom: 0.5em;
+
+  & .heading {
+    background-color: $alt-light-color;
+    h1, h2, h3, h4, h5, h6 {
+      margin: 0;
+      font-size: 1em;
+      line-height: 1.1;
+      font-weight: normal;
+      display: inline-block;
+    }
+  }
+  & .content , & .heading, & .heading th {
+    padding: 0.8em 1em
+  }
+  .widget-nav {
+    &, & li {
+      display: inline-block;
+    }
+  }
+
+}
+
+.card-panel {
+  background-color: $alt-light-color;
+  padding: 1em;
+}
+
+// Forms
+.bootstrap-select {
+  .dropdown-toggle.selectpicker, .dropdown-menu {
+    border-radius: 0;
+  }
+  &.btn-group.show-tick .dropdown-menu .inner  {
+    li a span.text {
+      margin: {
+        left: 10px;
+        right: 10px;
+      }
+    }
+    li.selected a i.check-mark {
+      left: 10px;
+      right: 0;
+    }
+
+  }
+  .dropdown-menu li > a {
+    outline: none;
+  }
+  .select-header {
+    pointer-events: none;
+  }
+}
+
+.rule-form {
+  line-height: 2.6;
+  .filter-item-list {
+    display: block;
+
+  }
+  .filter-item-list[data-key="triggerLocations"] {
+    .action-btn {
+      vertical-align: top;
+    }
+  }
+  .data-group-triggerLocations.visible {
+    .dropdown-menu {
+      position: static;
+      top: 0 !important;
+      display: block !important;
+      border-width: 0 0 0 5px;
+      box-shadow: none;
+      margin-top: 5px;
+    }
+    button.btn.dropdown-toggle.selectpicker {
+      pointer-events: none;
+      display: none;
+    }
+  }
+}
+
+// Specific Section
+.dashboard {
+  .summary {
+
+      .number {
+        font-size: 2em; //36px
+        font-weight:500;
+
+        .unit {
+          font-size: 0.7em; //24px/36px
+        }
+
+      }
+
+      .diff {
+        text-align: center;
+        .sign, .value {
+          display: block;
+        }
+
+        .sign {
+          width: 0;
+          height: 0;
+          margin: 8px auto 0 auto;
+          border-left: 12px solid transparent;
+          border-right: 12px solid transparent;
+        }
+
+        .arrow-up {
+          border-bottom: 9px solid $primary-color;
+        }
+
+        .arrow-down {
+          border-top: 9px solid $primary-color-compliment;
+        }
+      }
+
+      .duration {
+        color: $alt-font-color;
+        font-size: 0.8em
+      }
+
+      .field {
+        color: $primary-color-2;
+      }
+
+  }
+}
+
+.performance-nav {
+  ul li > a {
+  }
+  ul > li {
+    border: 1px solid #ccc;
+    width: 32px;
+    height: 32px;
+    text-align:center;
+    line-height: 32px;
+  }
+}
+
+.highlights {
+  margin-bottom: 1em;
+}
+
+.campaign-list {
+  tbody, tr.chart-row td, tbody > tr:first-child td {
+    border-top: none;
+  }
+  .table > thead > tr > th {
+    border-bottom: none;
+  }
+  .table > tbody > tr > td {
+    padding: 0.8em 1em;
+  }
+  .desc {
+    color: $alt-font-color;
+    font-size: 0.8em;
+    margin-bottom: 2em;
+  }
+  .data-row {
+    .entity {
+      font-weight: 500;
+      text-transform: capitalize;
+    }
+    .conversion {
+      color: $primary-color;
+    }
+    .value {
+      font-size: 1.2em;
+      line-height: 1.175
+    }
+  }
+
+  tr.campaign-summary.chart-row {
+    display: none;
+    &.live {
+      display: table-row;
+    }
+  }
+}
+
+.charting .d4, .charting-area .d4 {
+  .tick text {
+      font-size: 1em;
+      fill: #333;
+  }
+  path {
+    fill: none;
+    stroke-width: 2px;
+  }
+  .series0 path {
+        stroke: #F5A623;
+    }
+
+  .series1 path {
+        stroke: #BD10E0;
+    }
+
+  .series2 path {
+        stroke: #4A90E2;
+    }
+
+}
+.charting .d4 {
+
+  .grid.border rect {
+         fill: none;
+         stroke: none;
+     }
+
+   .grid.y {
+     line {
+         fill:none;
+         stroke: #ccc;
+         stroke-width: 1px;
+         // stroke-dasharray :3, 4;
+         // shape-rendering: crispEdges;
+     }
+     .domain {
+       display:none;
+     }
+   }
+   .axis .domain { display:none; }
+}
+.campaign-comparsion-chart {
+  .tick {
+    display: none;
+  }
+  .subtitle, .title {
+    // text-anchor: middle;
+  }
+}
+
+.performance-table {
+  &.table > thead > tr > th,
+  &.table > tbody > tr.entry > td {
+    border:none;
+  }
+
+  &.table > thead > tr > th,
+  &.table > tbody > tr.legend > td {
+    font-size: 0.8em;
+  }
+  &.table > tbody > tr.entry > td {
+    font-size: 1.1em;
+    padding-top:0.2em;
+  }
+
+  &.table > tbody > tr.legend > td {
+    padding-bottom:0.2em
+  }
+  &.table > tbody {
+    border-bottom:1px solid #ddd;
+  }
+}
+.performance-table-wrapper {
+  border-right: 1px solid #ddd;
+}
+
+// Engagement
+.engagement-create {
+  header .heading {
+    margin-bottom: 1.2em;
+  }
+  .item-pager {
+    margin: 0;
+    padding: 10px 15px;
+    li { list-style: none; }
+    a  {
+      color: #428bca;
+      text-decoration: none;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 0.2em 0.6em;
+      margin: 0.4em 0;
+      display: inline-block;
+    }
+  }
+  .bootstrap-select.select-picker, .select-picker-link  {
+    padding: 0;
+    margin-bottom: 0;
+  }
+  .select-picker button, .select-picker-link {
+       border: 1px solid #ccc;
+       padding: 0.8em 1.2em;
+       border-radius: 0;
+  }
+  .select-picker-link {
+    font-size: 0.8em;
+    text-decoration: none;
+    display: block;
+    position: relative;
+    .caret {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      margin-top: -2px;
+      vertical-align: middle;
+    }
+  }
+  .create-canel-btn {
+    line-height: 2.8
+  }
+}
