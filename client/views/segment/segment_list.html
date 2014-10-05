@@ -8,7 +8,9 @@
     <tbody>
     {{#each segments}}
     <tr>
-      <td>{{ name }}</td>
+      <td>
+        <a href="{{pathFor 'segment.detail' segmentId=_id }}">{{ name }}</a>
+      </td>
     </tr>
     {{/each}}
     </tbody>
