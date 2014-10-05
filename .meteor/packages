@@ -23,4 +23,5 @@ percolatestudio:synced-cron
 mrt:firebase-token-generator
 axw:json2csv
 zimme:iron-router-active
+stevezhu:lodash
 

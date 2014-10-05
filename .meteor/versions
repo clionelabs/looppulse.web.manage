@@ -74,6 +74,7 @@ spacebars-compiler@1.0.2
 spacebars@1.0.2
 srp@1.0.0
 standard-app-packages@1.0.2
+stevezhu:lodash@0.2.0
 templating@1.0.7
 tmeasday:publish-counts@0.3.4
 tracker@1.0.2
