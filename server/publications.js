@@ -243,3 +243,19 @@ Meteor.publish('watch-base', function(){
     Companies.find({}, { fields:{ _id:1, name:1 } })
   ]
 })
+
+
+Meteor.publish('segments', function () {
+  var self = this;
+  console.log("Returning Segments Data", self.userId);
+
+  if (Roles.userIsInRole(self.userId, ['admin'])) {
+    return Segments.find();
+  }
+
+  var companyIds = [];
+  // FiXME add relationship between User and Company,
+  // so can find companyIds by userId
+
+  return Segments.find({ companyId: { $in: companyIds } });
+});

@@ -21,14 +21,8 @@
           <div class="collapse navbar-collapse" id="primary-navbar-collapse">
             {{#if currentUser }}
             <ul class="nav navbar-nav">
-              <li class="{{ isActivePath 'dashboard' }}"><a
-                  href="{{ pathFor 'dashboard_home' locationId=this._id }}">dashboard</a>
-              </li>
-              <li class="{{ isActivePath 'segment' }}"><a
-                  href="{{ pathFor 'dashboard_segment_manage' locationId=this._id }}">segmentation</a>
-              </li>
-              <li class="{{ isActivePath 'engagement' }}"><a
-                  href="{{ pathFor 'dashboard_engagement_manage' locationId=this._id }}">engagement</a>
+              <li class="{{isActivePath 'segments' }}"><a
+                  href="{{pathFor 'segment.list' }}">Segmentation</a>
               </li>
             </ul>
             {{/if}}

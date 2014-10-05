@@ -1,0 +1,16 @@
+<template name="segmentList">
+  <table class="table table-bordered table-hover table-striped">
+    <thead>
+    <tr>
+      <th>Segment</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each segments}}
+    <tr>
+      <td>{{ name }}</td>
+    </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</template>
