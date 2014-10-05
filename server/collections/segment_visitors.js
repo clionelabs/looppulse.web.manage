@@ -1,22 +1,22 @@
-SegmentVisitors.upsertBySelector = function(selector) {
+SegmentVisitors.upsertBySelector = function (selector) {
   var modifier = {
-    $setOnInsert: _.extend({}, selector, { addedAt: _.now() })
+    $setOnInsert: _.extend({}, selector, { createdAt: lodash.now() })
   };
   return SegmentVisitors.upsert(selector, modifier);
 };
 
-var handleEncounterAdded = function(encounter) {
+var handleEncounterAdded = function (encounter) {
   updateSegmentVisitors(encounter);
   Engagement.dispatch(encounter);
 };
 
-var handleEncounterChanged = function(encounter, oldEncounter) {
+var handleEncounterChanged = function (encounter, oldEncounter) {
   updateSegmentVisitors(encounter);
   Engagement.dispatch(encounter);
 };
 
-var updateSegmentVisitors = function(encounter) {
-  Segments.find().map(function(segment) {
+var updateSegmentVisitors = function (encounter) {
+  Segments.find().map(function (segment) {
     var selector = {
       segmentId: segment._id,
       visitorId: encounter.visitorId
@@ -29,8 +29,8 @@ var updateSegmentVisitors = function(encounter) {
   });
 };
 
-var handleSegmentAdded = function(segment) {
-  Visitors.find().map(function(visitor) {
+var handleSegmentAdded = function (segment) {
+  Visitors.find().map(function (visitor) {
     var visitorId = visitor._id;
     var selector = {
       segmentId: segment._id,
@@ -42,7 +42,7 @@ var handleSegmentAdded = function(segment) {
   });
 };
 
-SegmentVisitor.startup = function() {
+SegmentVisitor.startup = function () {
   Encounters.find().observe({
     _suppress_initial: true,
     "added": handleEncounterAdded,

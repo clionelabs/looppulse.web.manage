@@ -97,13 +97,13 @@ Meteor.methods({
     }
 
     return SegmentVisitors.find({ segmentId: segmentId }, {
-      sort: { addedAt: -1 },
+      sort: { createdAt: -1 },
       transform: function(doc) {
         var visitor = Visitors.findOne(doc.visitorId);
         return {
           'ID': doc.visitorId,
           'External ID': visitor.externalId,
-          'Added At': new Date(doc.addedAt).toISOString()
+          'Added At': new Date(doc.createdAt).toISOString()
         };
       }
     }).fetch();
