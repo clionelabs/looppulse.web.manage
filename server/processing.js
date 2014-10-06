@@ -20,7 +20,7 @@ observeAllEventsFromFirebase = function() {
 
 observeBeaconEventsFromFirebase = function(company) {
   observeCompanyChildAdded("beacon_events", company, function(childSnapshot, prevChildName) {
-    processBeaconEventFromFirebase(childSnapshot, Meteor.settings.removeFromFirebase);
+    processBeaconEventFromFirebase(company._id, childSnapshot, Meteor.settings.removeFromFirebase);
   });
 };
 
@@ -32,7 +32,7 @@ observeEngagementEventsFromFirebase = function(company) {
 
 observeVisitorEventsFromFirebase = function(company) {
   observeCompanyChildAdded("visitor_events", company, function(childSnapshot, prevChildName) {
-    processVisitorEventFromFirebase(childSnapshot, Meteor.settings.removeFromFirebase);
+    processVisitorEventFromFirebase(company._id, childSnapshot, Meteor.settings.removeFromFirebase);
   });
 };
 
@@ -44,13 +44,13 @@ var observeCompanyChildAdded = function(path, company, callback) {
   firebase.on('child_added', Meteor.bindEnvironment(callback));
 };
 
-var processVisitorEventFromFirebase = function(snapshot, removeFromFirebase) {
+var processVisitorEventFromFirebase = function(companyId, snapshot, removeFromFirebase) {
   var visitorEventJSON = snapshot.val();
  
   console.log('[Remote] processing visitor events:', JSON.stringify(visitorEventJSON));
 
   if (visitorEventJSON.type === "identify") {
-    Visitors.identifyUser(visitorEventJSON.visitor_uuid, visitorEventJSON.external_id);
+    Visitors.identifyUser(companyId, visitorEventJSON.visitor_uuid, visitorEventJSON.external_id);
   }
 
   if (removeFromFirebase) {
@@ -68,9 +68,12 @@ var processEngagementEventFromFirebase = function(snapshot, removeFromFirebase) 
   }
 };
 
-var processBeaconEventFromFirebase = function(snapshot, removeFromFirebase) {
+var processBeaconEventFromFirebase = function(companyId, snapshot, removeFromFirebase) {
   var beaconEventJSON = snapshot.val();
-  var visitor = Visitors.findOneOrCreateByUuid(beaconEventJSON.visitor_uuid);
+  var visitor = Visitors.findOneOrCreate({
+    companyId: companyId,
+    uuid: beaconEventJSON.visitor_uuid
+  });
   // console.log("[processBeaconEventFromFirebase] Processing BeaconEvent["+beaconEventJSON._id+"] from Visitor["+visitor._id+"]");
 
   var beacon = Beacons.findOne({uuid: beaconEventJSON.uuid,
