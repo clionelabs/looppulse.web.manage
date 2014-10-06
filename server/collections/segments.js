@@ -4,20 +4,21 @@
  * @param {Encounter} [encounter]
  * @returns {boolean}
  */
-Segment.prototype.match = function(visitorId, encounter) {
-  var companyId = this.companyId;
-  var criteria = this.criteria;
+Segment.prototype.match = function (visitorId, encounter) {
+  var self = this;
 
   // Make sure visitor has encounter of segment.companyId
-  if (encounter && !encounter.didHappenInCompany(companyId)) {
-    return false;
-  } else if (!Encounters.findOneByCompany(companyId, { visitorId: visitorId })) {
+  if (encounter) {
+    if (!encounter.didHappenInCompany(self.companyId)) {
+      return false;
+    }
+  } else if (!Encounters.findOneByCompany(self.companyId, { visitorId: visitorId })) {
     return false;
   }
 
-  if (!criteria) {
+  if (_.isEmpty(self.criteria)) {
     return true;
   }
 
-  return new SegmentMatchCriteria(criteria).match(companyId, visitorId);
+  return new SegmentMatchCriteria(self.criteria).match(self.companyId, visitorId);
 };
