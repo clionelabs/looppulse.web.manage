@@ -210,6 +210,10 @@ header.primary {
     color: #fafafa;
     min-height: 40px;
     max-height: 60px;
+    .active a {
+      color: rgba(0,0,0,0.74);
+
+    }
     a {
       color: #fafafa;
     }
