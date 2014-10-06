@@ -70,7 +70,7 @@ var processEngagementEventFromFirebase = function(snapshot, removeFromFirebase) 
 
 var processBeaconEventFromFirebase = function(snapshot, removeFromFirebase) {
   var beaconEventJSON = snapshot.val();
-  var visitor = new Visitor(beaconEventJSON.visitor_uuid);
+  var visitor = new Visitor({ uuid: beaconEventJSON.visitor_uuid });
   visitor.save();
   // console.log("[processBeaconEventFromFirebase] Processing BeaconEvent["+beaconEventJSON._id+"] from Visitor["+visitor._id+"]");
 
