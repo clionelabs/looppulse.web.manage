@@ -58,7 +58,7 @@ html, body {
 }
 .wrapper:after, footer.primary {
   /* .push must be the same height as footer */
-  height: 60px;
+  height: 40px;
   display: block;
 }
 
@@ -179,6 +179,7 @@ footer.primary {
 }
 
 .copyright {
+  font-size: 0.6em;
   margin-top: 10px;
 }
 $navbar-padding: 10px;
@@ -210,6 +211,10 @@ header.primary {
     color: #fafafa;
     min-height: 40px;
     max-height: 60px;
+    .active a {
+      color: rgba(0,0,0,0.74);
+
+    }
     a {
       color: #fafafa;
     }
