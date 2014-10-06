@@ -21,15 +21,17 @@
           <div class="collapse navbar-collapse" id="primary-navbar-collapse">
             {{#if currentUser }}
             <ul class="nav navbar-nav">
-              <li class="{{isActivePath 'dashboard' }}">
+              <!-- <li class="{{isActivePath 'dashboard' }}">
                 <a href="{{pathFor 'dashboard' }}">Dashboard</a>
-              </li>
+                </li> -->
               <li class="{{isActivePath 'segments' }}"><a
                   href="{{pathFor 'segment.list' }}">Segmentation</a>
               </li>
+              <!-- 
               <li class="{{isActivePath 'engagements' }}">
                 <a href="{{pathFor 'engagement.list' }}">Engagements</a>
               </li>
+              -->
             </ul>
             {{/if}}
             <ul class="nav navbar-nav navbar-right">
