@@ -320,6 +320,8 @@
   }
 }
 
-header.segment-list button {
-  margin: 20px 0 10px;
+header.segment-list, header.segment-create {
+  button {
+    margin: 20px 0 10px;
+  }
 }

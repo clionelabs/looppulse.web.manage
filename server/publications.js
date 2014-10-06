@@ -273,3 +273,51 @@ Meteor.publish('segmentMetrics', function () {
 
   return SegmentMetrics.find({ segmentId: { $in: segmentIds } });
 });
+
+Meteor.publish('companyCategories', function (companyId) {
+  var self = this;
+  console.log("Returning Company Category Data", companyId);
+
+  // FIXME find relationship between User and Category
+  if (!Roles.userIsInRole(self.userId, ['admin'])) {
+    return null;
+  }
+
+  return Categories.find({ companyId: companyId });
+});
+
+Meteor.publish('companyLocations', function (companyId) {
+  var self = this;
+  console.log("Returning Company Location Data", companyId);
+
+  // FIXME find relationship between User and Company
+  if (!Roles.userIsInRole(self.userId, ['admin'])) {
+    return null;
+  }
+
+  return Locations.find({ companyId: companyId });
+});
+
+Meteor.publish('companyProducts', function (companyId) {
+  var self = this;
+  console.log("Returning Company Product Data", companyId);
+
+  // FIXME find relationship between User and Product
+  if (!Roles.userIsInRole(self.userId, ['admin'])) {
+    return null;
+  }
+
+  return Products.find({ companyId: companyId });
+});
+
+Meteor.publish('locationsFloors', function (locationIds) {
+  var self = this;
+  console.log("Returning Locations Floor Data", locationIds);
+
+  // FIXME find relationship between User and Locations
+  if (!Roles.userIsInRole(self.userId, ['admin'])) {
+    return null;
+  }
+
+  return Floors.find({ locationId: { $in: locationIds } });
+});
