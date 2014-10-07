@@ -1,7 +1,8 @@
 Router.map(function() {
-  var isGetRequest = function(request, response) {
+  var isPostRequest = function(request, response) {
     var requestMethod = request.method;
-    if (requestMethod !== "GET") {
+    if (requestMethod !== "POST") {
+      console.warn("[API] Unsupported method: " + requestMethod);
       response.writeHead(405, {'Content-Type': 'text/html'});
       response.end('<html><body>Unsupported method: ' + requestMethod + '</body></html>');
       return false;
@@ -13,7 +14,7 @@ Router.map(function() {
     path: '/api/authenticate/applications/:applicationId',
     where: 'server',
     action: function() {
-      if (!isGetRequest(this.request, this.response)) {
+      if (!isPostRequest(this.request, this.response)) {
         return;
       }
 
