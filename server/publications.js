@@ -17,7 +17,8 @@ console.log("Publishers Ready, Deploying")
 Meteor.publish('owned-companies', function() {
   var q = {}
   console.log("Returning Company Data of User", this.userId)
-  q = { ownedByUserId: this.userId }
+
+  q = { ownedByUserIds: { $in : [ this.userId ] } }
 
   return Companies.find(q, { fields: { _id:1, name:1 } }); //Note: Return MongoDB Cursor
 

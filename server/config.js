@@ -59,7 +59,7 @@ var configureCompany= function (companyConfig, configurationJSON) {
   //TODO to be removed once there are multiple user.
   var admin = Meteor.users.findOne();
   // Company
-  var company = new Company(companyConfig.name, companyConfig.system, configurationJSON, admin._id);
+  var company = new Company(companyConfig.name, companyConfig.system, configurationJSON, [ admin._id ]);
   companyConfig._id = company.save();
   console.info("[Init] Company created:", company._id, company.name);
 
