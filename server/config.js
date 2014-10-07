@@ -56,9 +56,10 @@ var configureCompany= function (companyConfig, configurationJSON) {
                 _.keys(companyConfig.products) + ") products and (" +
                 _.keys(companyConfig.locations) + ") locations from " +
                 configurationJSON);
-
+  //TODO to be removed once there are multiple user.
+  var admin = Meteor.users.findOne();
   // Company
-  var company = new Company(companyConfig.name, companyConfig.system, configurationJSON);
+  var company = new Company(companyConfig.name, companyConfig.system, configurationJSON, admin._id);
   companyConfig._id = company.save();
   console.info("[Init] Company created:", company._id, company.name);
 

@@ -14,14 +14,10 @@ console.log("Publishers Ready, Deploying")
 */
 
 //General Publication
-Meteor.publish('owned-company', function(id) {
+Meteor.publish('owned-companies', function() {
   var q = {}
-  console.log("Returning Company Data", id)
-  if (id && AccountsHelper.companyMatch(id, this.userId)) {
-    q = { _id: id }
-  } else {
-    return null;
-  }
+  console.log("Returning Company Data of User", this.userId)
+  q = { ownedByUserId: this.userId }
 
   return Companies.find(q, { fields: { _id:1, name:1 } }); //Note: Return MongoDB Cursor
 
