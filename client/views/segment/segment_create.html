@@ -1,4 +1,7 @@
 <template name="segmentCreate">
+    {{! TODO find better way to reuse this }}
+    {{> yield region='companyHeader'}}
+
   <header class="segment-create row">
     <div class="col-sm-9">
       <h3>Creating: <input name="segments.name" type="text"

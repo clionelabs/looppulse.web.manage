@@ -32,12 +32,13 @@ Template.segmentCreate.events({
     $(".data-group-triggerLocations.visible .dropdown-menu li:not(.selected)").show();
   },
   "submit .rule-form": function (e, tmpl) {
+    var self = this;
     var $form = $(e.currentTarget);
     var formData = $form.serializeObject();
     var plot = this.plot;
     var fields = Object.keys(plot);
     var submitData = {
-      "companyId": null,
+      "companyId": self.companyId,
       "name": null,
       "criteria": null
     };
@@ -54,8 +55,6 @@ Template.segmentCreate.events({
     if (!submitData.name) { // and other validation...
       throw Error("Missing Segment Name");
     }
-
-    submitData.companyId = LocationsHelper.getCompanyId();
 
     //May be we need to check companyId too...
 
