@@ -45,7 +45,7 @@ Session.prototype.save = function() {
   return this._id;
 }
 
-// Convenient method for creation with visitor UUID
+// No findOrCreate beaause a new session creation is always expected
 Sessions.create = function(visitorUUID, sdk, device) {
   var visitor = Visitors.findOneOrCreate({uuid: visitorUUID});
   var session = new Session({visitorId: visitor._id,
