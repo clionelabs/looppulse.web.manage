@@ -14,6 +14,18 @@ Company.prototype.generateVisitorEventsRef = function() {
   return this.firebaseRef() + "/visitor_events";
 }
 
+Company.prototype.generateLocationsJSON = function() {
+  var json = {};
+  Locations.find({companyId: this._id}).forEach(function(location) {
+    var installationsJSON = {};
+    Installations.find({locationId: location._id}).forEach(function(installation) {
+      installationsJSON[installation.name] = installation.denormalizedJSON();
+    });
+    json[location.name] = {"installations": installationsJSON};
+  });
+  return json;
+}
+
 // This is a JSON returned after successfully authenticated
 Company.prototype.authenticatedResponse = function() {
   var systemConfig = this.systemConfig;
@@ -23,13 +35,14 @@ Company.prototype.authenticatedResponse = function() {
     {admin: true}  // FIXME config Firebase security role per company
   );
   _.extend(systemConfig, {
-    "configurationJSON": this.configurationJSON,
     "firebase": {
       "token": token,
+      "root": this.firebaseRef(),
       "beacon_events": this.generateBeaconEventsRef(),
       "engagement_events": this.generateEngagementEventsRef(),
       "visitor_events": this.generateVisitorEventsRef()
-    }
+    },
+    "locations": this.generateLocationsJSON()
   });
   return systemConfig;
 };
