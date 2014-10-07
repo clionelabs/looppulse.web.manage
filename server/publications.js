@@ -244,34 +244,28 @@ Meteor.publish('watch-base', function(){
   ]
 })
 
-Meteor.publish('segments', function () {
-  var self = this;
-  console.log("Returning Segments Data", self.userId);
-
-  if (Roles.userIsInRole(self.userId, ['admin'])) {
-    return Segments.find();
-  }
-
-  var companyIds = [];
-  // FIXME add relationship between User and Company,
-  // so can find companyIds by userId
-
-  return Segments.find({ companyId: { $in: companyIds } });
-});
-
-Meteor.publish('segmentMetrics', function () {
+Meteor.publish('segmentMetrics', function (segmentIds) {
   var self = this;
   console.log("Returning Segment Metrics Data", self.userId);
 
-  if (Roles.userIsInRole(self.userId, ['admin'])) {
-    return SegmentMetrics.find();
+  // FIXME find relationship between User and Segment
+  if (!_.isArray(segmentIds) || !Roles.userIsInRole(self.userId, ['admin'])) {
+    return null;
   }
 
-  var segmentIds = [];
-  // FIXME find relationship between User and Segment,
-  // so can find segmentIds by userId
-
   return SegmentMetrics.find({ segmentId: { $in: segmentIds } });
+});
+
+Meteor.publish('companies', function () {
+  var self = this;
+  console.log("Returning Company Data", self.userId);
+
+  // FIXME find relationship between User and Category
+  if (!Roles.userIsInRole(self.userId, ['admin'])) {
+    return null;
+  }
+
+  return Companies.find();
 });
 
 Meteor.publish('companyCategories', function (companyId) {
@@ -308,6 +302,18 @@ Meteor.publish('companyProducts', function (companyId) {
   }
 
   return Products.find({ companyId: companyId });
+});
+
+Meteor.publish('companySegments', function (companyId) {
+  var self = this;
+  console.log("Returning Company Segments Data", self.userId);
+
+  // FIXME add relationship between User and Company
+  if (!Roles.userIsInRole(self.userId, ['admin'])) {
+    return null;
+  }
+
+  return Segments.find({ companyId: companyId });
 });
 
 Meteor.publish('locationsFloors', function (locationIds) {

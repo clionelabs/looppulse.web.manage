@@ -2,10 +2,14 @@
   <header class="segment-list row">
     <div class="col-sm-9"><h3>{{ segments.length }} segments</h3></div>
     <div class="col-sm-3">
+      <a href="{{pathFor 'segment.create' }}" class="create-btn btn btn-primary pull-right">New</a>
+      {{! TODO uncomment this if modal logic is implemented }}
+      <!--
       <button class="create-btn btn btn-primary pull-right"
               data-toggle="modal"
               data-target="#createSegmentModal">New
       </button>
+      -->
     </div>
   </header>
 
