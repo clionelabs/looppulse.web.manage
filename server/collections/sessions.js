@@ -33,7 +33,7 @@ Session.prototype.save = function() {
   };
 
   var modifier = {
-    $setOnInsert: _.extend({}, selector, { createdAt: (new Date()) })
+    $setOnInsert: _.extend({}, selector, { createdAt: (new Date()).getTime() })
   };
 
   var result = Sessions.upsert(selector, modifier);
