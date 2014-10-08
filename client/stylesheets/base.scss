@@ -173,11 +173,13 @@ svg.d4 {
 footer.primary {
   background-color: $alt-dark-color;
   color: #fff;
+  padding:0 10px;
+  line-height:40px;
 
   // position: relative;
   // left: 0;
   // bottom: 0;
-  // height: 60px;
+  height: 40px;
   // width: 100%
 }
 
