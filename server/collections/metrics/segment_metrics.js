@@ -1,37 +1,36 @@
 SegmentMetric.startup = function () {
-  function handleSegmentVisitorAdded(segmentVisitor) {
+  function upsertSegmentMetric(segmentId, modifier) {
     var selector = {
       type: SegmentMetric.type,
       resolution: Metric.forever,
-      segmentId: segmentVisitor.segmentId
+      segmentId: segmentId
     };
+    Metrics.upsert(selector, _.extend({}, modifier, {
+      $setOnInsert: selector
+    }));
+  }
+
+  function handleSegmentVisitorAdded(segmentVisitor) {
     var visitorMetric = VisitorMetrics.findOneByVisitor(segmentVisitor.visitorId);
-    var modifier = {
+    upsertSegmentMetric(segmentVisitor.segmentId, {
       $inc: {
+        visitorCount: 1,
         visitCount: visitorMetric.visitCount,
         dwellTime: visitorMetric.dwellTime
-      },
-      $setOnInsert: selector
-    };
-    Metrics.upsert(selector, modifier);
+      }
+    });
   }
 
   function handleSegmentVisitorRemoved(oldSegmentVisitor) {
-    var selector = {
-      type: SegmentMetric.type,
-      resolution: Metric.forever,
-      segmentId: oldSegmentVisitor.segmentId
-    };
     var visitorMetric = VisitorMetrics.findOneByVisitor(oldSegmentVisitor.visitorId);
     // FIXME can be negative if added event is not processed
-    var modifier = {
+    upsertSegmentMetric(oldSegmentVisitor.segmentId, {
       $inc: {
+        visitorCount: -1,
         visitCount: visitorMetric.visitCount * -1,
         dwellTime: visitorMetric.dwellTime * -1
-      },
-      $setOnInsert: selector
-    };
-    Metrics.upsert(selector, modifier);
+      }
+    });
   }
 
   SegmentVisitors.find().observe({
