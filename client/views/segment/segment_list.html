@@ -1,27 +1,23 @@
 <template name="segmentList">
-    {{> companyHeader }}
+  {{> companyHeader }}
 
-  <header class="segment-list row">
-    <div class="col-sm-9">
-      <h3>{{ segments.length }} segments</h3>
-    </div>
-    <div class="col-sm-3">
-      <a href="{{pathFor 'segment.create' }}" class="create-btn btn btn-primary pull-right">New</a>
-        {{!-- TODO uncomment this if modal logic is implemented
-        <button class="create-btn btn btn-primary pull-right"
-                data-toggle="modal"
-                data-target="#createSegmentModal">New
-        </button>
-        --}}
-    </div>
-  </header>
+  <div class="segment-list-header">
+    <h3>{{ segments.length }} segments</h3>
+    <a href="{{pathFor 'segment.create' }}" class="create-btn btn btn-primary pull-right">Create a Segment</a>
+      {{!-- TODO uncomment this if modal logic is implemented
+      <button class="create-btn btn btn-primary pull-right"
+              data-toggle="modal"
+              data-target="#createSegmentModal">New
+            </button> --}}
+  </div>
 
-  <table class="table table-bordered table-hover table-striped">
+  <table class="table table-hover segment-list">
     <thead>
       <tr>
-        <th>Segment</th>
-        <th>Visit Count</th>
-        <th>Dwell Time</th>
+        <th width="54%">Segments</th>
+        <th width="14%">Visitors</th>
+        <th width="15%">Dwell</th>
+        <th width="27%">Repeated Visits</th>
       </tr>
     </thead>
     <tbody>
@@ -30,8 +26,9 @@
             <td>
               <a href="{{pathFor 'segment.detail' segmentId=_id }}">{{ name }}</a>
             </td>
-            <td>{{ visitCount }}</td>
+            <td>{{ visitorsCount }}</td>
             <td>{{ dwellTime }}</td>
+            <td>{{ repeatedVisitsPercent }}</td>
           </tr>
         {{/each}}
     </tbody>
