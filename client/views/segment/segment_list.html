@@ -26,9 +26,9 @@
             <td>
               <a href="{{pathFor 'segment.detail' segmentId=_id }}">{{ name }}</a>
             </td>
-            <td>{{ visitorsCount }}</td>
-            <td>{{ dwellTime }}</td>
-            <td>{{ repeatedVisitsPercent }}</td>
+            <td>{{ visitorCount }}</td>
+            <td>{{ dwellTimeAverage }}</td>
+            <td>{{ repeatedVisitPercentage }}</td>
           </tr>
         {{/each}}
     </tbody>
