@@ -28,13 +28,13 @@ Application = function(doc) {
   }
 };
 
-Application.authenticatedResponse = function(applicationId, token) {
+Application.authenticatedResponse = function(applicationId, token, session) {
   var app = Applications.findOne({_id: applicationId});
   if (!app) {
     app = new UnauthenticatedApplication();
   }
 
-  return app.authenticatedResponse(token);
+  return app.authenticatedResponse(token, session);
 };
 
 Application.prototype.save = function() {
@@ -60,7 +60,7 @@ Application.prototype.save = function() {
   return self._id;
 };
 
-Application.prototype.authenticatedResponse = function(token) {
+Application.prototype.authenticatedResponse = function(token, sessionInfo) {
   self = this;
   var response = {};
   if (token != self.token) {
@@ -73,6 +73,12 @@ Application.prototype.authenticatedResponse = function(token) {
     // TODO: read these from company settings
     var company = Companies.findOne({_id: self.companyId});
     response["system"] = company.authenticatedResponse();
+
+    // Create session data
+    var sessionId = Sessions.create(sessionInfo.visitorUUID,
+                                    sessionInfo.sdk,
+                                    sessionInfo.device);
+    response["session"] = sessionId;
   }
   return response;
 };

@@ -46,7 +46,7 @@ var observeCompanyChildAdded = function(path, company, callback) {
 
 var processVisitorEventFromFirebase = function(companyId, snapshot, removeFromFirebase) {
   var visitorEventJSON = snapshot.val();
- 
+
   console.log('[Remote] processing visitor events:', JSON.stringify(visitorEventJSON));
 
   if (visitorEventJSON.type === "identify") {
@@ -84,7 +84,8 @@ var processBeaconEventFromFirebase = function(companyId, snapshot, removeFromFir
     return;
   }
 
-  var beaconEvent = new BeaconEvent(visitor._id, beacon._id, beaconEventJSON);
+  var sessionId = beaconEventJSON.session_id;
+  var beaconEvent = new BeaconEvent(visitor._id, beacon._id, sessionId, beaconEventJSON);
   if (beaconEvent.save()) {
     // Remove the copy on Firebase so we will not re process the
     // beacon event on restart

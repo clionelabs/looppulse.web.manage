@@ -1,7 +1,8 @@
 Router.map(function() {
-  var isGetRequest = function(request, response) {
+  var isPostRequest = function(request, response) {
     var requestMethod = request.method;
-    if (requestMethod !== "GET") {
+    if (requestMethod !== "POST") {
+      console.warn("[API] Unsupported method: " + requestMethod);
       response.writeHead(405, {'Content-Type': 'text/html'});
       response.end('<html><body>Unsupported method: ' + requestMethod + '</body></html>');
       return false;
@@ -13,13 +14,14 @@ Router.map(function() {
     path: '/api/authenticate/applications/:applicationId',
     where: 'server',
     action: function() {
-      if (!isGetRequest(this.request, this.response)) {
+      if (!isPostRequest(this.request, this.response)) {
         return;
       }
 
       var token = this.request.headers["x-auth-token"];
       var applicationId = this.params.applicationId;
-      var authenticatedResponse = Application.authenticatedResponse(applicationId, token);
+      var session = this.request.body.session;
+      var authenticatedResponse = Application.authenticatedResponse(applicationId, token, session);
       if (authenticatedResponse.statusCode != 200) {
         console.warn("[API] Application " + applicationId +
           " failed to authenticate with token " + token +
