@@ -23,6 +23,7 @@ SegmentMetric.startup = function () {
       segmentId: oldSegmentVisitor.segmentId
     };
     var visitorMetric = VisitorMetrics.findOneByVisitor(oldSegmentVisitor.visitorId);
+    // FIXME can be negative if added event is not processed
     var modifier = {
       $inc: {
         visitCount: visitorMetric.visitCount * -1,
