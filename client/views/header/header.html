@@ -1,46 +1,41 @@
 <template name="header">
-  {{> notifications}}
-  <header class="primary">
+  <header id="primary" class="nav navbar-static-top" role="banner">
     <div class="container">
-      <div class="row">
-        <nav class="primary-navbar navbar navbar-default " role="navigation">
-          <!-- Brand and toggle get grouped for better mobile display -->
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#primary-navbar-collapse">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#"><span
-                class="sr-only">Loop Pulse</span></a>
-          </div>
-
-          <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="primary-navbar-collapse">
-            {{#if currentUser }}
-            <ul class="nav navbar-nav">
-              <!-- <li class="{{isActivePath 'dashboard' }}">
-                <a href="{{pathFor 'dashboard' }}">Dashboard</a>
-                </li> -->
-              <li class="{{isActivePath 'segments' }}"><a
-                  href="{{pathFor 'segment.list' }}">Segmentation</a>
-              </li>
-              <!-- 
-              <li class="{{isActivePath 'engagements' }}">
-                <a href="{{pathFor 'engagement.list' }}">Engagements</a>
-              </li>
-              -->
-            </ul>
-            {{/if}}
-            <ul class="nav navbar-nav navbar-right">
-              {{> loginBox}}
-            </ul>
-          </div>
-          <!-- /.navbar-collapse -->
-        </nav>
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse"
+                data-target="#primary-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#"><span
+            class="sr-only">Loop Pulse</span></a>
       </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="primary-navbar-collapse" role="navigation">
+        {{#if currentUser }}
+        <ul class="nav navbar-nav">
+          <!-- <li class="{{isActivePath 'dashboard' }}">
+            <a href="{{pathFor 'dashboard' }}">Dashboard</a>
+            </li> -->
+          <li class="{{isActivePath 'segments' }}"><a
+              href="{{pathFor 'segment.list' }}">Segmentation</a>
+          </li>
+          <!-- 
+          <li class="{{isActivePath 'engagements' }}">
+            <a href="{{pathFor 'engagement.list' }}">Engagements</a>
+          </li>
+          -->
+        </ul>
+        {{/if}}
+        <ul class="nav navbar-nav navbar-right">
+          {{> loginBox}}
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
     </div>
   </header>
 </template>

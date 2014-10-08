@@ -184,7 +184,14 @@ footer.primary {
 }
 $navbar-padding: 10px;
 $navbar-logo-width: 64px - $navbar-padding;
-header.primary {
+header#primary {
+
+  .navbar-toggle {
+    span.icon-bar {
+      background-color: $font-color;
+    }
+  }
+
   background-color: $primary-color;
   color: #fff;
   .page-title {
@@ -204,43 +211,39 @@ header.primary {
     }
   }
 
+  color: #fafafa;
+  .active a {
+    color: rgba(0,0,0,0.74);
 
-  .primary-navbar {
-    margin-bottom: 0;
-    padding: 10px;
+  }
+  a {
     color: #fafafa;
-    min-height: 40px;
-    max-height: 60px;
-    .active a {
-      color: rgba(0,0,0,0.74);
+  }
+  .dropdown-menu a {
+    color: $alt-dark-color;
+  }
 
-    }
-    a {
-      color: #fafafa;
-    }
-    .dropdown-menu a {
-      color: $alt-dark-color;
-    }
-
-    .navbar-right > li > a {
+  .navbar-right {
+    
+    li > a {
       // margin-top: 20px;
-      padding-top:10px;
       font-size: 0.8em;
     }
+  }
 
-    .navbar-brand {
-      background: url(/images/logo_sm.png) left center no-repeat;
-      background-size: contain;
-      padding-left: (64px - 10px);
-      max-height: 40px;
-    }
+  .navbar-brand {
+    background: url(/images/logo_sm.png) left center no-repeat;
+    background-size: contain;
+    width:25px;
+    height:25px;
+    margin-top:7px;
+    max-height: 40px;
 
   }
 
 }
 
 .secondary-navbar {
-  background-color: $alt-light-color;
   margin-bottom: 0;
   .navbar-wrapper {
     padding-left: 10px;
