@@ -57,6 +57,9 @@ html, body {
   }
 }
 .wrapper:after, footer.primary {
+  h3 {
+    display:inline-block;
+  }
   /* .push must be the same height as footer */
   height: 40px;
   display: block;
@@ -185,6 +188,7 @@ footer.primary {
 $navbar-padding: 10px;
 $navbar-logo-width: 64px - $navbar-padding;
 header#primary {
+  padding:0 15px;
 
   .navbar-toggle {
     span.icon-bar {

@@ -320,14 +320,24 @@
   }
 }
 
-header.company-name {
-  height: 60px;
-  padding: 0.5em 0 0 0;
+.company-name {
+  height: 50px;
+  padding: 0.5em 15px 0 15px;
 }
 
-header.segment-list, header.segment-create {
+.segment-list-header, .segment-create {
+  height:130px;
+  padding:0 15px;
+  background-color: $background-color;
+  h3 {
+    line-height:20px;
+    display:inline-block;
+  }
   .create-btn {
-    margin: 20px 0 10px;
+    background-color: $btn-color;
+    font-size:1em;
+    border: 1px darken($btn-color, 5%) solid;
+    margin: 13px 0 10px;
   }
 }
 
