@@ -330,3 +330,36 @@ header.segment-list, header.segment-create {
     margin: 20px 0 10px;
   }
 }
+
+ul.metric-tabs {
+  > li {
+    height: 120px;
+    text-align: center;
+    padding: 0;
+
+    &.active {
+      border-top: 3px solid #000000;
+    }
+
+    div {
+      margin: 0;
+    }
+
+    > a, a > div {
+      height: 100%;
+      width: 100%;
+      display: table;
+      margin: 0 auto;
+      padding: 0;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+
+    > a span {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
+}
