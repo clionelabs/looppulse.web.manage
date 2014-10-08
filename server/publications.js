@@ -14,14 +14,11 @@ console.log("Publishers Ready, Deploying")
 */
 
 //General Publication
-Meteor.publish('owned-company', function(id) {
+Meteor.publish('owned-companies', function() {
   var q = {}
-  console.log("Returning Company Data", id)
-  if (id && AccountsHelper.companyMatch(id, this.userId)) {
-    q = { _id: id }
-  } else {
-    return null;
-  }
+  console.log("Returning Company Data of User", this.userId)
+
+  q = { ownedByUserIds: { $in : [ this.userId ] } }
 
   return Companies.find(q, { fields: { _id:1, name:1 } }); //Note: Return MongoDB Cursor
 
@@ -243,3 +240,87 @@ Meteor.publish('watch-base', function(){
     Companies.find({}, { fields:{ _id:1, name:1 } })
   ]
 })
+
+Meteor.publish('segmentMetrics', function (segmentIds) {
+  var self = this;
+  console.log("Returning Segment Metrics Data", self.userId);
+
+  // FIXME find relationship between User and Segment
+  if (!_.isArray(segmentIds) || !Roles.userIsInRole(self.userId, ['admin'])) {
+    return null;
+  }
+
+  return SegmentMetrics.find({ segmentId: { $in: segmentIds } });
+});
+
+Meteor.publish('companies', function () {
+  var self = this;
+  console.log("Returning Company Data", self.userId);
+
+  // FIXME find relationship between User and Category
+  if (!Roles.userIsInRole(self.userId, ['admin'])) {
+    return null;
+  }
+
+  return Companies.find();
+});
+
+Meteor.publish('companyCategories', function (companyId) {
+  var self = this;
+  console.log("Returning Company Category Data", companyId);
+
+  // FIXME find relationship between User and Category
+  if (!Roles.userIsInRole(self.userId, ['admin'])) {
+    return null;
+  }
+
+  return Categories.find({ companyId: companyId });
+});
+
+Meteor.publish('companyLocations', function (companyId) {
+  var self = this;
+  console.log("Returning Company Location Data", companyId);
+
+  // FIXME find relationship between User and Company
+  if (!Roles.userIsInRole(self.userId, ['admin'])) {
+    return null;
+  }
+
+  return Locations.find({ companyId: companyId });
+});
+
+Meteor.publish('companyProducts', function (companyId) {
+  var self = this;
+  console.log("Returning Company Product Data", companyId);
+
+  // FIXME find relationship between User and Product
+  if (!Roles.userIsInRole(self.userId, ['admin'])) {
+    return null;
+  }
+
+  return Products.find({ companyId: companyId });
+});
+
+Meteor.publish('companySegments', function (companyId) {
+  var self = this;
+  console.log("Returning Company Segments Data", self.userId);
+
+  // FIXME add relationship between User and Company
+  if (!Roles.userIsInRole(self.userId, ['admin'])) {
+    return null;
+  }
+
+  return Segments.find({ companyId: companyId });
+});
+
+Meteor.publish('locationsFloors', function (locationIds) {
+  var self = this;
+  console.log("Returning Locations Floor Data", locationIds);
+
+  // FIXME find relationship between User and Locations
+  if (!Roles.userIsInRole(self.userId, ['admin'])) {
+    return null;
+  }
+
+  return Floors.find({ locationId: { $in: locationIds } });
+});

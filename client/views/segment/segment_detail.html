@@ -1,0 +1,30 @@
+<template name="segmentDetail">
+    {{> companyHeader }}
+
+  <h1>{{ name }}</h1>
+
+  <ul class="metric-tabs nav nav-justified" role="tablist">
+    <li class="active">
+      <a href="#visitor-metrics" role="tab" data-toggle="tab">{{ visitorCount }}</a>
+    </li>
+    <li>
+      <a href="#dwell-time-metrics" role="tab" data-toggle="tab">{{ avgDwellTime }}</a>
+    </li>
+    <li>
+      <a href="#repeated-visits-metrics" role="tab"
+         data-toggle="tab">Repeated Visits Metrics</a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="visitor-metrics">
+      Visitor Metrics
+    </div>
+    <div class="tab-pane" id="dwell-time-metrics">
+      Dwell Time Metrics
+    </div>
+    <div class="tab-pane" id="repeated-visits-metrics">
+      Repeated Visits Metrics
+    </div>
+  </div>
+</template>
