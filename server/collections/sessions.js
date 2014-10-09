@@ -8,9 +8,11 @@ Sessions = new Meteor.Collection("sessions", {
 
 /**
  *
- * @param visitorId
- * @param sdk
- * @param device
+ * @param doc
+ * @param doc.visitorId
+ * @param doc.sdk
+ * @param doc.device
+ * @param [doc._id]
  * @constructor
  *
  * @property visitorId
