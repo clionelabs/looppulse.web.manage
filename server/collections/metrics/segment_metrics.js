@@ -21,9 +21,12 @@ SegmentMetric.startup = function () {
     };
 
     Metrics.upsert(selector, {
-      visitorCount: segmentMetric.visitorCount,
-      visitCount: segmentMetric.visitCount,
-      dwellTime: segmentMetric.dwellTime
+      $setOnInsert: selector,
+      $set: {
+        visitorCount: segmentMetric.visitorCount,
+        visitCount: segmentMetric.visitCount,
+        dwellTime: segmentMetric.dwellTime,
+      }
     });
   }
 
