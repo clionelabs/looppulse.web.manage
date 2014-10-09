@@ -1,4 +1,4 @@
-Encounters.createOrUpdate = function(beaconEvent) {
+Encounters.createOrUpdate = function (beaconEvent) {
   var installation = Installations.findOne({beaconId: beaconEvent.beaconId});
   if (!installation) {
     console.warn("[Encounter] Beacon missing installation:", beaconEvent.beaconId);
@@ -21,10 +21,19 @@ Encounters.createOrUpdate = function(beaconEvent) {
   return encounter.save();
 };
 
-Encounter.startup = function() {
+Encounter.ensureIndex = function () {
+  Encounters._ensureIndex({
+    visitorId: 1,
+    installationId: 1,
+    enteredAt: 1,
+    exitedAt: 1
+  });
+};
+
+Encounter.startup = function () {
   BeaconEvents.find().observe({
     _suppress_initial: true,
-    "added": function(beaconEvent) {
+    "added": function (beaconEvent) {
       Encounters.createOrUpdate(beaconEvent);
     }
   });

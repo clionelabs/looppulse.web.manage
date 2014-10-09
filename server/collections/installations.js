@@ -1,5 +1,5 @@
 // beacon, coordinate, product
-Installation.prototype.denormalizedJSON = function() {
+Installation.prototype.denormalizedJSON = function () {
   var json = {};
   json["product"] = Products.findOne({_id: this.productId}).name;
   json["coordinate"] = this.coord;
@@ -10,6 +10,10 @@ Installation.prototype.denormalizedJSON = function() {
   beaconJSON["major"] = beacon.major;
   beaconJSON["minor"] = beacon.minor;
   json["beacon"] = beaconJSON;
-  
+
   return json;
-}
+};
+
+Installation.ensureIndex = function () {
+  Installations._ensureIndex({ locationId: 1, productId: 1 });
+};

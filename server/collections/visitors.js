@@ -20,3 +20,7 @@ Visitors.identifyUser = function (companyId, uuid, externalId) {
     $setOnInsert: selector
   });
 };
+
+Visitor.ensureIndex = function () {
+  Visitors._ensureIndex({ companyId: 1, uuid: 1 });
+};
