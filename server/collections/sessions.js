@@ -48,8 +48,11 @@ Session.prototype.save = function() {
 }
 
 // No findOrCreate beaause a new session creation is always expected
-Sessions.create = function(visitorUUID, sdk, device) {
-  var visitor = Visitors.findOneOrCreate({uuid: visitorUUID});
+Sessions.create = function(companyId, visitorUUID, sdk, device) {
+  var visitor = Visitors.findOneOrCreate({
+    companyId: companyId,
+    uuid: visitorUUID
+  });
   var session = new Session({visitorId: visitor._id,
                              sdk: sdk,
                              device: device});

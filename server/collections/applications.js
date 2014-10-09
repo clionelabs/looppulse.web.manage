@@ -60,8 +60,8 @@ Application.prototype.save = function() {
   return self._id;
 };
 
-Application.prototype.authenticatedResponse = function(token, sessionInfo) {
-  self = this;
+Application.prototype.authenticatedResponse = function (token, sessionInfo) {
+  var self = this;
   var response = {};
   if (token != self.token) {
     response["authenticated"] = false;
@@ -75,9 +75,11 @@ Application.prototype.authenticatedResponse = function(token, sessionInfo) {
     response["system"] = company.authenticatedResponse();
 
     // Create session data
-    var sessionId = Sessions.create(sessionInfo.visitorUUID,
-                                    sessionInfo.sdk,
-                                    sessionInfo.device);
+    var sessionId = Sessions.create(
+      self.companyId,
+      sessionInfo.visitorUUID,
+      sessionInfo.sdk,
+      sessionInfo.device);
     response["session"] = sessionId;
   }
   return response;
