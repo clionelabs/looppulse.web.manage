@@ -17,7 +17,7 @@ SegmentMetric.startup = function () {
       type: SegmentMetric.type,
       resolution: Metric.daily,
       segmentId: segmentMetric.segmentId,
-      startTime: MetricsHelper.truncatedDateToDate(new Date()).getTime()
+      startTime: +moment().startOf('day')
     };
 
     Metrics.upsert(selector, {
