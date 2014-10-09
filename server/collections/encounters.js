@@ -26,7 +26,9 @@ Encounter.ensureIndex = function () {
     visitorId: 1,
     installationId: 1,
     enteredAt: 1,
-    exitedAt: 1
+    exitedAt: 1,
+    duration: 1,
+    'enteredAtParts.dayOfWeek': 1
   });
 };
 

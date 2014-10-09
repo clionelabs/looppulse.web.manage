@@ -15,5 +15,9 @@ Installation.prototype.denormalizedJSON = function () {
 };
 
 Installation.ensureIndex = function () {
-  Installations._ensureIndex({ locationId: 1, productId: 1 });
+  Installations._ensureIndex({
+    locationId: 1,
+    productId: 1,
+    'coord.z': 1
+  });
 };

@@ -42,6 +42,13 @@ var handleSegmentAdded = function (segment) {
   });
 };
 
+SegmentVisitor.ensureIndex = function () {
+  SegmentVisitors._ensureIndex({
+    segmentId: 1,
+    visitorId: 1
+  });
+};
+
 SegmentVisitor.startup = function () {
   Encounters.find().observe({
     _suppress_initial: true,
