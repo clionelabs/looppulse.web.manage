@@ -3,6 +3,7 @@ Metric.ensureIndex = function () {
     type: 1,
     resolution: 1,
     startTime: 1,
-    segmentId: 1
+    segmentId: 1,
+    visitorId: 1
   });
 };
