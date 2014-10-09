@@ -241,9 +241,9 @@ Meteor.publish('watch-base', function(){
   ]
 })
 
-Meteor.publish('segmentMetrics', function (segmentIds) {
+Meteor.publish('segmentsMetrics', function (segmentIds) {
   var self = this;
-  console.log("Returning Segment Metrics Data", self.userId);
+  console.log("Returning Segments Metrics Data", self.userId);
 
   // FIXME find relationship between User and Segment
   if (!_.isArray(segmentIds) || !Roles.userIsInRole(self.userId, ['admin'])) {
