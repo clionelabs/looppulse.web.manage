@@ -29,25 +29,17 @@ var upsertSelectors = function(encounter) {
 
   var hourlySelector = {
     resolution: Metric.hourly,
-    startTime: truncateToHours(encounter.enteredAt)
+    startTime: +moment(encounter.enteredAt).startOf('hour')
   };
   _.extend(hourlySelector, selector);
 
   var dailySelector = {
     resolution: Metric.daily,
-    startTime: truncateToDays(encounter.enteredAt)
+    startTime: +moment(encounter.enteredAt).startOf('day')
   };
   _.extend(dailySelector, selector);
 
   return [hourlySelector, dailySelector];
-};
-
-var truncateToHours = function(milliseconds) {
-  return MetricsHelper.truncatedDateToHours(new Date(milliseconds)).getTime();
-};
-
-var truncateToDays = function(milliseconds) {
-  return MetricsHelper.truncatedDateToDate(new Date(milliseconds)).getTime();
 };
 
 InstallationMetric.startup = function() {

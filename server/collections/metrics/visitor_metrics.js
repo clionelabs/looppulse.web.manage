@@ -7,7 +7,7 @@ var handleClosedEncounterAdded = function (encounter) {
   {
     var hourlySelector = _.extend({
       resolution: Metric.hourly,
-      startTime: truncateToHours(encounter.enteredAt)
+      startTime: +moment(encounter.enteredAt).startOf('hour')
     }, selector);
     var anHour = 1000 * 60 * 60;
     // TODO extract this to helper function
@@ -25,7 +25,7 @@ var handleClosedEncounterAdded = function (encounter) {
   {
     var dailySelector = _.extend({
       resolution: Metric.daily,
-      startTime: truncateToDays(encounter.enteredAt)
+      startTime: +moment(encounter.enteredAt).startOf('day')
     }, selector);
     var aDay = anHour * 24;
     if (dailySelector.startTime <= encounter.enteredAt && encounter.enteredAt < dailySelector.startTime + aDay) {
@@ -51,15 +51,6 @@ var handleClosedEncounterAdded = function (encounter) {
     };
     Metrics.upsert(foreverSelector, foreverModifier);
   }
-};
-
-// TODO reuse installation_metrics one
-var truncateToHours = function (milliseconds) {
-  return MetricsHelper.truncatedDateToHours(new Date(milliseconds)).getTime();
-};
-
-var truncateToDays = function (milliseconds) {
-  return MetricsHelper.truncatedDateToDate(new Date(milliseconds)).getTime();
 };
 
 VisitorMetric.startup = function () {
