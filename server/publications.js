@@ -250,7 +250,33 @@ Meteor.publish('segmentsMetrics', function (segmentIds) {
     return null;
   }
 
-  return SegmentMetrics.find({ segmentId: { $in: segmentIds } });
+  return SegmentMetrics.find({
+    segmentId: { $in: segmentIds },
+    type: Metric.forever
+  });
+});
+
+Meteor.publish('segmentMetrics', function (segmentId, numOfDaysAgo) {
+  var self = this;
+  console.log("Returning Segment Metrics Data", self.userId);
+
+  // FIXME find relationship between User and Segment
+  if (!Roles.userIsInRole(self.userId, ['admin'])) {
+    return null;
+  }
+
+  return SegmentMetrics.find({
+    segmentId: segmentId,
+    $or: [
+      {
+        resolution: Metric.forever
+      },
+      {
+        resolution: Metric.daily,
+        startTime: { $gte: MetricsHelper.nDaysAgoTruncatedTime(new Date(), numOfDaysAgo) }
+      }
+    ]
+  });
 });
 
 Meteor.publish('companies', function () {

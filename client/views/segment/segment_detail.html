@@ -5,10 +5,12 @@
 
   <ul class="metric-tabs nav nav-justified" role="tablist">
     <li class="active">
-      <a href="#visitor-metrics" role="tab" data-toggle="tab">{{ visitorCount }}</a>
+      <a href="#visitor-metrics" role="tab"
+         data-toggle="tab">{{ visitorCount }}, {{ changePercentages.visitorCount }}</a>
     </li>
     <li>
-      <a href="#dwell-time-metrics" role="tab" data-toggle="tab">{{ dwellTimeAverage }}</a>
+      <a href="#dwell-time-metrics" role="tab"
+         data-toggle="tab">{{ dwellTimeAverage }}, {{ changePercentages.dwellTimeAverage }}</a>
     </li>
     <li>
       <a href="#repeated-visits-metrics" role="tab"

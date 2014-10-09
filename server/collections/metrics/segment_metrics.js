@@ -8,6 +8,23 @@ SegmentMetric.startup = function () {
     Metrics.upsert(selector, _.extend({}, modifier, {
       $setOnInsert: selector
     }));
+
+    snapshotToDaily(SegmentMetrics.findOneBySegment(segmentId));
+  }
+
+  function snapshotToDaily(segmentMetric) {
+    var selector = {
+      type: SegmentMetric.type,
+      resolution: Metric.daily,
+      segmentId: segmentMetric.segmentId,
+      startTime: MetricsHelper.truncatedDateToDate(new Date()).getTime()
+    };
+
+    Metrics.upsert(selector, {
+      visitorCount: segmentMetric.visitorCount,
+      visitCount: segmentMetric.visitCount,
+      dwellTime: segmentMetric.dwellTime
+    });
   }
 
   function handleSegmentVisitorAdded(segmentVisitor) {
