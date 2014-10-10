@@ -188,10 +188,10 @@ var configureCompany= function (companyConfig, configurationJSON) {
       }
       if (criteria.days) {
         if (criteria.days.start) {
-          criteria.start = Date.parse(criteria.start);
+          criteria.days.start = Date.parse(criteria.days.start);
         }
         if (criteria.days.end) {
-          criteria.end = Date.parse(criteria.end);
+          criteria.days.end = Date.parse(criteria.days.end);
         }
       }
 
