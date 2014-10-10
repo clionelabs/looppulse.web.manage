@@ -31,6 +31,7 @@ SegmentMetric.startup = function () {
   }
 
   function handleSegmentVisitorAdded(segmentVisitor) {
+    console.log("[SegmentMetric] handleSegmentVisitorAdded of visitor " + segmentVisitor.visitorId + " to segment" + segmentVisitor.segmentId);
     var visitorMetric = VisitorMetrics.findOneByVisitor(segmentVisitor.visitorId);
     var updateDoc = {
       $inc: {
@@ -46,6 +47,7 @@ SegmentMetric.startup = function () {
   }
 
   function handleSegmentVisitorRemoved(oldSegmentVisitor) {
+    console.log("[SegmentMetric] handleSegmentVisitorRemoved of visitor " + oldSegmentVisitor.visitorId + " from segment" + oldSegmentVisitor.segmentId);
     var visitorMetric = VisitorMetrics.findOneByVisitor(oldSegmentVisitor.visitorId);
     // FIXME can be negative if added event is not processed
     var updateDoc = {
@@ -61,18 +63,24 @@ SegmentMetric.startup = function () {
     upsertSegmentMetric(oldSegmentVisitor.segmentId, updateDoc);
   }
 
-  function handleVisitorMetricChanged(oldVisitorMetric, newVisitorMetric) {
+  function handleVisitorMetricChanged(newVisitorMetric, oldVisitorMetric) {
+    console.log("[SegmentMetric] handleVisitorMetricChanged of " + newVisitorMetric.visitorId);
     var diffDwellTime = newVisitorMetric.dwellTime - oldVisitorMetric.dwellTime;
+    var diffVisitCount = newVisitorMetric.visitCount - oldVisitorMetric.visitCount
     var updateDoc = {
       $inc : {
+        visitCount: diffVisitCount,
         dwellTime: diffDwellTime
       }
     };
     if (newVisitorMetric.isRepeated() && !oldVisitorMetric.isRepeated()) {
-      _.extend(updateDoc, { repeatedVisitorsCount: 1 });
+      _.extend(updateDoc.$inc, { repeatedVisitorsCount: 1 });
     }
-    var segmentVisitor = SegmentVisitors.findOne({visitorId: newVisitorMetric.visitorId});
-    upsertSegmentMetric(segmentVisitor.segmentId, updateDoc);
+    SegmentVisitors.find({visitorId: newVisitorMetric.visitorId})
+      .map(function(segmentVisitor) {
+        console.log("[SegmentMetric] change " + segmentVisitor.segmentId + " with " + JSON.stringify(updateDoc));
+        upsertSegmentMetric(segmentVisitor.segmentId, updateDoc);
+      });
     
   }
 
@@ -82,7 +90,7 @@ SegmentMetric.startup = function () {
     removed: handleSegmentVisitorRemoved
   });
 
-  VisitorMetrics.find().observe({
+  VisitorMetrics.findForever().observe({
     _suppress_initial: true,
     "changed": handleVisitorMetricChanged
   });
