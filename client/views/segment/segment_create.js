@@ -52,11 +52,13 @@ Template.segmentCreate.events({
     };
 
     //Data Translation
-    $("input[data-type='datetime']").each(function () {
-      var $elem = $(this);
-      //@@WARN: timezone ignored
-      $elem.val(new Date($elem.val()).toISOString());
-    });
+    if ($('[name="days[_filter]"]').val() === 'dateTime') {
+      $("input[data-type='datetime']").each(function () {
+        var $elem = $(this);
+        //@@WARN: timezone ignored
+        $elem.val(new Date($elem.val()).toISOString());
+      });
+    }
 
     //Process other field first
     submitData.name = $("input[name='segments.name']").val();

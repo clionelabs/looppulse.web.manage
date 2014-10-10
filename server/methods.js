@@ -57,6 +57,9 @@ Meteor.methods({
         }
         delete criteria.days.dateTime;
       }
+      if (criteria.days && criteria.days.inLast) {
+        criteria.days.inLast = parseInt(criteria.days.inLast);
+      }
       var newTriggerLocations = [];
       _.each(obj.criteria.triggerLocations, function (triggerLocationConfig) {
         _.each(triggerLocationConfig, function (ids, key) {
