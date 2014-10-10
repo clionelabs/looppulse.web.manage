@@ -25,4 +25,5 @@ axw:json2csv
 zimme:iron-router-active
 stevezhu:lodash
 mrt:moment
+mrt:numeral
 
