@@ -321,8 +321,10 @@
 }
 
 .company-name {
+  background-color:$secondary-header-bg-color;
   height: 50px;
   padding: 0.5em 15px 0 15px;
+  border-bottom:1px solid $border-color;
 }
 
 .segment-list-header, .segment-create {
