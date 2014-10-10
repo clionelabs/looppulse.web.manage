@@ -1,5 +1,13 @@
 // TODO legacy code, rewrite them
 Template.segmentCreate.events({
+  'change [name="hasBeen"]': function (e, tmpl) {
+    console.log(e, $(e.currentTarget).val());
+    if ($(e.currentTarget).val() === 'true') {
+      $('#times_and_duration').removeClass('hide');
+    } else {
+      $('#times_and_duration').addClass('hide');
+    }
+  },
   "click .create-btn": function (e, tmpl) {
     try {
       $('.rule-form').submit();

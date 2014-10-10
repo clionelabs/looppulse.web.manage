@@ -43,6 +43,10 @@ Meteor.methods({
           obj.criteria.durationInMinutes.atMost = parseInt(obj.criteria.durationInMinutes.atMost);
         }
       }
+      if (!obj.criteria.hasBeen) {
+        delete obj.criteria.times;
+        delete obj.criteria.durationInMinutes;
+      }
       if (criteria.days && criteria.days.dateTime) {
         if (criteria.days.dateTime.start) {
           criteria.days.start = +moment(criteria.days.dateTime.start, "MM-DD-YYYY");
