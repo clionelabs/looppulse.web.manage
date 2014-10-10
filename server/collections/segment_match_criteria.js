@@ -20,7 +20,9 @@ SegmentMatchCriteria.prototype.match = function(companyId, visitorId) {
   if (criteria.hasBeen && criteria.to === "all") {
     return this.matchHasBeenToAll();
   } else if (criteria.hasBeen && criteria.to === "any") {
-    return this.matchHasBeenToAny();
+    var result = this.matchHasBeenToAny();
+//    console.info('[SegmentMatchCriteria] Match result:', companyId, visitorId, result);
+    return result;
   } else if (!criteria.hasBeen && criteria.to === "all") {
     return this.matchNotHasBeenAll();
   } else if (!criteria.hasBeen && criteria.to === "any") {
@@ -54,6 +56,7 @@ SegmentMatchCriteria.prototype.matchHasBeenToAny = function() {
     var encounterCount = installationEncounterCounter[installationId];
     if ((criteria.times.atLeast && encounterCount >= criteria.times.atLeast)
       || (criteria.times.atMost && encounterCount <= criteria.times.atMost)) {
+//      console.log("[SegmentMatchCriteria] matchHasBeenToAny:", criteria.times.atLeast, criteria.times.atLeast);
       result = true;
       return false;
     }
@@ -67,7 +70,7 @@ SegmentMatchCriteria.prototype.matchNotHasBeenAll = function() {
   var result = true;
   _.each(this.installationIds, function(installationId) {
     var encounterCount = installationEncounterCounter[installationId];
-    if (!encounterCount) {
+    if (encounterCount) {
       result = false;
       return false;
     }
@@ -81,7 +84,8 @@ SegmentMatchCriteria.prototype.matchNotHasBeenAny = function() {
   var result = false;
   _.each(this.installationIds, function(installationId) {
     var encounterCount = installationEncounterCounter[installationId];
-    if (encounterCount) {
+    if (!encounterCount) {
+//      console.log("[SegmentMatchCriteria] matchNotHasBeenAny:", installationId);
       result = true;
       return false;
     }
@@ -95,11 +99,13 @@ SegmentMatchCriteria.prototype.getInstallationEncounterCounter = function() {
     var installationId = encounter.installationId;
     installationEncounterCounter[installationId] = (installationEncounterCounter[installationId] || 0) + 1;
   });
+//  console.info('[SegmentMatchCriteria] Get installation encounter counter:', JSON.stringify(this.encounterSelector), installationEncounterCounter);
   return installationEncounterCounter;
 };
 
 SegmentMatchCriteria.prototype.updateEncounterSelectorByCriteriaDays = function() {
-  var criteria = this.criteria;
+  var self = this;
+  var criteria = self.criteria;
   var days = criteria.days;
 
   if (!days) {
@@ -107,11 +113,11 @@ SegmentMatchCriteria.prototype.updateEncounterSelectorByCriteriaDays = function(
   }
 
   if (days.inLast) {
-    this.encounterSelector.enteredAt = {
-      $gte: MetricsHelper.nDaysAgo(this.now, days.inLast)
+    self.encounterSelector.enteredAt = {
+      $gte: +moment(self.now).subtract(days.inLast, 'days')
     };
   } else {
-    this.encounterSelector.enteredAt = {
+    self.encounterSelector.enteredAt = {
       $gte: days.start,
       $lte: days.end
     };
