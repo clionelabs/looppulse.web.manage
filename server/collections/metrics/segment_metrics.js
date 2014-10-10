@@ -25,7 +25,7 @@ SegmentMetric.startup = function () {
       $set: {
         visitorCount: segmentMetric.visitorCount,
         visitCount: segmentMetric.visitCount,
-        dwellTime: segmentMetric.dwellTime,
+        dwellTime: segmentMetric.dwellTime
       }
     });
   }

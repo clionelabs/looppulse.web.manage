@@ -273,7 +273,7 @@ Meteor.publish('segmentMetrics', function (segmentId, numOfDaysAgo) {
       },
       {
         resolution: Metric.daily,
-        startTime: { $gte: MetricsHelper.nDaysAgoTruncatedTime(new Date(), numOfDaysAgo) }
+        startTime: { $gte: +moment().startOf('day').subtract(numOfDaysAgo, 'days') }
       }
     ]
   });
