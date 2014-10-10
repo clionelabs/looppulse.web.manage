@@ -52,8 +52,8 @@ SegmentMatchCriteria.prototype.matchHasBeenToAny = function() {
   var result = false;
   _.each(this.installationIds, function(installationId) {
     var encounterCount = installationEncounterCounter[installationId];
-    if ((criteria.times.atLeast && encounterCount < criteria.times.atLeast)
-      || (criteria.times.atMost && encounterCount > criteria.times.atMost)) {
+    if ((criteria.times.atLeast && encounterCount >= criteria.times.atLeast)
+      || (criteria.times.atMost && encounterCount <= criteria.times.atMost)) {
       result = true;
       return false;
     }
