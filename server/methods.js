@@ -25,6 +25,7 @@ Meteor.methods({
     //do some checking
     // FIXME very dirty HACK to convert criteria to stored format
     if (collectionName === 'Segments') {
+      delete obj.criteria.triggerPoints;
       var criteria = obj.criteria;
       obj.criteria.hasBeen =  (obj.criteria.hasBeen === 'true');
       if (obj.criteria.times) {
