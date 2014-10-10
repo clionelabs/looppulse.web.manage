@@ -13,8 +13,9 @@ TriggerLocation = function(companyId, triggerLocations, locationIds) {
 
 TriggerLocation.prototype.installationIds = function() {
   var orSelectors = _.map(this.triggerLocations, function(triggerLocation) {
-    if (triggerLocation.floorLevel) {
-      return { "coord.z": triggerLocation.floorLevel };
+    if (triggerLocation.floorId) {
+      var floor = Floors.findOne(triggerLocation.floorId);
+      return { "coord.z": floor.level };
     } else if (triggerLocation.productId) {
       return {
         productId: triggerLocation.productId

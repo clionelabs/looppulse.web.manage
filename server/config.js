@@ -174,6 +174,13 @@ var configureCompany= function (companyConfig, configurationJSON) {
             delete triggerLocationConfig.categoryName;
           }
         };
+        var replaceFloorKeyWithId = function(triggerLocationConfig) {
+          if (triggerLocationConfig.floorLevel) {
+            var floor = Floors.findOne({ level: triggerLocationConfig.floorLevel });
+            triggerLocationConfig.floorId = floor._id;
+            delete triggerLocationConfig.floorLevel;
+          }
+        };
         var replaceProductKeyWithId = function(triggerLocationConfig) {
           if (triggerLocationConfig.productName) {
             var product = Products.findOne({companyId: company._id, name: triggerLocationConfig.productName});
@@ -183,6 +190,7 @@ var configureCompany= function (companyConfig, configurationJSON) {
         };
         _.each(segmentConfig.criteria.triggerLocations, function(triggerLocationConfig) {
           replaceCategoryKeyWithId(triggerLocationConfig);
+          replaceFloorKeyWithId(triggerLocationConfig);
           replaceProductKeyWithId(triggerLocationConfig);
         });
       }
