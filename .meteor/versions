@@ -56,6 +56,7 @@ mrt:bootstrap-3@0.3.8
 mrt:firebase-token-generator@0.1.4
 mrt:firebase@0.6.15
 mrt:moment@2.8.1
+mrt:numeral@1.5.3
 mrt:underscore-string-latest@2.3.3
 npm-bcrypt@0.7.7
 observe-sequence@1.0.2
