@@ -82,7 +82,6 @@ Template.segmentCreate.events({
       if (!obj) {
         throw Error("Missing field: " + f);
       }
-
       if (type === "filterList" && _.isArray(obj)) {
         arr = obj.map(function (elem) {
           return filtering(elem);
@@ -214,8 +213,8 @@ Template.segmentCreate.helpers({
         "values": { "atLeast": 0, "atMost": 100 }, //label: value
         "type": "filterInput"
       },
-      "durantionInMinutes": {
-        "field": "durantionInMinutes",
+      "durationInMinutes": {
+        "field": "durationInMinutes",
         "filters": [
           {
             "key": "atLeast",
