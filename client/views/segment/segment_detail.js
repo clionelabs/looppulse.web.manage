@@ -3,6 +3,12 @@ Template.segmentDetail.helpers({
   formatDurationToMin: FormatHelper.formatDurationToMin,
 
   isMinus: function(num) {
-    return num >= 0 ? "" : "minus";
+    if (num > 0) {
+      return "inc";
+    } else if (num == 0) {
+      return "";
+    } else {
+      return "dec";
+    }
   }
 });

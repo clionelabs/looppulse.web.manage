@@ -356,16 +356,28 @@
 ul.metric-tabs {
   width: 100%;
   background-color:$non-active-tab-bg-color;
+  border-top: 1px solid $border-color;
+  padding:0px;
+  height:121px;
+  display:table;
   > li {
-    display:inline-block;
-    height: 120px;
+    display:table-cell;
     text-align: center;
-    width:32%;
+    width:calc(100%/3 - 1px);
     padding: 0;
+    margin: 0;
+    border-bottom: 1px solid $border-color;
+    &.separator {
+      width:1px;
+      background-color: $border-color;
+    }
 
     &.active {
       background-color:$active-tab-bg-color;
       border-top: 5px solid $primary-color;
+      border-bottom: 0px;
+      border-right: 0px;
+      border-left: 0px;
     }
 
     border-top: 5px solid transparent;
@@ -387,14 +399,14 @@ ul.metric-tabs {
           .arrow {
             width: 0;
             height: 0;
-            border-style: solid;
-            border-width: 0 12px 9px 12px;
-            border-color: transparent transparent $primary-color transparent;
             margin:0 auto;
 
-            .minus {
-              width: 0;
-              height: 0;
+            &.inc {
+              border-style: solid;
+              border-width: 0 12px 9px 12px;
+              border-color: transparent transparent $primary-color transparent;
+            }
+            &.dec {
               border-style: solid;
               border-width: 9px 12px 0 12px;
               border-color: $minus-color transparent transparent transparent;
