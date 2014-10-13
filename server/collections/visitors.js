@@ -24,3 +24,14 @@ Visitors.identifyUser = function (companyId, uuid, externalId) {
 Visitor.ensureIndex = function () {
   Visitors._ensureIndex({ companyId: 1, uuid: 1 });
 };
+
+Visitors.tagUser = function (companyId, uuid, properties) {
+  var selector = {
+    companyId: companyId,
+    uuid: uuid
+  };
+  Visitors.upsert(selector, {
+    $set: { properties: properties },
+    $setOnInsert: selector
+  });
+};

@@ -47,10 +47,17 @@ var observeCompanyChildAdded = function(path, company, callback) {
 var processVisitorEventFromFirebase = function(companyId, snapshot, removeFromFirebase) {
   var visitorEventJSON = snapshot.val();
 
-  console.log('[Remote] processing visitor events:', JSON.stringify(visitorEventJSON));
+  console.log('[Remote] processVisitorEventFromFirebase. New event: ', JSON.stringify(visitorEventJSON));
 
-  if (visitorEventJSON.type === "identify") {
-    Visitors.identifyUser(companyId, visitorEventJSON.visitor_uuid, visitorEventJSON.external_id);
+  switch (visitorEventJSON.type) {
+    case "identify":
+      Visitors.identifyUser(companyId, visitorEventJSON.visitor_uuid, visitorEventJSON.external_id);
+      break;
+    case "tag":
+      Visitors.tagUser(companyId, visitorEventJSON.visitor_uuid, visitorEventJSON.properties);
+      break;
+    default:
+      console.warn('[Remote] processVisitorEventFromFirebase. Invalid type: ', visitorEventJSON.type);
   }
 
   if (removeFromFirebase) {
