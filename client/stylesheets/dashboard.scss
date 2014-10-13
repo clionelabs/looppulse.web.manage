@@ -321,8 +321,11 @@
 }
 
 .company-name {
+  background-color:$secondary-header-bg-color;
   height: 50px;
   padding: 0.5em 15px 0 15px;
+  border-bottom:1px solid $border-color;
+  color: $primary-color;
 }
 
 .segment-list-header, .segment-create {
@@ -341,15 +344,104 @@
   }
 }
 
+.segment-header {
+  h1 {
+    margin:0;
+    padding:10px; 
+    color: rgba(0,0,0,0.45);
+    font-size: 1.47em;
+  }
+}
+
 ul.metric-tabs {
+  width: 100%;
+  background-color:$non-active-tab-bg-color;
+  border-top: 1px solid $border-color;
+  padding:0px;
+  height:121px;
+  display:table;
   > li {
-    height: 120px;
+    display:table-cell;
     text-align: center;
+    width:calc(100%/3 - 1px);
     padding: 0;
+    margin: 0;
+    border-bottom: 1px solid $border-color;
+    &.separator {
+      width:1px;
+      background-color: $border-color;
+    }
 
     &.active {
-      border-top: 3px solid #000000;
+      background-color:$active-tab-bg-color;
+      border-top: 5px solid $primary-color;
+      border-bottom: 0px;
+      border-right: 0px;
+      border-left: 0px;
     }
+
+    border-top: 5px solid transparent;
+
+    .tab-content {
+      margin:12px auto;
+      width:199px;
+      height:67px;
+      .row {
+        > div {
+          display:inline-block;
+        }
+        .number {
+          font-size:2.11em;
+          color:$primary-color;
+        }
+        .diff {
+          margin-top:10px;
+          .arrow {
+            width: 0;
+            height: 0;
+            margin:0 auto;
+
+            &.inc {
+              border-style: solid;
+              border-width: 0 12px 9px 12px;
+              border-color: transparent transparent $primary-color transparent;
+            }
+            &.dec {
+              border-style: solid;
+              border-width: 9px 12px 0 12px;
+              border-color: $minus-color transparent transparent transparent;
+            }
+
+          }
+          .percent {
+            color:$primary-color;
+
+            .minus {
+              color:$minus-color;
+
+            }
+          }
+        }
+        .type {
+          font-size:1em;
+          color:$primary-color;
+        }
+        .timeRange {
+          font-size: 0.8em;
+          line-height:1.5em; //FIXME a bit hacky here just to align the baseline of type and timeRange
+
+          color:$alt-font-color-3;
+        }
+        .left {
+          float:left;
+        }
+        .right {
+          float:right;
+        }
+        
+      }
+    }
+
 
     div {
       margin: 0;
