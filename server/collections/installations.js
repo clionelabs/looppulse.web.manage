@@ -16,6 +16,7 @@ Installation.prototype.denormalizedJSON = function () {
 
 Installation.ensureIndex = function () {
   Installations._ensureIndex({
+    beaconId: 1,
     locationId: 1,
     productId: 1,
     'coord.z': 1
