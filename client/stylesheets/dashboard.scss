@@ -354,14 +354,82 @@
 }
 
 ul.metric-tabs {
+  width: 100%;
+  background-color:$non-active-tab-bg-color;
   > li {
+    display:inline-block;
     height: 120px;
     text-align: center;
+    width:32%;
     padding: 0;
 
     &.active {
-      border-top: 3px solid #000000;
+      background-color:$active-tab-bg-color;
+      border-top: 5px solid $primary-color;
     }
+
+    border-top: 5px solid transparent;
+
+    .tab-content {
+      margin:12px auto;
+      width:199px;
+      height:67px;
+      .row {
+        > div {
+          display:inline-block;
+        }
+        .number {
+          font-size:2.11em;
+          color:$primary-color;
+        }
+        .diff {
+          margin-top:10px;
+          .arrow {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 12px 9px 12px;
+            border-color: transparent transparent $primary-color transparent;
+            margin:0 auto;
+
+            .minus {
+              width: 0;
+              height: 0;
+              border-style: solid;
+              border-width: 9px 12px 0 12px;
+              border-color: $minus-color transparent transparent transparent;
+            }
+
+          }
+          .percent {
+            color:$primary-color;
+
+            .minus {
+              color:$minus-color;
+
+            }
+          }
+        }
+        .type {
+          font-size:1em;
+          color:$primary-color;
+        }
+        .timeRange {
+          font-size: 0.8em;
+          line-height:1.5em; //FIXME a bit hacky here just to align the baseline of type and timeRange
+
+          color:$alt-font-color-3;
+        }
+        .left {
+          float:left;
+        }
+        .right {
+          float:right;
+        }
+        
+      }
+    }
+
 
     div {
       margin: 0;
