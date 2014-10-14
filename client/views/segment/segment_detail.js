@@ -10,5 +10,17 @@ Template.segmentDetail.helpers({
     } else {
       return "dec";
     }
+  },
+
+  
+});
+
+Template.segmentDetail.events({
+  "click #showInfo": function() {
+    Meteor.call("getSegmentCriteriaToString", this.criteria, function(e, msg) {
+      console.log(msg);
+      $("#criteria").html(msg);
+      
+    });
   }
 });

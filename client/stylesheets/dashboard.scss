@@ -329,7 +329,7 @@
 }
 
 .segment-list-header, .segment-create {
-  height:130px;
+  min-height:130px;
   padding:0 15px;
   background-color: $background-color;
   h3 {
@@ -350,6 +350,29 @@
     padding:10px; 
     color: rgba(0,0,0,0.45);
     font-size: 1.47em;
+    float:left;
+  }
+  .functions {
+    float:right;
+    padding:10px; 
+
+    .btn { 
+      border:0;
+      margin:0px 10px;
+      padding:9px;
+      &:hover {
+        background-color:$alt-font-color;
+      }
+      &.btn-info {
+        background: url('images/icon-info.png') no-repeat scroll center center / contain transparent;
+      }
+      &.btn-export {
+        background: url('images/icon-export.png') no-repeat scroll center center / contain transparent;
+      }
+      &.btn-delete {
+        background: url('images/icon-delete.png') no-repeat scroll center center / contain transparent;
+      }
+    }
   }
 }
 
