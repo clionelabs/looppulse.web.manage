@@ -329,7 +329,7 @@
 }
 
 .segment-list-header, .segment-create {
-  height:130px;
+  min-height:130px;
   padding:0 15px;
   background-color: $background-color;
   h3 {
