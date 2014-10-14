@@ -4,7 +4,6 @@
 # but you can also edit it by hand.
 
 standard-app-packages
-mrt:bootstrap-3
 fourseven:scss
 iron:router
 accounts-password
@@ -26,4 +25,4 @@ zimme:iron-router-active
 stevezhu:lodash
 mrt:moment
 mrt:numeral
-
+mizzao:bootstrap-3
