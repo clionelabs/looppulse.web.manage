@@ -95,6 +95,5 @@ SegmentMetric.startup = function () {
     "changed": handleVisitorMetricChanged
   });
 
-  // FIXME observe VisitorMetrics for updates
 };
 

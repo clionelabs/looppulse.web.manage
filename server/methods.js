@@ -162,5 +162,10 @@ Meteor.methods({
       }
     }).fetch();
 
+  },
+  getSegmentCriteriaToString: function(criteria) {
+    var str = Segment.criteriaToString(criteria);
+    console.log(str);
+    return str;
   }
 });
