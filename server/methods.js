@@ -155,7 +155,7 @@ Meteor.methods({
       transform: function(doc) {
         var visitor = Visitors.findOne(doc.visitorId);
         return {
-          'ID': doc.visitorId,
+          'LoopPulse ID': doc.visitorId,
           'External ID': visitor.externalId,
           'Added At': new Date(doc.createdAt).toISOString()
         };
