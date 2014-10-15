@@ -1,10 +1,9 @@
 /**
  *
  * @param visitorId
- * @param {Encounter} [encounter]
  * @returns {boolean}
  */
-Segment.prototype.match = function (visitorId, encounter) {
+Segment.prototype.match = function (visitorId) {
   // TODO remove optional `encounter` from arguments, also visitor instance could be passed in as visitor instance was fetched during daily jobs
   var self = this;
 
@@ -40,7 +39,7 @@ Segment.criteriaToString = function(criteria) {
     s = s + "of these ";
     var locHash = Segment.triggerLocationsToString(criteria.triggerLocations);
     if (locHash.categories) {
-      s = s + locHash.categories;    
+      s = s + locHash.categories;
     }
     if (locHash.floors) {
       s = s + (locHash.categories ? ", " : "") + locHash.floors;
@@ -54,18 +53,22 @@ Segment.criteriaToString = function(criteria) {
     //Number of Times convertion, assume mandatory
     s = s + "for "; //just for convention sake to put space after;
 
-    if(criteria.times.atMost) {
-      s = s + "at most " + criteria.times.atMost + " times and ";
-    } else {
-      s = s + "at least " + criteria.times.atMost + " times and ";
+    if(criteria.times) {
+      if (criteria.times.atMost) {
+        s = s + "at most " + criteria.times.atMost + " times and ";
+      } else {
+        s = s + "at least " + criteria.times.atLeast + " times and ";
+      }
     }
 
     //stay duration
     s = s + "stayed for ";
     if(criteria.durationInMinutes) {
-      s = s + "at most " + criteria.durationInMinutes.atMost + " minutes in ";
-    } else {
-      s = s + "at least " + criteria.durationInMinutes.atMost + " minutes in ";
+      if (criteria.durationInMinutes.atMost) {
+        s = s + "at most " + criteria.durationInMinutes.atMost + " minutes in ";
+      } else {
+        s = s + "at least " + criteria.durationInMinutes.atLeast + " minutes in ";
+      }
     }
 
     //time range

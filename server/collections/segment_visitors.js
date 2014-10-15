@@ -5,23 +5,27 @@ SegmentVisitors.upsertBySelector = function (selector) {
   return SegmentVisitors.upsert(selector, modifier);
 };
 
+var handleVisitorAdded = function (visitor) {
+  updateSegmentVisitors(visitor._id);
+};
+
 var handleEncounterAdded = function (encounter) {
-  updateSegmentVisitors(encounter);
-  Engagement.dispatch(encounter);
+  updateSegmentVisitors(encounter.visitorId);
+  // Engagement.dispatch(encounter);
 };
 
 var handleEncounterChanged = function (encounter, oldEncounter) {
-  updateSegmentVisitors(encounter);
-  Engagement.dispatch(encounter);
+  updateSegmentVisitors(encounter.visitorId);
+  // Engagement.dispatch(encounter);
 };
 
-var updateSegmentVisitors = function (encounter) {
+var updateSegmentVisitors = function (visitorId) {
   Segments.find().map(function (segment) {
     var selector = {
       segmentId: segment._id,
-      visitorId: encounter.visitorId
+      visitorId: visitorId
     };
-    if (segment.match(encounter.visitorId, encounter)) {
+    if (segment.match(visitorId)) {
       SegmentVisitors.upsertBySelector(selector);
     } else {
       SegmentVisitors.remove(selector);
@@ -50,6 +54,10 @@ SegmentVisitor.ensureIndex = function () {
 };
 
 SegmentVisitor.startup = function () {
+  Visitors.find().observe({
+    _suppress_initial: true,
+    "added": handleVisitorAdded
+  });
   Encounters.find().observe({
     _suppress_initial: true,
     "added": handleEncounterAdded,
