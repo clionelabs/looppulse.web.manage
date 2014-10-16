@@ -108,9 +108,9 @@ Segment.triggerLocationsToString = function(triggerLocations) {
   }, {categories: "", floors: "", products: ""});
 
   return {
-    categories: "categories: " + locHash.categories.substring(2),
-      floors: "floors: " + locHash.floors.substring(2),
-      products: "products: " + locHash.products.substring(2)
+    categories: locHash.categories ? "categories: " + locHash.categories.substring(2) : null,
+      floors: locHash.floors ? "floors: " + locHash.floors.substring(2) : null,
+      products: locHash.products ? "products: " + locHash.products.substring(2) : null
   };
 
 };
