@@ -108,10 +108,10 @@ Template.segmentCreate.events({
       var segmentId = res;
       if (err) {
         console.error(err);
-        Notifications.error("Segment", "Segment Creation failed -- " + err + " --");
+        Notifications.error("Segment", "Creation failed -- " + err + " --");
       } else {
         console.info(res);
-        Notifications.success("Segment", "Segment Created (" + segmentId + ")");
+        Notifications.success("Segment", "Created: '"+submitData.name + "'. Redirecting to its detail page...");
         Router.go('segment.detail', { segmentId: segmentId });
       }
     });
