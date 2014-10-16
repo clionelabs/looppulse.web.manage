@@ -25,7 +25,7 @@ Segment.criteriaToString = function(criteria) {
   }
 
   if (criteria.hasBeen === undefined) {
-    return "Include every visitor. ";
+    return "Includes every visitor. ";
   } else {
     var s = "Includes anyone who has ";
 
@@ -47,7 +47,7 @@ Segment.criteriaToString = function(criteria) {
     s = s + "of these ";
     var locHash = Segment.triggerLocationsToString(criteria.triggerLocations);
     if (locHash.categories) {
-      s = s + locHash.categories;    
+      s = s + locHash.categories;
     } else if (locHash.floors) {
       s = s + locHash.floors;
     } else if (locHash.products) {
@@ -70,9 +70,9 @@ Segment.criteriaToString = function(criteria) {
     if (criteria.hasBeen) {
       s = s + "stayed for ";
       if(criteria.durationInMinutes.atMost) {
-        s = s + "at most " + criteria.durationInMinutes.atMost + " minutes in ";
+        s = s + "at most " + criteria.durationInMinutes.atMost + " minutes ";
       } else {
-        s = s + "at least " + criteria.durationInMinutes.atLeast + " minutes in ";
+        s = s + "at least " + criteria.durationInMinutes.atLeast + " minutes ";
       }
     }
 
@@ -85,7 +85,7 @@ Segment.criteriaToString = function(criteria) {
     }
 
     //weekday / weekend
-    s = s + "every " + criteria.every + " only."
+    s = s + "every " + criteria.every + "."
 
     return s;
   }
