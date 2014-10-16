@@ -20,41 +20,46 @@ Segment.prototype.match = function (visitorId) {
 };
 
 Segment.criteriaToString = function(criteria) {
+  if (!criteria) {
+    return "Criteria is not defined";
+  }
+
   if (criteria.hasBeen === undefined) {
-    return "All segment";
+    return "Include every visitor. ";
   } else {
-    var s = "Includes anyone who have ";
+    var s = "Includes anyone who has ";
+
     //has been / has not been
     if (!criteria.hasBeen) {
       s = s + "not ";
     }
+    s = s + "been ";
     s = s + "to ";
+
     //all / any
     if (criteria.to == "any") {
       s = s + "any ";
     } else {
       s = s + "all ";
     }
+
     //Locations can be mixed
     s = s + "of these ";
     var locHash = Segment.triggerLocationsToString(criteria.triggerLocations);
     if (locHash.categories) {
-      s = s + locHash.categories;
-    }
-    if (locHash.floors) {
-      s = s + (locHash.categories ? ", " : "") + locHash.floors;
-
-
-    }
-    if (locHash.products) {
-      s = s + ((locHash.categories || locHash.floors) ? ", " : "") + locHash.products;
+      s = s + locHash.categories;    
+    } else if (locHash.floors) {
+      s = s + locHash.floors;
+    } else if (locHash.products) {
+      s = s + locHash.products;
     }
     s = s + " ";
-    //Number of Times convertion, assume mandatory
-    s = s + "for "; //just for convention sake to put space after;
 
-    if(criteria.times) {
-      if (criteria.times.atMost) {
+    //Number of Times convertion, assume mandatory
+    if (criteria.hasBeen) {
+      s = s + "for "; //just for convention sake to put space after;
+
+      if(criteria.times.atMost) {
         s = s + "at most " + criteria.times.atMost + " times and ";
       } else {
         s = s + "at least " + criteria.times.atLeast + " times and ";
@@ -62,9 +67,9 @@ Segment.criteriaToString = function(criteria) {
     }
 
     //stay duration
-    s = s + "stayed for ";
-    if(criteria.durationInMinutes) {
-      if (criteria.durationInMinutes.atMost) {
+    if (criteria.hasBeen) {
+      s = s + "stayed for ";
+      if(criteria.durationInMinutes.atMost) {
         s = s + "at most " + criteria.durationInMinutes.atMost + " minutes in ";
       } else {
         s = s + "at least " + criteria.durationInMinutes.atLeast + " minutes in ";
@@ -73,7 +78,7 @@ Segment.criteriaToString = function(criteria) {
 
     //time range
     if (criteria.days.inLast) {
-      s = s + criteria.days.inLast + "days ";
+      s = s + "for the last " + criteria.days.inLast + " days ";
     } else {
       s = s + "from " + moment(criteria.days.start).format('Do MMMM YYYY') + " ";
       s = s + "to " + moment(criteria.days.end).format('Do MMMM YYYY') + " ";
@@ -81,7 +86,6 @@ Segment.criteriaToString = function(criteria) {
 
     //weekday / weekend
     s = s + "every " + criteria.every + " only."
-
 
     return s;
   }
@@ -104,9 +108,9 @@ Segment.triggerLocationsToString = function(triggerLocations) {
   }, {categories: "", floors: "", products: ""});
 
   return {
-    categories: "categories: " + locHash.categories.substring(2),
-      floors: "floors: " + locHash.floors.substring(2),
-      products: "products: " + locHash.products.substring(2)
+    categories: locHash.categories ? "categories: " + locHash.categories.substring(2) : null,
+      floors: locHash.floors ? "floors: " + locHash.floors.substring(2) : null,
+      products: locHash.products ? "shops: " + locHash.products.substring(2) : null
   };
 
 };
