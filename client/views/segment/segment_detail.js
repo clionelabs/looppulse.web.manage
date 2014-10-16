@@ -27,7 +27,9 @@ Template.segmentDetail.events({
         if (result.length === 0) {
           Notifications.warn('Segment', 'No data to export');
         } else {
-          var csv = json2csv(result, true, true);
+          var headings = true;
+          var quotes = true;
+          var csv = json2csv(result, headings, quotes);
           var uri = "data:text/csv;charset=utf-8," + escape(csv);
           var filename = self.name + "-" + moment().format() + ".csv";
           //window.open has ugly filename
