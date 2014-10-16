@@ -25,9 +25,9 @@ Segment.criteriaToString = function(criteria) {
   }
 
   if (criteria.hasBeen === undefined) {
-    return "All segment";
+    return "Include every visitor. ";
   } else {
-    var s = "Includes anyone who have ";
+    var s = "Includes anyone who has ";
 
     //has been / has not been
     if (!criteria.hasBeen) {
@@ -110,7 +110,7 @@ Segment.triggerLocationsToString = function(triggerLocations) {
   return {
     categories: locHash.categories ? "categories: " + locHash.categories.substring(2) : null,
       floors: locHash.floors ? "floors: " + locHash.floors.substring(2) : null,
-      products: locHash.products ? "products: " + locHash.products.substring(2) : null
+      products: locHash.products ? "shops: " + locHash.products.substring(2) : null
   };
 
 };
