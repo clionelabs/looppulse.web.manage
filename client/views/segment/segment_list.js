@@ -3,7 +3,7 @@ Template.segmentList.helpers({
     if (num > 1000) {
       return numeral(num).format('0.00a');
     } else {
-      return numeral(num).format('0.0');
+      return numeral(num).format('0,0');
     }
   },
   formatPercent: FormatHelper.formatPercent,
