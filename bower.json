@@ -7,6 +7,7 @@
     "bootstrap-select": "~1.6.2",
     "yamm3": "~1.0.0",
     "bootstrap-datepicker": "~1.3.0",
+    "blockui": "*",
     "jquery.serializeJSON": "~2.2.0",
     "deepmerge": "~0.2.9",
     "jquery-serialize-object": "~2.4.3",

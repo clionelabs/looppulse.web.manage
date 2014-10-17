@@ -1,6 +1,6 @@
 // TODO legacy code, rewrite them
 Template.segmentCreate.events({
-  'change [name="hasBeen"]': function (e, tmpl) {
+  'change [name="hasBeen"]': function (e) {
     console.log(e, $(e.currentTarget).val());
     if ($(e.currentTarget).val() === 'true') {
       $('#times_and_duration').removeClass('hide');
@@ -8,7 +8,7 @@ Template.segmentCreate.events({
       $('#times_and_duration').addClass('hide');
     }
   },
-  "click .create-btn": function (e, tmpl) {
+  "click .create-btn": function (e) {
     try {
       $('.rule-form').submit();
     } catch (e) {
@@ -107,11 +107,15 @@ Template.segmentCreate.events({
 
     submitData.criteria = criteriaData;
     console.log("Data Ready", submitData);
+    Notifications.info("Creating", "Segment " + submitData.name, {timeout: 1000000, userCloseable: false});
+    $.blockUI({css : {width:0, height : 0, border:0, backgroundColor : "transparent"}, message : ""})
     Meteor.call("createInCollection", "Segments", submitData, function (err, res) {
+      Notifications.remove({title: "Creating"});
+      $.unblockUI();
       var segmentId = res;
       if (err) {
         console.error(err);
-        Notifications.error("Segment", "Creation failed -- " + err + " --");
+        Notifications.error("Creating", "Creation failed -- " + err + " --");
       } else {
         console.info(res);
         Notifications.success("Segment", "Created: '"+submitData.name + "'. Redirecting to its detail page...");
