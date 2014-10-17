@@ -26,6 +26,15 @@ Company.prototype.generateLocationsJSON = function() {
   return json;
 }
 
+Company.prototype.generateProductsJSON = function() {
+  var json = {};
+  Products.find({companyId: this._id}).forEach(function(product) {
+    var category = Categories.findOne({_id: product.categoryId}).name;
+    json[product.name] = {"name": product.name, "category": category, "type": product.type};
+  });
+  return json;
+}
+
 // This is a JSON returned after successfully authenticated
 Company.prototype.authenticatedResponse = function() {
   var systemConfig = this.systemConfig;
@@ -42,7 +51,8 @@ Company.prototype.authenticatedResponse = function() {
       "engagement_events": this.generateEngagementEventsRef(),
       "visitor_events": this.generateVisitorEventsRef()
     },
-    "locations": this.generateLocationsJSON()
+    "locations": this.generateLocationsJSON(),
+    "products": this.generateProductsJSON()
   });
   return systemConfig;
 };
