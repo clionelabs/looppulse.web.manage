@@ -56,13 +56,24 @@ html, body {
     content: "";
   }
 }
-.wrapper:after, footer.primary {
-  h3 {
-    display:inline-block;
-  }
-  /* .push must be the same height as footer */
+
+footer.primary {
   height: 40px;
+  width:100%;
   display: block;
+  position:fixed;
+  bottom:0;
+  left:0;
+  background-color: $alt-dark-color;
+  color: #fff;
+  padding:0 10px;
+  line-height:25px;
+}
+
+.copyright {
+  margin:7px 0px;
+  display:inline-block;
+  font-size: 0.6em;
 }
 
 
@@ -77,6 +88,11 @@ body {
   // vision correction: 18px/1.2
   font: normal #{$base-font-size}/#{$base-line-height} $base-font-family;
 }
+
+#content {
+  margin-bottom:50px;
+}
+
 
 main {
     line-height: 1.4;
@@ -170,23 +186,6 @@ svg.d4 {
 
 // Layout CSS
 
-footer.primary {
-  background-color: $alt-dark-color;
-  color: #fff;
-  padding:0 10px;
-  line-height:40px;
-
-  // position: relative;
-  // left: 0;
-  // bottom: 0;
-  height: 40px;
-  // width: 100%
-}
-
-.copyright {
-  font-size: 0.6em;
-  margin-top: 10px;
-}
 $navbar-padding: 10px;
 $navbar-logo-width: 64px - $navbar-padding;
 header#primary {
