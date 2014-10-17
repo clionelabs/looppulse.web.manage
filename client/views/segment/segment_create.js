@@ -8,12 +8,27 @@ Template.segmentCreate.events({
       $('#times_and_duration').addClass('hide');
     }
   },
+  'keypress [name="segments.name"]': function(e) {
+    var input = e.currentTarget;
+    window.setTimeout(function () { //strange behaviour it cannot get the current value
+      console.log(input.value);
+      if (input.value) {
+        $('.create-btn').removeClass("disabled");
+      } else {
+        $('.create-btn').addClass("disabled");
+
+      }
+    }, 100);
+  },
   "click .create-btn": function (e) {
-    try {
-      $('.rule-form').submit();
-    } catch (e) {
-      console.error(e);
-      Notifications.error("Error", e.message);
+    var button = e.currentTarget;
+    if (!$(button).hasClass("disabled")) {
+      try {
+        $('.rule-form').submit();
+      } catch (e) {
+        console.error(e);
+        Notifications.error("Error", e.message);
+      }
     }
   },
   "click .done-btn[data-key='triggerLocations'] ": function (e, tmpl) {
