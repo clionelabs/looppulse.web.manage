@@ -280,15 +280,11 @@ Meteor.publish('segmentMetrics', function (segmentId, numOfDaysAgo) {
 });
 
 Meteor.publish('companies', function () {
-  var self = this;
-  console.log("Returning Company Data", self.userId);
+  var q = {}
+  console.log("Returning Company Data of User", this.userId)
 
-  // FIXME find relationship between User and Category
-  if (!Roles.userIsInRole(self.userId, ['admin'])) {
-    return null;
-  }
-
-  return Companies.find();
+  q = { ownedByUserIds: { $in : [ this.userId ] } }
+  return Companies.find(q, { fields: { _id:1, name:1 } }); //Note: Return MongoDB Cursor
 });
 
 Meteor.publish('companyCategories', function (companyId) {
