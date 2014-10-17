@@ -1,6 +1,6 @@
 // TODO legacy code, rewrite them
 Template.segmentCreate.events({
-  'change [name="hasBeen"]': function (e, tmpl) {
+  'change [name="hasBeen"]': function (e) {
     console.log(e, $(e.currentTarget).val());
     if ($(e.currentTarget).val() === 'true') {
       $('#times_and_duration').removeClass('hide');
@@ -8,7 +8,7 @@ Template.segmentCreate.events({
       $('#times_and_duration').addClass('hide');
     }
   },
-  "click .create-btn": function (e, tmpl) {
+  "click .create-btn": function (e) {
     try {
       $('.rule-form').submit();
     } catch (e) {
@@ -42,6 +42,7 @@ Template.segmentCreate.events({
   "submit .rule-form": function (e, tmpl) {
     var self = this;
     var $form = $(e.currentTarget);
+    
     var formData = $form.serializeObject();
     var plot = this.plot;
     var fields = Object.keys(plot);
@@ -86,6 +87,8 @@ Template.segmentCreate.events({
 
     fields.forEach(function (f) {
       var obj = formData[f];
+      console.log(f);
+      console.log(obj);
       var schema = plot[f];
       var arr;
       var type = schema ? schema.type : "";
@@ -104,11 +107,15 @@ Template.segmentCreate.events({
 
     submitData.criteria = criteriaData;
     console.log("Data Ready", submitData);
+    Notifications.info("Creating", "Segment " + submitData.name, {timeout: 1000000, userCloseable: false});
+    $.blockUI({css : {width:0, height : 0, border:0, backgroundColor : "transparent"}, message : ""})
     Meteor.call("createInCollection", "Segments", submitData, function (err, res) {
+      Notifications.remove({title: "Creating"});
+      $.unblockUI();
       var segmentId = res;
       if (err) {
         console.error(err);
-        Notifications.error("Segment", "Creation failed -- " + err + " --");
+        Notifications.error("Creating", "Creation failed -- " + err + " --");
       } else {
         console.info(res);
         Notifications.success("Segment", "Created: '"+submitData.name + "'. Redirecting to its detail page...");
@@ -207,6 +214,7 @@ Template.segmentCreate.helpers({
         "field": "times",
         "filters": [
           {
+            "selected": true,
             "key": "atLeast",
             "label": "at least",
             "style": "Number",
@@ -216,8 +224,7 @@ Template.segmentCreate.helpers({
             "key": "atMost",
             "label": "at most",
             "style": "Number",
-            "placeholder": 99,
-            "selected": true
+            "placeholder": 99
           }
         ],
         "values": { "atLeast": 0, "atMost": 100 }, //label: value
@@ -230,7 +237,7 @@ Template.segmentCreate.helpers({
             "key": "atLeast",
             "label": "at least",
             "style": "Number",
-            "placeholder": 1,
+            "placeholder": 10,
             "selected": true
           },
           {
@@ -256,6 +263,7 @@ Template.segmentCreate.helpers({
             "key": "inLast",
             "label": "last",
             "style": "Number",
+            "placeholder": 30,
             "selected": true
           }
         ],

@@ -3,7 +3,7 @@
 
   <header class="segment-create row">
     <div class="col-sm-9">
-      <h3>Creating: <input name="segments.name" type="text"
+      <h3><input name="segments.name" type="text"
                            value=""
                            placeholder="segment name"></h3>
     </div>
@@ -106,11 +106,11 @@
         </select>
           {{#each filters}}
               {{#if equals this.style "Number"}}
-                <input type="text" value=""
+                <input type="text" 
                        class="filter-input-group input-md form-control"
                        placeholder="{{this.placeholder}}" size="2"
                        data-filter="{{this.key}}" data-key="{{../field}}"
-                       name="{{../field}}[{{this.key}}]">
+                       name="{{../field}}[{{this.key}}]" value="{{this.placeholder}}">
               {{/if}}
 
               {{#if equals this.style "DatetimeRange"}}
