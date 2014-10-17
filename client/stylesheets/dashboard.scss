@@ -332,10 +332,16 @@
   min-height:130px;
   padding:0 15px;
   background-color: $background-color;
+
+  .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+    width:auto;
+  }
+
   h3 {
     line-height:20px;
     display:inline-block;
   }
+
   .create-btn {
     background-color: $btn-color;
     font-size:1em;
