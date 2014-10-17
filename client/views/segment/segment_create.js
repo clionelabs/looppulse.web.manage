@@ -42,6 +42,7 @@ Template.segmentCreate.events({
   "submit .rule-form": function (e, tmpl) {
     var self = this;
     var $form = $(e.currentTarget);
+    
     var formData = $form.serializeObject();
     var plot = this.plot;
     var fields = Object.keys(plot);
@@ -86,6 +87,8 @@ Template.segmentCreate.events({
 
     fields.forEach(function (f) {
       var obj = formData[f];
+      console.log(f);
+      console.log(obj);
       var schema = plot[f];
       var arr;
       var type = schema ? schema.type : "";
