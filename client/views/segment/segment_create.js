@@ -207,6 +207,7 @@ Template.segmentCreate.helpers({
         "field": "times",
         "filters": [
           {
+            "selected": true,
             "key": "atLeast",
             "label": "at least",
             "style": "Number",
@@ -216,8 +217,7 @@ Template.segmentCreate.helpers({
             "key": "atMost",
             "label": "at most",
             "style": "Number",
-            "placeholder": 99,
-            "selected": true
+            "placeholder": 99
           }
         ],
         "values": { "atLeast": 0, "atMost": 100 }, //label: value
@@ -230,7 +230,7 @@ Template.segmentCreate.helpers({
             "key": "atLeast",
             "label": "at least",
             "style": "Number",
-            "placeholder": 1,
+            "placeholder": 10,
             "selected": true
           },
           {
@@ -256,6 +256,7 @@ Template.segmentCreate.helpers({
             "key": "inLast",
             "label": "last",
             "style": "Number",
+            "placeholder": 30,
             "selected": true
           }
         ],
