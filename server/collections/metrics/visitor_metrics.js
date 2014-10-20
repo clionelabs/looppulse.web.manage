@@ -44,15 +44,15 @@ var handleClosedEncounterAdded = function (encounter) {
       resolution: Metric.forever
     }, selector);
     //Same as dailySelector as of requirement, will be fading out so too lazy to change
+    var foreverModifier = {
+      $inc: {
+        dwellTime: encounter.duration
+      }
+    };
     if (foreverSelector.startTime <= encounter.enteredAt && encounter.enteredAt < foreverSelector.startTime + aDay) {
-      var foreverModifier = {
-        $inc: {
-          visitCount: 1,
-          dwellTime: encounter.duration
-        }
-      };
-      Metrics.upsert(foreverSelector, foreverModifier);
+      foreverModifier.$inc.visitCount = 1;
     }
+    Metrics.upsert(foreverSelector, foreverModifier);
   }
 };
 
