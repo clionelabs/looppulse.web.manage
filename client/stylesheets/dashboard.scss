@@ -5,6 +5,13 @@
   }
 }
 
+section.view-content {
+  background-color:#fff;
+  .container {
+    min-width: 768px;
+  }
+}
+
 .charting {
   font-size:10px;
   line-height: 1;
@@ -336,7 +343,6 @@
 
 .segment-list-header, .segment-create {
   min-height:130px;
-  // padding:0 15px;
   background-color: $background-color;
 
   .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
@@ -399,14 +405,7 @@ table.segment-list {
 }
 
 
-section.view-content {
-  background-color:#fff;
-  .container {
-    min-width: 768px;
-  }
-}
 .view-content.segment-create {
-
   .container {
     padding: 0 15px;
   }
@@ -446,7 +445,7 @@ ul.metric-tabs {
       width:220px;
       height:67px;
       .row {
-        > div {
+        > div { //FIXME
           display:inline-block;
         }
         .number {
@@ -501,12 +500,7 @@ ul.metric-tabs {
       }
     }
 
-
-    div {
-      margin: 0;
-    }
-
-    > a, a > div {
+    > a, a > div { //FIXME
       height: 100%;
       width: 100%;
       display: table;
@@ -518,7 +512,7 @@ ul.metric-tabs {
       }
     }
 
-    > a span {
+    > a span { //FIXME
       display: table-cell;
       vertical-align: middle;
     }
