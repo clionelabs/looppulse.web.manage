@@ -1,4 +1,5 @@
 var handleClosedEncounterAdded = function (encounter) {
+  console.log("[VisitorMetric] handleClosedEncounterAdd");
   var selector = {
     type: VisitorMetric.type,
     visitorId: encounter.visitorId
@@ -40,19 +41,22 @@ var handleClosedEncounterAdded = function (encounter) {
   }
 
   {
+    var aDay = +moment().startOf('day');
+    //dirty, should put in encounter
+    var encounters = Encounters.findClosed().fetch();
+    var encountersGrouped = _.groupBy(encounters, function(e) {return moment(e.enteredAt).format("YYYY-MM-DD")});
+    console.log(_.keys(encountersGrouped));
     var foreverSelector = _.extend({
       resolution: Metric.forever
     }, selector);
-    //Same as dailySelector as of requirement, will be fading out so too lazy to change
-    if (foreverSelector.startTime <= encounter.enteredAt && encounter.enteredAt < foreverSelector.startTime + aDay) {
-      var foreverModifier = {
-        $inc: {
-          visitCount: 1,
-          dwellTime: encounter.duration
-        }
-      };
-      Metrics.upsert(foreverSelector, foreverModifier);
-    }
+    var foreverModifier = {
+      $set: { visitCount: _.keys(encountersGrouped).length},
+      $inc: {
+        dwellTime: encounter.duration
+      }
+    };
+    console.log("[VisitorMetric] " + JSON.stringify(Metrics.upsert(foreverSelector, foreverModifier)) + " updated");
+    console.log(JSON.stringify(Metrics.find(foreverSelector).fetch()));
   }
 };
 
