@@ -1,15 +1,21 @@
 @import "variable";
-.view-content, .view-header {
-  .container {
-    padding: 0;
+
+.container {
+
+  // wrapper to eliminate container padding
+  .seamless &, .view-content & {
+    padding: 0
+  }
+
+  // revert to default setting:
+  // if you still want to have some container have padding applied anyway, add `.padded-container` in `div.container`
+  &.padded-container {
+    padding: 0 15px;
   }
 }
 
 section.view-content {
   background-color:#fff;
-  .container {
-    min-width: 768px;
-  }
 }
 
 .charting {
@@ -405,11 +411,6 @@ table.segment-list {
 }
 
 
-.view-content.segment-create {
-  .container {
-    padding: 0 15px;
-  }
-}
 
 ul.metric-tabs {
   width: 100%;
