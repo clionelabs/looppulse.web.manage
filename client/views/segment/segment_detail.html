@@ -1,83 +1,91 @@
 <template name="segmentDetail">
 {{> companyHeader }}
 
-  <div class="segment-header">
-    <h1>{{ name }}</h1>
-    <div class="functions">
-      <button class="btn btn-info" id="showInfo" alt="info" data-toggle="modal" data-target="#showInfoModal"></button>
-        <button class="btn btn-export" id="showExport" alt="export"></button>
-        <button class="btn btn-delete" id="showDelete" alt="delete"></button>
+  <header class="segment-view segment-header view-header">
+    <div class="container">
+      <h1>{{ name }}</h1>
+      <div class="functions">
+        <button class="btn btn-info" id="showInfo" alt="info" data-toggle="modal" data-target="#showInfoModal"></button>
+          <button class="btn btn-export" id="showExport" alt="export"></button>
+          <button class="btn btn-delete" id="showDelete" alt="delete"></button>
+      </div>
     </div>
-  </div>
-  {{> segmentInfoDialog }}
-  <ul class="metric-tabs nav nav-justified" role="tablist">
-    <li class="active">
-    <a href="#visitor-metrics" role="tab" data-toggle="tab">
-      <div class="tab-content">
-        <div class="row">
-          <div class="left number">{{ visitorCount }}</div>
-          <div class="right diff">
-            <div class="arrow {{ isMinus changePercentages.visitorCount }}"></div>
-            <div class="percent {{ isMinus changePercentages.visitorCount }}">{{ formatPercent changePercentages.visitorCount }}</div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="left type">Visitors</div>
-          <div class="right timeRange"><!-- TODO to include different time range-->1 week ago</div>
-        </div>
-      </div>
-    </a>
-    </li>
-    <li class="separator"></li>
-    <li>
-    <a href="#dwell-time-metrics" role="tab"
-      data-toggle="tab">
-      
-      <div class="tab-content">
-        <div class="row">
-          <div class="left number">{{ formatDurationToMin dwellTimeAverage }}</div>
-          <div class="right diff">
-            <div class="arrow {{ isMinus changePercentages.visitorCount }}"></div>
-            <div class="percent {{ isMinus changePercentages.visitorCount }}">{{ formatPercent changePercentages.dwellTimeAverage }}</div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="left type">Dwell</div>
-          <div class="right timeRange"><!-- TODO to include different time range-->1 week ago</div>
-        </div>
-      </div>
-    </a>
-    </li>
-    <li class="separator"></li>
-    <li>
-    <a href="#repeated-visits-metrics" role="tab"
-      data-toggle="tab">
-      <div class="tab-content">
-        <div class="row">
-          <div class="left number">{{ formatPercent repeatedVisitPercentage }}</div>
-          <div class="right diff">
-            <div class="arrow {{ isMinus changePercentages.visitorCount }}"></div>
-            <div class="percent {{ isMinus changePercentages.visitorCount }}">{{ formatPercent changePercentages.repeatedVisitPercentage }}</div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="left type">Repeated Visits</div>
-          <div class="right timeRange"><!-- TODO to include different time range-->1 week ago</div>
-        </div>
-      </div>
-    </a>
-    </li>
-  </ul>
+  </header>
+  <section class="view-content segment-detail">
+    <div class="container">
+        <ul class="metric-tabs nav nav-justified" role="tablist">
+          <li class="active">
+          <a href="#visitor-metrics" role="tab" data-toggle="tab">
+            <div class="tab-content">
+              <div class="row">
+                <div class="left number">{{ visitorCount }}</div>
+                <div class="right diff">
+                  <div class="arrow {{ isMinus changePercentages.visitorCount }}"></div>
+                  <div class="percent {{ isMinus changePercentages.visitorCount }}">{{ formatPercent changePercentages.visitorCount }}</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="left type">Visitors</div>
+                <div class="right timeRange"><!-- TODO to include different time range-->1 week ago</div>
+              </div>
+            </div>
+          </a>
+          </li>
+          <li class="separator"></li>
+          <li>
+          <a href="#dwell-time-metrics" role="tab"
+            data-toggle="tab">
 
-  <div class="tab-content">
-    <div class="tab-pane active" id="visitor-metrics">
-      Visitor Metrics
+            <div class="tab-content">
+              <div class="row">
+                <div class="left number">{{ formatDurationToMin dwellTimeAverage }}</div>
+                <div class="right diff">
+                  <div class="arrow {{ isMinus changePercentages.visitorCount }}"></div>
+                  <div class="percent {{ isMinus changePercentages.visitorCount }}">{{ formatPercent changePercentages.dwellTimeAverage }}</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="left type">Dwell</div>
+                <div class="right timeRange"><!-- TODO to include different time range-->1 week ago</div>
+              </div>
+            </div>
+          </a>
+          </li>
+          <li class="separator"></li>
+          <li>
+          <a href="#repeated-visits-metrics" role="tab"
+            data-toggle="tab">
+            <div class="tab-content">
+              <div class="row">
+                <div class="left number">{{ formatPercent repeatedVisitPercentage }}</div>
+                <div class="right diff">
+                  <div class="arrow {{ isMinus changePercentages.visitorCount }}"></div>
+                  <div class="percent {{ isMinus changePercentages.visitorCount }}">{{ formatPercent changePercentages.repeatedVisitPercentage }}</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="left type">Repeated Visits</div>
+                <div class="right timeRange"><!-- TODO to include different time range-->1 week ago</div>
+              </div>
+            </div>
+          </a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane active" id="visitor-metrics">
+            Visitor Metrics
+          </div>
+          <div class="tab-pane" id="dwell-time-metrics">
+            Dwell Time Metrics
+          </div>
+          <div class="tab-pane" id="repeated-visits-metrics">
+            Repeated Visits Metrics
+          </div>
+        </div>
+
     </div>
-    <div class="tab-pane" id="dwell-time-metrics">
-      Dwell Time Metrics
-    </div>
-    <div class="tab-pane" id="repeated-visits-metrics">
-      Repeated Visits Metrics
-    </div>
-  </div>
+  </section>
+
+  {{> segmentInfoDialog }}
 </template>

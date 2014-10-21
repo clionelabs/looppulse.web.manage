@@ -1,4 +1,10 @@
 @import "variable";
+.view-content, .view-header {
+  .container {
+    padding: 0;
+  }
+}
+
 .charting {
   font-size:10px;
   line-height: 1;
@@ -330,7 +336,7 @@
 
 .segment-list-header, .segment-create {
   min-height:130px;
-  padding:0 15px;
+  // padding:0 15px;
   background-color: $background-color;
 
   .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
@@ -363,16 +369,16 @@ table.segment-list {
 .segment-header {
   h1 {
     margin:0;
-    padding:10px; 
+    padding:10px;
     color: rgba(0,0,0,0.45);
     font-size: 1.47em;
     float:left;
   }
   .functions {
     float:right;
-    padding:10px; 
+    padding:10px;
 
-    .btn { 
+    .btn {
       border:0;
       margin:0px 10px;
       padding:9px;
@@ -389,6 +395,14 @@ table.segment-list {
         background: url('images/icon-delete.png') no-repeat scroll center center / contain transparent;
       }
     }
+  }
+}
+
+
+section.view-content {
+  background-color:#fff;
+  .container {
+    min-width: 768px;
   }
 }
 
@@ -423,7 +437,7 @@ ul.metric-tabs {
 
     .tab-content {
       margin:12px auto;
-      width:199px;
+      width:220px;
       height:67px;
       .row {
         > div {

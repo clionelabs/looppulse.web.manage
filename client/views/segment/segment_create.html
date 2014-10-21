@@ -1,33 +1,39 @@
 <template name="segmentCreate">
     {{> companyHeader }}
 
-  <header class="segment-create row">
-    <div class="col-sm-9">
-      <h3><input name="segments.name" type="text"
-                           value=""
-                           placeholder="segment name" autofocus></h3>
-    </div>
-    <div class="col-sm-3">
-      <div class="actions pull-right">
-        <button class="create-btn action-btn btn btn-primary disabled">
-          Create
-        </button>
+  <header class="segment-view segment-create view-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-9">
+          <h3><input name="segments.name" type="text"
+                               value=""
+                               placeholder="segment name" autofocus></h3>
+        </div>
+        <div class="col-sm-3">
+          <div class="actions pull-right">
+            <button class="create-btn action-btn btn btn-primary disabled">
+              Create
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </header>
 
   <section class="view-content segment-create">
-    <form class="form-inline rule-form" role="form" method="POST">
-        {{#with criteriaInputs }}
-          <p>Includes anyone who have {{>_field hasBeen }} to {{>_field to }} of
-          these {{>_field triggerPoints }}{{>_field triggerLocations }}</p>
+    <div class="container">
+      <form class="form-inline rule-form" role="form" method="POST">
+          {{#with criteriaInputs }}
+            <p>Includes anyone who have {{>_field hasBeen }} to {{>_field to }} of
+            these {{>_field triggerPoints }}{{>_field triggerLocations }}</p>
 
-          <p id="times_and_duration">for {{>_field times }} times and stayed
-            for {{>_field durationInMinutes }} minutes</p>
+            <p id="times_and_duration">for {{>_field times }} times and stayed
+              for {{>_field durationInMinutes }} minutes</p>
 
-          <p>in {{>_field days }} days every {{>_field every }} only</p>
-        {{/with}}
-    </form>
+            <p>in {{>_field days }} days every {{>_field every }} only</p>
+          {{/with}}
+      </form>
+    </div>
   </section>
 </template>
 
@@ -106,7 +112,7 @@
         </select>
           {{#each filters}}
               {{#if equals this.style "Number"}}
-                <input type="text" 
+                <input type="text"
                        class="filter-input-group input-md form-control"
                        placeholder="{{this.placeholder}}" size="2"
                        data-filter="{{this.key}}" data-key="{{../field}}"
