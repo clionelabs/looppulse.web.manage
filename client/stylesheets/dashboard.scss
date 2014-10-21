@@ -405,6 +405,12 @@ section.view-content {
     min-width: 768px;
   }
 }
+.view-content.segment-create {
+
+  .container {
+    padding: 0 15px;
+  }
+}
 
 ul.metric-tabs {
   width: 100%;
