@@ -63,8 +63,14 @@ SegmentMetric.startup = function () {
     upsertSegmentMetric(oldSegmentVisitor.segmentId, updateDoc);
   }
 
-  function handleVisitorMetricChanged(newVisitorMetric, oldVisitorMetric) {
-    console.log("[SegmentMetric] handleVisitorMetricChanged of " + newVisitorMetric.visitorId);
+  function handleVisitorMetricAddedOrChanged(newVisitorMetric, oldVisitorMetric) {
+    console.log("[SegmentMetric] handleVisitorMetricAddedOrChanged of " + newVisitorMetric.visitorId);
+    if (!oldVisitorMetric) {
+      oldVisitorMetric = {
+        dwellTime: 0,
+        visitCount: 0
+      };
+    }
     var diffDwellTime = newVisitorMetric.dwellTime - oldVisitorMetric.dwellTime;
     var diffVisitCount = newVisitorMetric.visitCount - oldVisitorMetric.visitCount
     var updateDoc = {
@@ -92,7 +98,8 @@ SegmentMetric.startup = function () {
 
   VisitorMetrics.findForever().observe({
     _suppress_initial: true,
-    "changed": handleVisitorMetricChanged
+    "added": handleVisitorMetricAddedOrChanged,
+    "changed": handleVisitorMetricAddedOrChanged
   });
 
 };
