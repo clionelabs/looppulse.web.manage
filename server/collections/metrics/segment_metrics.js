@@ -66,10 +66,10 @@ SegmentMetric.startup = function () {
   function handleVisitorMetricAddedOrChanged(newVisitorMetric, oldVisitorMetric) {
     console.log("[SegmentMetric] handleVisitorMetricAddedOrChanged of " + newVisitorMetric.visitorId);
     if (!oldVisitorMetric) {
-      oldVisitorMetric = {
+      oldVisitorMetric = new VisitorMetric({
         dwellTime: 0,
         visitCount: 0
-      };
+      });
     }
     var diffDwellTime = newVisitorMetric.dwellTime - oldVisitorMetric.dwellTime;
     var diffVisitCount = newVisitorMetric.visitCount - oldVisitorMetric.visitCount
