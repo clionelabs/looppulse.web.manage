@@ -46,10 +46,10 @@ localstorage@1.0.1
 logging@1.0.4
 meteor-platform@1.1.2
 meteor@1.1.2
-mike:mocha@0.3.12
 meteorhacks:kadira-binary-deps@1.2.0
 meteorhacks:kadira@2.11.13
 meteorhacks:meteorx@1.2.0
+mike:mocha@0.3.12
 minifiers@1.1.1
 minimongo@1.0.4
 mizzao:autocomplete@0.4.8
@@ -80,6 +80,8 @@ session@1.0.3
 sha@1.0.1
 spacebars-compiler@1.0.3
 spacebars@1.0.3
+spacejamio:chai@1.9.2_2
+spacejamio:sinon@1.10.3_1
 srp@1.0.1
 standard-app-packages@1.0.3
 stevezhu:lodash@1.0.2
