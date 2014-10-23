@@ -1,6 +1,72 @@
 SegmentVisitorMatcher = function(segment, visitor) {
-  var installationIds = new TriggerLocation(segment.companyId, segment.criteria.triggerLocations, segment.criteria.locationIds).installationIds(); 
+  this.segment = segment;
+  this.visitor = visitor;
 } 
+
+SegmentVisitorMatcher.prototype.match = function() {
+  var now = new Date();
+  var installationIds = this.getInstallationIds(this.segment.criteria, this.segment.companyId);
+  var encounters = this.getEncounters(this.segment.criteria, this.visitor._id, installationIds, now);
+  var events = this.doMatch(this.segment.criteria, installationIds, encounters, now); 
+  return events;
+}
+
+/**
+ * @return Array of the relevant installation ids of a segment
+ **/
+SegmentVisitorMatcher.prototype.getInstallationIds = function(criteria, companyId) {
+  var installationIds = new TriggerLocation(companyId, criteria.triggerLocations, criteria.locationIds).installationIds(); 
+  return installationIds;
+}
+
+SegmentVisitorMatcher.prototype.getEncounters = function(criteria, visitorId, installationIds, now) {
+  var selector = this.buildEncountersSelector(criteria, visitorId, installationIds, now);
+  var encounters = Encounters.find(selector, {sort: {exitedAt: 1}}).fetch();
+  return encounters;
+}
+
+SegmentVisitorMatcher.prototype.buildEncountersSelector = function(criteria, visitorId, installationIds, now) {
+  var selector = {
+    visitorId: visitorId,
+    installationId: { $in: installationIds }
+  };
+
+  if (criteria.days) {
+    if (criteria.days.inLast) {
+      selector['enteredAt'] = {
+        $gte: +moment(now).subtract(criteria.days.inLast, 'days')
+      };
+    } else {
+      selector['enteredAt'] = {
+        $gte: criteria.days.start,
+        $lte: criteria.days.end
+      };
+    }
+  }
+  
+  switch (criteria.every) {
+    case "weekdays":
+      selector["enteredAtParts.dayOfWeek"] = { $gte: 1, $lte: 5 };
+      break;
+    case "weekends":
+      selector["enteredAtParts.dayOfWeek"] = { $in: [0, 6] };
+      break;
+    case "day":
+      break;
+  }
+
+  if (criteria.durationInMinutes) {
+    selector['duration'] = {};
+    if (criteria.durationInMinutes.atLeast) {
+      selector['duration'].$gte = criteria.durationInMinutes.atLeast * 60 * 1000;
+    }
+    if (criteria.durationInMinutes.atMost) {
+      selector['duration'].$lte = criteria.durationInMinutes.atMost * 60 * 1000;
+    }
+  }
+
+  return selector;
+}
 
 /**
  * Sort encounters if it's not already been sorted
@@ -29,6 +95,7 @@ SegmentVisitorMatcher.prototype.sortEncounters = function(encounters) {
  * @return true/false
  */
 SegmentVisitorMatcher.prototype.isInstallationFulfilled = function(criteria, encounterCount) {
+  if (!criteria.times) return true; // only happen for all-segments?
   return (encounterCount && (
          (criteria.times.atLeast && encounterCount >= criteria.times.atLeast) ||
          (criteria.times.atMost && encounterCount <= criteria.times.atMost)
@@ -48,7 +115,7 @@ SegmentVisitorMatcher.prototype.isInstallationSetFulfilled = function(criteria, 
   } else if (!criteria.hasBeen && criteria.to === "all") {
     return fulfilledCount === 0;
   } else if (!criteria.hasBeen && criteria.to === "any") {
-    return fulfilledCount < fulfilledCount; 
+    return fulfilledCount < allCount; 
   }
 };
 
@@ -67,15 +134,19 @@ SegmentVisitorMatcher.prototype.buildInstallationCounters = function(encounters)
  * Core matching function. Given installations, encounters and critier, compute a list of 
  * in/out events happening from the last encounter into the future.
  *
+ * @param criteria SegmentCriteria
  * @param installationIds  Array of installation ids
  * @param encounters Array of encounters (presumably sorted in exitedAt. We will sort them if not, but it's not desired, coz the running time will become O(NlogN))
- * @param criteria SegmentCriteria
  *
  * @return Array of events, with each events having an attribute of i) time, and ii) delta (enter = 1, exit = -1)
  *    a sample return would be: [{time: date1, delta: 1}, {time: date2, delta: -1}]. This means that an enter 
  *    event is happening on time data1, and a exit event is happening on time dat2. 
  */
-SegmentVisitorMatcher.prototype.doMatch = function(installationIds, encounters, criteria) {
+SegmentVisitorMatcher.prototype.doMatch = function(criteria, installationIds, encounters, now) {
+  if (_.isEmpty(criteria)) { // All visitor segment only?
+    return [{time: now, delta: 1}];
+  }
+
   var self = this;
   var counters = this.buildInstallationCounters(encounters);
 
@@ -87,7 +158,8 @@ SegmentVisitorMatcher.prototype.doMatch = function(installationIds, encounters, 
 
   var result = [];
   var delta = this.isInstallationSetFulfilled(criteria, okCount, installationIds.length)? 1: -1;
-  result.push({time: encounters[encounters.length-1].exitedAt, delta: delta});
+  // result.push({time: encounters[encounters.length-1].exitedAt, delta: delta});
+  result.push({time: now, delta: delta});
 
   // quick check and see if future events are possible
   if (!criteria.days || !criteria.days.inLast) return result;

@@ -1,50 +1,45 @@
-SegmentVisitors.upsertBySelector = function (selector) {
-  var modifier = {
-    $setOnInsert: _.extend({}, selector, { createdAt: lodash.now() })
+var recomputeSegmentVisitorStatus = function(segment, visitor) {
+  var matcher = new SegmentVisitorMatcher(segment, visitor);
+  var statusDelta = matcher.match();
+  var selector = {
+    segmentId: segment._id,
+    visitorId: visitor._id
   };
-  return SegmentVisitors.upsert(selector, modifier);
-};
-
-var handleVisitorAdded = function (visitor) {
-  updateSegmentVisitors(visitor._id);
-};
-
-var handleEncounterAdded = function (encounter) {
-  updateSegmentVisitors(encounter.visitorId);
-  // Engagement.dispatch(encounter);
-};
-
-var handleEncounterChanged = function (encounter, oldEncounter) {
-  updateSegmentVisitors(encounter.visitorId);
-  // Engagement.dispatch(encounter);
-};
-
-var updateSegmentVisitors = function (visitorId) {
-  Segments.find().map(function (segment) {
-    var selector = {
-      segmentId: segment._id,
-      visitorId: visitorId
+  console.log('[SegmentVisitor] recompute', selector, statusDelta);
+  if (statusDelta.length === 1 && statusDelta[0].delta === -1) {
+    SegmentVisitors.remove(selector);
+  } else {
+    var modifier = {
+      $set: {statusDelta: statusDelta, lastUpdated: lodash.now()}
     };
-    if (segment.match(visitorId)) {
-      SegmentVisitors.upsertBySelector(selector);
-    } else {
-      SegmentVisitors.remove(selector);
-    }
+    SegmentVisitors.upsert(selector, modifier);    
+  }
+};
+
+var recomputeVisitorStatus = function(visitor) {
+  Segments.find().map(function(segment) {
+    recomputeSegmentVisitorStatus(segment, visitor);
+  });
+}
+
+var handleSegmentAdded = function(segment) {
+  Visitors.find().map(function(visitor) {
+    recomputeSegmentVisitorStatus(segment, visitor);
   });
 };
 
-var handleSegmentAdded = function (segment) {
-  Visitors.find().map(function (visitor) {
-    var visitorId = visitor._id;
-    var selector = {
-      segmentId: segment._id,
-      visitorId: visitorId
-    };
-    if (segment.match(visitorId)) {
-      SegmentVisitors.upsertBySelector(selector);
-    }
-  });
+var handleVisitorAdded = function(visitor) {
+  recomputeVisitorStatus(visitor);
 };
+
+//TODO: only need to recompute segments, whose criteria matched with the encounter.
+var handleEncounterAdded = function(encounter) {
+  recomputeVisitorStatus(Visitors.findOne({_id: encounter.visitorId}));
+};
+
+var handleEncounterChanged = function(encounter, oldEncounter) {
+  recomputeVisitorStatus(Visitors.findOne({_id: encounter.visitorId}));
+}
 
 SegmentVisitor.ensureIndex = function () {
   SegmentVisitors._ensureIndex({
