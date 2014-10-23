@@ -96,37 +96,33 @@ Meteor.publish('related-beacon-events', function(ids){
     return null;
   }
   return BeaconEvents.find(q)
-})
+});
+
+Meteor.publish('segment-metrics-list', function(ids) {
+  var q = {};
+  if (id && this.userId) {
+
+  }
+});
 
 Meteor.publish('related-metrics', function(id){
   var q = {};
-  console.log("Returning Metric Data", id);
+  //TODO change to new metrics
+  console.log("Returning metric data ", id);
 
-  if (id && AccountsHelper.fieldMatch("locations", id, this.userId)) {
-    var now = new Date();
-    q = {
-      locationId: id,
-      // TODO allow this to be set on client-side?
-      $or: [{
-        resolution: Metric.daily,
-        startTime: { $gte: MetricsHelper.nDaysAgoTruncatedTime(now, 30) }
-      }, {
-        resolution: Metric.hourly,
-        startTime: { $gte: MetricsHelper.nHoursAgoTruncatedTime(now, 24) }
-      }, {
-        resolution: { $exists: false }
-      }]
-    };
+  if (id && this.userId) {
+    q = { collectionId: id };
   } else {
     return null;
   }
+
   return Metrics.find(q);
 });
 
 Meteor.publish('location-engagements', function(locationId) {
   var q = {};
   console.log("Returning location-engagements Data", locationId);
-
+  //TODO AccountsHelper.findMatch do nothing
   if (locationId && AccountsHelper.fieldMatch("locations", locationId, this.userId)) {
     q = { locationId: locationId };
   } else {
@@ -241,46 +237,9 @@ Meteor.publish('watch-base', function(){
   ]
 })
 
-Meteor.publish('segmentsMetrics', function (segmentIds) {
-  var self = this;
-  console.log("Returning Segments Metrics Data", self.userId);
-
-  // FIXME find relationship between User and Segment
-  if (!_.isArray(segmentIds) || !Roles.userIsInRole(self.userId, ['admin'])) {
-    return null;
-  }
-
-  return SegmentMetrics.find({
-    segmentId: { $in: segmentIds },
-    type: Metric.forever
-  });
-});
-
-Meteor.publish('segmentMetrics', function (segmentId, numOfDaysAgo) {
-  var self = this;
-  console.log("Returning Segment Metrics Data", self.userId);
-
-  // FIXME find relationship between User and Segment
-  if (!Roles.userIsInRole(self.userId, ['admin'])) {
-    return null;
-  }
-
-  return SegmentMetrics.find({
-    segmentId: segmentId,
-    $or: [
-      {
-        resolution: Metric.forever
-      },
-      {
-        resolution: Metric.daily,
-        startTime: { $gte: +moment().startOf('day').subtract(numOfDaysAgo, 'days') }
-      }
-    ]
-  });
-});
 
 Meteor.publish('companies', function () {
-  var q = {}
+  var q = {};
   console.log("Returning Company Data of User", this.userId)
 
   q = { ownedByUserIds: { $in : [ this.userId ] } }
