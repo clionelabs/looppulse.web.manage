@@ -17,7 +17,7 @@ SegmentVisitorMatcher = function(segment, visitor) {
 SegmentVisitorMatcher.prototype.computeCurrentStatus = function() {
   var now = lodash.now();
   var installationIds = this.getInstallationIds(this.segment.criteria, this.segment.companyId);
-  var encounters = this.getEncounters(this.segment.criteria, this.visitor._id, installationIds, now);
+  var encounters = this.getMatchedEncounters(this.segment.criteria, this.visitor._id, installationIds, now);
   var events = this.doComputeCurrentStatus(this.segment.criteria, installationIds, encounters, now); 
   return events;
 }
@@ -33,7 +33,7 @@ SegmentVisitorMatcher.prototype.getInstallationIds = function(criteria, companyI
 /**
  * @return Array of encounters doc.
  */
-SegmentVisitorMatcher.prototype.getEncounters = function(criteria, visitorId, installationIds, now) {
+SegmentVisitorMatcher.prototype.getMatchedEncounters = function(criteria, visitorId, installationIds, now) {
   var selector = this.buildEncountersSelector(criteria, visitorId, installationIds, now);
   var encounters = Encounters.find(selector, {sort: {exitedAt: 1}}).fetch();
   return encounters;
@@ -181,6 +181,7 @@ SegmentVisitorMatcher.prototype.doComputeCurrentStatus = function(criteria, inst
   if (_.isEmpty(criteria)) { // All visitor segment only?
     return [{time: now, delta: 1}];
   }
+  this.sortEncounters(encounters);  // not necessary if they are already sorted, but for completeness....
 
   var self = this;
   var counters = this.buildInstallationCounters(encounters);
