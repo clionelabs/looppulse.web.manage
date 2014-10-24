@@ -20,7 +20,7 @@ var recomputeSegmentVisitorStatus = function(segment, visitor) {
     }
   });
 
-  console.log('[SegmentVisitorFLow] Segment visitor list: ', segment._id, segment.getVisitorIdList(lodash.now()));
+  // console.log('[SegmentVisitorFLow] Segment visitor list: ', segment._id, segment.getVisitorIdList(lodash.now()));
 };
 
 var recomputeVisitorStatus = function(visitor) {
