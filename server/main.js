@@ -37,7 +37,7 @@ var observeFirebase = function () {
 
 var observeCollections = function() {
   var classes = [
-    Encounter, Engagement, SegmentVisitor,
+    Encounter, Engagement, SegmentVisitor, SegmentVisitorFlow,
     EngagementMetric, InstallationMetric, ProductMetric, SegmentMetric,
     VisitorMetric
   ];

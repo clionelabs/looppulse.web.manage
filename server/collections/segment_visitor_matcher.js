@@ -3,11 +3,11 @@ SegmentVisitorMatcher = function(segment, visitor) {
   this.visitor = visitor;
 } 
 
-SegmentVisitorMatcher.prototype.match = function() {
-  var now = new Date();
+SegmentVisitorMatcher.prototype.computeCurrentStatus = function() {
+  var now = lodash.now();
   var installationIds = this.getInstallationIds(this.segment.criteria, this.segment.companyId);
   var encounters = this.getEncounters(this.segment.criteria, this.visitor._id, installationIds, now);
-  var events = this.doMatch(this.segment.criteria, installationIds, encounters, now); 
+  var events = this.doComputeCurrentStatus(this.segment.criteria, installationIds, encounters, now); 
   return events;
 }
 
@@ -31,20 +31,34 @@ SegmentVisitorMatcher.prototype.buildEncountersSelector = function(criteria, vis
     installationId: { $in: installationIds }
   };
 
-  if (criteria.days) {
-    if (criteria.days.inLast) {
-      selector['enteredAt'] = {
-        $gte: +moment(now).subtract(criteria.days.inLast, 'days')
-      };
-    } else {
-      selector['enteredAt'] = {
-        $gte: criteria.days.start,
-        $lte: criteria.days.end
-      };
-    }
+  if (criteria.durationInMinutes) {
+    _.extend(selector, this.buildEncountersSelectorDuration(criteria.durationInMinutes));
   }
-  
-  switch (criteria.every) {
+  if (criteria.every) {
+    _.extend(selector, this.buildEncountersSelectorEvery(criteria.every));
+  }
+  if (criteria.days) {
+    _.extend(selector, this.buildEncountersSelectorDays(criteria.days, now));
+  }
+
+  return selector;
+}
+
+SegmentVisitorMatcher.prototype.buildEncountersSelectorDuration = function(durationInMinutes) {
+  var selector = {};
+  selector['duration'] = {};
+  if (durationInMinutes.atLeast) {
+    selector['duration'].$gte = durationInMinutes.atLeast * 60 * 1000;
+  }
+  if (durationInMinutes.atMost) {
+    selector['duration'].$lte = durationInMinutes.atMost * 60 * 1000;
+  }
+  return selector;
+}
+
+SegmentVisitorMatcher.prototype.buildEncountersSelectorEvery = function(every) {
+  var selector = {};
+  switch (every) {
     case "weekdays":
       selector["enteredAtParts.dayOfWeek"] = { $gte: 1, $lte: 5 };
       break;
@@ -54,17 +68,21 @@ SegmentVisitorMatcher.prototype.buildEncountersSelector = function(criteria, vis
     case "day":
       break;
   }
+  return selector; 
+}
 
-  if (criteria.durationInMinutes) {
-    selector['duration'] = {};
-    if (criteria.durationInMinutes.atLeast) {
-      selector['duration'].$gte = criteria.durationInMinutes.atLeast * 60 * 1000;
-    }
-    if (criteria.durationInMinutes.atMost) {
-      selector['duration'].$lte = criteria.durationInMinutes.atMost * 60 * 1000;
-    }
+SegmentVisitorMatcher.prototype.buildEncountersSelectorDays = function(days, now) {
+  var selector = {};
+  if (days.inLast) {
+    selector['enteredAt'] = {
+      $gte: +moment(now).subtract(days.inLast, 'days')
+    };
+  } else {
+    selector['enteredAt'] = {
+      $gte: days.start,
+      $lte: days.end
+    };
   }
-
   return selector;
 }
 
@@ -131,8 +149,8 @@ SegmentVisitorMatcher.prototype.buildInstallationCounters = function(encounters)
 };
 
 /**
- * Core matching function. Given installations, encounters and critier, compute a list of 
- * in/out events happening from the last encounter into the future.
+ * Core matching function. Given installations, encounters and criteria, compute a list of 
+ * in/out events happening from now into the future.
  *
  * @param criteria SegmentCriteria
  * @param installationIds  Array of installation ids
@@ -142,7 +160,7 @@ SegmentVisitorMatcher.prototype.buildInstallationCounters = function(encounters)
  *    a sample return would be: [{time: date1, delta: 1}, {time: date2, delta: -1}]. This means that an enter 
  *    event is happening on time data1, and a exit event is happening on time dat2. 
  */
-SegmentVisitorMatcher.prototype.doMatch = function(criteria, installationIds, encounters, now) {
+SegmentVisitorMatcher.prototype.doComputeCurrentStatus = function(criteria, installationIds, encounters, now) {
   if (_.isEmpty(criteria)) { // All visitor segment only?
     return [{time: now, delta: 1}];
   }
@@ -166,7 +184,7 @@ SegmentVisitorMatcher.prototype.doMatch = function(criteria, installationIds, en
 
   // loop through the encounters, and remove them on by one, and track the changes in the future
   _.each(encounters, function(encounter) {
-    var invalidTime = moment(encounter.exitedAt).add(criteria.days.inLast, 'days').toDate();
+    var invalidTime = moment(encounter.exitedAt).add(criteria.days.inLast, 'days');
     var matchBefore = self.isInstallationFulfilled(criteria, counters[encounter.installationId]);
     counters[encounter.installationId]--;
     var matchAfter = self.isInstallationFulfilled(criteria, counters[encounter.installationId]);

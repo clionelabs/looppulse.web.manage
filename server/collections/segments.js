@@ -19,6 +19,23 @@ Segment.prototype.match = function (visitorId) {
   return new SegmentMatchCriteria(self.criteria).match(self.companyId, visitorId);
 };
 
+/*
+ *  Return the visitor Id list of this segment at a particular time
+ *
+ *  @param at Time at which you are checking
+ *  @return Array of visitor id
+ */
+Segment.prototype.getVisitorIdList = function(at) {
+  var outIds = {};
+  var inIds = {};
+  SegmentVisitorFlows.find({segmentId: this._id, time: {$lte: at}}, {sort: {time: -1}}).forEach(function(flow) {
+    if (outIds[flow.visitorId] !== undefined) return; // since we sort in desc order, if an out event appeared before, everything else is irrelevant
+    if (flow.delta === 1) inIds[flow.visitorId] = true;
+    else outIds[flow.visitorId] = true;
+  });
+  return Object.keys(inIds);
+}
+
 Segment.criteriaToString = function(criteria) {
   if (!criteria) {
     return "Criteria is not defined";

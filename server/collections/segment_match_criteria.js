@@ -30,10 +30,67 @@ SegmentMatchCriteria.prototype.match = function(companyId, visitorId) {
   }
 };
 
+/**
+ * encounters should be sorted by exitedAt
+ */
+SegmentMatchCriteria.prototype.matchBeenAll = function(installationIds, encounters, criteria) {
+  function isInstallationMatch(criteria, encounterCount) {
+    return (encounterCount && (
+         (criteria.times.atLeast && encounterCount >= criteria.times.atLeast) ||
+         (criteria.times.atMost && encounterCount <= criteria.times.atMost)
+        )); 
+  }
+
+  var counters = {};
+  var okCount = 0;
+  _.each(encounters, function(encounter) {
+    counters[encounter.installationId] = (counters[encounter.installationId] || 0) + 1;
+  });
+
+  // loop installations, and see how many of them match the requirement
+  _.each(installationIds, function(installationId) {
+    var encounterCount = counters[installationId];
+    if (isInstallationMatch(criteria, counters[installationId])) okCount++;
+  });
+
+  // segment is matched, if all installations are matched
+  var result = {
+    isMatched: (okCount == installationIds.length),
+    nextEnter: null,
+    nextExit: null
+  }
+
+  // quick check to see if nextEnter, or nextExit is possible
+  if (!criteria.days) return result;
+  if (!criteria.days.inLast) return result;
+  if (result.isMatched && !criteria.times.atLeast) return result;
+  if (!result.isMatched && !criteria.times.atMost) return result;
+
+  // loop through the encounters, and remove them one by one, until the segment matched condition is changed
+  _.each(encounters, function(encounter) {
+    var invalidTime = moment(encounter.exitedAt).add(criteria.days.inLast, 'days').toDate();
+    var matchBefore = isInstallationMatch(criteria, counters[encounter.installationId]);
+    counters[encounter.installationId]--;
+    var matchAfter = isInstallationMatch(criteria, counters[encounter.installationId]);
+    if (matchBefore && !matchAfter) {
+      result.nextExit = invalidTime;
+      return false;
+    }
+    if (!matchBefore && matchAfter) {
+      okCount++;
+      if (okCount == installationIds.length) {
+        result.nextEnter = invalidTime;
+        return false;
+      } 
+    }
+  });
+
+  return result;
+}
+
 SegmentMatchCriteria.prototype.matchHasBeenToAll = function() {
   var criteria = this.criteria;
   var installationEncounterCounter = this.getInstallationEncounterCounter();
-
   var result = true;
   _.each(this.installationIds, function(installationId) {
     var encounterCount = installationEncounterCounter[installationId];
