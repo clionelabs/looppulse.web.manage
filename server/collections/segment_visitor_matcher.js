@@ -3,6 +3,17 @@ SegmentVisitorMatcher = function(segment, visitor) {
   this.visitor = visitor;
 } 
 
+/**
+ * Compute in/out events of a visitor-segment pair, happening from now into the future.
+ *
+ * @param criteria SegmentCriteria
+ * @param installationIds  Array of installation ids
+ * @param encounters Array of encounters (presumably sorted in exitedAt. We will sort them if not, but it's not desired, coz the running time will become O(NlogN))
+ *
+ * @return Array of events, with each events having an attribute of i) time, and ii) delta (enter = 1, exit = -1)
+ *    a sample return would be: [{time: date1, delta: 1}, {time: date2, delta: -1}]. This means that an enter 
+ *    event is happening on time data1, and a exit event is happening on time dat2. 
+ */
 SegmentVisitorMatcher.prototype.computeCurrentStatus = function() {
   var now = lodash.now();
   var installationIds = this.getInstallationIds(this.segment.criteria, this.segment.companyId);
@@ -19,12 +30,19 @@ SegmentVisitorMatcher.prototype.getInstallationIds = function(criteria, companyI
   return installationIds;
 }
 
+/**
+ * @return Array of encounters doc.
+ */
 SegmentVisitorMatcher.prototype.getEncounters = function(criteria, visitorId, installationIds, now) {
   var selector = this.buildEncountersSelector(criteria, visitorId, installationIds, now);
   var encounters = Encounters.find(selector, {sort: {exitedAt: 1}}).fetch();
   return encounters;
 }
 
+/**
+ * Build db selectors given the criteria, visitor, installations and current time.
+ * Current time is needed for the "last X days" criteria.
+ */
 SegmentVisitorMatcher.prototype.buildEncountersSelector = function(criteria, visitorId, installationIds, now) {
   var selector = {
     visitorId: visitorId,
@@ -113,7 +131,9 @@ SegmentVisitorMatcher.prototype.sortEncounters = function(encounters) {
  * @return true/false
  */
 SegmentVisitorMatcher.prototype.isInstallationFulfilled = function(criteria, encounterCount) {
-  if (!criteria.times) return true; // only happen for all-segments?
+  if (!criteria.times) {
+    return (encounterCount && encounterCount > 0);
+  }
   return (encounterCount && (
          (criteria.times.atLeast && encounterCount >= criteria.times.atLeast) ||
          (criteria.times.atMost && encounterCount <= criteria.times.atMost)
@@ -148,17 +168,14 @@ SegmentVisitorMatcher.prototype.buildInstallationCounters = function(encounters)
   return counters;
 };
 
-/**
+/*
  * Core matching function. Given installations, encounters and criteria, compute a list of 
  * in/out events happening from now into the future.
  *
  * @param criteria SegmentCriteria
  * @param installationIds  Array of installation ids
  * @param encounters Array of encounters (presumably sorted in exitedAt. We will sort them if not, but it's not desired, coz the running time will become O(NlogN))
- *
- * @return Array of events, with each events having an attribute of i) time, and ii) delta (enter = 1, exit = -1)
- *    a sample return would be: [{time: date1, delta: 1}, {time: date2, delta: -1}]. This means that an enter 
- *    event is happening on time data1, and a exit event is happening on time dat2. 
+ * @return Array of events
  */
 SegmentVisitorMatcher.prototype.doComputeCurrentStatus = function(criteria, installationIds, encounters, now) {
   if (_.isEmpty(criteria)) { // All visitor segment only?

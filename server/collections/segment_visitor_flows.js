@@ -1,3 +1,14 @@
+/**
+ * recompute segment-visitor in/out events starting from now into the future
+ * It does the followings:
+ *   1) compute the current in/out status, and all future changes
+ *   2) remove all existing future changes in DB (which are computed since last time)
+ *   3) insert the current in/out status and future changes into DB.
+ *
+ * SegmentVisitorFlow collections should contain "all" in/out events for any pairs of
+ * segment and visitor from past into future, given the received encounters so far. 
+ * The SegmentVisitorFlow collections are updated whenever relevant encounters are received.
+ */
 var recomputeSegmentVisitorStatus = function(segment, visitor) {
   var matcher = new SegmentVisitorMatcher(segment, visitor);
   var statusDelta = matcher.computeCurrentStatus();
@@ -21,6 +32,7 @@ var recomputeSegmentVisitorStatus = function(segment, visitor) {
   });
 
   // console.log('[SegmentVisitorFLow] Segment visitor list: ', segment._id, segment.getVisitorIdList(lodash.now()));
+  // console.log('[SegmentVisitorFlow] Visitor segment list: ', visitor._id, visitor.getSegmentIdList(lodash.now()));
 };
 
 var recomputeVisitorStatus = function(visitor) {
@@ -51,7 +63,8 @@ var handleEncounterChanged = function(encounter, oldEncounter) {
 SegmentVisitor.ensureIndex = function () {
   SegmentVisitors._ensureIndex({
     segmentId: 1,
-    visitorId: 1
+    visitorId: 1,
+    time: 1
   });
 };
 
