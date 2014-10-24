@@ -1,112 +1,95 @@
-SegmentMetric.ensureIndex = function () {
-  SegmentMetrics._ensureIndex({
-    segmentId: 1,
-    type: 1
-  });
+SegmentMetrics = {};
+
+SegmentMetrics.findList = function() {
+    var companyId = Companies.findOne({ownedByUserId : this.userId});
+    return Metrics.find({type: "segment", companyId : companyId, graphType : GraphDataParser.Type.List});
 };
 
-SegmentMetric.startup = function () {
-  function upsertSegmentMetric(segmentId, modifier) {
-    var selector = {
-      type: SegmentMetric.type,
-      resolution: Metric.forever,
-      segmentId: segmentId
-    };
-    Metrics.upsert(selector, _.extend({}, modifier, {
-      $setOnInsert: selector
-    }));
+SegmentMetric = {};
 
-    snapshotToDaily(SegmentMetrics.findOneBySegment(segmentId));
-  }
+SegmentMetric.Graph = {};
+SegmentMetric.Graph.List = "list";
 
-  function snapshotToDaily(segmentMetric) {
-    var selector = {
-      type: SegmentMetric.type,
-      resolution: Metric.daily,
-      segmentId: segmentMetric.segmentId,
-      startTime: +moment().startOf('day')
-    };
+SegmentMetric.Graph.TimeBucketXNumOfVisitorHistogram = "timeBucketXNumberOfVisitorHistogram";
+SegmentMetric.Graph.VisitorOtherSegmentsBarChart = "visitorOtherSegmentsBarChart";
+SegmentMetric.Graph.VisitorsTagsBarChartData = "visitorsTagsBarChart";
 
-    Metrics.upsert(selector, {
-      $setOnInsert: selector,
-      $set: {
-        visitorCount: segmentMetric.visitorCount,
-        visitCount: segmentMetric.visitCount,
-        dwellTime: segmentMetric.dwellTime
-      }
+SegmentMetric.Graph.AverageDwellTimeBucketXNumOfVisitorHistogram = "averageDwellTimeBucketXNumOfVisitorHistogram";
+SegmentMetric.Graph.DwellTimeInTimeFrameBubble = "dwellTimeInTimeFrameBubble";
+
+SegmentMetric.Graph.NumberOfVisitXNumberOfVisitorsHistogram = "numberOfVisitXNumberOfVisitorsHistogram";
+SegmentMetric.Graph.NumberOfVisitInTimeFrameBubble = "numberOfVisitInTimeFrameBubble";
+
+SegmentMetric.TimeBucket = {};
+SegmentMetric.TimeBucket.Hour = "hour";
+SegmentMetric.TimeBucket.Day = "day";
+SegmentMetric.TimeBucket.Week = "week";
+SegmentMetric.TimeBucket.Month = "month";
+
+SegmentMetric.generateAllGraph = function(segmentId, from, to) {
+    //TODO get visitorIds from kim's work
+    var visitorIds = [];
+    var encounters = Encounters.findClosedByVisitors(visitorIds);
+    //TODO get visitors: [segmentIds] kim's work
+    var visitorInSegmentsHash = {};
+    //TODO get visitors: [tags]
+    var visitorHasTagsHash = {};
+
+    prepareListData(encounters);
+
+    prepareTimeBucketXNumOfVisitorHistogramData(SegmentMetric.TimeBucket.Week, encounters);
+    prepareVisitorOtherSegmentsBarChartData(visitorInSegmentsHash);
+    prepareVisitorsTagsBarChartData(visitorHasTagsHash);
+
+    prepareAverageDwelTimeBucketXNumOfVisitorHistogramData(encounters);
+    prepareDwellTimeInTimeFrameBubbleData(encounters);
+
+    prepareNumberOfVisitXNumberOfVisitorsHistogramData(encounters);
+    prepareNumberOfVisitsInTimeFrameBubbleData(encounters);
+
+}
+
+var prepareListData = function(encounters) {
+    console.log("[SegmentMetric] generating list view data");
+    var grpByVisitors = _.groupBy(encounters, function(e) {
+        return e.visitorId;
     });
-  }
+    console.log(JSON.stringify(grpByVisitors));
+    //TODO add impl
+}
 
-  function handleSegmentVisitorAdded(segmentVisitor) {
-    console.log("[SegmentMetric] handleSegmentVisitorAdded of visitor " + segmentVisitor.visitorId + " to segment" + segmentVisitor.segmentId);
-    var visitorMetric = VisitorMetrics.findOneByVisitor(segmentVisitor.visitorId);
-    var updateDoc = {
-      $inc: {
-        visitorCount: 1,
-        visitCount: visitorMetric.visitCount,
-        dwellTime: visitorMetric.dwellTime
-      }
-    };
-    if(visitorMetric.isRepeated()) {
-      _.extend(updateDoc.$inc, { repeatedVisitorsCount: 1 });
-    }
-    upsertSegmentMetric(segmentVisitor.segmentId, updateDoc);
-  }
+var prepareTimeBucketXNumOfVisitorHistogramData = function(bucketSize, encounters) {
+    console.log("[SegmentMetric] generating time bucket against number of visitors histogram");
+    //TODO add impl
+}
 
-  function handleSegmentVisitorRemoved(oldSegmentVisitor) {
-    console.log("[SegmentMetric] handleSegmentVisitorRemoved of visitor " + oldSegmentVisitor.visitorId + " from segment" + oldSegmentVisitor.segmentId);
-    var visitorMetric = VisitorMetrics.findOneByVisitor(oldSegmentVisitor.visitorId);
-    // FIXME can be negative if added event is not processed
-    var updateDoc = {
-      $inc: {
-        visitorCount: -1,
-        visitCount: visitorMetric.visitCount * -1,
-        dwellTime: visitorMetric.dwellTime * -1
-      }
-    };
-    if(visitorMetric.isRepeated()) {
-      _.extend(updateDoc.$inc, { repeatedVisitorsCount: -1 });
-    }
-    upsertSegmentMetric(oldSegmentVisitor.segmentId, updateDoc);
-  }
+var prepareVisitorOtherSegmentsBarChartData = function(visitorInSegmentsHash) {
+    console.log("[SegmentMetric] generating other segment percentage var chart");
+    //TODO add impl
+}
 
-  function handleVisitorMetricAddedOrChanged(newVisitorMetric, oldVisitorMetric) {
-    console.log("[SegmentMetric] handleVisitorMetricAddedOrChanged of " + newVisitorMetric.visitorId);
-    if (!oldVisitorMetric) {
-      oldVisitorMetric = new VisitorMetric({
-        dwellTime: 0,
-        visitCount: 0
-      });
-    }
-    var diffDwellTime = newVisitorMetric.dwellTime - oldVisitorMetric.dwellTime;
-    var diffVisitCount = newVisitorMetric.visitCount - oldVisitorMetric.visitCount
-    var updateDoc = {
-      $inc : {
-        visitCount: diffVisitCount,
-        dwellTime: diffDwellTime
-      }
-    };
-    if (newVisitorMetric.isRepeated() && !oldVisitorMetric.isRepeated()) {
-      _.extend(updateDoc.$inc, { repeatedVisitorsCount: 1 });
-    }
-    SegmentVisitors.find({visitorId: newVisitorMetric.visitorId})
-      .map(function(segmentVisitor) {
-        console.log("[SegmentMetric] change " + segmentVisitor.segmentId + " with " + JSON.stringify(updateDoc));
-        upsertSegmentMetric(segmentVisitor.segmentId, updateDoc);
-      });
+var prepareVisitorsTagsBarChartData = function(visitorHasTagsHash) {
+    console.log("[SegmentMetric] generating visitors tag percentage bar chart");
+    //TODO add impl
+}
 
-  }
+var prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(encounters) {
+    console.log("[SegmentMetric] preparing average dwell time again number of Visitors histogram");
+    //TODO add impl
 
-  SegmentVisitors.find().observe({
-    _suppress_initial: true,
-    added: handleSegmentVisitorAdded,
-    removed: handleSegmentVisitorRemoved
-  });
+}
 
-  VisitorMetrics.findForever().observe({
-    _suppress_initial: true,
-    "added": handleVisitorMetricAddedOrChanged,
-    "changed": handleVisitorMetricAddedOrChanged
-  });
+var prepareDwellTimeInTimeFrameBubbleData = function(encounters) {
+    console.log("[SegmentMetric] preparing dwell time in time frame bubble data");
+    //TODO add impl
+}
 
-};
+var prepareNumberOfVisitXNumberOfVisitorsHistogramData = function(encounters) {
+    console.log("[SegmentMetric] preparing number of visit against number of visitors");
+    //TODO add impl
+}
+
+var prepareNumberOfVisitsInTimeFrameBubbleData = function(encounters) {
+    console.log("[SegmentMetric] preparing number of visits in time frame bubble data");
+    //TODO add impl
+}
