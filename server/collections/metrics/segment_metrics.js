@@ -1,8 +1,9 @@
 SegmentMetrics = {};
 
 SegmentMetrics.findList = function() {
-    var companyId = Companies.findOne({ownedByUserId : this.userId});
-    return Metrics.find({type: "segment", companyId : companyId, graphType : SegmentMetric.Graph.List});
+    var companyId = Companies.findOne({ownedByUserId : this.userId})._id;
+    console.log("[SegmentMetric] companyId=" + companyId);
+    return Metrics.find({'collectionMeta.type': "segment", companyId : companyId, graphType : SegmentMetric.Graph.List});
 };
 
 SegmentMetric = {};
@@ -27,8 +28,7 @@ SegmentMetric.TimeBucket.Week = "week";
 SegmentMetric.TimeBucket.Month = "month";
 
 SegmentMetric.generateAllGraph = function(segment, from, to) {
-    //TODO get visitorIds from kim's work
-    var visitorIds = [];
+    var visitorIds = segment.getVisitorIdList(moment().valueOf());
     var encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to);
     //TODO get visitors: [segmentIds] kim's work
     var visitorInSegmentsHash = {};
@@ -45,7 +45,7 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
         graphType: SegmentMetric.Graph.List
     };
     var listMetric = new Metric(segment.companyId, collectionMeta, from, to, SegmentMetric.Graph.List, listData);
-    Metric.upsert(listMetricSelector, listMetric);
+    Metrics.upsert(listMetricSelector, listMetric);
 
 
     SegmentMetric.prepareTimeBucketXNumOfVisitorHistogramData(SegmentMetric.TimeBucket.Week, encounters);

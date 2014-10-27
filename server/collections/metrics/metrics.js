@@ -1,6 +1,6 @@
 Metric.generateAllSegmentRelated = function(userId, from, to) {
     var companyId = Companies.findOne({ownedByUserIds : userId })._id;
-    Segment.find({companyId: companyId}).map(function(segment) {
+    Segments.find({companyId: companyId}).map(function(segment) {
         SegmentMetric.generateAllGraph(segment, from, to);
     });
 };
