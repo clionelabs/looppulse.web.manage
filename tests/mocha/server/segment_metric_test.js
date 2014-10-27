@@ -69,6 +69,14 @@ if (!(typeof MochaWeb === "undefined")) {
                         repeatedVisitorPercentage : 1
                     }, SegmentMetric.prepareListData(encounters)).should.be.true;
                 });
+                it("should count repeated visitor percentage correctly", function() {
+                    var encounters = [e_123_1, e_123_2, e_456_2,e_456_3];
+                    _.isEqual({
+                        numberOfVisitors : 2,
+                        averageDwellTime : 2700000,
+                        repeatedVisitorPercentage : 0.5
+                    }, SegmentMetric.prepareListData(encounters)).should.be.true;
+                });
             });
         })
     });

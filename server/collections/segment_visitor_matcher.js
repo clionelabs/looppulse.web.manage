@@ -157,7 +157,7 @@ SegmentVisitorMatcher.prototype.sortEncounters = function(encounters) {
 
   if (isSorted) return;
   encounters.sort(function (e1, e2) {
-    return e1.exitedAt < e2.exitedAt? -1: 1;
+    return e1.exitedAt.diff(e2.exitedAt) < 0 ? -1: 1;
   });
 }
 

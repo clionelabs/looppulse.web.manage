@@ -58,7 +58,7 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
     SegmentMetric.prepareNumberOfVisitXNumberOfVisitorsHistogramData(encounters);
     SegmentMetric.prepareNumberOfVisitsInTimeFrameBubbleData(encounters);
 
-}
+};
 
 SegmentMetric.prepareListData = function(encounters) {
     console.log("[SegmentMetric] generating list view data");
@@ -119,44 +119,40 @@ SegmentMetric.prepareListData = function(encounters) {
 
         return listData;
     }
-}
+};
 
 SegmentMetric.prepareTimeBucketXNumOfVisitorHistogramData = function(bucketSize, encounters) {
     console.log("[SegmentMetric] generating time bucket against number of visitors histogram");
     //TODO add impl
-}
+};
 
 SegmentMetric.prepareVisitorOtherSegmentsBarChartData = function(visitorInSegmentsHash) {
     console.log("[SegmentMetric] generating other segment percentage var chart");
     //TODO add impl
-}
+};
 
 SegmentMetric.prepareVisitorsTagsBarChartData = function(visitorHasTagsHash) {
     console.log("[SegmentMetric] generating visitors tag percentage bar chart");
     //TODO add impl
-}
+};
 
 SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(encounters) {
     console.log("[SegmentMetric] preparing average dwell time again number of Visitors histogram");
     //TODO add impl
 
-}
+};
 
 SegmentMetric.prepareDwellTimeInTimeFrameBubbleData = function(encounters) {
     console.log("[SegmentMetric] preparing dwell time in time frame bubble data");
     //TODO add impl
-}
+};
 
 SegmentMetric.prepareNumberOfVisitXNumberOfVisitorsHistogramData = function(encounters) {
     console.log("[SegmentMetric] preparing number of visit against number of visitors");
     //TODO add impl
-}
+};
 
 SegmentMetric.prepareNumberOfVisitsInTimeFrameBubbleData = function(encounters) {
     console.log("[SegmentMetric] preparing number of visits in time frame bubble data");
     //TODO add impl
-}
-
-Meteor.startup = function() {
-    //TODO observe spring
 };
