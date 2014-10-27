@@ -60,11 +60,20 @@ SegmentVisitor.startup = function () {
   });
   Encounters.find().observe({
     _suppress_initial: true,
-    "added": handleEncounterAdded,
-    "changed": handleEncounterChanged
+    "added": function(doc){
+      Benchmark.time(
+        function() { handleEncounterAdded(doc); },
+        "[Benchmark] Encounters:added => handleEncounterAdded")},
+    "changed": function(newDoc, oldDoc){
+      Benchmark.time(
+        function() { handleEncounterChanged(newDoc, oldDoc); },
+        "[Benchmark] Encounters:changed => handleEncounterChanged")}
   });
   Segments.find().observe({
     _suppress_initial: true,
-    "added": handleSegmentAdded
+    "added": function(doc){
+      Benchmark.time(
+        function() { handleSegmentAdded(doc); },
+        "[Benchmark] Segments:added => handleSegmentAdded")}
   });
 };
