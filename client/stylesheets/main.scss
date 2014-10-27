@@ -1,2 +1,36 @@
 //The CSS that execute last put here
 @import "variable";
+
+@media (min-width: 768px) {
+  .container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    width: 1024px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar-nav {
+    margin: 0 15px;
+  }
+  .nav > li > a {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
