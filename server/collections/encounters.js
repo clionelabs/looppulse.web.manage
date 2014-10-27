@@ -36,7 +36,10 @@ Encounter.startup = function () {
   BeaconEvents.find().observe({
     _suppress_initial: true,
     "added": function (beaconEvent) {
-      Encounters.createOrUpdate(beaconEvent);
+      Benchmark.time(
+        function() { Encounters.createOrUpdate(beaconEvent); },
+        "[Benchmark] BeaconEvents:added => Encounters.createOrUpdate"
+        );
     }
   });
   console.info("[Encounter] startup complete");
