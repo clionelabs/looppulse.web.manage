@@ -1,5 +1,44 @@
 if (!(typeof MochaWeb === 'undefined')){
   MochaWeb.testOnly(function(){
+
+    describe("Check encounter is relevant", function() {
+      var matcher;
+      var installationIds = [1, 2];
+      var baseDate;
+
+      var getDateBySec = function(seconds) {
+        return moment(baseDate).add(seconds, 's');
+      }
+      
+      beforeEach(function() {
+        matcher = SegmentVisitorMatcher.prototype;
+        matcher.segment = {};
+        baseDate = moment().unix();
+      }); 
+
+      it("no criteria", function() {
+        matcher.segment.criteria = {};
+        var encounter = {installationId: 1, visitorId: 1, enteredAt: getDateBySec(0), exitedAt: getDateBySec(1), duration: 1 * 1000};
+        chai.assert(matcher.checkEncounterIsRelevant(encounter) === true);
+      });
+
+      it("duration at least", function() {
+        matcher.segment.criteria = {durationInMinutes: {atLeast: 1}};
+        var encounter = {installationId: 1, visitorId: 1, enteredAt: getDateBySec(0), exitedAt: getDateBySec(1), duration: 1 * 1000};
+        chai.assert(matcher.checkEncounterIsRelevant(encounter) === false);
+        var encounter = {installationId: 1, visitorId: 1, enteredAt: getDateBySec(0), exitedAt: getDateBySec(60), duration: 60 * 1000};
+        chai.assert(matcher.checkEncounterIsRelevant(encounter) === true);
+      });
+
+      it("duration at most", function() {
+        matcher.segment.criteria = {durationInMinutes: {atMost: 1}};
+        var encounter = {installationId: 1, visitorId: 1, enteredAt: getDateBySec(0), exitedAt: getDateBySec(60), duration: 60 * 1000};
+        chai.assert(matcher.checkEncounterIsRelevant(encounter) === true);
+        var encounter = {installationId: 1, visitorId: 1, enteredAt: getDateBySec(0), exitedAt: getDateBySec(61), duration: 61 * 1000};
+        chai.assert(matcher.checkEncounterIsRelevant(encounter) === false);
+      });
+    });
+
     describe("Segment Visitor Matcher", function() {
       var matcher;
       var criteria;

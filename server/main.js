@@ -1,5 +1,6 @@
 configure();
 
+/*
 Visitors.find().map(function(visitor) {
   Segments.find().map(function(segment) {
     Benchmark.time(function() {
@@ -10,6 +11,7 @@ Visitors.find().map(function(visitor) {
 Segments.find().map(function(segment) {
   console.log("[Main]", segment.name, segment.getVisitorIdList(moment().unix()).length);
 });
+*/
 
 Meteor.startup(
   Meteor.bindEnvironment(function() {
