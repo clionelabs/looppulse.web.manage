@@ -1,38 +1,44 @@
 <template name="segmentList">
   {{> companyHeader }}
 
-  <div class="segment-list-header">
-    <h3>{{ segments.length }} segments</h3>
-    <a href="{{pathFor 'segment.create' }}" class="create-btn btn btn-primary pull-right">Create a Segment</a>
-      {{!-- TODO uncomment this if modal logic is implemented
-      <button class="create-btn btn btn-primary pull-right"
-              data-toggle="modal"
-              data-target="#createSegmentModal">New
-            </button> --}}
-  </div>
+  <header class="segment-view segment-list-header view-header">
+    <div class="container">
+      <h3>{{ segments.length }} segments</h3>
+      <a href="{{pathFor 'segment.create' }}" class="create-btn btn btn-primary pull-right">Create a Segment</a>
+        {{!-- TODO uncomment this if modal logic is implemented
+        <button class="create-btn btn btn-primary pull-right"
+                data-toggle="modal"
+                data-target="#createSegmentModal">New
+              </button> --}}
+    </div>
+  </header>
 
-  <table class="table table-hover segment-list">
-    <thead>
-      <tr>
-        <th width="54%">Segments</th>
-        <th width="14%">Visitors</th>
-        <th width="15%">Dwell</th>
-        <th width="27%">Repeated Visits</th>
-      </tr>
-    </thead>
-    <tbody>
-        {{#each segments}}
+  <section class="view-content segment-list">
+    <div class="container">
+      <table class="table table-hover segment-list">
+        <thead>
           <tr>
-            <td>
-              <a href="{{pathFor 'segment.detail' segmentId=_id }}">{{ name }}</a>
-            </td>
-            <td>{{ formatToThousand visitorCount }}</td>
-            <td>{{ formatDurationToMin dwellTimeAverage }}</td>
-            <td>{{ formatPercent repeatedVisitPercentage }}</td>
+            <th width="54%">Segments</th>
+            <th width="14%">Visitors</th>
+            <th width="15%">Dwell</th>
+            <th width="27%">Repeated Visits</th>
           </tr>
-        {{/each}}
-    </tbody>
-  </table>
+        </thead>
+        <tbody>
+            {{#each segments}}
+              <tr>
+                <td>
+                  <a href="{{pathFor 'segment.detail' segmentId=_id }}">{{ name }}</a>
+                </td>
+                <td>{{ formatToThousand visitorCount }}</td>
+                <td>{{ formatDurationToMin dwellTimeAverage }}</td>
+                <td>{{ formatPercent repeatedVisitPercentage }}</td>
+              </tr>
+            {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </section>
 
     {{!-- TODO uncomment this if modal logic is implemented
     <div class="modal fade" id="createSegmentModal" tabindex="-1" role="dialog"

@@ -66,7 +66,6 @@ footer.primary {
   left:0;
   background-color: $alt-dark-color;
   color: #fff;
-  padding:0 10px;
   line-height:25px;
 }
 
@@ -188,9 +187,7 @@ svg.d4 {
 
 $navbar-padding: 10px;
 $navbar-logo-width: 64px - $navbar-padding;
-header#primary {
-  padding:0 15px;
-
+header.primary {
   .navbar-toggle {
     span.icon-bar {
       background-color: $font-color;
@@ -228,7 +225,7 @@ header#primary {
   }
 
   .navbar-right {
-    
+
     li > a {
       // margin-top: 20px;
       font-size: 0.8em;
@@ -240,7 +237,7 @@ header#primary {
     background-size: contain;
     width:35px;
     height:35px;
-    margin:6px 10px 0 10px;
+    margin: 6px -10px 0 -3px;
     max-height: 40px;
 
   }

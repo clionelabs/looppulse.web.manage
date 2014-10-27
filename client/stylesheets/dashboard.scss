@@ -1,4 +1,23 @@
 @import "variable";
+
+.container {
+
+  // wrapper to eliminate container padding
+  .seamless &, .view-content & {
+    padding: 0
+  }
+
+  // revert to default setting:
+  // if you still want to have some container have padding applied anyway, add `.padded-container` in `div.container`
+  &.padded-container {
+    padding: 0 15px;
+  }
+}
+
+section.view-content {
+  background-color:#fff;
+}
+
 .charting {
   font-size:10px;
   line-height: 1;
@@ -323,14 +342,13 @@
 .company-name {
   background-color:$secondary-header-bg-color;
   height: 50px;
-  padding: 0.5em 15px 0 15px;
+  line-height: 48px;
   border-bottom:1px solid $border-color;
   color: $primary-color;
 }
 
 .segment-list-header, .segment-create {
   min-height:130px;
-  padding:0 15px;
   background-color: $background-color;
 
   .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
@@ -363,16 +381,16 @@ table.segment-list {
 .segment-header {
   h1 {
     margin:0;
-    padding:10px; 
+    padding:10px 0;
     color: rgba(0,0,0,0.45);
     font-size: 1.47em;
     float:left;
   }
   .functions {
     float:right;
-    padding:10px; 
+    padding:10px 0;
 
-    .btn { 
+    .btn {
       border:0;
       margin:0px 10px;
       padding:9px;
@@ -391,6 +409,8 @@ table.segment-list {
     }
   }
 }
+
+
 
 ul.metric-tabs {
   width: 100%;
@@ -423,10 +443,10 @@ ul.metric-tabs {
 
     .tab-content {
       margin:12px auto;
-      width:199px;
+      width:200px;
       height:67px;
       .row {
-        > div {
+        > div { //FIXME
           display:inline-block;
         }
         .number {
@@ -481,12 +501,7 @@ ul.metric-tabs {
       }
     }
 
-
-    div {
-      margin: 0;
-    }
-
-    > a, a > div {
+    > a, a > div { //FIXME
       height: 100%;
       width: 100%;
       display: table;
@@ -498,7 +513,7 @@ ul.metric-tabs {
       }
     }
 
-    > a span {
+    > a span { //FIXME
       display: table-cell;
       vertical-align: middle;
     }

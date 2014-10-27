@@ -1,3 +1,10 @@
+SegmentMetric.ensureIndex = function () {
+  SegmentMetrics._ensureIndex({
+    segmentId: 1,
+    type: 1
+  });
+};
+
 SegmentMetric.startup = function () {
   function upsertSegmentMetric(segmentId, modifier) {
     var selector = {
@@ -66,10 +73,10 @@ SegmentMetric.startup = function () {
   function handleVisitorMetricAddedOrChanged(newVisitorMetric, oldVisitorMetric) {
     console.log("[SegmentMetric] handleVisitorMetricAddedOrChanged of " + newVisitorMetric.visitorId);
     if (!oldVisitorMetric) {
-      oldVisitorMetric = {
+      oldVisitorMetric = new VisitorMetric({
         dwellTime: 0,
         visitCount: 0
-      };
+      });
     }
     var diffDwellTime = newVisitorMetric.dwellTime - oldVisitorMetric.dwellTime;
     var diffVisitCount = newVisitorMetric.visitCount - oldVisitorMetric.visitCount
@@ -87,7 +94,7 @@ SegmentMetric.startup = function () {
         console.log("[SegmentMetric] change " + segmentVisitor.segmentId + " with " + JSON.stringify(updateDoc));
         upsertSegmentMetric(segmentVisitor.segmentId, updateDoc);
       });
-    
+
   }
 
   SegmentVisitors.find().observe({
@@ -103,4 +110,3 @@ SegmentMetric.startup = function () {
   });
 
 };
-
