@@ -1,5 +1,16 @@
 configure();
 
+Visitors.find().map(function(visitor) {
+  Segments.find().map(function(segment) {
+    Benchmark.time(function() {
+      recomputeSegmentVisitorStatus(segment, visitor);
+    }, "computing segment visitor status " + segment._id + " and " + visitor._id);
+  });
+});
+Segments.find().map(function(segment) {
+  console.log("[Main]", segment.name, segment.getVisitorIdList(moment().unix()).length);
+});
+
 Meteor.startup(
   Meteor.bindEnvironment(function() {
     Meteor.defer(function() {
