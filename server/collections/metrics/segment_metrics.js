@@ -1,3 +1,10 @@
+SegmentMetric.ensureIndex = function () {
+  SegmentMetrics._ensureIndex({
+    segmentId: 1,
+    type: 1
+  });
+};
+
 SegmentMetric.startup = function () {
   function upsertSegmentMetric(segmentId, modifier) {
     var selector = {
@@ -87,7 +94,7 @@ SegmentMetric.startup = function () {
         console.log("[SegmentMetric] change " + segmentVisitor.segmentId + " with " + JSON.stringify(updateDoc));
         upsertSegmentMetric(segmentVisitor.segmentId, updateDoc);
       });
-    
+
   }
 
   SegmentVisitors.find().observe({
@@ -103,4 +110,3 @@ SegmentMetric.startup = function () {
   });
 
 };
-

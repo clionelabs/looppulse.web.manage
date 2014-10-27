@@ -1,3 +1,9 @@
+Segment.ensureIndex = function () {
+  Segments._ensureIndex({
+    companyId: 1
+  });
+};
+
 /**
  *
  * @param visitorId
