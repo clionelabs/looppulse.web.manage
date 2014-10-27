@@ -1,10 +1,3 @@
-SegmentMetric.ensureIndex = function () {
-  SegmentMetrics._ensureIndex({
-    segmentId: 1,
-    type: 1
-  });
-};
-
 SegmentMetric.startup = function () {
   function upsertSegmentMetric(segmentId, modifier) {
     var selector = {
