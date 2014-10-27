@@ -20,7 +20,7 @@ configure = function() {
 };
 
 ensureIndexes = function() {
-  var classes = [BeaconEvent, Encounter, Installation, Metric, SegmentVisitor, Visitor];
+  var classes = [BeaconEvent, Encounter, Installation, Company, Floor, Segment, Metric, SegmentVisitor, Visitor];
   classes.forEach(
     function(objectClass) {
       if (objectClass.hasOwnProperty('ensureIndex')) {

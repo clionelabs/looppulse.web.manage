@@ -1,3 +1,9 @@
+Company.ensureIndex = function () {
+  Companies._ensureIndex({
+    ownedByUserIds: 1
+  });
+};
+
 Company.prototype.firebaseRef = function() {
   return this.systemConfig.firebase.root + "/companies/" + this._id.toString();
 };
