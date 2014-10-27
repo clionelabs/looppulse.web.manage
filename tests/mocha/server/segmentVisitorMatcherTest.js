@@ -22,7 +22,7 @@ if (!(typeof MochaWeb === 'undefined')){
 
       beforeEach(function() {
         matcher = SegmentVisitorMatcher.prototype;
-        baseDate = lodash.now();
+        baseDate = moment().unix();
       });
 
       describe("at least one", function() {

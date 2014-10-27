@@ -4,6 +4,42 @@ SegmentVisitorMatcher = function(segment, visitor) {
 } 
 
 /**
+ *  Check whether an encounter is relevant to a segment
+ *
+ *  @param encounter
+ *  @return true/false
+ */
+SegmentVisitorMatcher.prototype.checkEncounterIsRelevant = function(encounter) {
+  var criteria = this.segment.criteria;
+  if (_.isEmpty(criteria)) { // All visitor segment only?
+    return true;
+  } 
+  if (criteria.durationInMinutes) {
+    if (criteria.durationInMinutes.atLeast) {
+      if (!encounter.duration || encounter.duration < criteria.durationInMinutes.atLeast * 60 * 1000) return false;
+    }
+    if (criteria.durationInMinutes.atMost) {
+      if (encounter.duration && encounter.duration > criteria.durationInMinutes.atMost * 60 * 1000) return false; 
+    }
+  }
+  if (criteria.days) {
+    if (criteria.days.inLast) {
+      if (encounter.enteredAt < moment().subtract(criteria.days.inLast, 'days')) return false;
+    } else {
+      if (encounter.enteredAt < criteria.days.start || encounter.enteredAt > criteria.days.end) return false;
+    }
+  }
+  if (criteria.every) {
+    if (criteria.every === "weekdays") {
+      if (encounter.enteredAtParts.dayOfWeek < 1 || encounter.enteredAtParts.dayOfWeek > 5) return false; 
+    } else if (criteria.every === "weekends") {
+      if (encounter.enteredAtParts.dayOfWeek != 0 && encounter.enteredAtParts.dayOfWeek != 6) return false;
+    }
+  }
+  return true;
+}
+
+/**
  * Compute in/out events of a visitor-segment pair, happening from now into the future.
  *
  * @param criteria SegmentCriteria
@@ -15,7 +51,7 @@ SegmentVisitorMatcher = function(segment, visitor) {
  *    event is happening on time data1, and a exit event is happening on time dat2. 
  */
 SegmentVisitorMatcher.prototype.computeCurrentStatus = function() {
-  var now = lodash.now();
+  var now = moment().unix();
   var installationIds = this.getInstallationIds(this.segment.criteria, this.segment.companyId);
   var encounters = this.getMatchedEncounters(this.segment.criteria, this.visitor._id, installationIds, now);
   var events = this.doComputeCurrentStatus(this.segment.criteria, installationIds, encounters, now); 
@@ -121,7 +157,7 @@ SegmentVisitorMatcher.prototype.sortEncounters = function(encounters) {
 
   if (isSorted) return;
   encounters.sort(function (e1, e2) {
-    return e1.exitedAt.getTime() < e2.exitedAt.getTime()? -1: 1;
+    return e1.exitedAt < e2.exitedAt? -1: 1;
   });
 }
 

@@ -31,13 +31,26 @@ var recomputeSegmentVisitorStatus = function(segment, visitor) {
     }
   });
 
-  // console.log('[SegmentVisitorFLow] Segment visitor list: ', segment._id, segment.getVisitorIdList(lodash.now()));
-  // console.log('[SegmentVisitorFlow] Visitor segment list: ', visitor._id, visitor.getSegmentIdList(lodash.now()));
+  console.log('[SegmentVisitorFLow] Segment visitor list: ', segment._id, segment.getVisitorIdList(lodash.now()));
+  console.log('[SegmentVisitorFlow] Visitor segment list: ', visitor._id, visitor.getSegmentIdList(lodash.now()));
 };
 
 var recomputeVisitorStatus = function(visitor) {
   Segments.find().map(function(segment) {
     recomputeSegmentVisitorStatus(segment, visitor);
+  });
+}
+
+var recomputeEncounterVisitorStatus = function(encounter) {
+  var visitor = Visitors.findOne({_id: encounter.visitorId});
+  Segments.find().map(function(segment) {
+    var matcher = new SegmentVisitorMatcher(segment, visitor);
+    var isRelevant = matcher.checkEncounterIsRelevant(encounter);
+    // console.log("[SegmentVisitorFlow] isRelevant", encounter, segment, isRelevant);
+    // TODO: remove the "true" below to only recompute relevant segment.
+    if (true || isRelevant) {
+      recomputeSegmentVisitorStatus(segment, visitor);
+    } 
   });
 }
 
@@ -51,17 +64,16 @@ var handleVisitorAdded = function(visitor) {
   recomputeVisitorStatus(visitor);
 };
 
-//TODO: only need to recompute segments, whose criteria matched with the encounter.
 var handleEncounterAdded = function(encounter) {
-  recomputeVisitorStatus(Visitors.findOne({_id: encounter.visitorId}));
+  recomputeEncounterVisitorStatus(encounter);
 };
 
 var handleEncounterChanged = function(encounter, oldEncounter) {
-  recomputeVisitorStatus(Visitors.findOne({_id: encounter.visitorId}));
-}
+  recomputeEncounterVisitorStatus(encounter);
+};
 
-SegmentVisitor.ensureIndex = function () {
-  SegmentVisitors._ensureIndex({
+SegmentVisitorFlow.ensureIndex = function () {
+  SegmentVisitorFlows._ensureIndex({
     segmentId: 1,
     visitorId: 1,
     time: 1
