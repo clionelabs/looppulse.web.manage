@@ -81,6 +81,8 @@ Here are some few points for reference,
 5. Force restart
   1. `sudo service looppulse_manage restart` or simply trigger build in jenkins
 
+6. Source code
+  1. `/opt/looppulse_manage` on beta.looppulse.com
 
 ## Local Debugging
 
