@@ -11,6 +11,9 @@ Visitors.find().map(function(visitor) {
 Segments.find().map(function(segment) {
   console.log("[Main]", segment.name, segment.getVisitorIdList(moment().unix()).length);
 });
+Segments.find().map(function(segment) {
+  console.log("[Main]", segment.name, segment.getVisitorIdList(moment().unix()));
+});
 */
 
 Meteor.startup(
