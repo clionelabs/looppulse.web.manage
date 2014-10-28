@@ -28,8 +28,9 @@ SegmentMetric.TimeBucket.Week = "week";
 SegmentMetric.TimeBucket.Month = "month";
 
 SegmentMetric.generateAllGraph = function(segment, from, to) {
+    console.log("[SegmentMetric] generating segment " + segment._id + " metric data");
     var visitorIds = segment.getVisitorIdList(moment().valueOf());
-    var encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to);
+    var encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
     //TODO get visitors: [segmentIds] kim's work
     var visitorInSegmentsHash = {};
     //TODO get visitors: [tags]
@@ -62,6 +63,7 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
 
 SegmentMetric.prepareListData = function(encounters) {
     console.log("[SegmentMetric] generating list view data");
+    console.log(JSON.stringify(encounters));
     var listData = {
         numberOfVisitors : 0,
         averageDwellTime : 0,
