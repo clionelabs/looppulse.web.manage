@@ -6,8 +6,8 @@ SegmentVisitorMatcher = function(segment, visitor) {
 /**
  *  Check whether an encounter is relevant to a segment
  *
- *  @param encounter
- *  @return true/false
+ *  @param {Encounter} encounter
+ *  @return {BOOL} true/false
  */
 SegmentVisitorMatcher.prototype.checkEncounterIsRelevant = function(encounter) {
   var criteria = this.segment.criteria;
@@ -41,17 +41,15 @@ SegmentVisitorMatcher.prototype.checkEncounterIsRelevant = function(encounter) {
 
 /**
  * Compute in/out events of a visitor-segment pair, happening from now into the future.
+ * Note: This method currently is calling another private method doCmoputeCurrentStatus() solely for the purpose to ease unit-testing.
+ *       The largest barrier is the "new TriggerLocation()" call inside the method, which we don't know how to stub.
+ *       If we figure out how to stub constructor properly, we can get rid of the doComputeCurrentStatus(),
+ *       and unit-test this method directly because unit-testing private method is not desirable.
  *
- * @param criteria SegmentCriteria
- * @param installationIds  Array of installation ids
- * @param encounters Array of encounters (presumably sorted in exitedAt. We will sort them if not, but it's not desired, coz the running time will become O(NlogN))
- *
- * @return Array of events, with each events having an attribute of i) time, and ii) delta (enter = 1, exit = -1)
- *    a sample return would be: [{time: date1, delta: 1}, {time: date2, delta: -1}]. This means that an enter 
- *    event is happening on time data1, and a exit event is happening on time dat2. 
+ * @return {Object[]} Array of events: details refer to doComputeCurrentStatus()
  */
 SegmentVisitorMatcher.prototype.computeCurrentStatus = function() {
-  var now = moment().unix();
+  var now = moment().valueOf();
   var installationIds = this.getInstallationIds(this.segment.criteria, this.segment.companyId);
   var encounters = this.getMatchedEncounters(this.segment.criteria, this.visitor._id, installationIds, now);
   var events = this.doComputeCurrentStatus(this.segment.criteria, installationIds, encounters, now); 
@@ -59,7 +57,8 @@ SegmentVisitorMatcher.prototype.computeCurrentStatus = function() {
 }
 
 /**
- * @return Array of the relevant installation ids of a segment
+ * @private
+ * @return {Number[]} Array of the relevant installation ids of a segment
  **/
 SegmentVisitorMatcher.prototype.getInstallationIds = function(criteria, companyId) {
   var installationIds = new TriggerLocation(companyId, criteria.triggerLocations, criteria.locationIds).installationIds(); 
@@ -67,7 +66,8 @@ SegmentVisitorMatcher.prototype.getInstallationIds = function(criteria, companyI
 }
 
 /**
- * @return Array of encounters doc.
+ * @private
+ * @return {Encounter[]} Array of encounters
  */
 SegmentVisitorMatcher.prototype.getMatchedEncounters = function(criteria, visitorId, installationIds, now) {
   var selector = this.buildEncountersSelector(criteria, visitorId, installationIds, now);
@@ -78,6 +78,8 @@ SegmentVisitorMatcher.prototype.getMatchedEncounters = function(criteria, visito
 /**
  * Build db selectors given the criteria, visitor, installations and current time.
  * Current time is needed for the "last X days" criteria.
+ *
+ * @private
  */
 SegmentVisitorMatcher.prototype.buildEncountersSelector = function(criteria, visitorId, installationIds, now) {
   var selector = {
@@ -98,6 +100,9 @@ SegmentVisitorMatcher.prototype.buildEncountersSelector = function(criteria, vis
   return selector;
 }
 
+/**
+ * @private
+ */
 SegmentVisitorMatcher.prototype.buildEncountersSelectorDuration = function(durationInMinutes) {
   var selector = {};
   selector['duration'] = {};
@@ -110,6 +115,9 @@ SegmentVisitorMatcher.prototype.buildEncountersSelectorDuration = function(durat
   return selector;
 }
 
+/**
+ * @private
+ */
 SegmentVisitorMatcher.prototype.buildEncountersSelectorEvery = function(every) {
   var selector = {};
   switch (every) {
@@ -125,6 +133,9 @@ SegmentVisitorMatcher.prototype.buildEncountersSelectorEvery = function(every) {
   return selector; 
 }
 
+/**
+ * @private
+ */
 SegmentVisitorMatcher.prototype.buildEncountersSelectorDays = function(days, now) {
   var selector = {};
   if (days.inLast) {
@@ -141,10 +152,10 @@ SegmentVisitorMatcher.prototype.buildEncountersSelectorDays = function(days, now
 }
 
 /**
- * Sort encounters if it's not already been sorted
+ * Sort (In-place) encounters if it's not already been sorted
  * 
- * @param encounters Array of encounters (may not be sorted)
- * @return Array of sorted encounters
+ * @private
+ * @param {Encounter[]} encounters Array of encounters (may not be sorted)
  */
 SegmentVisitorMatcher.prototype.sortEncounters = function(encounters) {
   var isSorted = true;
@@ -164,6 +175,7 @@ SegmentVisitorMatcher.prototype.sortEncounters = function(encounters) {
 /**
  * check whether the encounterCount met a single installation requirement
  *
+ * @private
  * @return true/false
  */
 SegmentVisitorMatcher.prototype.isInstallationFulfilled = function(criteria, encounterCount) {
@@ -179,7 +191,8 @@ SegmentVisitorMatcher.prototype.isInstallationFulfilled = function(criteria, enc
 /**
  * Given the # of fulfilled installations individually, check whether the whole set is fulfilled as a whole.
  *
- * @return true/false
+ * @private
+ * @return {BOOL} true/false
  */
 SegmentVisitorMatcher.prototype.isInstallationSetFulfilled = function(criteria, fulfilledCount, allCount) {
   if (criteria.hasBeen && criteria.to === "all") {
@@ -195,6 +208,9 @@ SegmentVisitorMatcher.prototype.isInstallationSetFulfilled = function(criteria, 
 
 /**
  * Compute the # of encounters per each installations
+ * 
+ * @private
+ * @return {Objects[]}
  */
 SegmentVisitorMatcher.prototype.buildInstallationCounters = function(encounters) {
   var counters = {};
@@ -208,14 +224,18 @@ SegmentVisitorMatcher.prototype.buildInstallationCounters = function(encounters)
  * Core matching function. Given installations, encounters and criteria, compute a list of 
  * in/out events happening from now into the future.
  *
- * @param criteria SegmentCriteria
- * @param installationIds  Array of installation ids
- * @param encounters Array of encounters (presumably sorted in exitedAt. We will sort them if not, but it's not desired, coz the running time will become O(NlogN))
- * @return Array of events
+ * @private
+ * @param {SegmentCriteria} criteria
+ * @param {Number[]} installationIds Array of installation ids
+ * @param {Encounter[]} encounters Array of encounters (presumably sorted in exitedAt. We will sort them if not, but it's not desired, coz the running time will become O(NlogN)), so better fetch them sorted from mongo.
+ *
+ * @return {Object[]} Array of events, with each events having an attribute of i) deltaAt (timestamp in ms), and ii) delta (enter = 1, exit = -1)
+ *    a sample return would be: [{time: deltaAt, delta: 1}, {deltaAt: date2, delta: -1}]. This means that an enter 
+ *    event is happening on time data1, and a exit event is happening on time date2. 
  */
 SegmentVisitorMatcher.prototype.doComputeCurrentStatus = function(criteria, installationIds, encounters, now) {
   if (_.isEmpty(criteria)) { // All visitor segment only?
-    return [{time: now, delta: 1}];
+    return [{deltaAt: now, delta: 1}];
   }
   this.sortEncounters(encounters);  // not necessary if they are already sorted, but for completeness....
 
@@ -230,8 +250,7 @@ SegmentVisitorMatcher.prototype.doComputeCurrentStatus = function(criteria, inst
 
   var result = [];
   var delta = this.isInstallationSetFulfilled(criteria, okCount, installationIds.length)? 1: -1;
-  // result.push({time: encounters[encounters.length-1].exitedAt, delta: delta});
-  result.push({time: now, delta: delta});
+  result.push({deltaAt: now, delta: delta});
 
   // quick check and see if future events are possible
   if (!criteria.days || !criteria.days.inLast) return result;
@@ -249,10 +268,10 @@ SegmentVisitorMatcher.prototype.doComputeCurrentStatus = function(criteria, inst
     var setMatchAfter = self.isInstallationSetFulfilled(criteria, okCount, installationIds.length);
 
     if (setMatchBefore && !setMatchAfter) {
-        result.push({time: invalidTime, delta: -1});
+        result.push({deltaAt: invalidTime, delta: -1});
     }
     if (!setMatchBefore && setMatchAfter) {
-        result.push({time: invalidTime, delta: 1});
+        result.push({deltaAt: invalidTime, delta: 1});
     }
   });
 

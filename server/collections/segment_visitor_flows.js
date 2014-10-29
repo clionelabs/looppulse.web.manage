@@ -8,6 +8,9 @@
  * SegmentVisitorFlow collections should contain "all" in/out events for any pairs of
  * segment and visitor from past into future, given the received encounters so far. 
  * The SegmentVisitorFlow collections are updated whenever relevant encounters are received.
+ *
+ * @param {Segment} segment
+ * @param {Visitor} visitor
  */
 var recomputeSegmentVisitorStatus = function(segment, visitor) {
   var matcher = new SegmentVisitorMatcher(segment, visitor);
@@ -20,9 +23,9 @@ var recomputeSegmentVisitorStatus = function(segment, visitor) {
   if (statusDelta.length === 0) return; // Not supposed to be 0 though. Just to be safe.
 
   // remove all existing future events
-  SegmentVisitorFlows.remove(_.extend({}, selector, {time: {$gte: statusDelta[0].time}}));
+  SegmentVisitorFlows.remove(_.extend({}, selector, {deltaAt: {$gte: statusDelta[0].deltaAt}}));
 
-  var lastFlow = SegmentVisitorFlows.findOne(selector, {sort: {time: -1}});
+  var lastFlow = SegmentVisitorFlows.findOne(selector, {sort: {deltaAt: -1}});
   var lastDelta = lastFlow === undefined? 0: lastFlow.delta;
   _.each(statusDelta, function(flow) {
     if (flow.delta !== lastDelta) {
@@ -72,11 +75,47 @@ var handleEncounterChanged = function(encounter, oldEncounter) {
   recomputeEncounterVisitorStatus(encounter);
 };
 
+/*
+ *  Return the visitor Id list of a particular segment at a particular time
+ *
+ *  @param {Segment} segment
+ *  @param {timestamp in ms} at Time at which you are checking
+ *  @returni {Number[]} Array of visitor id
+ */
+SegmentVisitorFlows.getSegmentVisitorIdList = function(segment, at) {
+  var outIds = {};
+  var inIds = {};
+  SegmentVisitorFlows.find({segmentId: segment._id, deltaAt: {$lt: at}}, {sort: {deltaAt: -1}}).forEach(function(flow) {
+    if (outIds[flow.visitorId] !== undefined) return; // since we sort in desc order, if an out event appeared before, everything else is irrelevant
+    if (flow.delta === 1) inIds[flow.visitorId] = true;
+    else outIds[flow.visitorId] = true;
+  });
+  return Object.keys(inIds);
+}
+
+/*
+ *  Return the segment Id list, in which a particular visitor belongs, at a particular time
+ *
+ *  @param {Visitor} visitor
+ *  @param {timestamp in ms} at Time at which you are checking
+ *  @return {Number[]} Array of segment id
+ */
+SegmentVisitorFlows.getVisitorSegmentIdList = function(visitor, at) {
+  var outIds = {};
+  var inIds = {};
+  SegmentVisitorFlows.find({visitorId: visitor._id, deltaAt: {$lt: at}}, {sort: {deltaAt: -1}}).forEach(function(flow) {
+    if (outIds[flow.segmentId] !== undefined) return; // since we sort in desc order, if an out event appeared before, everything else is irrelevant
+    if (flow.delta === 1) inIds[flow.segmentId] = true;
+    else outIds[flow.segmentId] = true;
+  });
+  return Object.keys(inIds);
+}
+
 SegmentVisitorFlow.ensureIndex = function () {
   SegmentVisitorFlows._ensureIndex({
     segmentId: 1,
     visitorId: 1,
-    time: 1
+    deltaAt: 1
   });
 };
 

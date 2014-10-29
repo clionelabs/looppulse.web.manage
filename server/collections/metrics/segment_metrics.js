@@ -46,7 +46,7 @@ SegmentMetric.TimeBucketMomentShortHands[SegmentMetric.TimeBucket.Month] = 'M';
 SegmentMetric.generateAllGraph = function(segment, from, to) {
     console.log("[SegmentMetric] generating segment " + segment._id + " metric data");
     var atTime = moment().valueOf();
-    var visitorIds = segment.getVisitorIdList(atTime);
+    var visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment, atTime);
     var encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
     //TODO get visitors: [segmentIds] kim's work
     var visitorInSegmentsHash = {};
@@ -95,7 +95,6 @@ SegmentMetric.prepareListData = function(encounters, numberOfVisitors) {
         return e.visitorId;
         });
         console.log("1 " + JSON.stringify(grpByVisitors));
-        console.log("");
         grpByVisitors = _.map(grpByVisitors, function(visitors, id) {
             var result = {};
             var groupedEncounters = _.groupBy(visitors, function(encounter) {
@@ -104,8 +103,6 @@ SegmentMetric.prepareListData = function(encounters, numberOfVisitors) {
             result[id.toString()] = groupedEncounters;
             return result;
         });
-        console.log("1.5 " + JSON.stringify(grpByVisitors));
-        console.log("");
         //convert back to hash
         grpByVisitors = _.reduce(grpByVisitors, function(memo, visitor) {
             return _.extend(memo, visitor);
@@ -145,7 +142,7 @@ SegmentMetric.prepareListData = function(encounters, numberOfVisitors) {
 };
 
 /**
- * substitue the null value of an array by zero
+ * Substitue the null value of an array by zero
  */
 SegmentMetric.padArray = function(arr, size) {
     var result = [];
@@ -156,7 +153,7 @@ SegmentMetric.padArray = function(arr, size) {
 }
 
 /**
- * Create an empty 24 x 7 array with zero
+ * Create an empty 7 x 24 array with zero
  */
 SegmentMetric.createEmptyBubbleArray = function() {
     var result = [];
@@ -209,7 +206,9 @@ SegmentMetric.prepareVisitorOtherSegmentsBarChartData = function(to, thisSegment
     var segmentsCount = {};
     var totalCount = 0;
     _.each(visitorIds, function(visitorId) {
-        var segmentIdList = Visitors.findOne({_id: visitorId}).getSegmentIdList(to.valueOf());
+        var visitor = Visitors.findOne({_id: visitorId}); 
+        if (!visitor) return; // Not supposed to happen
+        var segmentIdList = SegmentVisitorFlows.getVisitorSegmentIdList(visitor, to.valueOf()); 
         _.each(segmentIdList, function(id) {
             if (id === thisSegment._id) return;
             totalCount++;
@@ -230,6 +229,8 @@ SegmentMetric.prepareVisitorsTagsBarChartData = function(visitorHasTagsHash) {
 };
 
 /**
+ * Performance: O(|encounters|)
+ *
  * @param encounters List of encounters
  * @param interval Interval of the x-axis (unit of ms)
  * return List of numbers of corresponding to the values on the y-axis, e.g. [1, 2, 0, 0, 1]
@@ -264,7 +265,7 @@ SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(
  *  Performance: O(|encounters|)
  *
  *  @param encounters List of encounters
- *  @return 24x7 array corresponding to the values on the bubble graph. e.g. result[0][0] means the value of Sunday 00:00 - 01:00, result[6][13] means Saturday 13:00-:14:00 
+ *  @return 7x24 array corresponding to the values on the bubble graph. e.g. result[0][0] means the value of Sunday 00:00 - 01:00, result[6][13] means Saturday 13:00-:14:00 
  */
 SegmentMetric.prepareDwellTimeInTimeFrameBubbleData = function(encounters) {
     console.log("[SegmentMetric] preparing dwell time in time frame bubble data");
@@ -318,7 +319,7 @@ SegmentMetric.prepareNumberOfVisitXNumberOfVisitorsHistogramData = function(enco
  *  Performance: O(|encounters|)
  *
  *  @param encounters List of encounters
- *  @return 24x7 array corresponding to the values on the bubble graph. e.g. result[0][0] means the value of Sunday 00:00 - 01:00, result[6][13] means Saturday 13:00-:14:00 
+ *  @return 7x24 array corresponding to the values on the bubble graph. e.g. result[0][0] means the value of Sunday 00:00 - 01:00, result[6][13] means Saturday 13:00-:14:00 
  */
 SegmentMetric.prepareNumberOfVisitsInTimeFrameBubbleData = function(encounters) {
     console.log("[SegmentMetric] preparing number of visits in time frame bubble data");
