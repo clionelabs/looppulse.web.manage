@@ -28,7 +28,7 @@
             {{#each segments}}
               <tr>
                 <td>
-                  <a href="{{pathFor 'segment.detail' segmentId=_id }}">{{ name }}</a>
+                  <a href="{{pathFor 'segment.detail' segmentId=collectionMeta.id }}">{{ name }}</a>
                 </td>
                 <td>{{ formatToThousand data.numberOfVisitors }}</td>
                 <td>{{ formatDurationToMin data.averageDwellTime }}</td>
