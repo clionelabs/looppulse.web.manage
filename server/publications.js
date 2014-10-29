@@ -98,10 +98,9 @@ Meteor.publish('related-beacon-events', function(ids){
   return BeaconEvents.find(q)
 });
 
-Meteor.publish('segment-metrics-list', function() {
-  var q = {};
+Meteor.publish('segmentListMetrics', function(from, to, id) {
   if (this.userId) {
-    return SegmentMetrics.findList();
+    return SegmentMetrics.findListView(from, to, id);
   } else {
     return null;
   }

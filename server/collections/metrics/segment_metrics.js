@@ -1,9 +1,19 @@
 SegmentMetrics = {};
 
-SegmentMetrics.findList = function() {
+SegmentMetrics.findListView = function(from, to, segmentId) {
     var companyId = Companies.findOne({ownedByUserId : this.userId})._id;
+    var selector = {
+        'collectionMeta.type': "segment",
+        companyId : companyId,
+        from : from,
+        to : to,
+        graphType : SegmentMetric.Graph.List};
+    if (segmentId) {
+        console.log("[SegmentMetrics] segmentId = " + segmentId);
+        _.extend(selector, {'collectionMeta.id' : segmentId});
+    }
     console.log("[SegmentMetric] companyId=" + companyId);
-    return Metrics.find({'collectionMeta.type': "segment", companyId : companyId, graphType : SegmentMetric.Graph.List});
+    return Metrics.find(selector);
 };
 
 SegmentMetric = {};

@@ -56,3 +56,11 @@ Template.segmentDetail.events({
     });
   }
 });
+
+Template.segmentDetail.created = function () {
+  var from = DateHelper.getSevenDaysAgoTimestamp();
+  var to = null;
+  Meteor.call("genSegmentListData", from, to, function(err, res){
+
+  });
+};
