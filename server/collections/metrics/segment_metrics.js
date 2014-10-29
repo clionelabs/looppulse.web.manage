@@ -67,14 +67,14 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
     Metrics.upsert(listMetricSelector, listMetric);
 
 
-    SegmentMetric.prepareTimeBucketXNumOfVisitorHistogramData(from, to, SegmentMetric.TimeBucket.Week, encounters);
+    SegmentMetric.prepareNumOfVisitorXTimeBucketistogramData(from, to, SegmentMetric.TimeBucket.Week, encounters);
     SegmentMetric.prepareVisitorOtherSegmentsBarChartData(atTime, segment, visitorIds);
     SegmentMetric.prepareVisitorsTagsBarChartData(visitorHasTagsHash);
 
     SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData(encounters, 1 * 1000);
     SegmentMetric.prepareDwellTimeInTimeFrameBubbleData(encounters);
 
-    SegmentMetric.prepareNumberOfVisitXNumberOfVisitorsHistogramData(encounters, 1);
+    SegmentMetric.prepareNumberOfVisitorsXNumberOfVisitsHistogramData(encounters, 1);
     SegmentMetric.prepareNumberOfVisitsInTimeFrameBubbleData(encounters);
 
 };
@@ -174,8 +174,8 @@ SegmentMetric.createEmptyBubbleArray = function() {
  * @param encounters List of encounters
  * return List of numbers of corresponding to the values on the y-axis, e.g. [1, 2, 0, 0, 1]
  */
-SegmentMetric.prepareTimeBucketXNumOfVisitorHistogramData = function(from, to, bucketSize, encounters) {
-    console.log("[SegmentMetric] generating time bucket against number of visitors histogram");
+SegmentMetric.prepareNumOfVisitorXTimeBucketistogramData = function(from, to, bucketSize, encounters) {
+    console.log("[SegmentMetric] generating number of visitors against time bucket histogram");
     interval = SegmentMetric.TimeBucketMomentShortHands[bucketSize];
 
     var visitorSet = [];
@@ -230,6 +230,10 @@ SegmentMetric.prepareVisitorsTagsBarChartData = function(visitorHasTagsHash) {
 
 /**
  * Performance: O(|encounters|)
+ *
+ * Average dwell time is per visitor across different days. For example, if visitor 1 have
+ * two encounters on day 1, with duration 10s and 20s. and he comes again on day 2 with duration 30s.
+ * The average dwell time for him would be ((10+20) + 30) / 2 = 30
  *
  * @param encounters List of encounters
  * @param interval Interval of the x-axis (unit of ms)
@@ -289,11 +293,13 @@ SegmentMetric.prepareDwellTimeInTimeFrameBubbleData = function(encounters) {
 /**
  * performance: O(|Encounters| + |Visitors|)
  *
+ * Note: multiple encounters of a visitor on the same day doesn't count as repeated visits
+ *
  * @param encounters
  * @param interval Interval of x-axis (in # of days)
  */
-SegmentMetric.prepareNumberOfVisitXNumberOfVisitorsHistogramData = function(encounters, interval) {
-    console.log("[SegmentMetric] preparing number of visit against number of visitors");
+SegmentMetric.prepareNumberOfVisitorsXNumberOfVisitsHistogramData = function(encounters, interval) {
+    console.log("[SegmentMetric] preparing number of visitors against repeated visits");
     var visitorDateCount = {};
     var visitorDateSet = {};
     _.each(encounters, function(encounter) {

@@ -51,7 +51,7 @@ if (!(typeof MochaWeb === 'undefined')){
         chai.assert(result.length === expected.length, "expected " + JSON.stringify(expected)+ ", but " + JSON.stringify(result));
         for (var i = 0; i < result.length; i++) {
           chai.assert(result[i].delta === expected[i].delta, "expected " + JSON.stringify(expected) + ", but " + JSON.stringify(result));
-          chai.assert(result[i].time.unix() === expected[i].time.unix(), "expected " + JSON.stringify(expected) + ", but " + JSON.stringify(result));
+          chai.assert(result[i].deltaAt.valueOf() === expected[i].deltaAt.valueOf(), "expected " + JSON.stringify(expected) + ", but " + JSON.stringify(result));
         }
       };
 
@@ -80,22 +80,22 @@ if (!(typeof MochaWeb === 'undefined')){
 
           it("Been All", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: true, to: 'all'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(1), delta: 1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(1), delta: 1}]);
           });
 
           it("Not Been All", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: false, to: 'all'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(1), delta: -1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(1), delta: -1}]);
           });
 
           it("Been Any", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: true, to: 'any'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(1), delta: 1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(1), delta: 1}]);
           });
 
           it("Not Been Any", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: false, to: 'any'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(1), delta: -1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(1), delta: -1}]);
           });
         });
 
@@ -108,22 +108,22 @@ if (!(typeof MochaWeb === 'undefined')){
 
           it("Been All", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: true, to: 'all'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(1), delta: -1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(1), delta: -1}]);
           });
 
           it("Not Been All", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: false, to: 'all'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(1), delta: -1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(1), delta: -1}]);
           }); 
 
           it("Been Any", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: true, to: 'any'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(1), delta: 1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(1), delta: 1}]);
           });
 
           it("Not Been Any", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: false, to: 'any'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(1), delta: 1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(1), delta: 1}]);
           });
         });
       }); // At Least 1 - End
@@ -143,22 +143,22 @@ if (!(typeof MochaWeb === 'undefined')){
 
           it("Been All", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: true, to: 'all'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(1), delta: 1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(1), delta: 1}]);
           });
 
           it("Not Been All", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: false, to: 'all'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(1), delta: -1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(1), delta: -1}]);
           });
 
           it("Been Any", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: true, to: 'any'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(1), delta: 1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(1), delta: 1}]);
           });
 
           it("Not Been Any", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: false, to: 'any'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(1), delta: -1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(1), delta: -1}]);
           });
         });
 
@@ -171,22 +171,22 @@ if (!(typeof MochaWeb === 'undefined')){
 
           it("Been All", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: true, to: 'all'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(1), delta: -1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(1), delta: -1}]);
           });
 
           it("Not Been All", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: false, to: 'all'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(1), delta: -1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(1), delta: -1}]);
           });
 
           it("Been Any", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: true, to: 'any'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(1), delta: 1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(1), delta: 1}]);
           });
 
           it("Not Been Any", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: false, to: 'any'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(1), delta: 1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(1), delta: 1}]);
           });
         });
         
@@ -201,22 +201,22 @@ if (!(typeof MochaWeb === 'undefined')){
 
           it("Been All", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: true, to: 'all'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(2), delta: -1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(2), delta: -1}]);
           });
 
           it("Not Been All", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: false, to: 'all'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(2), delta: -1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(2), delta: -1}]);
           });
 
           it("Been Any", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: true, to: 'any'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(2), delta: 1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(2), delta: 1}]);
           });
 
           it("Not Been Any", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: false, to: 'any'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(2), delta: 1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(2), delta: 1}]);
           });
         });
 
@@ -232,22 +232,22 @@ if (!(typeof MochaWeb === 'undefined')){
 
           it("Been All", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: true, to: 'all'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(2), delta: -1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(2), delta: -1}]);
           });
 
           it("Not Been All", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: false, to: 'all'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(2), delta: 1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(2), delta: 1}]);
           });
 
           it("Been Any", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: true, to: 'any'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(2), delta: -1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(2), delta: -1}]);
           });
 
           it("Not Been Any", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: false, to: 'any'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(2), delta: 1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(2), delta: 1}]);
           });
         });
       }); // At Most 1 - End
@@ -267,22 +267,22 @@ if (!(typeof MochaWeb === 'undefined')){
 
           it("Been All", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: true, to: 'all'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(20), delta: 1}, {time: getDateBySec(10 + 3600 * 24), delta: -1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(20), delta: 1}, {deltaAt: getDateBySec(10 + 3600 * 24), delta: -1}]);
           });
 
           it("Not Been All", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: false, to: 'all'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(20), delta: -1}, {time: getDateBySec(20 + 3600 * 24), delta: 1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(20), delta: -1}, {deltaAt: getDateBySec(20 + 3600 * 24), delta: 1}]);
           });
 
           it("Been Any", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: true, to: 'any'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(20), delta: 1}, {time: getDateBySec(20 + 3600 * 24), delta: -1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(20), delta: 1}, {deltaAt: getDateBySec(20 + 3600 * 24), delta: -1}]);
           });
 
           it("Not Been Any", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: false, to: 'any'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(20), delta: -1}, {time: getDateBySec(10 + 3600 * 24), delta: 1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(20), delta: -1}, {deltaAt: getDateBySec(10 + 3600 * 24), delta: 1}]);
           });
         });
       });
@@ -303,22 +303,22 @@ if (!(typeof MochaWeb === 'undefined')){
 
           it("Been All", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: true, to: 'all'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(20), delta: -1}, {time: getDateBySec(10 + 3600 * 24), delta: 1}, {time: getDateBySec(20 + 3600 * 24), delta: -1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(20), delta: -1}, {deltaAt: getDateBySec(10 + 3600 * 24), delta: 1}, {deltaAt: getDateBySec(20 + 3600 * 24), delta: -1}]);
           });
 
           it("Not Been All", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: false, to: 'all'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(20), delta: -1}, {time: getDateBySec(20 + 3600 * 24), delta: 1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(20), delta: -1}, {deltaAt: getDateBySec(20 + 3600 * 24), delta: 1}]);
           });
 
           it("Been Any", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: true, to: 'any'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(20), delta: 1}, {time: getDateBySec(20 + 3600 * 24), delta: -1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(20), delta: 1}, {deltaAt: getDateBySec(20 + 3600 * 24), delta: -1}]);
           });
 
           it("Not Been Any", function() {
             var result = matcher.doComputeCurrentStatus(_.extend({hasBeen: false, to: 'any'}, criteria), installationIds, encounters, encounters[encounters.length-1].exitedAt);
-            verifyResult(result, [{time: getDateBySec(20), delta: 1}, {time: getDateBySec(10 + 3600 * 24), delta: -1}, {time: getDateBySec(20 + 3600 * 24), delta: 1}]);
+            verifyResult(result, [{deltaAt: getDateBySec(20), delta: 1}, {deltaAt: getDateBySec(10 + 3600 * 24), delta: -1}, {deltaAt: getDateBySec(20 + 3600 * 24), delta: 1}]);
           });
         });
       });
