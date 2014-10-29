@@ -5,8 +5,10 @@ Meteor.startup(
     Meteor.defer(function() {
       Benchmark.time(configureDEBUG, "[Startup] configure");
       Benchmark.time(ensureIndexes, "[Startup] ensureIndexes");
-      Benchmark.time(observeFirebase, "[Startup] observeFirebase");
-      Benchmark.time(observeCollections, "[Startup] observeCollections");
+      if (Meteor.settings.performance.backlogging) {
+        Benchmark.time(observeFirebase, "[Startup] observeFirebase");
+        Benchmark.time(observeCollections, "[Startup] observeCollections");
+      }
       Benchmark.time(Scheduler.startup, "[Startup] startScheduler");
     });
   })
@@ -25,15 +27,17 @@ var observeConfigFirebase = function() {
     } else {
       console.info('Authenticated successfully with payload:', result.auth);
       console.info('Auth expires at:', new Date(result.expires * 1000));
-      observeCompaniesFromFirebaseDEBUG();
+      if (Meteor.settings.performance.backlogging) { observeCompaniesFromFirebaseDEBUG(); }
     }
   }));
 };
 
-var observeFirebase = function () {
-  observeConfigFirebase();
-  observeAllEventsFromFirebase();
-}
+var observeFirebase = (! Meteor.settings.performance.backlogging)
+                        ? function() {}
+                        : function() {
+                          observeConfigFirebase();
+                          observeAllEventsFromFirebase();
+                        }
 
 var observeCollections = function() {
   var classes = [
