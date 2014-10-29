@@ -40,7 +40,6 @@ existing `settings.sample.json` (Since settings.json is not in the repo)
   },
   //System finetuning setting
   "performance": {
-    "backlogging": true //turn the remote backlogging on and off
   }
 }
 ```
