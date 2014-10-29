@@ -43,7 +43,8 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
     //TODO get visitors: [tags]
     var visitorHasTagsHash = {};
 
-    var listData = SegmentMetric.prepareListData(encounters);
+    var numberOfVisitors = visitorIds.length;
+    var listData = SegmentMetric.prepareListData(encounters, numberOfVisitors);
     var collectionMeta = new Metric.CollectionMeta(segment._id, Metric.CollectionMeta.Type.Segment);
     var listMetricSelector = {
         companyId: segment.companyId,
@@ -68,11 +69,11 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
 
 };
 
-SegmentMetric.prepareListData = function(encounters) {
+SegmentMetric.prepareListData = function(encounters, numberOfVisitors) {
     console.log("[SegmentMetric] generating list view data");
     console.log(JSON.stringify(encounters));
     var listData = {
-        numberOfVisitors : 0,
+        numberOfVisitors : numberOfVisitors,
         averageDwellTime : 0,
         repeatedVisitorPercentage : 0
     };
