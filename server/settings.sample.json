@@ -28,6 +28,5 @@
   "public": {
   },
   "performance": {
-    "backlogging": true
   }
 }
