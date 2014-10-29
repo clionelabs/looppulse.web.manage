@@ -11,7 +11,7 @@ Template.segmentList.helpers({
 });
 
 Template.segmentList.created = function () {
-  var from = moment( moment().subtract(7, 'days').format("YYYY-MM-DD"), "YYYY-MM-DD").valueOf();
+  var from = DateHelper.getSevenDaysAgoTimestamp();
   var to = null;
   Meteor.call("genSegmentListData", from, to, function(err, res){
 
