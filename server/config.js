@@ -108,7 +108,7 @@ var configureCompany= function (companyConfig, configurationJSON) {
 
   // Locations
   _.each(companyConfig.locations, function(locationConfig, locationKey) {
-    var location = new Location(locationConfig.name, locationConfig.address, company._id);
+    var location = new Location(locationConfig.name, locationConfig.address, company._id, locationConfig.coordinate);
     companyConfig.locations[locationKey]._id = location.save();
     console.info("[Init] Location created:", location._id, location.name);
 
