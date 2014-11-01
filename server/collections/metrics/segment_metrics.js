@@ -168,27 +168,43 @@ SegmentMetric.createEmptyBubbleArray = function() {
 
 /**
  * Performance = O(|encounters|)
- * @param from startTime (moment object) of the graph
- * @param to endTime (moment object) of the graph
+ * @param from startTime (timestamp) of the graph
+ * @param to endTime (timestamp) of the graph
  * @param bucketSize interval of x axis
  * @param encounters List of encounters
  * return List of numbers of corresponding to the values on the y-axis, e.g. [1, 2, 0, 0, 1]
  */
-SegmentMetric.prepareNumOfVisitorXTimeBucketistogramData = function(from, to, bucketSize, encounters) {
+SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData = function(from, to, bucketSize, encounters) {
     console.log("[SegmentMetric] generating number of visitors against time bucket histogram");
-    interval = SegmentMetric.TimeBucketMomentShortHands[bucketSize];
+    from = moment(moment(from).format("YYYY-MM-DD"));
+    var format = SegmentMetric.TimeBucketMomentShortHands[bucketSize];
 
     var visitorSet = [];
-    var result = [];
+    var resultNumber = {};
     _.each(encounters, function(encounter) {
-        var index = encounter.enteredAt.diff(from, interval);
+        var index = encounter.enteredAt.format(format);
         visitorSet[index] = visitorSet[index] || {};
         if (!visitorSet[index][encounter.visitorId]) {
             visitorSet[index][encounter.visitorId] = true;
-            result[index] = (result[index] || 0) + 1;
+            resultNumber[index] = (resultNumber[index] || 0) + 1;
         }
     });
-    result = SegmentMetric.padArray(result, to === null? result.length: to.diff(from, interval));
+    var tto = null;
+    if (!to) {
+        tto = moment();
+    } else {
+        tto = moment(to);
+    }
+
+    var result = [];
+
+    var maxLength = tto.diff(from, bucketSize);
+    for (var i = 1; i <= maxLength; i++ ) {
+        var index = moment(from).add(i, bucketSize).format(format);
+        resultNumber[index] = resultNumber[index] ? resultNumber[index] : 0;
+        result.push({ "date" : index, "number of visitors" : resultNumber[index]});
+    }
+
     console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
 };
