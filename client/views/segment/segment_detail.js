@@ -12,6 +12,65 @@ Template.segmentDetail.helpers({
     }
   },
 
+  genLineChart: function(data) {
+    var lineChart = c3.generate({
+      bindto: "#lineChart",
+      data: {
+
+        json: data,
+        keys : {
+          x : 'date',
+          value: ['number of visitors']
+        },
+
+        type: 'bar',
+
+        colors : {
+          "number of visitors": "#CFD8DC"
+        },
+        color : function (color, d) {
+
+          return color;
+        }
+      },
+      axis: {
+        x : {
+          label: {
+            text : 'Date',
+            position: 'outer-right'
+          },
+          type : 'timeseries',
+          tick : {
+            format : function(x) { return moment(x).format(SegmentMetric.TimeBucketMomentShortHands[SegmentMetric.TimeBucket.Day])}
+          }
+
+        },
+        y: {
+
+          label: {
+            text: 'Number of Visitors',
+            position: 'outer-middle'
+          }
+        }
+      },
+      bar: {
+        width: {
+          ratio: 0.2 // this makes bar width 50% of length between ticks
+        }
+        // or
+        //width: 100 // this makes bar width 100px
+      },
+      grid: {
+        y :  {
+          show: true
+        }
+      }
+
+
+    });
+
+  }
+
   
 });
 
@@ -19,7 +78,7 @@ Template.segmentDetail.events({
   "click #showExport": function() {
     var self = this;
     console.log(this);
-    Meteor.call('getSegmentCsvData', this.segmentId, function(error, result) {
+    Meteor.call('getSegmentCsvData', self.segmentId, function(error, result) {
       if (error) {
         console.error(error);
         Notifications.error('Segment', 'Segment CSV Export failed -- ' + error + ' --');
@@ -61,6 +120,7 @@ Template.segmentDetail.created = function () {
   var from = DateHelper.getSevenDaysAgoTimestamp();
   var to = null;
   Meteor.call("genSegmentListData", from, to, function(err, res){
-
   });
 };
+
+

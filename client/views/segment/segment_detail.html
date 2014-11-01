@@ -72,20 +72,18 @@
           </li>
         </ul>
 
-        <div class="tab-content">
-          <div class="tab-pane active" id="visitor-metrics">
-            Visitor Metrics
-          </div>
-          <div class="tab-pane" id="dwell-time-metrics">
-            Dwell Time Metrics
-          </div>
-          <div class="tab-pane" id="repeated-visits-metrics">
-            Repeated Visits Metrics
-          </div>
-        </div>
-
     </div>
+      <div id="graph1" class="container">
+          <div class="graph-container">
+              <h3 class="graph-name">Total Number of Visitors</h3>
+          <div id="lineChart">
+            {{ genLineChart lineChart }}
+          </div>
+          </div>
+      </div>
   </section>
+
+
 
   {{> segmentInfoDialog }}
 </template>
