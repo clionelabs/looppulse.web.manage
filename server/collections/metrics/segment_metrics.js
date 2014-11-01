@@ -1,48 +1,35 @@
 SegmentMetrics = {};
 
 SegmentMetrics.findListView = function(from, to, segmentId) {
+    return SegmentMetrics.find(from, to, segmentId, SegmentMetric.Graph.List);
+};
+
+SegmentMetrics.find = function(from, to, segmentId, type) {
     var companyId = Companies.findOne({ownedByUserId : this.userId})._id;
     var selector = {
         'collectionMeta.type': "segment",
         companyId : companyId,
         from : from,
-        to : to,
-        graphType : SegmentMetric.Graph.List};
+        to : to
+    };
     if (segmentId) {
         console.log("[SegmentMetrics] segmentId = " + segmentId);
         _.extend(selector, {'collectionMeta.id' : segmentId});
     }
+    if (type) {
+        _.extend(selector, {'graphType' : type });
+    }
     console.log("[SegmentMetric] companyId=" + companyId);
     return Metrics.find(selector);
-};
+}
 
-SegmentMetric = {};
 
-SegmentMetric.Graph = {};
-SegmentMetric.Graph.List = "list";
-
-SegmentMetric.Graph.TimeBucketXNumOfVisitorHistogram = "timeBucketXNumberOfVisitorHistogram";
-SegmentMetric.Graph.VisitorOtherSegmentsBarChart = "visitorOtherSegmentsBarChart";
-SegmentMetric.Graph.VisitorsTagsBarChartData = "visitorsTagsBarChart";
-
-SegmentMetric.Graph.AverageDwellTimeBucketXNumOfVisitorHistogram = "averageDwellTimeBucketXNumOfVisitorHistogram";
-SegmentMetric.Graph.DwellTimeInTimeFrameBubble = "dwellTimeInTimeFrameBubble";
-
-SegmentMetric.Graph.NumberOfVisitXNumberOfVisitorsHistogram = "numberOfVisitXNumberOfVisitorsHistogram";
-SegmentMetric.Graph.NumberOfVisitInTimeFrameBubble = "numberOfVisitInTimeFrameBubble";
-
-SegmentMetric.TimeBucket = {};
-SegmentMetric.TimeBucket.Hour = "hour";
-SegmentMetric.TimeBucket.Day = "day";
-SegmentMetric.TimeBucket.Week = "week";
-SegmentMetric.TimeBucket.Month = "month";
-
-SegmentMetric.TimeBucketMomentShortHands = {};
-SegmentMetric.TimeBucketMomentShortHands[SegmentMetric.TimeBucket.Hour] = 'h';
-SegmentMetric.TimeBucketMomentShortHands[SegmentMetric.TimeBucket.Day] = 'd';
-SegmentMetric.TimeBucketMomentShortHands[SegmentMetric.TimeBucket.Week] = 'w';
-SegmentMetric.TimeBucketMomentShortHands[SegmentMetric.TimeBucket.Month] = 'M';
-
+/**
+ *
+ * @param segment
+ * @param from timestamp as the moment cannot be passed
+ * @param to
+ */
 SegmentMetric.generateAllGraph = function(segment, from, to) {
     console.log("[SegmentMetric] generating segment " + segment._id + " metric data");
     var atTime = moment().valueOf();
@@ -53,6 +40,7 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
     //TODO get visitors: [tags]
     var visitorHasTagsHash = {};
 
+    //list
     var numberOfVisitors = visitorIds.length;
     var listData = SegmentMetric.prepareListData(encounters, numberOfVisitors);
     var collectionMeta = new Metric.CollectionMeta(segment._id, Metric.CollectionMeta.Type.Segment);
@@ -66,8 +54,18 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
     var listMetric = new Metric(segment.companyId, collectionMeta, from, to, SegmentMetric.Graph.List, listData);
     Metrics.upsert(listMetricSelector, listMetric);
 
+    //line chart
+    var lineChartData = SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData(from, to, SegmentMetric.TimeBucket.Day, encounters);
+    var lineChartMetricSelector = {
+        companyId: segment.companyId,
+        collectionMeta: collectionMeta,
+        from: from,
+        to: to,
+        graphType: SegmentMetric.Graph.DayXNumOfVisitorLineChart
+    };
+    var lineChartMetric = new Metric(segment.companyId, collectionMeta, from, to, SegmentMetric.Graph.DayXNumOfVisitorLineChart, lineChartData);
+    Metrics.upsert(lineChartMetricSelector, lineChartMetric);
 
-    SegmentMetric.prepareNumOfVisitorXTimeBucketistogramData(from, to, SegmentMetric.TimeBucket.Week, encounters);
     SegmentMetric.prepareVisitorOtherSegmentsBarChartData(atTime, segment, visitorIds);
     SegmentMetric.prepareVisitorsTagsBarChartData(visitorHasTagsHash);
 

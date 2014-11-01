@@ -106,6 +106,14 @@ Meteor.publish('segmentListMetrics', function(from, to, id) {
   }
 });
 
+Meteor.publish('segmentMetrics', function(from, to, id) {
+  if (this.userId) {
+    return SegmentMetrics.find(from, to, id);
+  } else {
+    return null;
+  }
+});
+
 Meteor.publish('related-metrics', function(id){
   var q = {};
   //TODO change to new metrics
