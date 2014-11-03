@@ -10,6 +10,7 @@ $background-color: #EBEDF0;
 $content-background-color: #FFF;
 $secondary-header-bg-color: #FAFAFA;
 $border-color: rgba(0,0,0,0.12);
+$border: 1px $border-color solid;
 
 $font-color: #9B9B9B;
 $alt-font-color: #B6B6B6;
@@ -22,6 +23,12 @@ $btn-color: #FFC400;
 
 $non-active-tab-bg-color:rgba(235,237,240,1);
 $active-tab-bg-color:rgba(255,255,255,1);
+
+$horizontal-chart-header-color:rgba(96,125,139,1);
+$horizontal-chart-header-bg-color:rgba(250,250,250,1);
+
+$bar-color-1:rgba(207,216,220,1);
+$bar-color-2:rgba(236, 239, 241, 1);
 
 $minus-color:rgba(255,103,121,1);
 

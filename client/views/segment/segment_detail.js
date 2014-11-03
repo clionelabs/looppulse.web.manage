@@ -12,24 +12,20 @@ Template.segmentDetail.helpers({
     }
   },
 
-  genLineChart: function(data) {
+  generateNumberOfVisitorsPerDayBarChart: function(data) {
     var lineChart = c3.generate({
       bindto: "#lineChart",
       data: {
-
         json: data,
         keys : {
           x : 'date',
           value: ['number of visitors']
         },
-
         type: 'bar',
-
         colors : {
           "number of visitors": "#CFD8DC"
         },
         color : function (color, d) {
-
           return color;
         }
       },
@@ -46,7 +42,6 @@ Template.segmentDetail.helpers({
 
         },
         y: {
-
           label: {
             text: 'Number of Visitors',
             position: 'outer-middle'
@@ -55,23 +50,17 @@ Template.segmentDetail.helpers({
       },
       bar: {
         width: {
-          ratio: 0.2 // this makes bar width 50% of length between ticks
+          ratio: 0.2
         }
-        // or
-        //width: 100 // this makes bar width 100px
       },
       grid: {
         y :  {
           show: true
         }
       }
-
-
     });
-
   }
 
-  
 });
 
 Template.segmentDetail.events({
