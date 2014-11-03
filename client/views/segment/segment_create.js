@@ -57,7 +57,7 @@ Template.segmentCreate.events({
   "submit .rule-form": function (e, tmpl) {
     var self = this;
     var $form = $(e.currentTarget);
-    
+
     var formData = $form.serializeObject();
     var plot = this.plot;
     var fields = Object.keys(plot);
@@ -360,7 +360,6 @@ Template._field.helpers({
     return this.multiple;
   },
   isSelected: function () {
-    console.log("isSelected?", !this.notSelected ? this.selected : false);
     return !this.notSelected ? this.selected : false;
   }
 });
