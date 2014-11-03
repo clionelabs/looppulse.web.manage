@@ -20,7 +20,7 @@ configure = function() {
 };
 
 ensureIndexes = function() {
-  var classes = [BeaconEvent, Encounter, Installation, Company, Floor, Segment, SegmentVisitor, Visitor];
+  var classes = [BeaconEvent, Encounter, Installation, Company, Location, Floor, Segment, SegmentVisitor, Visitor];
   classes.forEach(
     function(objectClass) {
       if (objectClass.hasOwnProperty('ensureIndex')) {
@@ -120,7 +120,7 @@ var configureCompany= function (companyConfig, configurationJSON) {
 
   // Locations
   _.each(companyConfig.locations, function(locationConfig, locationKey) {
-    var location = new Location(locationConfig.name, locationConfig.address, company._id, locationConfig.coordinate);
+    var location = new Location(company._id, locationConfig.name, locationConfig.address, locationConfig.coordinate);
     companyConfig.locations[locationKey]._id = location.save();
     console.info("[Init] Location created:", location._id, location.name);
 
