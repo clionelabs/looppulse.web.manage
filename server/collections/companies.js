@@ -27,16 +27,9 @@ Company.prototype.generateLocationsJSON = function() {
     Installations.find({locationId: location._id}).forEach(function(installation) {
       installationsJSON[installation.name] = installation.denormalizedJSON();
     });
-    json[location.name] = {"installations": installationsJSON};
+    json[location.name] = {"coordinate": location.coordinate, "installations": installationsJSON};
   });
-  return json;
-};
-
-Company.prototype.generateGeofencesJSON = function() {
-  var json = {};
-  Geofences.find({companyId: this._id}).forEach(function(geofence) {
-    json[geofence.geofenceKey] = geofence; 
-  });
+  console.log("[Companies] generatedJson: ", JSON.stringify(json));
   return json;
 };
 
@@ -65,7 +58,6 @@ Company.prototype.authenticatedResponse = function() {
       "engagement_events": this.generateEngagementEventsRef(),
       "visitor_events": this.generateVisitorEventsRef()
     },
-    "geofences": this.generateGeofencesJSON(),
     "locations": this.generateLocationsJSON(),
     "products": this.generateProductsJSON()
   });
