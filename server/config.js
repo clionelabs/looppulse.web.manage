@@ -106,6 +106,18 @@ var configureCompany= function (companyConfig, configurationJSON) {
     console.info("[Init] Product created:", p._id, p.name);
   });
 
+  _.each(companyConfig.geofences, function(geofenceConfig, geofenceKey) {
+    var geofence = new Geofence({
+      geofenceKey: geofenceKey,
+      companyId: company._id,
+      latitude: geofenceConfig.latitude,
+      longitude: geofenceConfig.longitude,
+      radius: geofenceConfig.radius
+    });
+    companyConfig.geofences[geofenceKey]._id = geofence.save();
+    console.info("[Init] Geofence created:", geofence._id);
+  });
+
   // Locations
   _.each(companyConfig.locations, function(locationConfig, locationKey) {
     var location = new Location(locationConfig.name, locationConfig.address, company._id, locationConfig.coordinate);
