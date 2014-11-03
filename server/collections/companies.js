@@ -27,7 +27,7 @@ Company.prototype.generateLocationsJSON = function() {
     Installations.find({locationId: location._id}).forEach(function(installation) {
       installationsJSON[installation.name] = installation.denormalizedJSON();
     });
-    json[location.name] = {"installations": installationsJSON};
+    json[location.name] = {"coordinate": location.coordinate, "installations": installationsJSON};
   });
   return json;
 };
