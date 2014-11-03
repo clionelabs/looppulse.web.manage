@@ -169,5 +169,9 @@ Meteor.methods({
     var str = Segment.criteriaToString(criteria);
     console.log(str);
     return str;
+  },
+
+  genSegmentListData: function(from, to) {
+    Metric.generateAllSegmentRelated(Meteor.userId(), from, to);
   }
 });

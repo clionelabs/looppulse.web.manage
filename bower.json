@@ -2,7 +2,7 @@
   "name": "looppulse.web.manage",
   "private": true,
   "dependencies": {
-    "d4": "~0.8.9",
+    "c3": "~0.3.0",
     "d3": "~3.4.4",
     "bootstrap-select": "~1.6.2",
     "yamm3": "~1.0.0",

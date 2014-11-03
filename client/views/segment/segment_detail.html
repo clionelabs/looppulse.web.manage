@@ -18,7 +18,7 @@
           <a href="#visitor-metrics" role="tab" data-toggle="tab">
             <div class="tab-content">
               <div class="row">
-                <div class="left number">{{ visitorCount }}</div>
+                <div class="left number">{{ list.numberOfVisitors }}</div>
                 <div class="right diff">
                   <div class="arrow {{ isMinus changePercentages.visitorCount }}"></div>
                   <div class="percent {{ isMinus changePercentages.visitorCount }}">{{ formatPercent changePercentages.visitorCount }}</div>
@@ -38,7 +38,7 @@
 
             <div class="tab-content">
               <div class="row">
-                <div class="left number">{{ formatDurationToMin dwellTimeAverage }}</div>
+                <div class="left number">{{ formatDurationToMin list.averageDwellTime }}</div>
                 <div class="right diff">
                   <div class="arrow {{ isMinus changePercentages.visitorCount }}"></div>
                   <div class="percent {{ isMinus changePercentages.visitorCount }}">{{ formatPercent changePercentages.dwellTimeAverage }}</div>
@@ -57,7 +57,7 @@
             data-toggle="tab">
             <div class="tab-content">
               <div class="row">
-                <div class="left number">{{ formatPercent repeatedVisitPercentage }}</div>
+                <div class="left number">{{ formatPercent list.repeatedVisitorPercentage }}</div>
                 <div class="right diff">
                   <div class="arrow {{ isMinus changePercentages.visitorCount }}"></div>
                   <div class="percent {{ isMinus changePercentages.visitorCount }}">{{ formatPercent changePercentages.repeatedVisitPercentage }}</div>
@@ -72,20 +72,18 @@
           </li>
         </ul>
 
-        <div class="tab-content">
-          <div class="tab-pane active" id="visitor-metrics">
-            Visitor Metrics
-          </div>
-          <div class="tab-pane" id="dwell-time-metrics">
-            Dwell Time Metrics
-          </div>
-          <div class="tab-pane" id="repeated-visits-metrics">
-            Repeated Visits Metrics
-          </div>
-        </div>
-
     </div>
+      <div id="graph1" class="container">
+          <div class="graph-container">
+              <h3 class="graph-name">Total Number of Visitors</h3>
+          <div id="lineChart">
+            {{ genLineChart lineChart }}
+          </div>
+          </div>
+      </div>
   </section>
+
+
 
   {{> segmentInfoDialog }}
 </template>

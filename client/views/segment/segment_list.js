@@ -9,3 +9,11 @@ Template.segmentList.helpers({
   formatPercent: FormatHelper.formatPercent,
   formatDurationToMin: FormatHelper.formatDurationToMin
 });
+
+Template.segmentList.created = function () {
+  var from = DateHelper.getSevenDaysAgoTimestamp();
+  var to = null;
+  Meteor.call("genSegmentListData", from, to, function(err, res){
+
+  });
+};

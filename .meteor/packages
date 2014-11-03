@@ -3,7 +3,6 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-standard-app-packages
 fourseven:scss
 iron:router
 accounts-password
@@ -26,7 +25,9 @@ stevezhu:lodash
 mrt:moment
 mrt:numeral
 mizzao:bootstrap-3
-velocity:html-reporter
 mike:mocha
 meteorhacks:kadira
+spacejamio:chai
+spacejamio:sinon
 mizzao:user-status
+meteor-platform

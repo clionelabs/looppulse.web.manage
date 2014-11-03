@@ -20,7 +20,7 @@ configure = function() {
 };
 
 ensureIndexes = function() {
-  var classes = [BeaconEvent, Encounter, Installation, Company, Floor, Segment, Metric, SegmentVisitor, Visitor];
+  var classes = [BeaconEvent, Encounter, Installation, Company, Floor, Segment, SegmentVisitor, Visitor];
   classes.forEach(
     function(objectClass) {
       if (objectClass.hasOwnProperty('ensureIndex')) {
@@ -294,7 +294,7 @@ configureDEBUG = function() {
 };
 
 var resetLocal = function() {
-  var collections = [BeaconEvents, Encounters, Visitors, Metrics, Messages];
+  var collections = [BeaconEvents, Encounters, Visitors, Metrics, Messages, SegmentVisitorFlows];
   collections.forEach(function(collection) {
     collection.remove({});
     console.info("[Reset] Removed all data in:", collection._name);
