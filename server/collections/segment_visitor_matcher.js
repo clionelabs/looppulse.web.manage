@@ -106,10 +106,10 @@ SegmentVisitorMatcher.prototype.buildEncountersSelector = function(criteria, vis
 SegmentVisitorMatcher.prototype.buildEncountersSelectorDuration = function(durationInMinutes) {
   var selector = {};
   selector['duration'] = {};
-  if (durationInMinutes.atLeast) {
+  if (durationInMinutes.atLeast !== undefined) {
     selector['duration'].$gte = durationInMinutes.atLeast * 60 * 1000;
   }
-  if (durationInMinutes.atMost) {
+  if (durationInMinutes.atMost !== undefined) {
     selector['duration'].$lte = durationInMinutes.atMost * 60 * 1000;
   }
   return selector;
@@ -257,7 +257,7 @@ SegmentVisitorMatcher.prototype.doComputeCurrentStatus = function(criteria, inst
 
   // loop through the encounters, and remove them on by one, and track the changes in the future
   _.each(encounters, function(encounter) {
-    var invalidTime = moment(encounter.exitedAt).add(criteria.days.inLast, 'days');
+    var invalidTime = moment(encounter.exitedAt).add(criteria.days.inLast, 'days').valueOf();
     var matchBefore = self.isInstallationFulfilled(criteria, counters[encounter.installationId]);
     counters[encounter.installationId]--;
     var matchAfter = self.isInstallationFulfilled(criteria, counters[encounter.installationId]);
