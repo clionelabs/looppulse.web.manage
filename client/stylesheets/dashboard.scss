@@ -520,6 +520,9 @@ ul.metric-tabs {
   }
 }
 #lineChart {
+  graph-name: {
+    padding-left:15px;
+  }
   svg {
     font-size: 22px;
     .c3-axis {
@@ -559,5 +562,68 @@ ul.metric-tabs {
     .c3-legend-item text {
       font-size: 16px;
     }
+  }
+}
+
+#graph2 {
+  border: $border;
+  .percentage-chart-header {
+    padding:10px;
+    color: $horizontal-chart-header-color;
+    background-color: $horizontal-chart-header-bg-color;
+    border-bottom: $border;
+    table {
+      width:100%;
+      border: 0;
+
+      tr {
+        td:first-child {
+          padding-left: 10px;
+        }
+      }
+    }
+
+  }
+
+  #other-segment-detail {
+    width:calc(100% - 20px);
+    margin:10px;
+    tr {
+
+      &:last-child {
+        td {
+          padding-bottom: 0px;
+        }
+      }
+
+      td {
+        padding-bottom:10px;
+      }
+
+      td:first-child {
+          padding-left: 10px;
+      }
+
+      .bar {
+        min-height: 100%;
+      }
+
+
+      &:nth-child(2n) {
+        .bar {
+          background-color: $bar-color-2;
+        }
+      }
+
+
+      &:nth-child(2n+1) {
+        .bar {
+          background-color: $bar-color-1;
+        }
+      }
+    }
+
+
+
   }
 }

@@ -66,7 +66,17 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
     var lineChartMetric = new Metric(segment.companyId, collectionMeta, from, to, SegmentMetric.Graph.DayXNumOfVisitorLineChart, lineChartData);
     Metrics.upsert(lineChartMetricSelector, lineChartMetric);
 
-    SegmentMetric.prepareVisitorOtherSegmentsBarChartData(atTime, segment, visitorIds);
+    var otherSegmentChartData = SegmentMetric.prepareVisitorOtherSegmentsBarChartData(atTime, segment, visitorIds);
+    var otherSegmentChartSelector = {
+        companyId: segment.companyId,
+        collectionMeta: collectionMeta,
+        from: from,
+        to: to,
+        graphType: SegmentMetric.Graph.VisitorOtherSegmentsBarChart
+    };
+    var otherSegmentChartMetrics = new Metric(segment.companyId, collectionMeta, from, to, SegmentMetric.Graph.VisitorOtherSegmentsBarChart, otherSegmentChartData);
+    Metrics.upsert(otherSegmentChartSelector, otherSegmentChartMetrics);
+
     SegmentMetric.prepareVisitorsTagsBarChartData(visitorHasTagsHash);
 
     SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData(encounters, 1 * 1000);
