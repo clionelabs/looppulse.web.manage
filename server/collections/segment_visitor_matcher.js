@@ -13,7 +13,8 @@ SegmentVisitorMatcher.prototype.checkEncounterIsRelevant = function(encounter) {
   var criteria = this.segment.criteria;
   if (_.isEmpty(criteria)) { // All visitor segment only?
     return true;
-  } 
+  }
+
   if (criteria.durationInMinutes) {
     if (criteria.durationInMinutes.atLeast) {
       if (!encounter.duration || encounter.duration < criteria.durationInMinutes.atLeast * 60 * 1000) return false;
@@ -30,10 +31,11 @@ SegmentVisitorMatcher.prototype.checkEncounterIsRelevant = function(encounter) {
     }
   }
   if (criteria.every) {
+    enteredAtParts = encounter.timestampToParts(encounter.enteredAt.valueOf());
     if (criteria.every === "weekdays") {
-      if (encounter.enteredAtParts.dayOfWeek < 1 || encounter.enteredAtParts.dayOfWeek > 5) return false; 
+      if (enteredAtParts.dayOfWeek < 1 || enteredAtParts.dayOfWeek > 5) return false;
     } else if (criteria.every === "weekends") {
-      if (encounter.enteredAtParts.dayOfWeek != 0 && encounter.enteredAtParts.dayOfWeek != 6) return false;
+      if (enteredAtParts.dayOfWeek != 0 && enteredAtParts.dayOfWeek != 6) return false;
     }
   }
   return true;
