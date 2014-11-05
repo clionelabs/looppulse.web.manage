@@ -10,55 +10,6 @@ Template.segmentDetail.helpers({
     } else {
       return "dec";
     }
-  },
-
-  generateNumberOfVisitorsPerDayBarChart: function(data) {
-    var lineChart = c3.generate({
-      bindto: "#lineChart",
-      data: {
-        json: data,
-        keys : {
-          x : 'date',
-          value: ['number of visitors']
-        },
-        type: 'bar',
-        colors : {
-          "number of visitors": "#CFD8DC"
-        },
-        color : function (color, d) {
-          return color;
-        }
-      },
-      axis: {
-        x : {
-          label: {
-            text : 'Date',
-            position: 'outer-right'
-          },
-          type : 'timeseries',
-          tick : {
-            format : function(x) { return moment(x).format(SegmentMetric.TimeBucketMomentShortHands[SegmentMetric.TimeBucket.Day])}
-          }
-
-        },
-        y: {
-          label: {
-            text: 'Number of Visitors',
-            position: 'outer-middle'
-          }
-        }
-      },
-      bar: {
-        width: {
-          ratio: 0.2
-        }
-      },
-      grid: {
-        y :  {
-          show: true
-        }
-      }
-    });
   }
 
 });
@@ -112,4 +63,55 @@ Template.segmentDetail.created = function () {
   });
 };
 
+Template.segmentDetail.rendered = function() {
+  console.log(this.data.lineChart);
+
+  c3.generate({
+    bindto: "#lineChart",
+    data: {
+      json: this.data.lineChart,
+      keys : {
+        x : 'date',
+        value: ['number of visitors']
+      },
+      type: 'bar',
+      colors : {
+        "number of visitors": "#CFD8DC"
+      },
+      color : function (color, d) {
+        return color;
+      }
+    },
+    axis: {
+      x : {
+        label: {
+          text : 'Date',
+          position: 'outer-right'
+        },
+        type : 'timeseries',
+        tick : {
+          format : function(x) { return moment(x).format(SegmentMetric.TimeBucketMomentShortHands[SegmentMetric.TimeBucket.Day])}
+        }
+
+      },
+      y: {
+        label: {
+          text: 'Number of Visitors',
+          position: 'outer-middle'
+        }
+      }
+    },
+    bar: {
+      width: {
+        ratio: 0.2
+      }
+    },
+    grid: {
+      y :  {
+        show: true
+      }
+    }
+  });
+
+}
 
