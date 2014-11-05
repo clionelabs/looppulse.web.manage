@@ -91,7 +91,25 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
 
     SegmentMetric.prepareVisitorsTagsBarChartData(visitorHasTagsHash);
 
-    SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData(encounters, 1 * 1000);
+    //TODO dynamic gen bucket
+    var averageDwellTimeXNumberOfVisitorHistogramData = SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData(encounters);
+    var averageDwellTimeXNumberOfVisitorHistogramSelector = {
+        companyId: segment.companyId,
+        collectionMeta: collectionMeta,
+        from: from,
+        to: to,
+        graphType: SegmentMetric.Graph.AverageDwellTimeBucketXNumOfVisitorHistogram
+    };
+    var averageDwellTimeXNumberOfVisitorHistogramMetrics = new Metric(
+        segment.companyId,
+        collectionMeta,
+        from,
+        to,
+        SegmentMetric.Graph.AverageDwellTimeBucketXNumOfVisitorHistogram,
+        averageDwellTimeXNumberOfVisitorHistogramData
+    );
+    Metrics.upsert(averageDwellTimeXNumberOfVisitorHistogramSelector, averageDwellTimeXNumberOfVisitorHistogramMetrics);
+
     SegmentMetric.prepareDwellTimeInTimeFrameBubbleData(encounters);
 
     var numberOfVisitsXNumberOfVisitorsBarChartData = SegmentMetric.prepareNumberOfVisitorsXNumberOfVisitsHistogramData(encounters, 1);
@@ -291,8 +309,11 @@ SegmentMetric.prepareVisitorsTagsBarChartData = function(visitorHasTagsHash) {
  * @param interval Interval of the x-axis (unit of ms)
  * return List of numbers of corresponding to the values on the y-axis, e.g. [1, 2, 0, 0, 1]
  */
-SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(encounters, interval) {
+SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(encounters) {
+
     console.log("[SegmentMetric] preparing average dwell time again number of Visitors histogram");
+
+    var interval = 10 * 60 * 1 * 1000; //TODO dynamic
 
     var visitorSumDurations = {};
     var visitorDateCount = {};
@@ -307,12 +328,25 @@ SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(
             visitorDateCount[vid] = (visitorDateCount[vid] || 0) + 1;
         }
     });
-    var result = [];
+    var resultNumber = [];
     _.each(visitorSumDurations, function(sumDuration, visitorId) {
         var index = Math.floor(sumDuration / visitorDateCount[visitorId] / interval);
-        result[index] = (result[index] || 0) + 1;
+        resultNumber[index] = (resultNumber[index] || 0) + 1;
     });
-    result = SegmentMetric.padArray(result, result.length); 
+    resultNumber = SegmentMetric.padArray(resultNumber, resultNumber.length);
+
+    var from = 0;
+    var to = from + 10; //TODO dynamic
+    var unit = "min"; //TODO dynamic
+    var result = [];
+    _.each(resultNumber, function(r) {
+        result.push({
+            duration : from + " - " + to + " " + unit,
+            "number of visitors" : r
+        });
+        from = to;
+        to = from + 10;
+    })
     console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
 };

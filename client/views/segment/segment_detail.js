@@ -67,6 +67,9 @@ Template.segmentDetail.rendered = function() {
 
   c3.generate({
     bindto: "#dateXNumberOfVisitorsBarChart",
+    size: {
+      width: 1170
+    },
     data: {
       json: this.data.dateXNumberOfVisitorsBarChart,
       keys : {
@@ -151,6 +154,51 @@ Template.segmentDetail.rendered = function() {
       }
     }
   });
+
+  c3.generate({
+    bindto: "#averageDwellTimePerVisitorPerDayXNumberOfVisitorsHistogram",
+    size: {
+      width: 1170
+    },
+    data: {
+      json: this.data.averageDwellTimeXNumberOfVisitorsChart,
+      keys : {
+        x : 'duration',
+        value: ['number of visitors']
+      },
+      type: 'bar',
+      colors : {
+        "number of visitors": "#CFD8DC"
+      },
+    },
+    axis: {
+      x : {
+        label: {
+          text : "Minutes",
+          position: 'outer-right'
+        },
+        type : 'category'
+      },
+      y: {
+        label: {
+          text: 'Number of Visitors',
+          position: 'outer-middle'
+        }
+      }
+    },
+    bar: {
+      width: {
+        ratio: 1
+      }
+    },
+    grid: {
+      y :  {
+        show: true
+      }
+    }
+  });
+
+
 
 }
 
