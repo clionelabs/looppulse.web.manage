@@ -55,16 +55,22 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
     Metrics.upsert(listMetricSelector, listMetric);
 
     //line chart
-    var lineChartData = SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData(from, to, SegmentMetric.TimeBucket.Day, encounters);
-    var lineChartMetricSelector = {
+    var dateXNumberOfVisitorsBarChartData = SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData(from, to, SegmentMetric.TimeBucket.Day, encounters);
+    var dateXNumberOfVisitorsBarChartMetricSelector = {
         companyId: segment.companyId,
         collectionMeta: collectionMeta,
         from: from,
         to: to,
         graphType: SegmentMetric.Graph.DayXNumOfVisitorLineChart
     };
-    var lineChartMetric = new Metric(segment.companyId, collectionMeta, from, to, SegmentMetric.Graph.DayXNumOfVisitorLineChart, lineChartData);
-    Metrics.upsert(lineChartMetricSelector, lineChartMetric);
+    var dateXNumberOfVisitorsBarChartMetric = new Metric(
+        segment.companyId,
+        collectionMeta,
+        from,
+        to,
+        SegmentMetric.Graph.DayXNumOfVisitorLineChart,
+        dateXNumberOfVisitorsBarChartData);
+    Metrics.upsert(dateXNumberOfVisitorsBarChartMetricSelector, dateXNumberOfVisitorsBarChartMetric);
 
     var otherSegmentChartData = SegmentMetric.prepareVisitorOtherSegmentsBarChartData(atTime, segment, visitorIds);
     var otherSegmentChartSelector = {
@@ -74,7 +80,13 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
         to: to,
         graphType: SegmentMetric.Graph.VisitorOtherSegmentsBarChart
     };
-    var otherSegmentChartMetrics = new Metric(segment.companyId, collectionMeta, from, to, SegmentMetric.Graph.VisitorOtherSegmentsBarChart, otherSegmentChartData);
+    var otherSegmentChartMetrics = new Metric(
+        segment.companyId,
+        collectionMeta,
+        from,
+        to,
+        SegmentMetric.Graph.VisitorOtherSegmentsBarChart,
+        otherSegmentChartData);
     Metrics.upsert(otherSegmentChartSelector, otherSegmentChartMetrics);
 
     SegmentMetric.prepareVisitorsTagsBarChartData(visitorHasTagsHash);
@@ -82,7 +94,23 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
     SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData(encounters, 1 * 1000);
     SegmentMetric.prepareDwellTimeInTimeFrameBubbleData(encounters);
 
-    SegmentMetric.prepareNumberOfVisitorsXNumberOfVisitsHistogramData(encounters, 1);
+    var numberOfVisitsXNumberOfVisitorsBarChartData = SegmentMetric.prepareNumberOfVisitorsXNumberOfVisitsHistogramData(encounters, 1);
+    var numberOfVisitsXNumberOfVisitorsBarChartSelector = {
+        companyId: segment.companyId,
+        collectionMeta: collectionMeta,
+        from: from,
+        to: to,
+        graphType: SegmentMetric.Graph.NumberOfVisitXNumberOfVisitorsBarChart
+    }
+    var numberOfVisitsXNumberOfVisitorsBarChartMetric = new Metric(
+        segment.companyId,
+        collectionMeta,
+        from,
+        to,
+        SegmentMetric.Graph.NumberOfVisitXNumberOfVisitorsBarChart,
+        numberOfVisitsXNumberOfVisitorsBarChartData);
+    Metrics.upsert(numberOfVisitsXNumberOfVisitorsBarChartSelector, numberOfVisitsXNumberOfVisitorsBarChartMetric);
+
     SegmentMetric.prepareNumberOfVisitsInTimeFrameBubbleData(encounters);
 
 };
@@ -335,12 +363,17 @@ SegmentMetric.prepareNumberOfVisitorsXNumberOfVisitsHistogramData = function(enc
             visitorDateCount[vid] = (visitorDateCount[vid] || 0) + 1;
         }
     });
-    var result = [];
+    var resultNumber = [];
     _.each(visitorDateCount, function(dateCount, visitorId) {
         var index = Math.floor(dateCount/ interval);
-        result[index] = (result[index] || 0) + 1;
+        resultNumber[index] = (resultNumber[index] || 0) + 1;
     });
-    result = SegmentMetric.padArray(result, result.length); 
+    resultNumber = SegmentMetric.padArray(resultNumber, resultNumber.length);
+
+    var result = [];
+    _.each(resultNumber, function(resultCount, count) {
+        result.push({ "count" : count, "number of visitors" : resultCount});
+    })
     console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
 };

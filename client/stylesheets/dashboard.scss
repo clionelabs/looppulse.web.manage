@@ -519,48 +519,52 @@ ul.metric-tabs {
     }
   }
 }
-#lineChart {
-  graph-name: {
+
+.graph-container {
+  .graph-name {
     padding-left:15px;
   }
-  svg {
-    font-size: 22px;
-    .c3-axis {
+  .graph-content {
+    width:100%;
+    svg {
+      font-size: 22px;
+      .c3-axis {
 
-      .tick {
-        line {
-          stroke: transparent;
+        .tick {
+          line {
+            stroke: transparent;
+          }
         }
       }
-    }
 
-    .c3-grid {
-      .c3-ygrid {
-        stroke : $font-color;
-        stroke-dasharray: 0;
+      .c3-grid {
+        .c3-ygrid {
+          stroke: $font-color;
+          stroke-dasharray: 0;
+        }
       }
-    }
 
-    .c3-axis-x {
-      path {
-        stroke: $font-color;
+      .c3-axis-x {
+        path {
+          stroke: $font-color;
 
+        }
       }
-    }
 
-    .c3-axis-y {
-      path {
-        stroke: transparent;
+      .c3-axis-y {
+        path {
+          stroke: transparent;
 
+        }
       }
-    }
-    text {
-      fill: $font-color;
-      stroke: none;
-      font-size: 0.6em;
-    }
-    .c3-legend-item text {
-      font-size: 16px;
+      text {
+        fill: $font-color;
+        stroke: none;
+        font-size: 0.6em;
+      }
+      .c3-legend-item text {
+        font-size: 16px;
+      }
     }
   }
 }
