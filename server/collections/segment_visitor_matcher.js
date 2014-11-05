@@ -31,11 +31,11 @@ SegmentVisitorMatcher.prototype.checkEncounterIsRelevant = function(encounter) {
     }
   }
   if (criteria.every) {
-    enteredAtParts = encounter.timestampToParts(encounter.enteredAt.valueOf());
+    dayOfWeek = encounter.enteredAt.day();
     if (criteria.every === "weekdays") {
-      if (enteredAtParts.dayOfWeek < 1 || enteredAtParts.dayOfWeek > 5) return false;
+      if (dayOfWeek < 1 || dayOfWeek > 5) return false;
     } else if (criteria.every === "weekends") {
-      if (enteredAtParts.dayOfWeek != 0 && enteredAtParts.dayOfWeek != 6) return false;
+      if (dayOfWeek != 0 && dayOfWeek != 6) return false;
     }
   }
   return true;

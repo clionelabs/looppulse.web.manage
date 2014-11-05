@@ -13,7 +13,7 @@ if (!(typeof MochaWeb === 'undefined')){
       beforeEach(function() {
         matcher = SegmentVisitorMatcher.prototype;
         matcher.segment = {};
-        baseDate = moment().unix();
+        baseDate = moment().day(-7).hour(0).minute(0).second(0); // set base day as last sunday 00:00:00
       }); 
 
       it("no criteria", function() {
@@ -37,6 +37,18 @@ if (!(typeof MochaWeb === 'undefined')){
         var encounter = {installationId: 1, visitorId: 1, enteredAt: getDateBySec(0), exitedAt: getDateBySec(61), duration: 61 * 1000};
         chai.assert(matcher.checkEncounterIsRelevant(encounter) === false);
       });
+
+      it("every", function() {
+        var baseDay = getDateBySec(0, 's').day();
+        var baseHour = getDateBySec(0, 's').hour();
+        var startDate = getDateBySec(0, 's').subtract(baseDay, 'd').subtract(baseHour, 'h');
+
+        matcher.segment.criteria = {every: "weekdays"};
+        var encounter = {installationId: 1, visitorId: 1, enteredAt: getDateBySec(0), exitedAt: getDateBySec(60), duration: 60 * 1000};
+        chai.assert(matcher.checkEncounterIsRelevant(encounter) === false);
+        var encounter = {installationId: 1, visitorId: 1, enteredAt: getDateBySec(0).add(1, 'd'), exitedAt: getDateBySec(60), duration: 60 * 1000};
+        chai.assert(matcher.checkEncounterIsRelevant(encounter) === true);
+      });
     });
 
     describe("Segment Visitor Matcher", function() {
@@ -47,7 +59,6 @@ if (!(typeof MochaWeb === 'undefined')){
       var baseDate;
 
       var verifyResult = function(result, expected) {
-        console.log('[Seg Match]', result, expected);
         chai.assert(result.length === expected.length, "expected " + JSON.stringify(expected)+ ", but " + JSON.stringify(result));
         for (var i = 0; i < result.length; i++) {
           chai.assert(result[i].delta === expected[i].delta, "expected " + JSON.stringify(expected) + ", but " + JSON.stringify(result));
