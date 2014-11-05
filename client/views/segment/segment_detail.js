@@ -64,7 +64,6 @@ Template.segmentDetail.created = function () {
 };
 
 Template.segmentDetail.rendered = function() {
-  console.log(this.data);
 
   c3.generate({
     bindto: "#dateXNumberOfVisitorsBarChart",
