@@ -90,68 +90,18 @@ SegmentVisitorMatcher.prototype.buildEncountersSelector = function(criteria, vis
   };
 
   if (criteria.durationInMinutes) {
-    _.extend(selector, this.buildEncountersSelectorDuration(criteria.durationInMinutes));
+    _.extend(selector, Encounters.durationSelector(criteria.durationInMinutes));
   }
   if (criteria.every) {
-    _.extend(selector, this.buildEncountersSelectorEvery(criteria.every));
+    _.extend(selector, Encounters.everySelector(criteria.every));
   }
   if (criteria.days) {
-    _.extend(selector, this.buildEncountersSelectorDays(criteria.days, now));
+    _.extend(selector, Encounters.daysSelector(criteria.days, now));
   }
 
   return selector;
 }
 
-/**
- * @private
- */
-SegmentVisitorMatcher.prototype.buildEncountersSelectorDuration = function(durationInMinutes) {
-  var selector = {};
-  selector['duration'] = {};
-  if (durationInMinutes.atLeast !== undefined) {
-    selector['duration'].$gte = durationInMinutes.atLeast * 60 * 1000;
-  }
-  if (durationInMinutes.atMost !== undefined) {
-    selector['duration'].$lte = durationInMinutes.atMost * 60 * 1000;
-  }
-  return selector;
-}
-
-/**
- * @private
- */
-SegmentVisitorMatcher.prototype.buildEncountersSelectorEvery = function(every) {
-  var selector = {};
-  switch (every) {
-    case "weekdays":
-      selector["enteredAtParts.dayOfWeek"] = { $gte: 1, $lte: 5 };
-      break;
-    case "weekends":
-      selector["enteredAtParts.dayOfWeek"] = { $in: [0, 6] };
-      break;
-    case "day":
-      break;
-  }
-  return selector;
-}
-
-/**
- * @private
- */
-SegmentVisitorMatcher.prototype.buildEncountersSelectorDays = function(days, now) {
-  var selector = {};
-  if (days.inLast) {
-    selector['enteredAt'] = {
-      $gte: +moment(now).subtract(days.inLast, 'days')
-    };
-  } else {
-    selector['enteredAt'] = {
-      $gte: days.start,
-      $lte: days.end
-    };
-  }
-  return selector;
-}
 
 /**
  * Sort (In-place) encounters if it's not already been sorted
