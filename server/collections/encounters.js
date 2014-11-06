@@ -44,3 +44,45 @@ Encounter.startup = function () {
   });
   console.info("[Encounter] startup complete");
 };
+
+Encounters.durationSelector = function (durationInMinutes) {
+  var selector = {};
+  selector['duration'] = {};
+  if (durationInMinutes.atLeast !== undefined) {
+    selector['duration'].$gte = durationInMinutes.atLeast * 60 * 1000;
+  }
+  if (durationInMinutes.atMost !== undefined) {
+    selector['duration'].$lte = durationInMinutes.atMost * 60 * 1000;
+  }
+  return selector;
+};
+
+Encounters.everySelector = function (every) {
+  var selector = {};
+  switch (every) {
+    case "weekdays":
+      selector["enteredAtParts.dayOfWeek"] = { $gte: 1, $lte: 5 };
+      break;
+    case "weekends":
+      selector["enteredAtParts.dayOfWeek"] = { $in: [0, 6] };
+      break;
+    case "day":
+      break;
+  }
+  return selector;
+};
+
+Encounters.daysSelector = function (days, now) {
+  var selector = {};
+  if (days.inLast) {
+    selector['enteredAt'] = {
+      $gte: +moment(now).subtract(days.inLast, 'days')
+    };
+  } else {
+    selector['enteredAt'] = {
+      $gte: days.start,
+      $lte: days.end
+    };
+  }
+  return selector;
+};
