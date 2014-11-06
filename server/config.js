@@ -294,21 +294,14 @@ configureDEBUG = function() {
   var debugConfig = Meteor.settings.DEBUG;
   if (debugConfig && JSON.stringify(debugConfig) != "{}") {
     console.info("[Dev] Applying DEBUG options: ", debugConfig);
-    if (debugConfig.resetLocal) {
-      resetLocal();
+    if (debugConfig.hasOwnProperty("resetLocal")) {
+      console.warn("[DEBUG] Deprecated: option 'resetLocal' ")
     }
     if (useSeedData()) {
+      console.info("[DEBUG] Using: Seed Data.")
       configureCompanyFromJSON(debugConfig.seedData);
     }
   }
 
   Debug.observeChanges();
 };
-
-var resetLocal = function() {
-  var collections = [BeaconEvents, Encounters, Visitors, Metrics, Messages, SegmentVisitorFlows];
-  collections.forEach(function(collection) {
-    collection.remove({});
-    console.info("[Reset] Removed all data in:", collection._name);
-  });
-}
