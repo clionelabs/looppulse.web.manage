@@ -33,7 +33,10 @@ SegmentMetrics.find = function(from, to, segmentId, type) {
 SegmentMetric.generateAllGraph = function(segment, from, to) {
     console.log("[SegmentMetric] generating segment " + segment._id + " metric data");
     var atTime = moment().valueOf();
-    var visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment, atTime);
+    var visitorIds;
+    Benchmark.time(function() {
+        visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment, atTime);
+    }, '[Benchmark] generateAllGraph retrieving visitorId list for segment: ', segment.name);
     var encounters;
     Benchmark.time(function() {
         encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
