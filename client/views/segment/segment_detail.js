@@ -206,8 +206,7 @@ Template.segmentDetail.rendered = function() {
       }
     }
   });
-
-
-
+  
+  ChartHelper.punchCard("#dwellTimePunchCard",this.data.averageDwellTimePunchCard);
 }
 

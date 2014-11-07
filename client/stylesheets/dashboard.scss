@@ -569,9 +569,13 @@ ul.metric-tabs {
   }
 }
 
-#graph2 {
+.box {
   border: $border;
-  .percentage-chart-header {
+
+  margin-top:20px;
+  margin-bottom:20px;
+
+  .graph-header {
     padding:10px;
     color: $horizontal-chart-header-color;
     background-color: $horizontal-chart-header-bg-color;
@@ -601,17 +605,16 @@ ul.metric-tabs {
       }
 
       td {
-        padding-bottom:10px;
+        padding-bottom: 10px;
       }
 
       td:first-child {
-          padding-left: 10px;
+        padding-left: 10px;
       }
 
       .bar {
         min-height: 100%;
       }
-
 
       &:nth-child(2n) {
         .bar {
@@ -619,15 +622,36 @@ ul.metric-tabs {
         }
       }
 
-
       &:nth-child(2n+1) {
         .bar {
           background-color: $bar-color-1;
         }
       }
     }
-
-
-
   }
+}
+
+.punchcard {
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: transparent;
+    shape-rendering: crispEdges;
+  }
+
+  text {
+    font-family: $base-font-family;
+    font-size: 0.8em;
+    fill: $font-color;
+    stroke: transparent;
+
+    .loading {
+      font-size : 1.2em;
+    }
+  }
+
+  .circle {
+    fill: $primary-color;
+  }
+
 }

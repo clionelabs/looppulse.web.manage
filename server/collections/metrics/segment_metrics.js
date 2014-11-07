@@ -110,7 +110,23 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
     );
     Metrics.upsert(averageDwellTimeXNumberOfVisitorHistogramSelector, averageDwellTimeXNumberOfVisitorHistogramMetrics);
 
-    SegmentMetric.prepareDwellTimeInTimeFrameBubbleData(encounters);
+    var dwellTimePunchCardData = SegmentMetric.prepareDwellTimeInTimeFrameBubbleData(encounters);
+    var dwellTimePunchCardSelector = {
+        companyId: segment.companyId,
+        collectionMeta: collectionMeta,
+        from: from,
+        to: to,
+        graphType: SegmentMetric.Graph.DwellTimeInTimeFrameBubble
+    };
+    var dwellTimePunchCardMetrics = new Metric(
+        segment.companyId,
+        collectionMeta,
+        from,
+        to,
+        SegmentMetric.Graph.DwellTimeInTimeFrameBubble,
+        dwellTimePunchCardData
+    );
+    Metrics.upsert(dwellTimePunchCardSelector, dwellTimePunchCardMetrics);
 
     var numberOfVisitsXNumberOfVisitorsBarChartData = SegmentMetric.prepareNumberOfVisitorsXNumberOfVisitsHistogramData(encounters, 1);
     var numberOfVisitsXNumberOfVisitorsBarChartSelector = {
@@ -358,21 +374,31 @@ SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(
  */
 SegmentMetric.prepareDwellTimeInTimeFrameBubbleData = function(encounters) {
     console.log("[SegmentMetric] preparing dwell time in time frame bubble data");
+
+    var weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
     var avgDurations = SegmentMetric.createEmptyBubbleArray();
     var cntDurations = SegmentMetric.createEmptyBubbleArray();
     _.each(encounters, function(encounter) {
         avgDurations[encounter.enteredAt.day()][encounter.enteredAt.hour()] += encounter.duration;
         cntDurations[encounter.enteredAt.day()][encounter.enteredAt.hour()] ++;
     });
+
+    var result = [];
+
     for (var i = 0; i < 7; i++) {
         for (var j = 0; j < 24; j++) {
             if (avgDurations[i][j] !== 0) {
                 avgDurations[i][j] /= cntDurations[i][j];
-            }  
+            }
+            result.push([weekdays[i], j, avgDurations[i][j]]);
         }
     }
-    console.log("[SegmentMetric] result: ", JSON.stringify(avgDurations));
-    return avgDurations;
+    console.log("[SegmentMetric] result: ", JSON.stringify(result));
+
+
+
+    return result;
 };
 
 /**
