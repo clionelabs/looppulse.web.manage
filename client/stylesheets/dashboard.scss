@@ -521,12 +521,11 @@ ul.metric-tabs {
 }
 
 .graph-container {
-  width: 100%;
   .graph-name {
     padding-left:15px;
   }
   .graph-content {
-    width: 98%;
+    width:100%;
     svg {
       font-size: 22px;
       .c3-axis {

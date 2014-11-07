@@ -51,7 +51,7 @@ Template.segmentDetail.events({
     Meteor.call("getSegmentCriteriaToString", this.criteria, function(e, msg) {
       console.log(msg);
       $("#criteria").html(msg);
-
+      
     });
   }
 });
@@ -67,6 +67,9 @@ Template.segmentDetail.rendered = function() {
 
   c3.generate({
     bindto: "#dateXNumberOfVisitorsBarChart",
+    size: {
+      width: 1170
+    },
     data: {
       json: this.data.dateXNumberOfVisitorsBarChart,
       keys : {
@@ -114,6 +117,9 @@ Template.segmentDetail.rendered = function() {
 
   c3.generate({
     bindto: "#numberOfVisitsXNumberOfVisitorsBarChart",
+    size: {
+      width: 1170
+    },
     data: {
       json: this.data.numberOfVisitsXNumberOfVisitorsBarChart,
       keys : {
@@ -157,6 +163,9 @@ Template.segmentDetail.rendered = function() {
 
   c3.generate({
     bindto: "#averageDwellTimePerVisitorPerDayXNumberOfVisitorsHistogram",
+    size: {
+      width: 1170
+    },
     data: {
       json: this.data.averageDwellTimeXNumberOfVisitorsChart,
       keys : {
@@ -197,7 +206,7 @@ Template.segmentDetail.rendered = function() {
       }
     }
   });
-
+  
   ChartHelper.punchCard("#dwellTimePunchCard",this.data.averageDwellTimePunchCard);
 }
 
