@@ -100,6 +100,9 @@ Template.segmentDetail.rendered = function() {
         }
       }
     },
+    legend: {
+      position: 'right'
+    },
     bar: {
       width: {
         ratio: 0.2
@@ -142,6 +145,9 @@ Template.segmentDetail.rendered = function() {
           position: 'outer-middle'
         }
       }
+    },
+    legend: {
+      position: 'right'
     },
     bar: {
       width: {
@@ -186,6 +192,9 @@ Template.segmentDetail.rendered = function() {
         }
       }
     },
+    legend: {
+      position: 'right'
+    },
     bar: {
       width: {
         ratio: 1
@@ -197,8 +206,7 @@ Template.segmentDetail.rendered = function() {
       }
     }
   });
-
-
-
+  
+  ChartHelper.punchCard("#dwellTimePunchCard",this.data.averageDwellTimePunchCard);
 }
 

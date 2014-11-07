@@ -80,10 +80,9 @@
                       <h3 class="graph-name">Total Number of Visitors</h3>
                       <div class="graph-content" id="dateXNumberOfVisitorsBarChart"></div>
                   </div>
-              </div>
-              <div id="graph2" class="container">
-                  <div class="graph-container">
-                      <div class="percentage-chart-header">
+
+                  <div class="graph-container box">
+                      <div class="graph-header">
                           <table>
                               <tr><td width="30%">Segments</td><td width="70%">Percentage</td></tr>
                           </table>
@@ -93,7 +92,7 @@
                           <tr>
                               <td width="30%">{{ segmentName }}</td>
                               <td width="10%">{{ formatPercent percent }}</td>
-                              <td width="60%"><div class="bar" width="{{ formatPercent percent }}">&nbsp;</div></td></tr>
+                              <td width="60%"><div class="bar" style="width: {{ formatPercent percent }}">&nbsp;</div></td></tr>
                         {{ /each }}
                       </table>
 
@@ -106,6 +105,12 @@
                 <div class="graph-container">
                     <h3 class="graph-name">Average Dwell Time</h3>
                     <div class="graph-content" id="averageDwellTimePerVisitorPerDayXNumberOfVisitorsHistogram">
+                    </div>
+                </div>
+                <div class="graph-container box">
+                    <div class="graph-header">Dwell Time</div>
+                    <div class="punchcard" id="dwellTimePunchCard">
+
                     </div>
                 </div>
             </div>
