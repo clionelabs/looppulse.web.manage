@@ -337,11 +337,10 @@ SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(
 
     var from = 0;
     var to = from + 10; //TODO dynamic
-    var unit = "min"; //TODO dynamic
     var result = [];
     _.each(resultNumber, function(r) {
         result.push({
-            duration : from + " - " + to + " " + unit,
+            duration : from,
             "number of visitors" : r
         });
         from = to;
