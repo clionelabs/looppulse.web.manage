@@ -290,20 +290,18 @@ SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData = function(from, to, b
 SegmentMetric.prepareVisitorOtherSegmentsBarChartData = function(to, thisSegment, visitorIds) {
     console.log("[SegmentMetric] generating other segment percentage var chart");
     var segmentsCount = {};
-    var totalCount = 0;
     _.each(visitorIds, function(visitorId) {
         var visitor = Visitors.findOne({_id: visitorId}); 
         if (!visitor) return; // Not supposed to happen
         var segmentIdList = SegmentVisitorFlows.getVisitorSegmentIdList(visitor, to.valueOf()); 
         _.each(segmentIdList, function(id) {
             if (id === thisSegment._id) return;
-            totalCount++;
             segmentsCount[id] = (segmentsCount[id] || 0) + 1;
         });
     });
     var result = [];
     _.each(segmentsCount, function(cnt, segmentId) {
-        result.push({segmentName: Segments.findOne({_id: segmentId}).name, percent: cnt/totalCount});
+        result.push({segmentName: Segments.findOne({_id: segmentId}).name, percent: cnt/visitorIds.length});
     });
     console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
