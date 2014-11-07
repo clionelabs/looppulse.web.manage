@@ -100,6 +100,9 @@ Template.segmentDetail.rendered = function() {
         }
       }
     },
+    legend: {
+      position: 'right'
+    },
     bar: {
       width: {
         ratio: 0.2
@@ -143,6 +146,9 @@ Template.segmentDetail.rendered = function() {
         }
       }
     },
+    legend: {
+      position: 'right'
+    },
     bar: {
       width: {
         ratio: 0.2
@@ -185,6 +191,9 @@ Template.segmentDetail.rendered = function() {
           position: 'outer-middle'
         }
       }
+    },
+    legend: {
+      position: 'right'
     },
     bar: {
       width: {
