@@ -26,7 +26,7 @@ var recomputeSegmentVisitorStatus = function(segment, visitor) {
   SegmentVisitorFlows.remove(_.extend({}, selector, {deltaAt: {$gte: statusDelta[0].deltaAt}}));
 
   var lastFlow = SegmentVisitorFlows.findOne(selector, {sort: {deltaAt: -1}});
-  var lastDelta = lastFlow === undefined? 0: lastFlow.delta;
+  var lastDelta = lastFlow === undefined? -1: lastFlow.delta;
   _.each(statusDelta, function(flow) {
     if (flow.delta !== lastDelta) {
       SegmentVisitorFlows.insert(_.extend(selector, flow));
