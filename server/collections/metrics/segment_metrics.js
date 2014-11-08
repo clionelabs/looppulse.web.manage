@@ -313,19 +313,22 @@ SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData = function(from, to, b
  */
 SegmentMetric.prepareVisitorOtherSegmentsBarChartData = function(to, thisSegment, visitorIds) {
     console.log("[SegmentMetric] generating other segment percentage var chart");
-    var segmentsCount = {};
+
+    var thisVisitorIdSet = {};
     _.each(visitorIds, function(visitorId) {
-        var visitor = Visitors.findOne({_id: visitorId}); 
-        if (!visitor) return; // Not supposed to happen
-        var segmentIdList = SegmentVisitorFlows.getVisitorSegmentIdList(visitor, to.valueOf()); 
-        _.each(segmentIdList, function(id) {
-            if (id === thisSegment._id) return;
-            segmentsCount[id] = (segmentsCount[id] || 0) + 1;
-        });
+        thisVisitorIdSet[visitorId] = true;
     });
     var result = [];
-    _.each(segmentsCount, function(cnt, segmentId) {
-        result.push({segmentName: Segments.findOne({_id: segmentId}).name, percent: cnt/visitorIds.length});
+    Segments.find().map(function(segment) {
+        if (segment._id === thisSegment._id) return;
+        var visitorIdList = SegmentVisitorFlows.getSegmentVisitorIdList(segment, to.valueOf());
+        var cnt = 0;
+        _.each(visitorIdList, function(visitorId) {
+            if (thisVisitorIdSet[visitorId] !== undefined) {
+                cnt++;
+            }
+        });
+        result.push({segmentName: segment.name, percent: cnt/visitorIds.length});
     });
     console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;

@@ -114,6 +114,9 @@ SegmentVisitorFlows.getVisitorSegmentIdList = function(visitor, at) {
 SegmentVisitorFlow.ensureIndex = function () {
   SegmentVisitorFlows._ensureIndex({
     segmentId: 1,
+    deltaAt: 1
+  });
+  SegmentVisitorFlows._ensureIndex({
     visitorId: 1,
     deltaAt: 1
   });
