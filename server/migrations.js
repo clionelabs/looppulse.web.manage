@@ -18,7 +18,7 @@ var recomputeAllSegmentVisitorFlows = function() {
         var lastDelta = lastFlow === undefined? -1: lastFlow.delta;
         _.each(statusDelta, function(flow) {
           if (flow.delta !== lastDelta) {
-            SegmentVisitorFlows.insert(_.extend(selector, flow));
+            SegmentVisitorFlows.insert(_.extend({}, selector, {deltaAt: flow.deltaAt, delta: flow.delta}));
             lastDelta = flow.delta;
           }
         });
