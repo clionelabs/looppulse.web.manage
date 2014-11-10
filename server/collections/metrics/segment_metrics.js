@@ -33,14 +33,8 @@ SegmentMetrics.find = function(from, to, segmentId, type) {
 SegmentMetric.generateAllGraph = function(segment, from, to) {
     console.log("[SegmentMetric] generating segment " + segment._id + " metric data");
     var atTime = moment().valueOf();
-    var visitorIds;
-    Benchmark.time(function() {
-        visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment, atTime);
-    }, '[Benchmark] generateAllGraph retrieving visitorId list for segment: ', segment.name);
-    var encounters;
-    Benchmark.time(function() {
-        encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
-    }, '[Benchmark] generallAllGraph retrieving encounters for segment: ' + segment.name);
+    var visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment, atTime);
+    var encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
     //TODO get visitors: [segmentIds] kim's work
     var visitorInSegmentsHash = {};
     //TODO get visitors: [tags]
@@ -48,10 +42,7 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
 
     //list
     var numberOfVisitors = visitorIds.length;
-    var listData;
-    Benchmark.time(function() {
-        listData = SegmentMetric.prepareListData(encounters, numberOfVisitors);
-    }, '[Benchmark] SegmentMetric.prepareListData for segment: ' + segment.name);
+    var listData = SegmentMetric.prepareListData(encounters, numberOfVisitors);
     var collectionMeta = new Metric.CollectionMeta(segment._id, Metric.CollectionMeta.Type.Segment);
     var listMetricSelector = {
         companyId: segment.companyId,
@@ -64,10 +55,7 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
     Metrics.upsert(listMetricSelector, listMetric);
 
     //line chart
-    var dateXNumberOfVisitorsBarChartData;
-    Benchmark.time(function() {
-        dateXNumberOfVisitorsBarChartData = SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData(from, to, SegmentMetric.TimeBucket.Day, encounters);
-    }, '[Benchmark] SegmentMetric.prepareNumOfVisitorXTimeBUcketLineChartData for segment: ' + segment.name);
+    var dateXNumberOfVisitorsBarChartData = SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData(from, to, SegmentMetric.TimeBucket.Day, encounters);
     var dateXNumberOfVisitorsBarChartMetricSelector = {
         companyId: segment.companyId,
         collectionMeta: collectionMeta,
@@ -84,10 +72,7 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
         dateXNumberOfVisitorsBarChartData);
     Metrics.upsert(dateXNumberOfVisitorsBarChartMetricSelector, dateXNumberOfVisitorsBarChartMetric);
 
-    var otherSegmentChartData;
-    Benchmark.time(function() {
-        otherSegmentChartData = SegmentMetric.prepareVisitorOtherSegmentsBarChartData(atTime, segment, visitorIds);
-    }, '[Benchmark] SegmentMetric.prepareVisitorOtherSegmentsBarChartData for segment: ' + segment.name);
+    var otherSegmentChartData = SegmentMetric.prepareVisitorOtherSegmentsBarChartData(atTime, segment, visitorIds);
     var otherSegmentChartSelector = {
         companyId: segment.companyId,
         collectionMeta: collectionMeta,
@@ -107,10 +92,7 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
     SegmentMetric.prepareVisitorsTagsBarChartData(visitorHasTagsHash);
 
     //TODO dynamic gen bucket
-    var averageDwellTimeXNumberOfVisitorHistogramData;
-    Benchmark.time(function() {
-        averageDwellTimeXNumberOfVisitorHistogramData = SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData(encounters);
-    }, '[Benchmark] SegmentMetric.prepareAverageDwellTimeBucketXNumOfVisitorHistogramData for segment: ' + segment.name);
+    var averageDwellTimeXNumberOfVisitorHistogramData = SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData(encounters);
     var averageDwellTimeXNumberOfVisitorHistogramSelector = {
         companyId: segment.companyId,
         collectionMeta: collectionMeta,
@@ -128,10 +110,7 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
     );
     Metrics.upsert(averageDwellTimeXNumberOfVisitorHistogramSelector, averageDwellTimeXNumberOfVisitorHistogramMetrics);
 
-    var dwellTimePunchCardData;
-    Benchmark.time(function() {
-        dwellTimePunchCardData = SegmentMetric.prepareDwellTimeInTimeFrameBubbleData(encounters);
-    }, '[Benchmark] SegmentMetric.prepareDwellTimeInTimeFrameBubbleData for segment: ' + segment.name);
+    var dwellTimePunchCardData = SegmentMetric.prepareDwellTimeInTimeFrameBubbleData(encounters);
     var dwellTimePunchCardSelector = {
         companyId: segment.companyId,
         collectionMeta: collectionMeta,
@@ -149,10 +128,7 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
     );
     Metrics.upsert(dwellTimePunchCardSelector, dwellTimePunchCardMetrics);
 
-    var numberOfVisitsXNumberOfVisitorsBarChartData;
-    Benchmark.time(function() {
-        numberOfVisitsXNumberOfVisitorsBarChartData = SegmentMetric.prepareNumberOfVisitorsXNumberOfVisitsHistogramData(encounters, 1);
-    }, '[Benchmark] SegmentMetric.prepareNumberOfVisitorsXNumberOfVisitsHistogramData for segment: ' + segment.name);
+    var numberOfVisitsXNumberOfVisitorsBarChartData = SegmentMetric.prepareNumberOfVisitorsXNumberOfVisitsHistogramData(encounters, 1);
     var numberOfVisitsXNumberOfVisitorsBarChartSelector = {
         companyId: segment.companyId,
         collectionMeta: collectionMeta,
