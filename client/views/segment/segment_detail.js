@@ -199,5 +199,8 @@ Template.segmentDetail.rendered = function() {
   });
 
   ChartHelper.punchCard("#dwellTimePunchCard",this.data.averageDwellTimePunchCard);
+
+  ChartHelper.punchCard("#enteredAtPunchCard",this.data.enteredAtPunchCard);
+  ChartHelper.punchCard("#exitedAtPunchCard",this.data.exitedAtPunchCard);
 }
 
