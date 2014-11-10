@@ -25,7 +25,7 @@ SegmentMetrics.find = function(from, to, segmentId, type) {
 
 
 /**
- *
+ * TODO refactor to a better abstraction for the Metrics.upsert
  * @param segment
  * @param from timestamp as the moment cannot be passed
  * @param to
@@ -116,14 +116,14 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
         collectionMeta: collectionMeta,
         from: from,
         to: to,
-        graphType: SegmentMetric.Graph.DwellTimeInTimeFrameBubble
+        graphType: SegmentMetric.Graph.DwellTimePunchCard
     };
     var dwellTimePunchCardMetrics = new Metric(
         segment.companyId,
         collectionMeta,
         from,
         to,
-        SegmentMetric.Graph.DwellTimeInTimeFrameBubble,
+        SegmentMetric.Graph.DwellTimePunchCard,
         dwellTimePunchCardData
     );
     Metrics.upsert(dwellTimePunchCardSelector, dwellTimePunchCardMetrics);
@@ -145,7 +145,39 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
         numberOfVisitsXNumberOfVisitorsBarChartData);
     Metrics.upsert(numberOfVisitsXNumberOfVisitorsBarChartSelector, numberOfVisitsXNumberOfVisitorsBarChartMetric);
 
-    SegmentMetric.prepareNumberOfVisitsInTimeFrameBubbleData(encounters);
+    var enteredAtPunchCardData = SegmentMetric.prepareEnteredAtPunchCardData(encounters);
+    var enteredAtPunchCardSelector = {
+        companyId: segment.companyId,
+        collectionMeta: collectionMeta,
+        from: from,
+        to: to,
+        graphType: SegmentMetric.Graph.EnteredAtPunchCard
+    }
+    var enteredAtPunchCardMetric = new Metric(
+        segment.companyId,
+        collectionMeta,
+        from,
+        to,
+        SegmentMetric.Graph.EnteredAtPunchCard,
+        enteredAtPunchCardData);
+    Metrics.upsert(enteredAtPunchCardSelector, enteredAtPunchCardMetric);
+
+    var exitedAtPunchCardData = SegmentMetric.prepareExitAtPunchCardData(encounters);
+    var exitedAtPunchCardSelector = {
+        companyId: segment.companyId,
+        collectionMeta: collectionMeta,
+        from: from,
+        to: to,
+        graphType: SegmentMetric.Graph.ExitedAtPunchCard
+    }
+    var exitedAtPunchCardMetric = new Metric(
+        segment.companyId,
+        collectionMeta,
+        from,
+        to,
+        SegmentMetric.Graph.ExitedAtPunchCard,
+        exitedAtPunchCardData);
+    Metrics.upsert(exitedAtPunchCardSelector, exitedAtPunchCardMetric);
 
 };
 
@@ -378,31 +410,50 @@ SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(
 SegmentMetric.prepareDwellTimeInTimeFrameBubbleData = function(encounters) {
     console.log("[SegmentMetric] preparing dwell time in time frame bubble data");
 
-    var weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-    var avgDurations = SegmentMetric.createEmptyBubbleArray();
-    var cntDurations = SegmentMetric.createEmptyBubbleArray();
+    var durations = SegmentMetric.createEmptyBubbleArray();
     _.each(encounters, function(encounter) {
-        avgDurations[encounter.enteredAt.day()][encounter.enteredAt.hour()] += encounter.duration;
-        cntDurations[encounter.enteredAt.day()][encounter.enteredAt.hour()] ++;
+        if (!durations[encounter.enteredAt.day()][encounter.enteredAt.hour()]) {
+            durations[encounter.enteredAt.day()][encounter.enteredAt.hour()] = {
+                totalDuration : 0,
+                count : 0
+            }
+        }
+        durations[encounter.enteredAt.day()][encounter.enteredAt.hour()].totalDuration += encounter.duration;
+        durations[encounter.enteredAt.day()][encounter.enteredAt.hour()].count++;
     });
 
+    console.log("[SegmentMetric] result: ", JSON.stringify(durations));
+
+    return SegmentMetric.format7X24ToFrontend(durations, function(ele) {
+      return ele && ele.count ? ele.totalDuration / ele.count : 0;
+    });
+};
+/**
+ * from 7x24 to [$weekday, $timeOfDay, $count]
+ * @param array a 7 x 24 array
+ * @param func a function to convert an element to , optional
+ * @returns {Array}
+ */
+SegmentMetric.format7X24ToFrontend = function(array, func) {
+    //TODO start refactor to better encapsulate, perhaps pass to d3?
+    var weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     var result = [];
 
     for (var i = 0; i < 7; i++) {
         for (var j = 0; j < 24; j++) {
-            if (avgDurations[i][j] !== 0) {
-                avgDurations[i][j] /= cntDurations[i][j];
+            var r = null;
+            if (func) {
+                r = func(array[i][j]);
+            } else {
+                r = array[i][j];
             }
-            result.push([weekdays[i], j, avgDurations[i][j]]);
+            result.push([weekdays[i], j, r]);
         }
     }
-    console.log("[SegmentMetric] result: ", JSON.stringify(result));
-
-
-
+    //TODO end
     return result;
-};
+
+}
 
 /**
  * performance: O(|Encounters| + |Visitors|)
@@ -446,12 +497,32 @@ SegmentMetric.prepareNumberOfVisitorsXNumberOfVisitsHistogramData = function(enc
  *  @param encounters List of encounters
  *  @return 7x24 array corresponding to the values on the bubble graph. e.g. result[0][0] means the value of Sunday 00:00 - 01:00, result[6][13] means Saturday 13:00-:14:00 
  */
-SegmentMetric.prepareNumberOfVisitsInTimeFrameBubbleData = function(encounters) {
+SegmentMetric.prepareEnteredAtPunchCardData = function(encounters) {
     console.log("[SegmentMetric] preparing number of visits in time frame bubble data");
     var result = SegmentMetric.createEmptyBubbleArray();
     _.each(encounters, function(encounter) {
         result[encounter.enteredAt.day()][encounter.enteredAt.hour()]++;
     });
+
+    result = SegmentMetric.format7X24ToFrontend(result);
+    console.log("[SegmentMetric] result: ", JSON.stringify(result));
+    return result;
+};
+
+/**
+ *  Performance: O(|encounters|)
+ *
+ *  @param encounters List of encounters
+ *  @return 7x24 array corresponding to the values on the bubble graph. e.g. result[0][0] means the value of Sunday 00:00 - 01:00, result[6][13] means Saturday 13:00-:14:00
+ */
+SegmentMetric.prepareExitAtPunchCardData = function(encounters) {
+    console.log("[SegmentMetric] preparing number of visits in time frame bubble data");
+    var result = SegmentMetric.createEmptyBubbleArray();
+    _.each(encounters, function(encounter) {
+        result[encounter.exitedAt.day()][encounter.exitedAt.hour()]++;
+    });
+
+    result = SegmentMetric.format7X24ToFrontend(result);
     console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
 };

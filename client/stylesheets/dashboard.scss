@@ -581,6 +581,47 @@ ul.metric-tabs {
     color: $horizontal-chart-header-color;
     background-color: $horizontal-chart-header-bg-color;
     border-bottom: $border;
+    .nav {
+      border:0px;
+      float:right;
+      display: inline-block;
+      border: $border;
+      li {
+        margin: 0;
+
+        &:first-child {
+          border-right: $border;
+          border-radius: 0px;
+        }
+
+        &.active {
+          a {
+            color: black;
+          }
+          background-color: white;
+          border: 0px;
+        }
+
+        a {
+          display: inline-block;
+          margin: 0px;
+          font-size: 0.6em;
+          padding: 5px;
+          color: $font-color;
+          background-color: transparent;
+          border: 0px;
+          &:hover {
+            color: black;
+            background-color: white;
+            border: 0px;
+          }
+
+
+
+
+        }
+      }
+    }
     table {
       width:100%;
       border: 0;
@@ -652,7 +693,7 @@ ul.metric-tabs {
   }
 
   .circle {
-    fill: $primary-color;
+    fill: $primary-color-2;
   }
 
 }
