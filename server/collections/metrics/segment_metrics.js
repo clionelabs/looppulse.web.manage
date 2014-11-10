@@ -151,7 +151,7 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
 
 SegmentMetric.prepareListData = function(encounters, numberOfVisitors) {
     console.log("[SegmentMetric] generating list view data");
-    console.log(JSON.stringify(encounters));
+    //console.log(JSON.stringify(encounters));
     var listData = {
         numberOfVisitors : numberOfVisitors,
         averageDwellTime : 0,
@@ -164,7 +164,7 @@ SegmentMetric.prepareListData = function(encounters, numberOfVisitors) {
         var grpByVisitors = _.groupBy(encounters, function (e) {
         return e.visitorId;
         });
-        console.log("1 " + JSON.stringify(grpByVisitors));
+        //console.log("1 " + JSON.stringify(grpByVisitors));
         grpByVisitors = _.map(grpByVisitors, function(visitors, id) {
             var result = {};
             var groupedEncounters = _.groupBy(visitors, function(encounter) {
@@ -177,17 +177,17 @@ SegmentMetric.prepareListData = function(encounters, numberOfVisitors) {
         grpByVisitors = _.reduce(grpByVisitors, function(memo, visitor) {
             return _.extend(memo, visitor);
         }, {});
-        console.log("2 " + JSON.stringify(grpByVisitors));
+        //console.log("2 " + JSON.stringify(grpByVisitors));
 
         listData.numberOfVisitors =  _.size(grpByVisitors);
-        console.log("After calculating number of visitors: " + JSON.stringify(listData));
+        //console.log("After calculating number of visitors: " + JSON.stringify(listData));
 
         var getRepeated = function(encountersByDate) {
             return _.size(encountersByDate) > 1;
         };
         var numberOfRepeatedVisitor = _.size(_.filter(grpByVisitors, getRepeated));
         listData.repeatedVisitorPercentage = numberOfRepeatedVisitor / listData.numberOfVisitors;
-        console.log("After calculating percentage of repeated visit" + JSON.stringify(listData));
+        //console.log("After calculating percentage of repeated visit" + JSON.stringify(listData));
 
         var getTotalDwellTime = function(encounters) {
             return _.reduce(encounters, function(memo, encounter) {
@@ -289,19 +289,22 @@ SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData = function(from, to, b
  */
 SegmentMetric.prepareVisitorOtherSegmentsBarChartData = function(to, thisSegment, visitorIds) {
     console.log("[SegmentMetric] generating other segment percentage var chart");
-    var segmentsCount = {};
+
+    var thisVisitorIdSet = {};
     _.each(visitorIds, function(visitorId) {
-        var visitor = Visitors.findOne({_id: visitorId}); 
-        if (!visitor) return; // Not supposed to happen
-        var segmentIdList = SegmentVisitorFlows.getVisitorSegmentIdList(visitor, to.valueOf()); 
-        _.each(segmentIdList, function(id) {
-            if (id === thisSegment._id) return;
-            segmentsCount[id] = (segmentsCount[id] || 0) + 1;
-        });
+        thisVisitorIdSet[visitorId] = true;
     });
     var result = [];
-    _.each(segmentsCount, function(cnt, segmentId) {
-        result.push({segmentName: Segments.findOne({_id: segmentId}).name, percent: cnt/visitorIds.length});
+    Segments.find().map(function(segment) {
+        if (segment._id === thisSegment._id) return;
+        var visitorIdList = SegmentVisitorFlows.getSegmentVisitorIdList(segment, to.valueOf());
+        var cnt = 0;
+        _.each(visitorIdList, function(visitorId) {
+            if (thisVisitorIdSet[visitorId] !== undefined) {
+                cnt++;
+            }
+        });
+        result.push({segmentName: segment.name, percent: cnt/visitorIds.length});
     });
     console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
