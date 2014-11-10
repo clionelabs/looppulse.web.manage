@@ -78,10 +78,14 @@ Here are some few points for reference,
 4. Dropping database
   1. In mongo shell/console, `db.dropDatabase()`
 
-5. Force restart
+5. Cloning production database into local
+  1. ssh -v -i keys/dev.pem -L 27018:localhost:27017 ubuntu@beta.looppulse.com
+  2. In mongo shell/console, `db.copyDatabase('looppulse_manage', 'meteor', 'localhost:27018')`
+
+6. Force restart
   1. `sudo service looppulse_manage restart` or simply trigger build in jenkins
 
-6. Source code
+7. Source code
   1. `/opt/looppulse_manage` on beta.looppulse.com
 
 ## Local Debugging
