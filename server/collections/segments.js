@@ -5,6 +5,22 @@ Segment.ensureIndex = function () {
 };
 
 /**
+ * Return the default segment which contains every visitor.
+ *
+ * @return {Segment} Default Every-Visitor-Segments
+ */
+Segments.findEveryVisitorSegment = function(companyId) {
+  return Segments.findOne({companyId: companyId, criteria: {}})
+}
+
+Segments.findByCompany = function(companyId, selector) {
+  if (!selector) selector = {};
+  //_.extend(selector, {companyId: companyId});
+  console.log("Selector: ", selector);
+  return Segments.find(selector);
+}
+
+/**
  *
  * @param visitorId
  * @returns {boolean}

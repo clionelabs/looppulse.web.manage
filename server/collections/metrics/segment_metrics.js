@@ -327,8 +327,8 @@ SegmentMetric.prepareVisitorOtherSegmentsBarChartData = function(to, thisSegment
         thisVisitorIdSet[visitorId] = true;
     });
     var result = [];
-    Segments.find().map(function(segment) {
-        if (segment._id === thisSegment._id) return;
+    var skippedIds = [thisSegment._id, Segments.findEveryVisitorSegment(thisSegment.companyId)._id];
+    Segments.findByCompany(thisSegment.companyId, {_id: {$nin: skippedIds}}).map(function(segment) {
         var visitorIdList = SegmentVisitorFlows.getSegmentVisitorIdList(segment._id, to.valueOf());
         var cnt = 0;
         _.each(visitorIdList, function(visitorId) {
