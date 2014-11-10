@@ -98,7 +98,8 @@ Template.segmentDetail.rendered = function() {
       }
     },
     legend: {
-      position: 'right'
+      position: 'right',
+      show: false
     },
     bar: {
       width: {
@@ -141,7 +142,8 @@ Template.segmentDetail.rendered = function() {
       }
     },
     legend: {
-      position: 'right'
+      position: 'right',
+      show: false
     },
     bar: {
       width: {
@@ -184,7 +186,8 @@ Template.segmentDetail.rendered = function() {
       }
     },
     legend: {
-      position: 'right'
+      position: 'right',
+      show: false
     },
     bar: {
       width: {
