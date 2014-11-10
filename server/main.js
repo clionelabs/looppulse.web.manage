@@ -1,12 +1,4 @@
 configure();
-/*
-Visitors.find().map(function(visitor) {
-  console.log("[Main]", visitor._id, SegmentVisitorFlows.getVisitorSegmentIdList(moment().valueOf()));
-});
-Segments.find().map(function(segment) {
-  console.log("[Main]", segment._id, SegmentVisitorFlows.getSegmentVisitorIdList(moment().valueOf()));
-});
-*/
 
 Meteor.startup(
   Meteor.bindEnvironment(function() {

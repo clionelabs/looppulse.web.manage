@@ -78,37 +78,61 @@ var handleEncounterChanged = function(encounter, oldEncounter) {
 /*
  *  Return the visitor Id list of a particular segment at a particular time
  *
- *  @param {Segment} segment
+ *  @param {Id} segmentId
  *  @param {timestamp in ms} at Time at which you are checking
- *  @returni {Number[]} Array of visitor id
+ *  @return {Number[]} Array of visitor id
  */
-SegmentVisitorFlows.getSegmentVisitorIdList = function(segment, at) {
+SegmentVisitorFlows.getSegmentVisitorIdList = function(segmentId, at) {
+  var dict = SegmentVisitorFlows.getSegmentVisitorIdsWithTimeDict(segmentId, at);
+  return Object.keys(dict);
+}
+
+/*
+ *  Return the visitor Id list of a particular segment at a particular time
+ *
+ *  @param {Id} segmentId
+ *  @param {timestamp in ms} at Time at which you are checking
+ *  @return {Dictionary} Dictionary (segmentId -> entered time)
+ */
+SegmentVisitorFlows.getSegmentVisitorIdsWithTimeDict = function(segmentId, at) {
   var outIds = {};
   var inIds = {};
-  SegmentVisitorFlows.find({segmentId: segment._id, deltaAt: {$lt: at}}, {sort: {deltaAt: -1}}).forEach(function(flow) {
-    if (outIds[flow.visitorId] !== undefined) return; // since we sort in desc order, if an out event appeared before, everything else is irrelevant
-    if (flow.delta === 1) inIds[flow.visitorId] = true;
-    else outIds[flow.visitorId] = true;
+  SegmentVisitorFlows.find({segmentId: segmentId, deltaAt: {$lt: at}}, {sort: {deltaAt: -1}}).forEach(function(flow) {
+    if (outIds[flow.visitorId] !== undefined || inIds[flow.visitorId] !== undefined) return; // since we sort in desc order, only the last delta is relevant
+    if (flow.delta === 1) inIds[flow.visitorId] = flow.deltaAt;
+    else outIds[flow.visitorId] = flow.deltaAt;
   });
-  return Object.keys(inIds);
+  return inIds;
 }
 
 /*
  *  Return the segment Id list, in which a particular visitor belongs, at a particular time
  *
- *  @param {Visitor} visitor
+ *  @param {Id} visitorId
  *  @param {timestamp in ms} at Time at which you are checking
  *  @return {Number[]} Array of segment id
  */
-SegmentVisitorFlows.getVisitorSegmentIdList = function(visitor, at) {
+SegmentVisitorFlows.getVisitorSegmentIdList = function(visitorId, at) {
+  var dict = SegmentVisitorFlows.getVisitorSegmentIdsWithTimeDict(visitorId, at);
+  return Object.keys(dict);
+}
+
+/*
+ *  Return the segment Id list, in which a particular visitor belongs, at a particular time
+ *
+ *  @param {Id} visitorId
+ *  @param {timestamp in ms} at Time at which you are checking
+ *  @return {Dictionary} Dictionary (segmentId -> entered time)
+ */
+SegmentVisitorFlows.getVisitorSegmentIdsWithTimeDict = function(visitorId, at) {
   var outIds = {};
   var inIds = {};
-  SegmentVisitorFlows.find({visitorId: visitor._id, deltaAt: {$lt: at}}, {sort: {deltaAt: -1}}).forEach(function(flow) {
-    if (outIds[flow.segmentId] !== undefined) return; // since we sort in desc order, if an out event appeared before, everything else is irrelevant
-    if (flow.delta === 1) inIds[flow.segmentId] = true;
-    else outIds[flow.segmentId] = true;
+  SegmentVisitorFlows.find({visitorId: visitorId, deltaAt: {$lt: at}}, {sort: {deltaAt: -1}}).forEach(function(flow) {
+    if (outIds[flow.segmentId] !== undefined || inIds[flow.segmentId] !== undefined) return; // since we sort in desc order, only the last delta is relevant
+    if (flow.delta === 1) inIds[flow.segmentId] = flow.deltaAt;
+    else outIds[flow.segmentId] = flow.deltaAt;
   });
-  return Object.keys(inIds);
+  return inIds;
 }
 
 SegmentVisitorFlow.ensureIndex = function () {

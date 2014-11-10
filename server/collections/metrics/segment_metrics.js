@@ -33,7 +33,7 @@ SegmentMetrics.find = function(from, to, segmentId, type) {
 SegmentMetric.generateAllGraph = function(segment, from, to) {
     console.log("[SegmentMetric] generating segment " + segment._id + " metric data");
     var atTime = moment().valueOf();
-    var visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment, atTime);
+    var visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment._id, atTime);
     var encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
     //TODO get visitors: [segmentIds] kim's work
     var visitorInSegmentsHash = {};
@@ -297,7 +297,7 @@ SegmentMetric.prepareVisitorOtherSegmentsBarChartData = function(to, thisSegment
     var result = [];
     Segments.find().map(function(segment) {
         if (segment._id === thisSegment._id) return;
-        var visitorIdList = SegmentVisitorFlows.getSegmentVisitorIdList(segment, to.valueOf());
+        var visitorIdList = SegmentVisitorFlows.getSegmentVisitorIdList(segment._id, to.valueOf());
         var cnt = 0;
         _.each(visitorIdList, function(visitorId) {
             if (thisVisitorIdSet[visitorId] !== undefined) {
