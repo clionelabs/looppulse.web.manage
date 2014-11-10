@@ -304,7 +304,9 @@ SegmentMetric.prepareVisitorOtherSegmentsBarChartData = function(to, thisSegment
                 cnt++;
             }
         });
-        result.push({segmentName: segment.name, percent: cnt/visitorIds.length});
+        if (cnt > 0) {
+            result.push({segmentName: segment.name, percent: cnt/visitorIds.length});
+        }
     });
     console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
