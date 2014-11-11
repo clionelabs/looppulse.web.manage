@@ -26,23 +26,18 @@ SegmentMetrics.find = function(from, to, segmentId, type) {
 
 /**
  * TODO refactor to a better abstraction for the Metrics.upsert
- * @param segment
- * @param from timestamp as the moment cannot be passed
- * @param to
+ * @param segment {Segment}
+ * @param from {Unix Timestamp} Use timestamp because the moment cannot be passed
+ * @param to {Unix Timestamp}
  */
 SegmentMetric.generateAllGraph = function(segment, from, to) {
     console.log("[SegmentMetric] generating segment " + segment._id + " metric data");
     var atTime = moment().valueOf();
     var visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment._id, atTime);
     var encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
-    //TODO get visitors: [segmentIds] kim's work
-    var visitorInSegmentsHash = {};
-    //TODO get visitors: [tags]
-    var visitorHasTagsHash = {};
 
     //list
-    var numberOfVisitors = visitorIds.length;
-    var listData = SegmentMetric.prepareListData(encounters, numberOfVisitors);
+    var listData = SegmentMetric.prepareListData(encounters, visitorIds);
     var collectionMeta = new Metric.CollectionMeta(segment._id, Metric.CollectionMeta.Type.Segment);
     var listMetricSelector = {
         companyId: segment.companyId,
@@ -89,10 +84,8 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
         otherSegmentChartData);
     Metrics.upsert(otherSegmentChartSelector, otherSegmentChartMetrics);
 
-    SegmentMetric.prepareVisitorsTagsBarChartData(visitorHasTagsHash);
-
-    //TODO dynamic gen bucket
-    var averageDwellTimeXNumberOfVisitorHistogramData = SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData(encounters);
+    var interval = 10 * 60 * 1000; // 10 minutes. TODO: dynamic gen bucket
+    var averageDwellTimeXNumberOfVisitorHistogramData = SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData(encounters, interval);
     var averageDwellTimeXNumberOfVisitorHistogramSelector = {
         companyId: segment.companyId,
         collectionMeta: collectionMeta,
@@ -181,90 +174,44 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
 
 };
 
-SegmentMetric.prepareListData = function(encounters, numberOfVisitors) {
+/**
+ * @param encounters {Encounter[]} List of encounters
+ * @param visitorIds {Number[]} List of visitor Ids
+ *
+ * @return {Object} example: {numberOfVisitors: 10, averageDwellTime: 1000, repeatedVisitorPercentage: 0.25}. Note: averageDwellTime in ms
+ */
+SegmentMetric.prepareListData = function(encounters, visitorIds) {
     console.log("[SegmentMetric] generating list view data");
-    //console.log(JSON.stringify(encounters));
-    var listData = {
-        numberOfVisitors : numberOfVisitors,
-        averageDwellTime : 0,
-        repeatedVisitorPercentage : 0
+    var visitorSumDurations = {};
+    var visitorDateCount = {};
+    var visitorDateSet = {};
+    _.each(encounters, function(encounter) {
+        var vid = encounter.visitorId;
+        var dateStr = encounter.enteredAt.format("YYYY-MM-DD");
+        visitorSumDurations[vid] = (visitorSumDurations[vid] || 0) + encounter.duration;
+        visitorDateSet[vid] = visitorDateSet[vid] || {};
+        if (!visitorDateSet[vid][dateStr]) {
+            visitorDateSet[vid][dateStr] = true;
+            visitorDateCount[vid] = (visitorDateCount[vid] || 0) + 1;
+        }
+    });
+
+    var sumAverage = 0;
+    _.each(visitorSumDurations, function(sumDuration, visitorId) {
+        sumAverage += (sumDuration / visitorDateCount[visitorId]);
+    });
+    var repeatedCnt = 0;
+    _.each(visitorDateCount, function(dateCount, visitorId) {
+        if (dateCount > 1) repeatedCnt++;
+    });
+
+    var nVisitors = visitorIds.length;
+    var result = {
+        numberOfVisitors: nVisitors,
+        averageDwellTime: nVisitors > 0? sumAverage / nVisitors: 0,
+        repeatedVisitorPercentage: nVisitors > 0? repeatedCnt / nVisitors: 0
     };
-
-    if (!encounters.length) {
-        return listData;
-    } else {
-        var grpByVisitors = _.groupBy(encounters, function (e) {
-        return e.visitorId;
-        });
-        //console.log("1 " + JSON.stringify(grpByVisitors));
-        grpByVisitors = _.map(grpByVisitors, function(visitors, id) {
-            var result = {};
-            var groupedEncounters = _.groupBy(visitors, function(encounter) {
-                return moment(encounter.enteredAt).format("YYYY-MM-DD");
-            });
-            result[id.toString()] = groupedEncounters;
-            return result;
-        });
-        //convert back to hash
-        grpByVisitors = _.reduce(grpByVisitors, function(memo, visitor) {
-            return _.extend(memo, visitor);
-        }, {});
-        //console.log("2 " + JSON.stringify(grpByVisitors));
-
-        listData.numberOfVisitors =  _.size(grpByVisitors);
-        //console.log("After calculating number of visitors: " + JSON.stringify(listData));
-
-        var getRepeated = function(encountersByDate) {
-            return _.size(encountersByDate) > 1;
-        };
-        var numberOfRepeatedVisitor = _.size(_.filter(grpByVisitors, getRepeated));
-        listData.repeatedVisitorPercentage = numberOfRepeatedVisitor / listData.numberOfVisitors;
-        //console.log("After calculating percentage of repeated visit" + JSON.stringify(listData));
-
-        var getTotalDwellTime = function(encounters) {
-            return _.reduce(encounters, function(memo, encounter) {
-                return memo + encounter.duration;
-            }, 0);
-        };
-        var getAverageDwellTimePerDay = function(encountersByDate) {
-            return _.reduce(encountersByDate, function (memo, encounters) {
-               return memo + getTotalDwellTime(encounters);
-            }, 0) / _.size(encountersByDate);
-        }
-        var getAverageDwellTimePerVisitor = function(visitorEncountersByDate) {
-            return _.reduce(visitorEncountersByDate, function (memo, encountersByDate) {
-                    return memo + getAverageDwellTimePerDay(encountersByDate);
-                }, 0) / _.size(visitorEncountersByDate);
-        }
-        listData.averageDwellTime = getAverageDwellTimePerVisitor(grpByVisitors);
-        console.log(JSON.stringify(listData));
-
-        return listData;
-    }
-};
-
-/**
- * Substitue the null value of an array by zero
- */
-SegmentMetric.padArray = function(arr, size) {
-    var result = [];
-    for (var i = 0; i < size; i++) {
-        result[i] = arr[i]? arr[i]: 0;
-    }
-    return result;
-}
-
-/**
- * Create an empty 7 x 24 array with zero
- */
-SegmentMetric.createEmptyBubbleArray = function() {
-    var result = [];
-    for (var i = 0; i < 7; i++) {
-        result[i] = [];
-        for (var j = 0; j < 24; j++) {
-            result[i][j] = 0;
-        }
-    }
+    console.log('[SegmentMetric] result: ', JSON.stringify(result));
     return result;
 }
 
@@ -280,8 +227,10 @@ SegmentMetric.createEmptyBubbleArray = function() {
 SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData = function(from, to, bucketSize, encounters) {
     console.log("[SegmentMetric] generating number of visitors against time bucket histogram");
     from = moment(moment(from).format("YYYY-MM-DD"));
+    to = to? moment(to): moment();
     var format = SegmentMetric.TimeBucketMomentShortHands[bucketSize];
 
+    // resultNumber {Number[]} List of number corresponds to the y-value at each bucket
     var visitorSet = [];
     var resultNumber = {};
     _.each(encounters, function(encounter) {
@@ -292,21 +241,17 @@ SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData = function(from, to, b
             resultNumber[index] = (resultNumber[index] || 0) + 1;
         }
     });
-    var tto = null;
-    if (!to) {
-        tto = moment();
-    } else {
-        tto = moment(to);
-    }
-
-    var result = [];
-
-    var maxLength = tto.diff(from, bucketSize);
+    var maxLength = to.diff(from, bucketSize);
     for (var i = 1; i <= maxLength; i++ ) {
         var index = moment(from).add(i, bucketSize).format(format);
         resultNumber[index] = resultNumber[index] ? resultNumber[index] : 0;
-        result.push({ "date" : index, "number of visitors" : resultNumber[index]});
     }
+
+    // Transform the resultNumber into a frontend-friendly format.
+    var result = [];
+    _.each(resultNumber, function(value, key) {
+        result.push({"date": key, "number of visitors": value});
+    });
 
     console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
@@ -342,16 +287,8 @@ SegmentMetric.prepareVisitorOtherSegmentsBarChartData = function(to, thisSegment
             result.push({segmentName: segment.name, percent: cnt/visitorIds.length});
         }
     });
-    result = _.sortBy(result, function(item) {
-        return -1 * item['percent'];
-    });
     console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
-};
-
-SegmentMetric.prepareVisitorsTagsBarChartData = function(visitorHasTagsHash) {
-    console.log("[SegmentMetric] generating visitors tag percentage bar chart");
-    //TODO add impl
 };
 
 /**
@@ -362,14 +299,14 @@ SegmentMetric.prepareVisitorsTagsBarChartData = function(visitorHasTagsHash) {
  * The average dwell time for him would be ((10+20) + 30) / 2 = 30
  *
  * @param encounters {Encounter[]} List of encounters
+ * @param interval {Number} interval of x-axis in ms
  *
  *  @return {Object[]} List of result object of the form: {duration: xxx, nuber of visitors: yyy}.
  */
-SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(encounters) {
+SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(encounters, interval) {
     console.log("[SegmentMetric] preparing average dwell time again number of Visitors histogram");
 
-    var interval = 10 * 60 * 1 * 1000; //TODO dynamic
-
+    // Compute resultNumber {Number[]} as a List of number corresponds to the y-value at each bucket
     var visitorSumDurations = {};
     var visitorDateCount = {};
     var visitorDateSet = {};
@@ -390,17 +327,14 @@ SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(
     });
     resultNumber = SegmentMetric.padArray(resultNumber, resultNumber.length);
 
-    var from = 0;
-    var to = from + 10; //TODO dynamic
+    // Transform the resultNumber into a frontend-friendly format.
     var result = [];
-    _.each(resultNumber, function(r) {
-        result.push({
-            duration : from,
-            "number of visitors" : r
-        });
-        from = to;
-        to = from + 10;
-    })
+    _.each(resultNumber, function(value, key) {
+        // TODO: make more sense for duration to be in ms (agrees with the input param), and then transform it in frontend display
+        //       OR change the input param to be in minute
+        result.push({'duration': key / (60 * 1000), 'number of visitors': value}); //duration in minutes
+    });
+
     console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
 };
@@ -428,38 +362,13 @@ SegmentMetric.prepareDwellTimeInTimeFrameBubbleData = function(encounters) {
         durations[encounter.enteredAt.day()][encounter.enteredAt.hour()].count++;
     });
 
-    console.log("[SegmentMetric] result: ", JSON.stringify(durations));
-
-    return SegmentMetric.format7X24ToFrontend(durations, function(ele) {
+    // Transform the resultNumber into a frontend-friendly format.
+    var result = SegmentMetric.format7X24ToFrontend(durations, function(ele) {
       return ele && ele.count ? ele.totalDuration / ele.count : 0;
     });
-};
-/**
- * from 7x24 to [$weekday, $timeOfDay, $count]
- * @param array a 7 x 24 array
- * @param func a function to convert an element to , optional
- * @returns {Array}
- */
-SegmentMetric.format7X24ToFrontend = function(array, func) {
-    //TODO start refactor to better encapsulate, perhaps pass to d3?
-    var weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    var result = [];
-
-    for (var i = 0; i < 7; i++) {
-        for (var j = 0; j < 24; j++) {
-            var r = null;
-            if (func) {
-                r = func(array[i][j]);
-            } else {
-                r = array[i][j];
-            }
-            result.push([weekdays[i], j, r]);
-        }
-    }
-    //TODO end
+    console.log("[SegmentMetric] result: ", JSON.stringify(durations));
     return result;
-
-}
+};
 
 /**
  * performance: O(|Encounters| + |Visitors|)
@@ -489,6 +398,7 @@ SegmentMetric.prepareNumberOfVisitorsXNumberOfVisitsHistogramData = function(enc
     });
     resultNumber = SegmentMetric.padArray(resultNumber, resultNumber.length);
 
+    // Transform the resultNumber into a frontend-friendly format.
     var result = [];
     _.each(resultNumber, function(resultCount, count) {
         result.push({ "count" : count, "number of visitors" : resultCount});
@@ -512,6 +422,7 @@ SegmentMetric.prepareEnteredAtPunchCardData = function(encounters) {
         result[encounter.enteredAt.day()][encounter.enteredAt.hour()]++;
     });
 
+    // Transform the resultNumber into a frontend-friendly format.
     result = SegmentMetric.format7X24ToFrontend(result);
     console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
@@ -532,7 +443,55 @@ SegmentMetric.prepareExitAtPunchCardData = function(encounters) {
         result[encounter.exitedAt.day()][encounter.exitedAt.hour()]++;
     });
 
+    // Transform the resultNumber into a frontend-friendly format.
     result = SegmentMetric.format7X24ToFrontend(result);
     console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
 };
+
+/**
+ * Substitue the null value of an array by zero
+ */
+SegmentMetric.padArray = function(arr, size) {
+    var result = [];
+    for (var i = 0; i < size; i++) {
+        result[i] = arr[i]? arr[i]: 0;
+    }
+    return result;
+}
+
+/**
+ * Create an empty 7 x 24 array with zero
+ */
+SegmentMetric.createEmptyBubbleArray = function() {
+    var result = [];
+    for (var i = 0; i < 7; i++) {
+        result[i] = [];
+        for (var j = 0; j < 24; j++) {
+            result[i][j] = 0;
+        }
+    }
+    return result;
+}
+
+/**
+ * Transform 7x24 bubble array into a frontend-frinedly format for chart
+ * 
+ * @param array {[7][24]} a 7 x 24 array
+ * @param [func] {Function} An optional function to transform the element. If not set, then direct copy the element.
+ * @returns {Objects[]} Array of objects, each of format [$weekday, $timeOfDay, $value]
+ */
+SegmentMetric.format7X24ToFrontend = function(array, func) {
+    //TODO start refactor to better encapsulate, perhaps pass to d3?
+    var weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    var result = [];
+    for (var i = 0; i < 7; i++) {
+        for (var j = 0; j < 24; j++) {
+            var r = func? func(array[i][j]): array[i][j];
+            result.push([weekdays[i], j, r]);
+        }
+    }
+    //TODO end
+    return result;
+}
+
