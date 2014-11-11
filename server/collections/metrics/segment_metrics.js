@@ -218,7 +218,7 @@ SegmentMetric.prepareListData = function(encounters, visitorIds) {
  * Performance = O(|encounters|)
  * @param from {Unix Timestamp} startTime of the graph
  * @param to {Unix Timestamp} endTime of the graph
- * @param bucketSize {SegmentMetric.TimeBucket} interval of x axis in terms of "Hours", "Days", "Weeks" and "Months
+ * @param bucketSize {SegmentMetric.TimeBucket} interval of x axis in terms of "h", "d", "w" and "m"
  * @param encounters {Encounter[]} List of encounters
  *
  * @return {Object[]} List of objects, each of the format {'date': xxx, 'number of visitors': yyy}
@@ -227,13 +227,13 @@ SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData = function(from, to, b
     console.log("[SegmentMetric] generating number of visitors against time bucket histogram");
     from = moment(moment(from).format("YYYY-MM-DD"));
     to = to? moment(to): moment();
-    var format = SegmentMetric.TimeBucketMomentShortHands[bucketSize];
+    var format = SegmentMetric.TimeBucketDisplayFormat[bucketSize];
 
     // resultNumber {Number[]} List of number corresponds to the y-value at each bucket
     var visitorSet = [];
     var resultNumber = {};
     _.each(encounters, function(encounter) {
-        var index = encounter.enteredAt.format(format);
+        var index = encounter.enteredAt.diff(from, bucketSize);
         visitorSet[index] = visitorSet[index] || {};
         if (!visitorSet[index][encounter.visitorId]) {
             visitorSet[index][encounter.visitorId] = true;
@@ -241,14 +241,14 @@ SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData = function(from, to, b
         }
     });
     var maxLength = to.diff(from, bucketSize);
-    for (var i = 1; i <= maxLength; i++ ) {
-        var index = moment(from).add(i, bucketSize).format(format);
-        resultNumber[index] = resultNumber[index] ? resultNumber[index] : 0;
+    for (var i = 0; i < maxLength; i++) {
+        resultNumber[i] = resultNumber[i] ? resultNumber[i] : 0;
     }
 
     // Transform the resultNumber into a frontend-friendly format.
     var result = [];
-    _.each(resultNumber, function(value, key) {
+    _.each(resultNumber, function(value, index) {
+        var key = moment(from).add(index, bucketSize).format(format);
         result.push({"date": key, "number of visitors": value});
     });
     return result;
@@ -329,7 +329,7 @@ SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(
     _.each(resultNumber, function(value, key) {
         // TODO: make more sense for duration to be in ms (agrees with the input param), and then transform it in frontend display
         //       OR change the input param to be in minute
-        result.push({'duration': key / (60 * 1000), 'number of visitors': value}); //duration in minutes
+        result.push({'duration': key * 10, 'number of visitors': value}); //duration in minutes
     });
 
     return result;
