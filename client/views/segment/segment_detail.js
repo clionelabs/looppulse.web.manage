@@ -56,24 +56,19 @@ Template.segmentDetail.events({
   }
 });
 
-Template.segmentDetail.created = function () {
-  var from = DateHelper.getSevenDaysAgoTimestamp();
-  var to = null;
-  Meteor.call("genSegmentListData", from, to, function(err, res){
-  });
-};
-
 Template.segmentDetail.rendered = function() {
+  console.log(this.data);
 
+  var self = this;
   var format = SegmentMetric.TimeBucketMomentShortHands[SegmentMetric.TimeBucket.Day];
-  $('#datepicker').html(moment(this.data.from).format(format) + " to " + moment(this.data.to).format(format));
+  $('#datepicker').html(moment(+self.data.from).format(format) + " to " + moment(+self.data.to).format(format));
   $('#datepicker').daterangepicker({
     format: format,
     maxDate: moment(),
     startDate: moment(DateHelper.getSevenDaysAgoTimestamp()),
     endDate: moment()
   }, function(start, end, label) {
-    Router.go()
+    Router.go("/segments/" + self.data.segmentId + "?from=" + start.valueOf() + "&to=" + end.valueOf());
   });
 
   c3.generate({

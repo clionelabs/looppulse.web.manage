@@ -31,7 +31,7 @@ SegmentMetrics.find = function(from, to, segmentId, type) {
  * @param to {Unix Timestamp}
  */
 SegmentMetric.generateAllGraph = function(segment, from, to) {
-    console.log("[SegmentMetric] generating segment " + segment._id + " metric data");
+    console.log("[SegmentMetric] generating segment " + segment._id + " metric data from " + from + " to " + to);
     var atTime = moment().valueOf();
     var visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment._id, atTime);
     var encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
@@ -211,7 +211,6 @@ SegmentMetric.prepareListData = function(encounters, visitorIds) {
         averageDwellTime: nVisitors > 0? sumAverage / nVisitors: 0,
         repeatedVisitorPercentage: nVisitors > 0? repeatedCnt / nVisitors: 0
     };
-    console.log('[SegmentMetric] result: ', JSON.stringify(result));
     return result;
 }
 
@@ -252,8 +251,6 @@ SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData = function(from, to, b
     _.each(resultNumber, function(value, key) {
         result.push({"date": key, "number of visitors": value});
     });
-
-    console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
 };
 
@@ -287,7 +284,7 @@ SegmentMetric.prepareVisitorOtherSegmentsBarChartData = function(to, thisSegment
             result.push({segmentName: segment.name, percent: cnt/visitorIds.length});
         }
     });
-    console.log("[SegmentMetric] result: ", JSON.stringify(result));
+
     return result;
 };
 
@@ -335,7 +332,6 @@ SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(
         result.push({'duration': key / (60 * 1000), 'number of visitors': value}); //duration in minutes
     });
 
-    console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
 };
 
@@ -366,7 +362,6 @@ SegmentMetric.prepareDwellTimeInTimeFrameBubbleData = function(encounters) {
     var result = SegmentMetric.format7X24ToFrontend(durations, function(ele) {
       return ele && ele.count ? ele.totalDuration / ele.count : 0;
     });
-    console.log("[SegmentMetric] result: ", JSON.stringify(durations));
     return result;
 };
 
@@ -403,7 +398,6 @@ SegmentMetric.prepareNumberOfVisitorsXNumberOfVisitsHistogramData = function(enc
     _.each(resultNumber, function(resultCount, count) {
         result.push({ "count" : count, "number of visitors" : resultCount});
     })
-    console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
 };
 
@@ -424,7 +418,6 @@ SegmentMetric.prepareEnteredAtPunchCardData = function(encounters) {
 
     // Transform the resultNumber into a frontend-friendly format.
     result = SegmentMetric.format7X24ToFrontend(result);
-    console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
 };
 
@@ -445,7 +438,6 @@ SegmentMetric.prepareExitAtPunchCardData = function(encounters) {
 
     // Transform the resultNumber into a frontend-friendly format.
     result = SegmentMetric.format7X24ToFrontend(result);
-    console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
 };
 
