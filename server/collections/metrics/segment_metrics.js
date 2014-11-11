@@ -284,6 +284,9 @@ SegmentMetric.prepareVisitorOtherSegmentsBarChartData = function(to, thisSegment
             result.push({segmentName: segment.name, percent: cnt/visitorIds.length});
         }
     });
+    result = _.sortBy(result, function(item) {
+        return -1 * item['percent'];
+    });
 
     return result;
 };
