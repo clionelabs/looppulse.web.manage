@@ -26,23 +26,18 @@ SegmentMetrics.find = function(from, to, segmentId, type) {
 
 /**
  * TODO refactor to a better abstraction for the Metrics.upsert
- * @param segment
- * @param from timestamp as the moment cannot be passed
- * @param to
+ * @param segment {Segment}
+ * @param from {Unix Timestamp} Use timestamp because the moment cannot be passed
+ * @param to {Unix Timestamp}
  */
 SegmentMetric.generateAllGraph = function(segment, from, to) {
     console.log("[SegmentMetric] generating segment " + segment._id + " metric data");
     var atTime = moment().valueOf();
     var visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment._id, atTime);
     var encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
-    //TODO get visitors: [segmentIds] kim's work
-    var visitorInSegmentsHash = {};
-    //TODO get visitors: [tags]
-    var visitorHasTagsHash = {};
 
     //list
-    var numberOfVisitors = visitorIds.length;
-    var listData = SegmentMetric.prepareListData(encounters, numberOfVisitors);
+    var listData = SegmentMetric.prepareListData(encounters, visitorIds);
     var collectionMeta = new Metric.CollectionMeta(segment._id, Metric.CollectionMeta.Type.Segment);
     var listMetricSelector = {
         companyId: segment.companyId,
@@ -89,10 +84,8 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
         otherSegmentChartData);
     Metrics.upsert(otherSegmentChartSelector, otherSegmentChartMetrics);
 
-    SegmentMetric.prepareVisitorsTagsBarChartData(visitorHasTagsHash);
-
-    //TODO dynamic gen bucket
-    var averageDwellTimeXNumberOfVisitorHistogramData = SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData(encounters);
+    var interval = 10 * 60 * 1000; // 10 minutes. TODO: dynamic gen bucket
+    var averageDwellTimeXNumberOfVisitorHistogramData = SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData(encounters, interval);
     var averageDwellTimeXNumberOfVisitorHistogramSelector = {
         companyId: segment.companyId,
         collectionMeta: collectionMeta,
@@ -181,66 +174,279 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
 
 };
 
-SegmentMetric.prepareListData = function(encounters, numberOfVisitors) {
+/**
+ * @param encounters {Encounter[]} List of encounters
+ * @param visitorIds {Number[]} List of visitor Ids
+ *
+ * @return {Object} example: {numberOfVisitors: 10, averageDwellTime: 1000, repeatedVisitorPercentage: 0.25}. Note: averageDwellTime in ms
+ */
+SegmentMetric.prepareListData = function(encounters, visitorIds) {
     console.log("[SegmentMetric] generating list view data");
-    //console.log(JSON.stringify(encounters));
-    var listData = {
-        numberOfVisitors : numberOfVisitors,
-        averageDwellTime : 0,
-        repeatedVisitorPercentage : 0
+    var visitorSumDurations = {};
+    var visitorDateCount = {};
+    var visitorDateSet = {};
+    _.each(encounters, function(encounter) {
+        var vid = encounter.visitorId;
+        var dateStr = encounter.enteredAt.format("YYYY-MM-DD");
+        visitorSumDurations[vid] = (visitorSumDurations[vid] || 0) + encounter.duration;
+        visitorDateSet[vid] = visitorDateSet[vid] || {};
+        if (!visitorDateSet[vid][dateStr]) {
+            visitorDateSet[vid][dateStr] = true;
+            visitorDateCount[vid] = (visitorDateCount[vid] || 0) + 1;
+        }
+    });
+
+    var sumAverage = 0;
+    _.each(visitorSumDurations, function(sumDuration, visitorId) {
+        sumAverage += (sumDuration / visitorDateCount[visitorId]);
+    });
+    var repeatedCnt = 0;
+    _.each(visitorDateCount, function(dateCount, visitorId) {
+        if (dateCount > 1) repeatedCnt++;
+    });
+
+    var nVisitors = visitorIds.length;
+    var result = {
+        numberOfVisitors: nVisitors,
+        averageDwellTime: nVisitors > 0? sumAverage / nVisitors: 0,
+        repeatedVisitorPercentage: nVisitors > 0? repeatedCnt / nVisitors: 0
     };
+    console.log('[SegmentMetric] result: ', JSON.stringify(result));
+    return result;
+}
 
-    if (!encounters.length) {
-        return listData;
-    } else {
-        var grpByVisitors = _.groupBy(encounters, function (e) {
-        return e.visitorId;
-        });
-        //console.log("1 " + JSON.stringify(grpByVisitors));
-        grpByVisitors = _.map(grpByVisitors, function(visitors, id) {
-            var result = {};
-            var groupedEncounters = _.groupBy(visitors, function(encounter) {
-                return moment(encounter.enteredAt).format("YYYY-MM-DD");
-            });
-            result[id.toString()] = groupedEncounters;
-            return result;
-        });
-        //convert back to hash
-        grpByVisitors = _.reduce(grpByVisitors, function(memo, visitor) {
-            return _.extend(memo, visitor);
-        }, {});
-        //console.log("2 " + JSON.stringify(grpByVisitors));
+/**
+ * Performance = O(|encounters|)
+ * @param from {Unix Timestamp} startTime of the graph
+ * @param to {Unix Timestamp} endTime of the graph
+ * @param bucketSize {SegmentMetric.TimeBucket} interval of x axis in terms of "Hours", "Days", "Weeks" and "Months
+ * @param encounters {Encounter[]} List of encounters
+ *
+ * @return {Object[]} List of objects, each of the format {'date': xxx, 'number of visitors': yyy}
+ */
+SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData = function(from, to, bucketSize, encounters) {
+    console.log("[SegmentMetric] generating number of visitors against time bucket histogram");
+    from = moment(moment(from).format("YYYY-MM-DD"));
+    to = to? moment(to): moment();
+    var format = SegmentMetric.TimeBucketMomentShortHands[bucketSize];
 
-        listData.numberOfVisitors =  _.size(grpByVisitors);
-        //console.log("After calculating number of visitors: " + JSON.stringify(listData));
-
-        var getRepeated = function(encountersByDate) {
-            return _.size(encountersByDate) > 1;
-        };
-        var numberOfRepeatedVisitor = _.size(_.filter(grpByVisitors, getRepeated));
-        listData.repeatedVisitorPercentage = numberOfRepeatedVisitor / listData.numberOfVisitors;
-        //console.log("After calculating percentage of repeated visit" + JSON.stringify(listData));
-
-        var getTotalDwellTime = function(encounters) {
-            return _.reduce(encounters, function(memo, encounter) {
-                return memo + encounter.duration;
-            }, 0);
-        };
-        var getAverageDwellTimePerDay = function(encountersByDate) {
-            return _.reduce(encountersByDate, function (memo, encounters) {
-               return memo + getTotalDwellTime(encounters);
-            }, 0) / _.size(encountersByDate);
+    // resultNumber {Number[]} List of number corresponds to the y-value at each bucket
+    var visitorSet = [];
+    var resultNumber = {};
+    _.each(encounters, function(encounter) {
+        var index = encounter.enteredAt.format(format);
+        visitorSet[index] = visitorSet[index] || {};
+        if (!visitorSet[index][encounter.visitorId]) {
+            visitorSet[index][encounter.visitorId] = true;
+            resultNumber[index] = (resultNumber[index] || 0) + 1;
         }
-        var getAverageDwellTimePerVisitor = function(visitorEncountersByDate) {
-            return _.reduce(visitorEncountersByDate, function (memo, encountersByDate) {
-                    return memo + getAverageDwellTimePerDay(encountersByDate);
-                }, 0) / _.size(visitorEncountersByDate);
-        }
-        listData.averageDwellTime = getAverageDwellTimePerVisitor(grpByVisitors);
-        console.log(JSON.stringify(listData));
-
-        return listData;
+    });
+    var maxLength = to.diff(from, bucketSize);
+    for (var i = 1; i <= maxLength; i++ ) {
+        var index = moment(from).add(i, bucketSize).format(format);
+        resultNumber[index] = resultNumber[index] ? resultNumber[index] : 0;
     }
+
+    // Transform the resultNumber into a frontend-friendly format.
+    var result = [];
+    _.each(resultNumber, function(value, key) {
+        result.push({"date": key, "number of visitors": value});
+    });
+
+    console.log("[SegmentMetric] result: ", JSON.stringify(result));
+    return result;
+};
+
+/**
+ *  Performance: O(|SegmentVisitorFlows|);
+ *
+ *  @param to {Moment} EndDate of period
+ *  @param thisSegment {Segment} current segment under calculation
+ *  @param visitorIds {String[]} list of visitor ids of thisSegment
+ *
+ *  @return {Object[]} List of segmentName-percent pairs (sorted by percentage desc) e.g. [{'segmentName': 'Foodie', 'percent': 50}, {'segmentName': 'Shopper', 'percent': 20}]
+ */
+SegmentMetric.prepareVisitorOtherSegmentsBarChartData = function(to, thisSegment, visitorIds) {
+    console.log("[SegmentMetric] generating other segment percentage var chart");
+
+    var thisVisitorIdSet = {};
+    _.each(visitorIds, function(visitorId) {
+        thisVisitorIdSet[visitorId] = true;
+    });
+    var result = [];
+    var skippedIds = [thisSegment._id, Segments.findEveryVisitorSegment(thisSegment.companyId)._id];
+    Segments.findByCompany(thisSegment.companyId, {_id: {$nin: skippedIds}}).map(function(segment) {
+        var visitorIdList = SegmentVisitorFlows.getSegmentVisitorIdList(segment._id, to.valueOf());
+        var cnt = 0;
+        _.each(visitorIdList, function(visitorId) {
+            if (thisVisitorIdSet[visitorId] !== undefined) {
+                cnt++;
+            }
+        });
+        if (cnt > 0) {
+            result.push({segmentName: segment.name, percent: cnt/visitorIds.length});
+        }
+    });
+    console.log("[SegmentMetric] result: ", JSON.stringify(result));
+    return result;
+};
+
+/**
+ * Performance: O(|encounters|)
+ *
+ * Average dwell time is per visitor across different days. For example, if visitor 1 have
+ * two encounters on day 1, with duration 10s and 20s. and he comes again on day 2 with duration 30s.
+ * The average dwell time for him would be ((10+20) + 30) / 2 = 30
+ *
+ * @param encounters {Encounter[]} List of encounters
+ * @param interval {Number} interval of x-axis in ms
+ *
+ *  @return {Object[]} List of result object of the form: {duration: xxx, nuber of visitors: yyy}.
+ */
+SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(encounters, interval) {
+    console.log("[SegmentMetric] preparing average dwell time again number of Visitors histogram");
+
+    // Compute resultNumber {Number[]} as a List of number corresponds to the y-value at each bucket
+    var visitorSumDurations = {};
+    var visitorDateCount = {};
+    var visitorDateSet = {};
+    _.each(encounters, function(encounter) {
+        var vid = encounter.visitorId;
+        var dateStr = encounter.enteredAt.format("YYYY-MM-DD");
+        visitorSumDurations[vid] = (visitorSumDurations[vid] || 0) + encounter.duration;
+        visitorDateSet[vid] = visitorDateSet[vid] || {};
+        if (!visitorDateSet[vid][dateStr]) {
+            visitorDateSet[vid][dateStr] = true;
+            visitorDateCount[vid] = (visitorDateCount[vid] || 0) + 1;
+        }
+    });
+    var resultNumber = [];
+    _.each(visitorSumDurations, function(sumDuration, visitorId) {
+        var index = Math.floor(sumDuration / visitorDateCount[visitorId] / interval);
+        resultNumber[index] = (resultNumber[index] || 0) + 1;
+    });
+    resultNumber = SegmentMetric.padArray(resultNumber, resultNumber.length);
+
+    // Transform the resultNumber into a frontend-friendly format.
+    var result = [];
+    _.each(resultNumber, function(value, key) {
+        // TODO: make more sense for duration to be in ms (agrees with the input param), and then transform it in frontend display
+        //       OR change the input param to be in minute
+        result.push({'duration': key / (60 * 1000), 'number of visitors': value}); //duration in minutes
+    });
+
+    console.log("[SegmentMetric] result: ", JSON.stringify(result));
+    return result;
+};
+
+/**
+ *  Performance: O(|encounters|)
+ *
+ *  @param encounters {Encounter[]} List of encounters
+ *  @return {[][]} List of list, each of the format [weekday, hour, value] corresponding to the value of a particular hour on a particular weekday.
+ *                 Sample output: [['Sunday', 0, 100], ['Sunday', 1, 200], ..., ..., ['Saturday', 23, 1000]]
+ */
+SegmentMetric.prepareDwellTimeInTimeFrameBubbleData = function(encounters) {
+    console.log("[SegmentMetric] preparing dwell time in time frame bubble data");
+
+    // 7x24 array corresponding to the values on the bubble graph. e.g. durations[0][0] means the value of Sunday 00:00 - 01:00, durations[6][13] means Saturday 13:00-:14:00
+    var durations = SegmentMetric.createEmptyBubbleArray();
+    _.each(encounters, function(encounter) {
+        if (!durations[encounter.enteredAt.day()][encounter.enteredAt.hour()]) {
+            durations[encounter.enteredAt.day()][encounter.enteredAt.hour()] = {
+                totalDuration : 0,
+                count : 0
+            }
+        }
+        durations[encounter.enteredAt.day()][encounter.enteredAt.hour()].totalDuration += encounter.duration;
+        durations[encounter.enteredAt.day()][encounter.enteredAt.hour()].count++;
+    });
+
+    // Transform the resultNumber into a frontend-friendly format.
+    var result = SegmentMetric.format7X24ToFrontend(durations, function(ele) {
+      return ele && ele.count ? ele.totalDuration / ele.count : 0;
+    });
+    console.log("[SegmentMetric] result: ", JSON.stringify(durations));
+    return result;
+};
+
+/**
+ * performance: O(|Encounters| + |Visitors|)
+ *
+ * Note: multiple encounters of a visitor on the same day doesn't count as repeated visits
+ *
+ * @param encounters {Encounter[]} List of encounters
+ * @param interval {Number} Interval of x-axis (in # of days)
+ */
+SegmentMetric.prepareNumberOfVisitorsXNumberOfVisitsHistogramData = function(encounters, interval) {
+    console.log("[SegmentMetric] preparing number of visitors against repeated visits");
+    var visitorDateCount = {};
+    var visitorDateSet = {};
+    _.each(encounters, function(encounter) {
+        var vid = encounter.visitorId;
+        var dateStr = encounter.enteredAt.format("YYYY-MM-DD");
+        visitorDateSet[vid] = visitorDateSet[vid] || {};
+        if (!visitorDateSet[vid][dateStr]) {
+            visitorDateSet[vid][dateStr] = true;
+            visitorDateCount[vid] = (visitorDateCount[vid] || 0) + 1;
+        }
+    });
+    var resultNumber = [];
+    _.each(visitorDateCount, function(dateCount, visitorId) {
+        var index = Math.floor(dateCount/ interval);
+        resultNumber[index] = (resultNumber[index] || 0) + 1;
+    });
+    resultNumber = SegmentMetric.padArray(resultNumber, resultNumber.length);
+
+    // Transform the resultNumber into a frontend-friendly format.
+    var result = [];
+    _.each(resultNumber, function(resultCount, count) {
+        result.push({ "count" : count, "number of visitors" : resultCount});
+    })
+    console.log("[SegmentMetric] result: ", JSON.stringify(result));
+    return result;
+};
+
+/**
+ *  Performance: O(|encounters|)
+ *
+ *  @param encounters {Encounter[]} List of encounters
+ *  @return {[][]} List of list, each of the format [weekday, hour, value] corresponding to the value of a particular hour on a particular weekday.
+ *                 Sample output: [['Sunday', 0, 100], ['Sunday', 1, 200], ..., ..., ['Saturday', 23, 1000]]
+ */
+SegmentMetric.prepareEnteredAtPunchCardData = function(encounters) {
+    console.log("[SegmentMetric] preparing number of visits in time frame bubble data");
+    // 7x24 array corresponding to the values on the bubble graph. e.g. result[0][0] means the value of Sunday 00:00 - 01:00, result[6][13] means Saturday 13:00-:14:00
+    var result = SegmentMetric.createEmptyBubbleArray();
+    _.each(encounters, function(encounter) {
+        result[encounter.enteredAt.day()][encounter.enteredAt.hour()]++;
+    });
+
+    // Transform the resultNumber into a frontend-friendly format.
+    result = SegmentMetric.format7X24ToFrontend(result);
+    console.log("[SegmentMetric] result: ", JSON.stringify(result));
+    return result;
+};
+
+/**
+ *  Performance: O(|encounters|)
+ *
+ *  @param encounters {Encounter[]} List of encounters
+ *  @return {[][]} List of list, each of the format [weekday, hour, value] corresponding to the value of a particular hour on a particular weekday.
+ *                 Sample output: [['Sunday', 0, 100], ['Sunday', 1, 200], ..., ..., ['Saturday', 23, 1000]]
+ */
+SegmentMetric.prepareExitAtPunchCardData = function(encounters) {
+    console.log("[SegmentMetric] preparing number of visits in time frame bubble data");
+    // 7x24 array corresponding to the values on the bubble graph. e.g. result[0][0] means the value of Sunday 00:00 - 01:00, result[6][13] means Saturday 13:00-:14:00
+    var result = SegmentMetric.createEmptyBubbleArray();
+    _.each(encounters, function(encounter) {
+        result[encounter.exitedAt.day()][encounter.exitedAt.hour()]++;
+    });
+
+    // Transform the resultNumber into a frontend-friendly format.
+    result = SegmentMetric.format7X24ToFrontend(result);
+    console.log("[SegmentMetric] result: ", JSON.stringify(result));
+    return result;
 };
 
 /**
@@ -269,260 +475,23 @@ SegmentMetric.createEmptyBubbleArray = function() {
 }
 
 /**
- * Performance = O(|encounters|)
- * @param from startTime (timestamp) of the graph
- * @param to endTime (timestamp) of the graph
- * @param bucketSize interval of x axis
- * @param encounters List of encounters
- * return List of numbers of corresponding to the values on the y-axis, e.g. [1, 2, 0, 0, 1]
- */
-SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData = function(from, to, bucketSize, encounters) {
-    console.log("[SegmentMetric] generating number of visitors against time bucket histogram");
-    from = moment(moment(from).format("YYYY-MM-DD"));
-    var format = SegmentMetric.TimeBucketMomentShortHands[bucketSize];
-
-    var visitorSet = [];
-    var resultNumber = {};
-    _.each(encounters, function(encounter) {
-        var index = encounter.enteredAt.format(format);
-        visitorSet[index] = visitorSet[index] || {};
-        if (!visitorSet[index][encounter.visitorId]) {
-            visitorSet[index][encounter.visitorId] = true;
-            resultNumber[index] = (resultNumber[index] || 0) + 1;
-        }
-    });
-    var tto = null;
-    if (!to) {
-        tto = moment();
-    } else {
-        tto = moment(to);
-    }
-
-    var result = [];
-
-    var maxLength = tto.diff(from, bucketSize);
-    for (var i = 1; i <= maxLength; i++ ) {
-        var index = moment(from).add(i, bucketSize).format(format);
-        resultNumber[index] = resultNumber[index] ? resultNumber[index] : 0;
-        result.push({ "date" : index, "number of visitors" : resultNumber[index]});
-    }
-
-    console.log("[SegmentMetric] result: ", JSON.stringify(result));
-    return result;
-};
-
-/**
- *  Performance: O(|SegmentVisitorFlows|);
- *
- *  @param to EndDate (moment object) of period
- *  @param thisSegment current segment under calculation
- *  @param visitorIds list of visitor ids of thisSegment
- *  @return List of segmentName, percent pairs as dictionary. e.g. [{'segmentName': 'Foodie', 'percent': 50}, {'segmentName': 'Shopper', 'percent': 20}] 
- */
-SegmentMetric.prepareVisitorOtherSegmentsBarChartData = function(to, thisSegment, visitorIds) {
-    console.log("[SegmentMetric] generating other segment percentage var chart");
-
-    var thisVisitorIdSet = {};
-    _.each(visitorIds, function(visitorId) {
-        thisVisitorIdSet[visitorId] = true;
-    });
-    var result = [];
-    var skippedIds = [thisSegment._id, Segments.findEveryVisitorSegment(thisSegment.companyId)._id];
-    Segments.findByCompany(thisSegment.companyId, {_id: {$nin: skippedIds}}).map(function(segment) {
-        var visitorIdList = SegmentVisitorFlows.getSegmentVisitorIdList(segment._id, to.valueOf());
-        var cnt = 0;
-        _.each(visitorIdList, function(visitorId) {
-            if (thisVisitorIdSet[visitorId] !== undefined) {
-                cnt++;
-            }
-        });
-        if (cnt > 0) {
-            result.push({segmentName: segment.name, percent: cnt/visitorIds.length});
-        }
-    });
-    console.log("[SegmentMetric] result: ", JSON.stringify(result));
-    return result;
-};
-
-SegmentMetric.prepareVisitorsTagsBarChartData = function(visitorHasTagsHash) {
-    console.log("[SegmentMetric] generating visitors tag percentage bar chart");
-    //TODO add impl
-};
-
-/**
- * Performance: O(|encounters|)
- *
- * Average dwell time is per visitor across different days. For example, if visitor 1 have
- * two encounters on day 1, with duration 10s and 20s. and he comes again on day 2 with duration 30s.
- * The average dwell time for him would be ((10+20) + 30) / 2 = 30
- *
- * @param encounters List of encounters
- * @param interval Interval of the x-axis (unit of ms)
- * return List of numbers of corresponding to the values on the y-axis, e.g. [1, 2, 0, 0, 1]
- */
-SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(encounters) {
-
-    console.log("[SegmentMetric] preparing average dwell time again number of Visitors histogram");
-
-    var interval = 10 * 60 * 1 * 1000; //TODO dynamic
-
-    var visitorSumDurations = {};
-    var visitorDateCount = {};
-    var visitorDateSet = {};
-    _.each(encounters, function(encounter) {
-        var vid = encounter.visitorId;
-        var dateStr = encounter.enteredAt.format("YYYY-MM-DD");
-        visitorSumDurations[vid] = (visitorSumDurations[vid] || 0) + encounter.duration;
-        visitorDateSet[vid] = visitorDateSet[vid] || {};
-        if (!visitorDateSet[vid][dateStr]) {
-            visitorDateSet[vid][dateStr] = true;
-            visitorDateCount[vid] = (visitorDateCount[vid] || 0) + 1;
-        }
-    });
-    var resultNumber = [];
-    _.each(visitorSumDurations, function(sumDuration, visitorId) {
-        var index = Math.floor(sumDuration / visitorDateCount[visitorId] / interval);
-        resultNumber[index] = (resultNumber[index] || 0) + 1;
-    });
-    resultNumber = SegmentMetric.padArray(resultNumber, resultNumber.length);
-
-    var from = 0;
-    var to = from + 10; //TODO dynamic
-    var result = [];
-    _.each(resultNumber, function(r) {
-        result.push({
-            duration : from,
-            "number of visitors" : r
-        });
-        from = to;
-        to = from + 10;
-    })
-    console.log("[SegmentMetric] result: ", JSON.stringify(result));
-    return result;
-};
-
-/**
- *  Performance: O(|encounters|)
- *
- *  @param encounters List of encounters
- *  @return 7x24 array corresponding to the values on the bubble graph. e.g. result[0][0] means the value of Sunday 00:00 - 01:00, result[6][13] means Saturday 13:00-:14:00 
- */
-SegmentMetric.prepareDwellTimeInTimeFrameBubbleData = function(encounters) {
-    console.log("[SegmentMetric] preparing dwell time in time frame bubble data");
-
-    var durations = SegmentMetric.createEmptyBubbleArray();
-    _.each(encounters, function(encounter) {
-        if (!durations[encounter.enteredAt.day()][encounter.enteredAt.hour()]) {
-            durations[encounter.enteredAt.day()][encounter.enteredAt.hour()] = {
-                totalDuration : 0,
-                count : 0
-            }
-        }
-        durations[encounter.enteredAt.day()][encounter.enteredAt.hour()].totalDuration += encounter.duration;
-        durations[encounter.enteredAt.day()][encounter.enteredAt.hour()].count++;
-    });
-
-    console.log("[SegmentMetric] result: ", JSON.stringify(durations));
-
-    return SegmentMetric.format7X24ToFrontend(durations, function(ele) {
-      return ele && ele.count ? ele.totalDuration / ele.count : 0;
-    });
-};
-/**
- * from 7x24 to [$weekday, $timeOfDay, $count]
- * @param array a 7 x 24 array
- * @param func a function to convert an element to , optional
- * @returns {Array}
+ * Transform 7x24 bubble array into a frontend-frinedly format for chart
+ * 
+ * @param array {[7][24]} a 7 x 24 array
+ * @param [func] {Function} An optional function to transform the element. If not set, then direct copy the element.
+ * @returns {Objects[]} Array of objects, each of format [$weekday, $timeOfDay, $value]
  */
 SegmentMetric.format7X24ToFrontend = function(array, func) {
     //TODO start refactor to better encapsulate, perhaps pass to d3?
     var weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     var result = [];
-
     for (var i = 0; i < 7; i++) {
         for (var j = 0; j < 24; j++) {
-            var r = null;
-            if (func) {
-                r = func(array[i][j]);
-            } else {
-                r = array[i][j];
-            }
+            var r = func? func(array[i][j]): array[i][j];
             result.push([weekdays[i], j, r]);
         }
     }
     //TODO end
     return result;
-
 }
 
-/**
- * performance: O(|Encounters| + |Visitors|)
- *
- * Note: multiple encounters of a visitor on the same day doesn't count as repeated visits
- *
- * @param encounters
- * @param interval Interval of x-axis (in # of days)
- */
-SegmentMetric.prepareNumberOfVisitorsXNumberOfVisitsHistogramData = function(encounters, interval) {
-    console.log("[SegmentMetric] preparing number of visitors against repeated visits");
-    var visitorDateCount = {};
-    var visitorDateSet = {};
-    _.each(encounters, function(encounter) {
-        var vid = encounter.visitorId;
-        var dateStr = encounter.enteredAt.format("YYYY-MM-DD");
-        visitorDateSet[vid] = visitorDateSet[vid] || {};
-        if (!visitorDateSet[vid][dateStr]) {
-            visitorDateSet[vid][dateStr] = true;
-            visitorDateCount[vid] = (visitorDateCount[vid] || 0) + 1;
-        }
-    });
-    var resultNumber = [];
-    _.each(visitorDateCount, function(dateCount, visitorId) {
-        var index = Math.floor(dateCount/ interval);
-        resultNumber[index] = (resultNumber[index] || 0) + 1;
-    });
-    resultNumber = SegmentMetric.padArray(resultNumber, resultNumber.length);
-
-    var result = [];
-    _.each(resultNumber, function(resultCount, count) {
-        result.push({ "count" : count, "number of visitors" : resultCount});
-    })
-    console.log("[SegmentMetric] result: ", JSON.stringify(result));
-    return result;
-};
-
-/**
- *  Performance: O(|encounters|)
- *
- *  @param encounters List of encounters
- *  @return 7x24 array corresponding to the values on the bubble graph. e.g. result[0][0] means the value of Sunday 00:00 - 01:00, result[6][13] means Saturday 13:00-:14:00 
- */
-SegmentMetric.prepareEnteredAtPunchCardData = function(encounters) {
-    console.log("[SegmentMetric] preparing number of visits in time frame bubble data");
-    var result = SegmentMetric.createEmptyBubbleArray();
-    _.each(encounters, function(encounter) {
-        result[encounter.enteredAt.day()][encounter.enteredAt.hour()]++;
-    });
-
-    result = SegmentMetric.format7X24ToFrontend(result);
-    console.log("[SegmentMetric] result: ", JSON.stringify(result));
-    return result;
-};
-
-/**
- *  Performance: O(|encounters|)
- *
- *  @param encounters List of encounters
- *  @return 7x24 array corresponding to the values on the bubble graph. e.g. result[0][0] means the value of Sunday 00:00 - 01:00, result[6][13] means Saturday 13:00-:14:00
- */
-SegmentMetric.prepareExitAtPunchCardData = function(encounters) {
-    console.log("[SegmentMetric] preparing number of visits in time frame bubble data");
-    var result = SegmentMetric.createEmptyBubbleArray();
-    _.each(encounters, function(encounter) {
-        result[encounter.exitedAt.day()][encounter.exitedAt.hour()]++;
-    });
-
-    result = SegmentMetric.format7X24ToFrontend(result);
-    console.log("[SegmentMetric] result: ", JSON.stringify(result));
-    return result;
-};
