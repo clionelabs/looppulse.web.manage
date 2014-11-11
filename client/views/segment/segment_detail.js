@@ -56,7 +56,7 @@ Template.segmentDetail.events({
   },
   "click #showDelete": function() {
     var self = this;
-    bootbox.confirm("Are you sure?", function(result) {
+    bootbox.confirm("Are you sure you want to remove the segment " + self.name + "?", function(result) {
         if (result) {
             console.log("Removing Segment", self.name);
             Notifications.info("Removing", "Segment " + self.name, {timeout: 1000000, userCloseable: false});
