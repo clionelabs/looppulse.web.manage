@@ -270,11 +270,12 @@ SegmentMetric.createEmptyBubbleArray = function() {
 
 /**
  * Performance = O(|encounters|)
- * @param from startTime (timestamp) of the graph
- * @param to endTime (timestamp) of the graph
- * @param bucketSize interval of x axis
- * @param encounters List of encounters
- * return List of numbers of corresponding to the values on the y-axis, e.g. [1, 2, 0, 0, 1]
+ * @param from {Unix Timestamp} startTime of the graph
+ * @param to {Unix Timestamp} endTime of the graph
+ * @param bucketSize {SegmentMetric.TimeBucket} interval of x axis in terms of "Hours", "Days", "Weeks" and "Months
+ * @param encounters {Encounter[]} List of encounters
+ *
+ * @return {Object[]} List of objects, each of the format {'date': xxx, 'number of visitors': yyy}
  */
 SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData = function(from, to, bucketSize, encounters) {
     console.log("[SegmentMetric] generating number of visitors against time bucket histogram");
@@ -314,10 +315,11 @@ SegmentMetric.prepareNumOfVisitorXTimeBucketLineChartData = function(from, to, b
 /**
  *  Performance: O(|SegmentVisitorFlows|);
  *
- *  @param to EndDate (moment object) of period
- *  @param thisSegment current segment under calculation
- *  @param visitorIds list of visitor ids of thisSegment
- *  @return List of segmentName, percent pairs as dictionary. e.g. [{'segmentName': 'Foodie', 'percent': 50}, {'segmentName': 'Shopper', 'percent': 20}] 
+ *  @param to {Moment} EndDate of period
+ *  @param thisSegment {Segment} current segment under calculation
+ *  @param visitorIds {String[]} list of visitor ids of thisSegment
+ *
+ *  @return {Object[]} List of segmentName-percent pairs (sorted by percentage desc) e.g. [{'segmentName': 'Foodie', 'percent': 50}, {'segmentName': 'Shopper', 'percent': 20}]
  */
 SegmentMetric.prepareVisitorOtherSegmentsBarChartData = function(to, thisSegment, visitorIds) {
     console.log("[SegmentMetric] generating other segment percentage var chart");
@@ -340,6 +342,9 @@ SegmentMetric.prepareVisitorOtherSegmentsBarChartData = function(to, thisSegment
             result.push({segmentName: segment.name, percent: cnt/visitorIds.length});
         }
     });
+    result = _.sortBy(result, function(item) {
+        return -1 * item['percent'];
+    });
     console.log("[SegmentMetric] result: ", JSON.stringify(result));
     return result;
 };
@@ -356,12 +361,11 @@ SegmentMetric.prepareVisitorsTagsBarChartData = function(visitorHasTagsHash) {
  * two encounters on day 1, with duration 10s and 20s. and he comes again on day 2 with duration 30s.
  * The average dwell time for him would be ((10+20) + 30) / 2 = 30
  *
- * @param encounters List of encounters
- * @param interval Interval of the x-axis (unit of ms)
- * return List of numbers of corresponding to the values on the y-axis, e.g. [1, 2, 0, 0, 1]
+ * @param encounters {Encounter[]} List of encounters
+ *
+ *  @return {Object[]} List of result object of the form: {duration: xxx, nuber of visitors: yyy}.
  */
 SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(encounters) {
-
     console.log("[SegmentMetric] preparing average dwell time again number of Visitors histogram");
 
     var interval = 10 * 60 * 1 * 1000; //TODO dynamic
@@ -404,12 +408,14 @@ SegmentMetric.prepareAverageDwelTimeBucketXNumOfVisitorHistogramData = function(
 /**
  *  Performance: O(|encounters|)
  *
- *  @param encounters List of encounters
- *  @return 7x24 array corresponding to the values on the bubble graph. e.g. result[0][0] means the value of Sunday 00:00 - 01:00, result[6][13] means Saturday 13:00-:14:00 
+ *  @param encounters {Encounter[]} List of encounters
+ *  @return {[][]} List of list, each of the format [weekday, hour, value] corresponding to the value of a particular hour on a particular weekday.
+ *                 Sample output: [['Sunday', 0, 100], ['Sunday', 1, 200], ..., ..., ['Saturday', 23, 1000]]
  */
 SegmentMetric.prepareDwellTimeInTimeFrameBubbleData = function(encounters) {
     console.log("[SegmentMetric] preparing dwell time in time frame bubble data");
 
+    // 7x24 array corresponding to the values on the bubble graph. e.g. durations[0][0] means the value of Sunday 00:00 - 01:00, durations[6][13] means Saturday 13:00-:14:00
     var durations = SegmentMetric.createEmptyBubbleArray();
     _.each(encounters, function(encounter) {
         if (!durations[encounter.enteredAt.day()][encounter.enteredAt.hour()]) {
@@ -460,8 +466,8 @@ SegmentMetric.format7X24ToFrontend = function(array, func) {
  *
  * Note: multiple encounters of a visitor on the same day doesn't count as repeated visits
  *
- * @param encounters
- * @param interval Interval of x-axis (in # of days)
+ * @param encounters {Encounter[]} List of encounters
+ * @param interval {Number} Interval of x-axis (in # of days)
  */
 SegmentMetric.prepareNumberOfVisitorsXNumberOfVisitsHistogramData = function(encounters, interval) {
     console.log("[SegmentMetric] preparing number of visitors against repeated visits");
@@ -494,11 +500,13 @@ SegmentMetric.prepareNumberOfVisitorsXNumberOfVisitsHistogramData = function(enc
 /**
  *  Performance: O(|encounters|)
  *
- *  @param encounters List of encounters
- *  @return 7x24 array corresponding to the values on the bubble graph. e.g. result[0][0] means the value of Sunday 00:00 - 01:00, result[6][13] means Saturday 13:00-:14:00 
+ *  @param encounters {Encounter[]} List of encounters
+ *  @return {[][]} List of list, each of the format [weekday, hour, value] corresponding to the value of a particular hour on a particular weekday.
+ *                 Sample output: [['Sunday', 0, 100], ['Sunday', 1, 200], ..., ..., ['Saturday', 23, 1000]]
  */
 SegmentMetric.prepareEnteredAtPunchCardData = function(encounters) {
     console.log("[SegmentMetric] preparing number of visits in time frame bubble data");
+    // 7x24 array corresponding to the values on the bubble graph. e.g. result[0][0] means the value of Sunday 00:00 - 01:00, result[6][13] means Saturday 13:00-:14:00
     var result = SegmentMetric.createEmptyBubbleArray();
     _.each(encounters, function(encounter) {
         result[encounter.enteredAt.day()][encounter.enteredAt.hour()]++;
@@ -512,11 +520,13 @@ SegmentMetric.prepareEnteredAtPunchCardData = function(encounters) {
 /**
  *  Performance: O(|encounters|)
  *
- *  @param encounters List of encounters
- *  @return 7x24 array corresponding to the values on the bubble graph. e.g. result[0][0] means the value of Sunday 00:00 - 01:00, result[6][13] means Saturday 13:00-:14:00
+ *  @param encounters {Encounter[]} List of encounters
+ *  @return {[][]} List of list, each of the format [weekday, hour, value] corresponding to the value of a particular hour on a particular weekday.
+ *                 Sample output: [['Sunday', 0, 100], ['Sunday', 1, 200], ..., ..., ['Saturday', 23, 1000]]
  */
 SegmentMetric.prepareExitAtPunchCardData = function(encounters) {
     console.log("[SegmentMetric] preparing number of visits in time frame bubble data");
+    // 7x24 array corresponding to the values on the bubble graph. e.g. result[0][0] means the value of Sunday 00:00 - 01:00, result[6][13] means Saturday 13:00-:14:00
     var result = SegmentMetric.createEmptyBubbleArray();
     _.each(encounters, function(encounter) {
         result[encounter.exitedAt.day()][encounter.exitedAt.hour()]++;
