@@ -92,7 +92,7 @@ Template.segmentDetail.rendered = function() {
         },
         type : 'timeseries',
         tick : {
-          format : function(x) { return moment(x).format(SegmentMetric.TimeBucketMomentShortHands[SegmentMetric.TimeBucket.Day])}
+          format : function(x) { return moment(x).format(SegmentMetric.TimeBucketDisplayFormat[SegmentMetric.TimeBucket.Day])}
         }
 
       },
