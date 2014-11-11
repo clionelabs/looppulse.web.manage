@@ -65,6 +65,17 @@ Template.segmentDetail.created = function () {
 
 Template.segmentDetail.rendered = function() {
 
+  var format = SegmentMetric.TimeBucketMomentShortHands[SegmentMetric.TimeBucket.Day];
+  $('#datepicker').html(moment(this.data.from).format(format) + " to " + moment(this.data.to).format(format));
+  $('#datepicker').daterangepicker({
+    format: format,
+    maxDate: moment(),
+    startDate: moment(DateHelper.getSevenDaysAgoTimestamp()),
+    endDate: moment()
+  }, function(start, end, label) {
+    Router.go()
+  });
+
   c3.generate({
     bindto: "#dateXNumberOfVisitorsBarChart",
     data: {

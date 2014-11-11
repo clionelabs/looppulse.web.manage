@@ -1,7 +1,8 @@
 <template name="companyHeader">
   <div class="company-name">
     <div class="container">
-      {{ company.name }}
+      <span id="name">{{ company.name }}</span>
+        <div id="datepicker-container"><i class="fa fa-calendar"></i><span id="datepicker"></span><b class="caret"></b></div>
     </div>
   </div>
 </template>

@@ -345,6 +345,22 @@ section.view-content {
   line-height: 48px;
   border-bottom:1px solid $border-color;
   color: $primary-color;
+
+  #name {
+    float:left;
+  }
+
+  #datepicker-container {
+    text-align: center;
+
+    #datepicker {
+
+      color: $primary-color;
+      border: 0px;
+      display: inline-block;
+      background-color: transparent;
+    }
+  }
 }
 
 .segment-list-header, .segment-create {
