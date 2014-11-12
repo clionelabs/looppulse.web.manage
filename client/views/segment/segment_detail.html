@@ -19,14 +19,9 @@
             <div class="tab-content">
               <div class="row">
                 <div class="left number">{{ list.numberOfVisitors }}</div>
-                <div class="right diff">
-                  <div class="arrow {{ isMinus changePercentages.visitorCount }}"></div>
-                  <div class="percent {{ isMinus changePercentages.visitorCount }}">{{ formatPercent changePercentages.visitorCount }}</div>
-                </div>
               </div>
               <div class="row">
                 <div class="left type">Visitors</div>
-                <div class="right timeRange"><!-- TODO to include different time range-->1 week ago</div>
               </div>
             </div>
           </a>
@@ -39,14 +34,9 @@
             <div class="tab-content">
               <div class="row">
                 <div class="left number">{{ formatDurationToMin list.averageDwellTime }}</div>
-                <div class="right diff">
-                  <div class="arrow {{ isMinus changePercentages.visitorCount }}"></div>
-                  <div class="percent {{ isMinus changePercentages.visitorCount }}">{{ formatPercent changePercentages.dwellTimeAverage }}</div>
-                </div>
               </div>
               <div class="row">
                 <div class="left type">Dwell Time</div>
-                <div class="right timeRange"><!-- TODO to include different time range-->1 week ago</div>
               </div>
             </div>
           </a>
@@ -58,14 +48,10 @@
             <div class="tab-content">
               <div class="row">
                 <div class="left number">{{ formatPercent list.repeatedVisitorPercentage }}</div>
-                <div class="right diff">
-                  <div class="arrow {{ isMinus changePercentages.visitorCount }}"></div>
-                  <div class="percent {{ isMinus changePercentages.visitorCount }}">{{ formatPercent changePercentages.repeatedVisitPercentage }}</div>
-                </div>
+
               </div>
               <div class="row">
                 <div class="left type">Repeated Visits</div>
-                <div class="right timeRange"><!-- TODO to include different time range-->1 week ago</div>
               </div>
             </div>
           </a>
