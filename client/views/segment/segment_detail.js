@@ -93,9 +93,7 @@ Template.segmentDetail.rendered = function() {
       'Last 60 Days': [moment().subtract('days', 59), moment()]
     },
     format: format,
-    maxDate: moment(),
-    startDate: moment(DateHelper.getSevenDaysAgoTimestamp()),
-    endDate: moment()
+    maxDate: moment()
   }, function(start, end, label) {
     Router.go("/segments/" + self.data.segmentId + "?from=" + start.valueOf() + "&to=" + end.valueOf());
   });
