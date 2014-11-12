@@ -364,6 +364,10 @@ section.view-content {
   }
 }
 
+.daterangepicker .calendar table tbody tr td.disabled {
+  color: $alt-font-color-2;
+}
+
 .segment-list-header, .segment-create {
   min-height:130px;
   background-color: $background-color;

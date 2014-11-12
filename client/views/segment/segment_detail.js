@@ -83,10 +83,15 @@ Template.segmentDetail.rendered = function() {
   console.log(this.data);
 
   var self = this;
-  var format = SegmentMetric.TimeBucketDisplayFormat[SegmentMetric.TimeBucket.Day];
+  var format = "MMM DD, YYYY";
   $('#datepicker-container').show();
   $('#datepicker').html(moment(+self.data.from).format(format) + " to " + moment(+self.data.to).format(format));
   $('#datepicker').daterangepicker({
+    ranges : {
+      'Last 7 Days': [moment().subtract('days', 6), moment()],
+      'Last 30 Days': [moment().subtract('days', 29), moment()],
+      'Last 60 Days': [moment().subtract('days', 59), moment()]
+    },
     format: format,
     maxDate: moment(),
     startDate: moment(DateHelper.getSevenDaysAgoTimestamp()),
