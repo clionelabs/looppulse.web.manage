@@ -60,7 +60,7 @@ Template.segmentDetail.rendered = function() {
   console.log(this.data);
 
   var self = this;
-  var format = SegmentMetric.TimeBucketMomentShortHands[SegmentMetric.TimeBucket.Day];
+  var format = SegmentMetric.TimeBucketDisplayFormat[SegmentMetric.TimeBucket.Day];
   $('#datepicker').html(moment(+self.data.from).format(format) + " to " + moment(+self.data.to).format(format));
   $('#datepicker').daterangepicker({
     format: format,
