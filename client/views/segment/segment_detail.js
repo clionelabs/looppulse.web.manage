@@ -84,6 +84,7 @@ Template.segmentDetail.rendered = function() {
 
   var self = this;
   var format = SegmentMetric.TimeBucketDisplayFormat[SegmentMetric.TimeBucket.Day];
+  $('#datepicker-container').show();
   $('#datepicker').html(moment(+self.data.from).format(format) + " to " + moment(+self.data.to).format(format));
   $('#datepicker').daterangepicker({
     format: format,
