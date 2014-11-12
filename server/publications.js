@@ -13,18 +13,7 @@ console.log("Publishers Ready, Deploying")
 
 */
 
-//General Publication
-Meteor.publish('owned-companies', function() {
-  var q = {}
-  console.log("Returning Company Data of User", this.userId)
-
-  q = { ownedByUserIds: { $in : [ this.userId ] } }
-
-  return Companies.find(q, { fields: { _id:1, name:1 } }); //Note: Return MongoDB Cursor
-
-});
-
-Meteor.publish('owned-locations', function(id) {
+Meteor.publish('locations', function(id) {
   var q = {}
   console.log("Returning Location Data", id)
   if (id && AccountsHelper.companyMatch(id, this.userId)) {
@@ -34,6 +23,7 @@ Meteor.publish('owned-locations', function(id) {
   }
   return Locations.find(q);
 });
+
 Meteor.publish('current-location', function(id){
   var q = {}
   console.log("Returning Location Data (Current)", id)
