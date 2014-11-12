@@ -406,9 +406,9 @@ Template._field.rendered = function () {
   $('.input-daterange').datepicker({});
   $('.select-picker').selectpicker({});
 
-  // this.$('.select-picker').selectpicker('refresh');
+  // $('.select-picker').selectpicker('refresh');
 
-  $select = this.$("select.select-filter");
+  $select = $("select.select-filter");
   $select.on("change", function (e) {
     _selecting(e.currentTarget);
   });
@@ -419,7 +419,7 @@ Template._field.rendered = function () {
     present = this.data.trigger;
     console.log("Hiding ", present);
     $(present).hide();
-    this.$("select.main-selector").change(function () {
+    $("select.main-selector").change(function () {
       var selected = $("option:selected", this);
       console.log("Selected ", selected, "; Showing", present);
       //do something with prefix
