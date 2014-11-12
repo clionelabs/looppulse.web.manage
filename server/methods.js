@@ -110,12 +110,8 @@ Meteor.methods({
     }
 
     if (collectionName === "Segments") {
-      console.log("[Methods] Removing SegmentVisitorFLows", {segmentId: _id});
-      console.log("[Methods] Removing Metrics", {collectionMeta:{"id": _id, "type": "segment"}});
       console.log("[Methods] Removing Segment", _id);
-      SegmentVisitorFlows.remove({segmentId: _id});
       Segments.remove(_id);
-      Metrics.remove({collectionMeta:{"id": _id, "type": "segment"}});
     } else {
       throw new Meteor.Error(401, "Operation is not allowed");
     }
