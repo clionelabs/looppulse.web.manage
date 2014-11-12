@@ -403,9 +403,8 @@ Template._field.rendered = function () {
     }
   }
 
-  this.$('.input-daterange').datepicker({});
-
-  this.$('.select-picker').selectpicker({});
+  $('.input-daterange').datepicker({});
+  $('.select-picker').selectpicker({});
 
   // this.$('.select-picker').selectpicker('refresh');
 
@@ -413,7 +412,7 @@ Template._field.rendered = function () {
   $select.on("change", function (e) {
     _selecting(e.currentTarget);
   });
-  this.$(".filter-input-group").hide();
+  $(".filter-input-group").hide();
   _selecting($select);
 
   if (this.data.trigger) {
