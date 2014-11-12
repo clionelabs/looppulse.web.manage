@@ -101,6 +101,21 @@ Meteor.methods({
     var res = _collection.update({"_id": _id}, obj) //return row affected.
     return res;
   },
+  removeInCollection: function(collectionName, _id) {
+    console.log("Called Delete", collectionName, "for", _id);
+
+    var user = Meteor.user();
+    if (!user || !Roles.userIsInRole(user, ['admin'])) {
+      throw new Meteor.Error(401, "You need to be an admin");
+    }
+
+    if (collectionName === "Segments") {
+      console.log("[Methods] Removing Segment", _id);
+      Segments.remove(_id);
+    } else {
+      throw new Meteor.Error(401, "Operation is not allowed");
+    }
+  },
   updateUserProfileByEmail: function(userEmail, mapper){
     console.log("Updating User profile:", userEmail, mapper)
 

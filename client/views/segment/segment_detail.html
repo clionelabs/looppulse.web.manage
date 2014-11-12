@@ -7,7 +7,9 @@
       <div class="functions">
         <button class="btn btn-info" id="showInfo" alt="info" data-toggle="modal" data-target="#showInfoModal"></button>
           <button class="btn btn-export" id="showExport" alt="export"></button>
-          <button class="btn btn-delete" id="showDelete" alt="delete"></button>
+          {{# if isDeletable}}
+            <button class="btn btn-delete" id="showDelete" alt="delete"></button>
+          {{/if}}
       </div>
     </div>
   </header>

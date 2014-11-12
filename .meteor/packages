@@ -31,3 +31,5 @@ spacejamio:chai
 spacejamio:sinon
 mizzao:user-status
 meteor-platform
+mizzao:bootboxjs
+

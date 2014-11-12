@@ -58,6 +58,7 @@ mike:mocha@0.4.4
 minifiers@1.1.2
 minimongo@1.0.5
 mizzao:autocomplete@0.4.10
+mizzao:bootboxjs@4.3.0
 mizzao:bootstrap-3@3.3.0
 mizzao:timesync@0.2.2
 mizzao:user-status@0.6.3

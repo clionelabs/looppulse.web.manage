@@ -63,6 +63,11 @@ var handleSegmentAdded = function(segment) {
   });
 };
 
+var handleSegmentRemoved = function(segment) {
+  console.log("[SegmentVisitorFlows] Removing SegmentVisitorFLows", {segmentId: segment._id});
+  SegmentVisitorFlows.remove({segmentId: segment._id});
+};
+
 var handleVisitorAdded = function(visitor) {
   recomputeVisitorStatus(visitor);
 };
@@ -158,6 +163,7 @@ SegmentVisitorFlow.startup = function () {
   });
   Segments.find().observe({
     _suppress_initial: true,
-    "added": handleSegmentAdded
+    "added": handleSegmentAdded,
+    "removed": handleSegmentRemoved
   });
 };
