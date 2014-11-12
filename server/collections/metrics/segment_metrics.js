@@ -172,6 +172,10 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
         exitedAtPunchCardData);
     Metrics.upsert(exitedAtPunchCardSelector, exitedAtPunchCardMetric);
 
+    // TODO: use this to output chart
+    SegmentMetric.prepareVisitorTopLocationsBarChartData(encounters);
+    SegmentMetric.prepareDwellTimeTopLocationsBarChartData(encounters);
+    SegmentMetric.prepareNumberOfVisitTopLocationsBarChartData(encounters);
 };
 
 /**
@@ -282,8 +286,8 @@ SegmentMetric.prepareVisitorOtherSegmentsBarChartData = function(to, thisSegment
         });
         if (cnt > 0) {
             result.push({segmentName: segment.name, percent: cnt/visitorIds.length});
-        }
-    });
+            }
+        });
     result = _.sortBy(result, function(item) {
         return -1 * item['percent'];
     });
@@ -444,6 +448,146 @@ SegmentMetric.prepareExitAtPunchCardData = function(encounters) {
     return result;
 };
 
+/**
+ *  Performance: O(|encounters|)
+ *
+ *  @param encounters {Encounter[]} List of encounters
+ *  @return {Object[]} List of object, each of the format {installationName: 'xxx', count: yyy}
+ */
+SegmentMetric.prepareVisitorTopLocationsBarChartData = function(encounters) {
+    var installationVisitorSet = {};
+    _.each(encounters, function(encounter) {
+        var vid = encounter.visitorId;
+        var iid = encounter.installationId;
+        installationVisitorSet[iid] = installationVisitorSet[iid] || {};
+        installationVisitorSet[iid][vid] = true;
+    }); 
+    var result = [];
+    _.each(installationVisitorSet, function(visitorSet, iid) {
+        var installation = Installations.findOne(iid);
+        result.push({installationName: installation.name, count: Object.keys(visitorSet).length});
+    });
+    result = _.sortBy(result, function(item) {
+        return -1 * item['count'];
+    });
+    console.log("[Segment Metric] visitorTopLocationsBarChart: ", JSON.stringify(result));
+    return result;
+};
+
+/**
+ *  Performance: O(|encounters|)
+ *
+ *  @param encounters {Encounter[]} List of encounters
+ *  @return {Object[]} List of object, each of the format {installationName: 'xxx', duration: yyy}
+ */
+SegmentMetric.prepareDwellTimeTopLocationsBarChartData = function(encounters) {
+    /*
+     *  === Step 1 ===
+     *
+     *  First parse of the encounters to build an intermediate installationData, which faciltates the second step.
+     *  Sample installationData after this step:
+     *  {
+     *      'installationId1': {
+     *          'visitorSumDurations': {
+     *              'visitorId1': 1000,
+     *              'visitorId2': 2000
+     *          },
+     *          'visitorDateSet': {
+     *              'visitorId1': {
+     *                  '2014-01-01': true,
+     *                  '2014-02-02': true
+     *              },
+     *              'visitorId2': {...}
+     *          },
+     *          'visitorDateCount': {
+     *              'visitorId1': 10,
+     *              'visitorId2': 5
+     *          }
+     *      },
+     *      'installationId2': {...}
+     *  }
+     */
+
+    var installationData = {};
+    _.each(encounters, function(encounter) {
+        var iid = encounter.installationId;
+        var vid = encounter.visitorId;
+        var dateStr = encounter.enteredAt.format("YYYY-MM-DD");
+        installationData[iid] = installationData[iid] || {
+            visitorSumDurations: {},
+            visitorDateCount: {},
+            visitorDateSet: {}
+        };
+
+        installationData[iid]['visitorSumDurations'][vid] = (installationData[iid]['visitorSumDurations'][vid] || 0) + encounter.duration;
+        installationData[iid]['visitorDateSet'][vid] = installationData[iid]['visitorDateSet'][vid] || {};
+        if (!installationData[iid]['visitorDateSet'][vid][dateStr]) {
+            installationData[iid]['visitorDateSet'][vid][dateStr] = true;
+            installationData[iid]['visitorDateCount'][vid] = (installationData[iid]['visitorDateCount'][vid] || 0) + 1;
+        }
+    });
+  
+    /*
+     *  === STEP 2 ===
+     *
+     *  The idea is to treat each installation independently, and calculate the average dwell time for each of them.
+     *  For each installation:
+     *      visitorDateSet is only an intermediate hashset for counting date, so it's not used in step 2.
+     *      By using visitorSumDurations and visitorDateCount, we can compute the average dwell time for each visitor, i.e.
+     *          sumDuration / dateCount
+     *      And finally, the average dwell time for an installation is the average among all visitors.
+     */
+    var result = [];
+    _.each(installationData, function(data, iid) {
+        var sumAverage = 0;
+        var cntAverage = 0;
+        _.each(data['visitorSumDurations'], function(sumDuration, visitorId) {
+            var visitorAverage = sumDuration / data['visitorDateCount'][visitorId];
+            sumAverage += visitorAverage;
+            cntAverage ++;
+        });
+        var installation = Installations.findOne(iid);
+        result.push({installationName: installation.name, duration: sumAverage/cntAverage});
+    });
+
+    result = _.sortBy(result, function(item) {
+        return -1 * item['duration'];
+    });
+    console.log("[Segment Metric] dwellTimeTopLocationsBarChart: ", JSON.stringify(result));
+    return result;
+};
+
+/**
+ *  Performance: O(|encounters|)
+ *
+ *  @param encounters {Encounter[]} List of encounters
+ *  @return {Object[]} List of object, each of the format {installationName: 'xxx', count: yyy}
+ */
+SegmentMetric.prepareNumberOfVisitTopLocationsBarChartData = function(encounters) {
+    var installationVisitorDateSet = {};
+    var installationDateCount = {};
+    _.each(encounters, function(encounter) {
+        var iid = encounter.installationId;
+        var vid = encounter.visitorId;
+        var dateStr = encounter.enteredAt.format("YYYY-MM-DD");
+        installationVisitorDateSet[iid] = installationVisitorDateSet[iid] || {};
+        installationVisitorDateSet[iid][vid] = installationVisitorDateSet[iid][vid] || {};
+        if (!installationVisitorDateSet[iid][vid][dateStr]) {
+            installationVisitorDateSet[iid][vid][dateStr] = true;
+            installationDateCount[iid] = (installationDateCount[iid] || 0) + 1;
+        }
+    });
+    var result = [];
+    _.each(installationDateCount, function(count, iid) {
+        var installation = Installations.findOne(iid);
+        result.push({installationName: installation.name, count: count});
+    });
+    result = _.sortBy(result, function(item) {
+        return -1 * item['count'];
+    });
+    console.log("[Segment Metric] numverOfVisitsTopLocationsBarChart: ", JSON.stringify(result));
+    return result;
+};
 /**
  * Substitue the null value of an array by zero
  */
