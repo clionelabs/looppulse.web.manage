@@ -80,8 +80,6 @@ Template.segmentDetail.events({
 });
 
 Template.segmentDetail.rendered = function() {
-  console.log(this.data);
-
   var self = this;
   var format = "MMM DD, YYYY";
   $('#datepicker-container').show();
