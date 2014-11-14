@@ -403,6 +403,8 @@ Template._field.rendered = function () {
     }
   }
 
+  // The datepicker object existed only for the global jQuery object, but not the template's jQuery object.
+  // So we have to wrap it with the global $ before calling datepicker. Fix me if you have a more elegant way.
   $(this.$('.input-daterange')).datepicker({});
 
   $(this.$('.select-picker')).selectpicker({});
