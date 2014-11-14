@@ -20,11 +20,96 @@ Template.segmentCreate.events({
       }
     }, 100);
   },
-  "click .create-btn": function (e) {
+  "click .create-btn": function (e, tmpl) {
     var button = e.currentTarget;
+
+    var handleFormSubmit = function(self) {
+
+      var $form = $(".rule-form");
+
+      var formData = $form.serializeObject();
+
+      var plot = self.plot;
+      var fields = Object.keys(plot);
+      var submitData = {
+        "companyId": self.companyId,
+        "name": null,
+        "criteria": null
+      };
+
+      //Data Translation
+      if ($('[name="days[_filter]"]').val() === 'dateTime') {
+        $("input[data-type='datetime']").each(function () {
+          var $elem = $(self);
+          //@@WARN: timezone ignored
+          $elem.val(new Date($elem.val()).toISOString());
+        });
+      }
+
+      //Process other field first
+      submitData.name = $("input[name='segments.name']").val();
+      if (!submitData.name) { // and other validation...
+        throw Error("Missing Segment Name");
+      }
+
+      //May be we need to check companyId too...
+
+      //criteria
+      var criteriaData = {};
+      var filtering = function (obj) {
+        var o = {};
+        var value;
+        var key;
+        if (obj._filter) {
+          key = obj._filter;
+          value = obj[key];
+          o[key] = value;
+        } else {
+          o = obj;
+        }
+        return o;
+      };
+
+      fields.forEach(function (f) {
+        var obj = formData[f];
+        var schema = plot[f];
+        var arr;
+        var type = schema ? schema.type : "";
+        if (!obj) {
+          throw Error("Missing field: " + f);
+        }
+        if (type === "filterList" && _.isArray(obj)) {
+          arr = obj.map(function (elem) {
+            return filtering(elem);
+          });
+          criteriaData[f] = arr;
+        } else {
+          criteriaData[f] = filtering(obj);
+        }
+      });
+
+      submitData.criteria = criteriaData;
+      console.log("Data Ready", submitData);
+      Notifications.info("Creating", "Segment " + submitData.name, {timeout: 1000000, userCloseable: false});
+      $.blockUI({css : {width:0, height : 0, border:0, backgroundColor : "transparent"}, message : ""})
+      Meteor.call("createInCollection", "Segments", submitData, function (err, res) {
+        Notifications.remove({title: "Creating"});
+        $.unblockUI();
+        var segmentId = res;
+        if (err) {
+          console.error(err);
+          Notifications.error("Creating", "Creation failed -- " + err + " --");
+        } else {
+          console.info(res);
+          Notifications.success("Segment", "Created: '"+submitData.name + "'. Redirecting to its detail page...");
+          Router.go('segment.detail', { segmentId: segmentId });
+        }
+      });
+    };
+
     if (!$(button).hasClass("disabled")) {
       try {
-        $('.rule-form').submit();
+        handleFormSubmit(this);
       } catch (e) {
         console.error(e);
         Notifications.error("Error", e.message);
@@ -54,95 +139,10 @@ Template.segmentCreate.events({
     $(".done-btn[data-key='triggerLocations']").show();
     $(".data-group-triggerLocations.visible .dropdown-menu li:not(.selected)").show();
   },
-  "submit .rule-form": function (e, tmpl) {
-    var self = this;
-    var $form = $(e.currentTarget);
-
-    var formData = $form.serializeObject();
-    var plot = this.plot;
-    var fields = Object.keys(plot);
-    var submitData = {
-      "companyId": self.companyId,
-      "name": null,
-      "criteria": null
-    };
-
-    //Data Translation
-    if ($('[name="days[_filter]"]').val() === 'dateTime') {
-      $("input[data-type='datetime']").each(function () {
-        var $elem = $(this);
-        //@@WARN: timezone ignored
-        $elem.val(new Date($elem.val()).toISOString());
-      });
-    }
-
-    //Process other field first
-    submitData.name = $("input[name='segments.name']").val();
-    if (!submitData.name) { // and other validation...
-      throw Error("Missing Segment Name");
-    }
-
-    //May be we need to check companyId too...
-
-    //criteria
-    var criteriaData = {};
-    var filtering = function (obj) {
-      var o = {};
-      var value;
-      var key;
-      if (obj._filter) {
-        key = obj._filter;
-        value = obj[key];
-        o[key] = value;
-      } else {
-        o = obj;
-      }
-      return o;
-    };
-
-    fields.forEach(function (f) {
-      var obj = formData[f];
-      console.log(f);
-      console.log(obj);
-      var schema = plot[f];
-      var arr;
-      var type = schema ? schema.type : "";
-      if (!obj) {
-        throw Error("Missing field: " + f);
-      }
-      if (type === "filterList" && _.isArray(obj)) {
-        arr = obj.map(function (elem) {
-          return filtering(elem);
-        });
-        criteriaData[f] = arr;
-      } else {
-        criteriaData[f] = filtering(obj);
-      }
-    });
-
-    submitData.criteria = criteriaData;
-    console.log("Data Ready", submitData);
-    Notifications.info("Creating", "Segment " + submitData.name, {timeout: 1000000, userCloseable: false});
-    $.blockUI({css : {width:0, height : 0, border:0, backgroundColor : "transparent"}, message : ""})
-    Meteor.call("createInCollection", "Segments", submitData, function (err, res) {
-      Notifications.remove({title: "Creating"});
-      $.unblockUI();
-      var segmentId = res;
-      if (err) {
-        console.error(err);
-        Notifications.error("Creating", "Creation failed -- " + err + " --");
-      } else {
-        console.info(res);
-        Notifications.success("Segment", "Created: '"+submitData.name + "'. Redirecting to its detail page...");
-        Router.go('segment.detail', { segmentId: segmentId });
-      }
-    });
-    // Submit to server
-    return false;
-  }
 });
 
 Template.segmentCreate.helpers({
+
   criteriaInputs: function () {
     var self = this;
     var companyId = self.companyId;
