@@ -5,8 +5,8 @@ Metric.generateAllSegmentRelated = function(userId, from, to) {
     });
 };
 
-Metrics.removeAllFromUser = function(userId) {
-    Metrics.remove({userId: userId});
+Metrics.removeAllFromCompany = function(companyId) {
+    Metrics.remove({companyId: companyId});
 };
 
 var handleSegmentRemoved = function(segment) {

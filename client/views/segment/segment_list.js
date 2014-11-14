@@ -10,10 +10,6 @@ Template.segmentList.helpers({
   formatDurationToMin: FormatHelper.formatDurationToMin
 });
 
-Template.segmentList.created = function () {
-  var from = DateHelper.getSevenDaysAgoTimestamp();
-  var to = null;
-  Meteor.call("genSegmentListData", from, to, function(err, res){
-
-  });
-};
+Template.segmentList.rendered = function() {
+  DateHelper.setUpDatePicker(this);
+}

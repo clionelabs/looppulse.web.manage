@@ -13,18 +13,7 @@ console.log("Publishers Ready, Deploying")
 
 */
 
-//General Publication
-Meteor.publish('owned-companies', function() {
-  var q = {}
-  console.log("Returning Company Data of User", this.userId)
-
-  q = { ownedByUserIds: { $in : [ this.userId ] } }
-
-  return Companies.find(q, { fields: { _id:1, name:1 } }); //Note: Return MongoDB Cursor
-
-});
-
-Meteor.publish('owned-locations', function(id) {
+Meteor.publish('locations', function(id) {
   var q = {}
   console.log("Returning Location Data", id)
   if (id && AccountsHelper.companyMatch(id, this.userId)) {
@@ -34,6 +23,7 @@ Meteor.publish('owned-locations', function(id) {
   }
   return Locations.find(q);
 });
+
 Meteor.publish('current-location', function(id){
   var q = {}
   console.log("Returning Location Data (Current)", id)
@@ -182,36 +172,6 @@ Meteor.publish('owned-categories', function(id) {
   return Categories.find(q);
 });
 
-Meteor.publish('location-floors', function(locationId) {
-  var q = {};
-  console.log("Returning location-floors Data", locationId);
-
-  if (locationId && AccountsHelper.fieldMatch("locations", locationId, this.userId)) {
-    q = { locationId: locationId };
-  } else {
-    return null;
-  }
-
-  return Floors.find(q);
-});
-
-Meteor.publish('owned-floors', function(id) {
-  var q = {};
-  var userId = this.userId;
-
-  console.log("Returning Categories Data", id)
-  if (id && AccountsHelper.companyMatch(id, this.userId)) {
-    q = { companyId: id }
-  } else {
-    if (!userId || !Roles.userIsInRole(userId, ['admin']))
-        return null;
-  }
-
-  var locations = Locations.find(q).fetch();
-  var locationIds = _.pluck(locations, "_id");
-  return Floors.find({locationId:{$in:locationIds}});
-});
-
 //@@DEV
 //@@Admin Use
 Meteor.publish('all-companies', function(){
@@ -303,14 +263,16 @@ Meteor.publish('companySegments', function (companyId) {
   return Segments.find({ companyId: companyId });
 });
 
-Meteor.publish('locationsFloors', function (locationIds) {
+Meteor.publish('companyLocationsFloors', function (companyId) {
   var self = this;
-  console.log("Returning Locations Floor Data", locationIds);
+  console.log("Returning Locations Floor Data from company ", companyId);
+
+  var locationIds = _.pluck(Locations.find({ companyId: companyId }).fetch(), "_id");
 
   // FIXME find relationship between User and Locations
   if (!Roles.userIsInRole(self.userId, ['admin'])) {
     return null;
   }
 
-  return Floors.find({ locationId: { $in: locationIds } });
+  return Floors.find({ locationId: { $in: locationIds } }, { sort : {level : 1}});
 });
