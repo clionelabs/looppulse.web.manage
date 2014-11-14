@@ -403,8 +403,9 @@ Template._field.rendered = function () {
     }
   }
 
-  $('.input-daterange').datepicker({});
-  $('.select-picker').selectpicker({});
+  $(this.$('.input-daterange')).datepicker({});
+
+  $(this.$('.select-picker')).selectpicker({});
 
   // $('.select-picker').selectpicker('refresh');
 
