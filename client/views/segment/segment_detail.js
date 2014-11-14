@@ -80,23 +80,7 @@ Template.segmentDetail.events({
 });
 
 Template.segmentDetail.rendered = function() {
-  var self = this;
-  var format = "MMM DD, YYYY";
-  $('#datepicker-container').show();
-  $('#datepicker').html(moment(+self.data.from).format(format) + " to " + moment(+self.data.to).format(format));
-  $('#datepicker').daterangepicker({
-    ranges : {
-      'Last 7 Days': [moment().subtract('days', 6), moment()],
-      'Last 30 Days': [moment().subtract('days', 29), moment()],
-      'Last 60 Days': [moment().subtract('days', 59), moment()]
-    },
-    format: format,
-    maxDate: moment(),
-    startDate: moment(self.data.from),
-    endDate: moment(self.data.to)
-  }, function(start, end, label) {
-    Router.go("/segments/" + self.data.segmentId + "?from=" + start.valueOf() + "&to=" + end.valueOf());
-  });
+  DateHelper.setUpDatePicker(this);
 
   c3.generate({
     bindto: "#dateXNumberOfVisitorsBarChart",
