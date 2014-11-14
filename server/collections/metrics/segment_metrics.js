@@ -172,10 +172,56 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
         exitedAtPunchCardData);
     Metrics.upsert(exitedAtPunchCardSelector, exitedAtPunchCardMetric);
 
-    // TODO: use this to output chart
-    SegmentMetric.prepareVisitorTopLocationsBarChartData(encounters);
-    SegmentMetric.prepareDwellTimeTopLocationsBarChartData(encounters);
-    SegmentMetric.prepareNumberOfVisitTopLocationsBarChartData(encounters);
+    var visitorTopLocationsBarChartData = SegmentMetric.prepareVisitorTopLocationsBarChartData(encounters);
+    var visitorTopLocationsBarChartSelector = {
+        companyId: segment.companyId,
+        collectionMeta: collectionMeta,
+        from: from,
+        to: to,
+        graphType: SegmentMetric.Graph.VisitorTopLocationsBarChart
+    }
+    var visitorTopLocationsBarChartMetric = new Metric(
+        segment.companyId,
+        collectionMeta,
+        from,
+        to,
+        SegmentMetric.Graph.VisitorTopLocationsBarChart,
+        visitorTopLocationsBarChartData);
+    Metrics.upsert(visitorTopLocationsBarChartSelector, visitorTopLocationsBarChartMetric);
+
+    var dwellTimeTopLocationsBarChartData = SegmentMetric.prepareDwellTimeTopLocationsBarChartData(encounters);
+    var dwellTimeTopLocationsBarChartSelector = {
+        companyId: segment.companyId,
+        collectionMeta: collectionMeta,
+        from: from,
+        to: to,
+        graphType: SegmentMetric.Graph.DwellTimeTopLocationsBarChart
+    }
+    var dwellTimeTopLocationsBarChartMetric = new Metric(
+        segment.companyId,
+        collectionMeta,
+        from,
+        to,
+        SegmentMetric.Graph.DwellTimeTopLocationsBarChart,
+        dwellTimeTopLocationsBarChartData);
+    Metrics.upsert(dwellTimeTopLocationsBarChartSelector, dwellTimeTopLocationsBarChartMetric);
+
+    var numberOfVisitTopLocationsBarChartData = SegmentMetric.prepareNumberOfVisitTopLocationsBarChartData(encounters);
+    var numberOfVisitTopLocationsBarChartSelector = {
+        companyId: segment.companyId,
+        collectionMeta: collectionMeta,
+        from: from,
+        to: to,
+        graphType: SegmentMetric.Graph.NumberOfVisitTopLocationsBarChart
+    }
+    var numberOfVisitTopLocationsBarChartMetric = new Metric(
+        segment.companyId,
+        collectionMeta,
+        from,
+        to,
+        SegmentMetric.Graph.NumberOfVisitTopLocationsBarChart,
+        numberOfVisitTopLocationsBarChartData);
+    Metrics.upsert(numberOfVisitTopLocationsBarChartSelector, numberOfVisitTopLocationsBarChartMetric);
 };
 
 /**
