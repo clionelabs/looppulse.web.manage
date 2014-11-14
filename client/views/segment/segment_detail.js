@@ -80,7 +80,9 @@ Template.segmentDetail.events({
 });
 
 Template.segmentDetail.rendered = function() {
-  DateHelper.setUpDatePicker(this);
+  var self = this;
+
+  DateHelper.setUpDatePicker(self);
 
   c3.generate({
     bindto: "#dateXNumberOfVisitorsBarChart",
