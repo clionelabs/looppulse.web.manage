@@ -351,6 +351,7 @@ section.view-content {
   }
 
   #datepicker-container {
+    display:none;
     text-align: center;
 
     #datepicker {
@@ -361,6 +362,10 @@ section.view-content {
       background-color: transparent;
     }
   }
+}
+
+.daterangepicker .calendar table tbody tr td.disabled {
+  color: $alt-font-color-2;
 }
 
 .segment-list-header, .segment-create {
@@ -709,7 +714,7 @@ ul.metric-tabs {
   }
 
   .circle {
-    fill: $primary-color-2;
+    fill: $font-color;
   }
 
 }

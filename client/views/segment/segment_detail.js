@@ -80,25 +80,18 @@ Template.segmentDetail.events({
 });
 
 Template.segmentDetail.rendered = function() {
+
   console.log("Chart Data", this.data);
 
   var self = this;
-  var format = SegmentMetric.TimeBucketDisplayFormat[SegmentMetric.TimeBucket.Day];
-  $('#datepicker').html(moment(+self.data.from).format(format) + " to " + moment(+self.data.to).format(format));
-  $('#datepicker').daterangepicker({
-    format: format,
-    maxDate: moment(),
-    startDate: moment(DateHelper.getSevenDaysAgoTimestamp()),
-    endDate: moment()
-  }, function(start, end, label) {
-    Router.go("/segments/" + self.data.segmentId + "?from=" + start.valueOf() + "&to=" + end.valueOf());
-  });
+
+  DateHelper.setUpDatePicker(self);
 
   //Visitor Chart by Date
   c3.generate({
     bindto: "#dateXNumberOfVisitorsBarChart",
     data: {
-      json: this.data.dateXNumberOfVisitorsBarChart,
+      json: self.data.dateXNumberOfVisitorsBarChart,
       keys : {
         x : 'date',
         value: ['number of visitors']
@@ -150,7 +143,9 @@ Template.segmentDetail.rendered = function() {
   c3.generate({
     bindto: "#averageDwellTimePerVisitorPerDayXNumberOfVisitorsHistogram",
     data: {
-      json: this.data.averageDwellTimeXNumberOfVisitorsChart,
+
+      json: self.data.numberOfVisitsXNumberOfVisitorsBarChart,
+
       keys : {
         x : 'duration',
         value: ['number of visitors']
@@ -199,7 +194,8 @@ Template.segmentDetail.rendered = function() {
   c3.generate({
     bindto: "#numberOfVisitsXNumberOfVisitorsBarChart",
     data: {
-      json: this.data.numberOfVisitsXNumberOfVisitorsBarChart,
+      json: self.data.averageDwellTimeXNumberOfVisitorsChart,
+
       keys : {
         x : 'count',
         value: ['number of visitors']
@@ -243,10 +239,9 @@ Template.segmentDetail.rendered = function() {
     }
   });
 
+  ChartHelper.punchCard("#dwellTimePunchCard",self.data.averageDwellTimePunchCard, self.data.operatingTime);
+  ChartHelper.punchCard("#enteredAtPunchCard",self.data.enteredAtPunchCard, self.data.operatingTime);
+  ChartHelper.punchCard("#exitedAtPunchCard",self.data.exitedAtPunchCard, self.data.operatingTime);
 
-  //PunchCards
-  ChartHelper.punchCard("#dwellTimePunchCard",this.data.averageDwellTimePunchCard);
-  ChartHelper.punchCard("#enteredAtPunchCard",this.data.enteredAtPunchCard);
-  ChartHelper.punchCard("#exitedAtPunchCard",this.data.exitedAtPunchCard);
 }
 
