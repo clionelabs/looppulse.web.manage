@@ -110,10 +110,9 @@ Template.segmentDetail.rendered = function(e,tmpl) {
           },
           type : 'timeseries',
           tick : {
-            format : function(x) { return moment(x).format(SegmentMetric.TimeBucketDisplayFormat[SegmentMetric.TimeBucket.Day])}
-          },
-          culling: { max: 10 }
-
+            format : function(x) { return moment(x).format(SegmentMetric.TimeBucketDisplayFormat[SegmentMetric.TimeBucket.Day])},
+            culling: { max: 10 }
+          }
         },
         y: {
           label: {
@@ -146,7 +145,7 @@ Template.segmentDetail.rendered = function(e,tmpl) {
       bindto: "#averageDwellTimePerVisitorPerDayXNumberOfVisitorsHistogram",
       data: {
 
-        json: self.data.numberOfVisitsXNumberOfVisitorsBarChart,
+        json: self.data.averageDwellTimeXNumberOfVisitorsChart,
 
         keys : {
           x : 'duration',
@@ -203,7 +202,7 @@ Template.segmentDetail.rendered = function(e,tmpl) {
     c3.generate({
       bindto: "#numberOfVisitsXNumberOfVisitorsBarChart",
       data: {
-        json: self.data.averageDwellTimeXNumberOfVisitorsChart,
+        json: self.data.numberOfVisitsXNumberOfVisitorsBarChart,
 
         keys : {
           x : 'count',
@@ -222,8 +221,7 @@ Template.segmentDetail.rendered = function(e,tmpl) {
           },
           tick : {
             culling: { max: 10 }
-          }
-
+          },
         },
         y: {
           label: {
