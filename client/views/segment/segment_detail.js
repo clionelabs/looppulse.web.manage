@@ -78,8 +78,7 @@ Template.segmentDetail.events({
     });
   }
 });
-
-Template.segmentDetail.rendered = function() {
+Template.segmentDetail.rendered = function(e,tmpl) {
 
   console.log("Chart Data", this.data);
 
@@ -87,161 +86,201 @@ Template.segmentDetail.rendered = function() {
 
   DateHelper.setUpDatePicker(self);
 
-  //Visitor Chart by Date
-  c3.generate({
-    bindto: "#dateXNumberOfVisitorsBarChart",
-    data: {
-      json: self.data.dateXNumberOfVisitorsBarChart,
-      keys : {
-        x : 'date',
-        value: ['number of visitors']
-      },
-      type: 'bar',
-      colors : {
-        "number of visitors": "#CFD8DC"
-      }
-    },
-    axis: {
-      x : {
-        label: {
-          text : 'Date',
-          position: 'outer-right'
-        },
-        type : 'timeseries',
-        tick : {
-          format : function(x) { return moment(x).format(SegmentMetric.TimeBucketDisplayFormat[SegmentMetric.TimeBucket.Day])}
-        },
-        culling: { max: 10 }
+  var setVisitorCharts = function(){
 
-      },
-      y: {
-        label: {
-          text: 'Number of Visitors',
-          position: 'outer-middle'
+    //Visitor Chart by Date
+    c3.generate({
+      bindto: "#dateXNumberOfVisitorsBarChart",
+      data: {
+        json: self.data.dateXNumberOfVisitorsBarChart,
+        keys : {
+          x : 'date',
+          value: ['number of visitors']
+        },
+        type: 'bar',
+        colors : {
+          "number of visitors": "#CFD8DC"
         }
-      }
-    },
-    legend: {
-      position: 'right',
-      show: false
-    },
-    bar: {
-      width: {
-        ratio: 0.2
-      }
-    },
-    grid: {
-      y :  {
-        show: true
-      }
-    }
-  });
-
-
-
-  //Dwell time chart
-  c3.generate({
-    bindto: "#averageDwellTimePerVisitorPerDayXNumberOfVisitorsHistogram",
-    data: {
-
-      json: self.data.numberOfVisitsXNumberOfVisitorsBarChart,
-
-      keys : {
-        x : 'duration',
-        value: ['number of visitors']
       },
-      type: 'bar',
-      colors : {
-        "number of visitors": "#CFD8DC"
-      },
-    },
-    axis: {
-      x : {
-        label: {
-          text : "Minutes",
-          position: 'outer-right'
-        },
-        type : 'category',
-        tick : {
-          format: function (d) { return d+" min"; },
+      axis: {
+        x : {
+          label: {
+            text : 'Date',
+            position: 'outer-right'
+          },
+          type : 'timeseries',
+          tick : {
+            format : function(x) { return moment(x).format(SegmentMetric.TimeBucketDisplayFormat[SegmentMetric.TimeBucket.Day])}
+          },
           culling: { max: 10 }
-        }
-      },
-      y: {
-        label: {
-          text: 'Number of Visitors',
-          position: 'outer-middle'
-        }
-      }
-    },
-    legend: {
-      position: 'right',
-      show: false
-    },
-    bar: {
-      width: {
-        ratio: 1
-      }
-    },
-    grid: {
-      y :  {
-        show: true
-      }
-    }
-  });
 
-  // Repeated Visitor Chart
-  c3.generate({
-    bindto: "#numberOfVisitsXNumberOfVisitorsBarChart",
-    data: {
-      json: self.data.averageDwellTimeXNumberOfVisitorsChart,
-
-      keys : {
-        x : 'count',
-        value: ['number of visitors']
-      },
-      type: 'bar',
-      colors : {
-        "number of visitors": "#CFD8DC"
-      }
-    },
-    axis: {
-      x : {
-        label: {
-          text : 'Number of Visits',
-          position: 'outer-right',
         },
-        tick : {
-          culling: { max: 10 }
+        y: {
+          label: {
+            text: 'Number of Visitors',
+            position: 'outer-middle'
+          }
         }
-
       },
-      y: {
-        label: {
-          text: 'Number of Visitors',
-          position: 'outer-middle'
+      legend: {
+        position: 'right',
+        show: false
+      },
+      bar: {
+        width: {
+          ratio: 0.2
+        }
+      },
+      grid: {
+        y :  {
+          show: true
         }
       }
-    },
-    legend: {
-      position: 'right',
-      show: false
-    },
-    bar: {
-      width: {
-        ratio: 0.2
-      }
-    },
-    grid: {
-      y :  {
-        show: true
-      }
-    }
-  });
+    });
+  }
 
-  ChartHelper.punchCard("#dwellTimePunchCard",self.data.averageDwellTimePunchCard, self.data.operatingTime);
-  ChartHelper.punchCard("#enteredAtPunchCard",self.data.enteredAtPunchCard, self.data.operatingTime);
-  ChartHelper.punchCard("#exitedAtPunchCard",self.data.exitedAtPunchCard, self.data.operatingTime);
+  var setDwellTimeCharts = function(){
+    //Dwell time chart
+    console.log("Drawing DwellTime", self.data.numberOfVisitsXNumberOfVisitorsBarChart);
+    c3.generate({
+      bindto: "#averageDwellTimePerVisitorPerDayXNumberOfVisitorsHistogram",
+      data: {
+
+        json: self.data.numberOfVisitsXNumberOfVisitorsBarChart,
+
+        keys : {
+          x : 'duration',
+          value: ['number of visitors']
+        },
+        type: 'bar',
+        colors : {
+          "number of visitors": "#CFD8DC"
+        },
+      },
+      axis: {
+        x : {
+          label: {
+            text : "Minutes",
+            position: 'outer-right'
+          },
+          type : 'category',
+          tick : {
+            format: function (d) { return d+" min"; },
+            culling: { max: 10 }
+          }
+        },
+        y: {
+          label: {
+            text: 'Number of Visitors',
+            position: 'outer-middle'
+          }
+        }
+      },
+      legend: {
+        position: 'right',
+        show: false
+      },
+      bar: {
+        width: {
+          ratio: 1
+        }
+      },
+      grid: {
+        y :  {
+          show: true
+        }
+      }
+    });
+
+
+   ChartHelper.punchCard("#dwellTimePunchCard",self.data.averageDwellTimePunchCard, self.data.operatingTime);
+
+  };
+
+  var setRepeatedVisitorCharts = function(){
+
+    // Repeated Visitor Chart
+    c3.generate({
+      bindto: "#numberOfVisitsXNumberOfVisitorsBarChart",
+      data: {
+        json: self.data.averageDwellTimeXNumberOfVisitorsChart,
+
+        keys : {
+          x : 'count',
+          value: ['number of visitors']
+        },
+        type: 'bar',
+        colors : {
+          "number of visitors": "#CFD8DC"
+        }
+      },
+      axis: {
+        x : {
+          label: {
+            text : 'Number of Visits',
+            position: 'outer-right',
+          },
+          tick : {
+            culling: { max: 10 }
+          }
+
+        },
+        y: {
+          label: {
+            text: 'Number of Visitors',
+            position: 'outer-middle'
+          }
+        }
+      },
+      legend: {
+        position: 'right',
+        show: false
+      },
+      bar: {
+        width: {
+          ratio: 0.2
+        }
+      },
+      grid: {
+        y :  {
+          show: true
+        }
+      }
+    });
+
+
+    ChartHelper.punchCard("#enteredAtPunchCard",self.data.enteredAtPunchCard, self.data.operatingTime);
+    ChartHelper.punchCard("#exitedAtPunchCard",self.data.exitedAtPunchCard, self.data.operatingTime);
+
+  }
+
+  $(".metric-tabs a[data-toggle='tab']").on("click", function(e){
+    // e.target // newly activated tab
+      // e.relatedTarget // previous active tab
+      console.log("Target Finding")
+      var currentTab = $(e.currentTarget);
+      var target = currentTab.attr("href")
+      if (currentTab.data("init")){
+        console.log("initialized:", target);
+        return true;
+      } else {
+        console.log("initializing", target);
+        if (target === "#dwell-time-metrics") {
+          setDwellTimeCharts();
+        } else if (target === "#repeated-visits-metrics") {
+          setRepeatedVisitorCharts();
+        }
+        //do nothing for the visitor tabs
+
+        currentTab.data("init", true)
+        return true;
+      }
+  })
+
+  //init
+  setVisitorCharts();
+
+
 
 }
 
