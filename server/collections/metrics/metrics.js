@@ -1,7 +1,7 @@
-Metric.generateAllSegmentsGraph = function (userId, from, to) {
+Metric.generateListGraph = function (userId, from, to) {
     var companyId = Companies.findOne({ownedByUserIds : userId })._id;
     Segments.find({companyId: companyId}).map(function(segment) {
-        SegmentMetric.generateAllGraph(segment, from, to);
+        SegmentMetric.generateListGraph(segment, from, to);
     });
 };
 
