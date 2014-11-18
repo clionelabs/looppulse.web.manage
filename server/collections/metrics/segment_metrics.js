@@ -23,6 +23,31 @@ SegmentMetrics.find = function(from, to, segmentId, type) {
     return Metrics.find(selector);
 }
 
+/**
+ * TODO refactor
+ * @param segment
+ * @param from
+ * @param to
+ */
+SegmentMetric.generateListGraph = function(segment, from, to) {
+    console.log("[SegmentMetric] generating segment " + segment._id + " metric data from " + from + " to " + to);
+    var atTime = moment().valueOf();
+    var visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment._id, atTime);
+    var encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
+
+    //list
+    var listData = SegmentMetric.prepareListData(encounters, visitorIds);
+    var collectionMeta = new Metric.CollectionMeta(segment._id, Metric.CollectionMeta.Type.Segment);
+    var listMetricSelector = {
+        companyId: segment.companyId,
+        collectionMeta: collectionMeta,
+        from: from,
+        to: to,
+        graphType: SegmentMetric.Graph.List
+    };
+    var listMetric = new Metric(segment.companyId, collectionMeta, from, to, SegmentMetric.Graph.List, listData);
+    Metrics.upsert(listMetricSelector, listMetric);
+}
 
 /**
  * TODO refactor to a better abstraction for the Metrics.upsert

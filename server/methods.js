@@ -184,6 +184,10 @@ Meteor.methods({
   },
 
   genSegmentListData: function(from, to) {
-    Metric.generateAllSegmentRelated(Meteor.userId(), from, to);
+    Metric.generateListGraph(Meteor.userId(), from, to);
+  },
+
+  genSegmentData: function(segmentId, from, to) {
+    Metric.generateAllGraph(Meteor.userId(), segmentId, from, to);
   }
 });
