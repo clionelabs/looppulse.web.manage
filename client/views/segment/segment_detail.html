@@ -68,38 +68,8 @@
                     <h3 class="graph-name">Total Number of Visitors</h3>
                     <div class="graph-content" id="dateXNumberOfVisitorsBarChart"></div>
                 </div>
-
-                <div class="graph-container box">
-                    <div class="graph-header">
-                        <table>
-                            <tr><td width="30%">Segments</td><td width="70%">Percentage</td></tr>
-                        </table>
-                    </div>
-                    <table id="other-segment-detail">
-                      {{ #each percentageOtherSegmentChart }}
-                        <tr>
-                            <td width="30%">{{ segmentName }}</td>
-                            <td width="10%">{{ formatPercent percent }}</td>
-                            <td width="60%"><div class="bar" style="width: {{ formatPercent percent }}">&nbsp;</div></td></tr>
-                      {{ /each }}
-                    </table>
-                </div>
-
-                <div class="graph-container box">
-                    <div class="graph-header">
-                        <table>
-                            <tr><td width="30%">Locations</td><td width="70%">Count</td></tr>
-                        </table>
-                    </div>
-                    <table id="other-segment-detail">
-                      {{ #each visitorTopLocationsBarChart }}
-                        <tr>
-                            <td width="30%">{{ installationName }}</td>
-                            <td width="10%">{{ count }}</td>
-                            <td width="60%"><div class="bar" style="width: {{ formatPercent percent }}">&nbsp;</div></td></tr>
-                      {{ /each }}
-                    </table>
-                </div>
+                {{> twoColsBarChart percentageOtherSegmentChart}}
+                {{> twoColsBarChart visitorTopLocationsBarChart}}
         </div>
         <div class="tab-pane" id="dwell-time-metrics">
               <div class="graph-container">
@@ -113,22 +83,7 @@
 
                   </div>
               </div>
-
-              <div class="graph-container box">
-                  <div class="graph-header">
-                      <table>
-                          <tr><td width="30%">Locations</td><td width="70%">Duration</td></tr>
-                      </table>
-                  </div>
-                  <table id="other-segment-detail">
-                    {{ #each dwellTimeTopLocationsBarChart }}
-                      <tr>
-                          <td width="30%">{{ installationName }}</td>
-                          <td width="10%">{{ formatDurationToMin duration }}</td>
-                          <td width="60%"><div class="bar" style="width: {{ formatPercent percent }}">&nbsp;</div></td></tr>
-                    {{ /each }}
-                  </table>
-              </div>
+              {{> twoColsBarChart dwellTimeTopLocationsBarChart}}
         </div>
         <div class="tab-pane" id="repeated-visits-metrics">
 
@@ -154,23 +109,7 @@
                       </div>
                     </div>
                 </div>
-
-                <div class="graph-container box">
-                    <div class="graph-header">
-                        <table>
-                            <tr><td width="30%">Locations</td><td width="70%">Count</td></tr>
-                        </table>
-                    </div>
-                    <table id="other-segment-detail">
-                      {{ #each numberOfVisitTopLocationsBarChart }}
-                        <tr>
-                            <td width="30%">{{ installationName }}</td>
-                            <td width="10%">{{ count }}</td>
-                            <td width="60%"><div class="bar" style="width: {{ formatPercent percent }}">&nbsp;</div></td></tr>
-                      {{ /each }}
-                    </table>
-                </div>
-
+                {{> twoColsBarChart numberOfVisitTopLocationsBarChart}}
         </div>
 
       </div>
@@ -180,4 +119,24 @@
 
 
   {{> segmentInfoDialog }}
+</template>
+
+<template name="twoColsBarChart">
+  <div class="graph-container box">
+      <div class="graph-header">
+        <table>
+            {{#with header}}
+            <tr><td width="30%">{{col1}}</td><td width="70%">{{col2}}</td></tr>
+            {{/with}}
+          </table>
+      </div>
+      <table id="other-segment-detail">
+        {{ #each items}}
+          <tr>
+              <td width="30%">{{ col1 }}</td>
+              <td width="10%">{{ col2 }}</td>
+              <td width="60%"><div class="bar" style="width: {{ barWidth }}">&nbsp;</div></td></tr>
+        {{ /each }}
+      </table>
+  </div>
 </template>
