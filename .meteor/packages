@@ -33,4 +33,8 @@ mizzao:user-status
 meteor-platform
 mizzao:bootboxjs
 u2622:persistent-session
+deepwell:bootstrap-datepicker2
+loftsteinn:bootstrap3-daterangepicker
+benjaminrh:jquery-blockui
+veto44:bootstrap-select
 

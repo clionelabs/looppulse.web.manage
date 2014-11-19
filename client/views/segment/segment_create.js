@@ -20,99 +20,102 @@ Template.segmentCreate.events({
       }
     }, 100);
   },
-  "click .create-btn": function (e, tmpl) {
+  "click .create-btn": function (e) {
     var button = e.currentTarget;
-
-    var handleFormSubmit = function(self) {
-
-      var $form = $(".rule-form");
-
-      var formData = $form.serializeObject();
-
-      var plot = self.plot;
-      var fields = Object.keys(plot);
-      var submitData = {
-        "companyId": self.companyId,
-        "name": null,
-        "criteria": null
-      };
-
-      //Data Translation
-      if ($('[name="days[_filter]"]').val() === 'dateTime') {
-        $("input[data-type='datetime']").each(function () {
-          var $elem = $(self);
-          //@@WARN: timezone ignored
-          $elem.val(new Date($elem.val()).toISOString());
-        });
-      }
-
-      //Process other field first
-      submitData.name = $("input[name='segments.name']").val();
-      if (!submitData.name) { // and other validation...
-        throw Error("Missing Segment Name");
-      }
-
-      //May be we need to check companyId too...
-
-      //criteria
-      var criteriaData = {};
-      var filtering = function (obj) {
-        var o = {};
-        var value;
-        var key;
-        if (obj._filter) {
-          key = obj._filter;
-          value = obj[key];
-          o[key] = value;
-        } else {
-          o = obj;
-        }
-        return o;
-      };
-
-      fields.forEach(function (f) {
-        var obj = formData[f];
-        var schema = plot[f];
-        var arr;
-        var type = schema ? schema.type : "";
-        if (!obj) {
-          throw Error("Missing field: " + f);
-        }
-        if (type === "filterList" && _.isArray(obj)) {
-          arr = obj.map(function (elem) {
-            return filtering(elem);
-          });
-          criteriaData[f] = arr;
-        } else {
-          criteriaData[f] = filtering(obj);
-        }
-      });
-
-      submitData.criteria = criteriaData;
-      console.log("Data Ready", submitData);
-      Notifications.info("Creating", "Segment " + submitData.name, {timeout: 1000000, userCloseable: false});
-      $.blockUI({css : {width:0, height : 0, border:0, backgroundColor : "transparent"}, message : ""})
-      Meteor.call("createInCollection", "Segments", submitData, function (err, res) {
-        Notifications.remove({title: "Creating"});
-        $.unblockUI();
-        var segmentId = res;
-        if (err) {
-          console.error(err);
-          Notifications.error("Creating", "Creation failed -- " + err + " --");
-        } else {
-          console.info(res);
-          Notifications.success("Segment", "Created: '"+submitData.name + "'. Redirecting to its detail page...");
-          Router.go('segment.detail', { segmentId: segmentId });
-        }
-      });
-    };
-
     if (!$(button).hasClass("disabled")) {
-      try {
-        handleFormSubmit(this);
-      } catch (e) {
-        console.error(e);
-        Notifications.error("Error", e.message);
+      var button = e.currentTarget;
+
+      var handleFormSubmit = function(self) {
+
+        var $form = $(".rule-form");
+
+        var formData = $form.serializeObject();
+
+        var plot = self.plot;
+        var fields = Object.keys(plot);
+        var submitData = {
+          "companyId": self.companyId,
+          "name": null,
+          "criteria": null
+        };
+
+        //Data Translation
+        if ($('[name="days[_filter]"]').val() === 'dateTime') {
+          $("input[data-type='datetime']").each(function () {
+            var $elem = $(self);
+            //@@WARN: timezone ignored
+            $elem.val(new Date($elem.val()).toISOString());
+          });
+        }
+
+        //Process other field first
+        submitData.name = $("input[name='segments.name']").val();
+        if (!submitData.name) { // and other validation...
+          throw Error("Missing Segment Name");
+        }
+
+        //May be we need to check companyId too...
+
+        //criteria
+        var criteriaData = {};
+        var filtering = function (obj) {
+          var o = {};
+          var value;
+          var key;
+          if (obj._filter) {
+            key = obj._filter;
+            value = obj[key];
+            o[key] = value;
+          } else {
+            o = obj;
+          }
+          return o;
+        };
+
+        fields.forEach(function (f) {
+          var obj = formData[f];
+          var schema = plot[f];
+          var arr;
+          var type = schema ? schema.type : "";
+          if (!obj) {
+            throw Error("Missing field: " + f);
+          }
+          if (type === "filterList" && _.isArray(obj)) {
+            arr = obj.map(function (elem) {
+              return filtering(elem);
+            });
+            criteriaData[f] = arr;
+          } else {
+            criteriaData[f] = filtering(obj);
+          }
+        });
+
+        submitData.criteria = criteriaData;
+        console.log("Data Ready", submitData);
+        Notifications.info("Creating", "Segment " + submitData.name, {timeout: 1000000, userCloseable: false});
+        $.blockUI({css : {width:0, height : 0, border:0, backgroundColor : "transparent"}, message : ""})
+        Meteor.call("createInCollection", "Segments", submitData, function (err, res) {
+          Notifications.remove({title: "Creating"});
+          $.unblockUI();
+          var segmentId = res;
+          if (err) {
+            console.error(err);
+            Notifications.error("Creating", "Creation failed -- " + err + " --");
+          } else {
+            console.info(res);
+            Notifications.success("Segment", "Created: '"+submitData.name + "'. Redirecting to its detail page...");
+            Router.go('segment.detail', { segmentId: segmentId });
+          }
+        });
+      };
+
+      if (!$(button).hasClass("disabled")) {
+        try {
+          handleFormSubmit(this);
+        } catch (e) {
+          console.error(e);
+          Notifications.error("Error", e.message);
+        }
       }
     }
   },
@@ -138,11 +141,10 @@ Template.segmentCreate.events({
     $(".edit-btn[data-key='triggerLocations']").hide();
     $(".done-btn[data-key='triggerLocations']").show();
     $(".data-group-triggerLocations.visible .dropdown-menu li:not(.selected)").show();
-  },
+  }
 });
 
 Template.segmentCreate.helpers({
-
   criteriaInputs: function () {
     var self = this;
     var companyId = self.companyId;
@@ -394,7 +396,8 @@ Template._field.rendered = function () {
     $(selector + ".visible").removeClass("visible").hide();
 
     if (type === "select") {
-      $("select" + toggle).val([]).selectpicker("refresh");
+
+      //this.$("select" + toggle).val([]).selectpicker("refresh");
       console.info("Filtered List reset: " + toggle);
       toggle = "div" + toggle;
     }
@@ -403,27 +406,25 @@ Template._field.rendered = function () {
     }
   }
 
-  // The datepicker object existed only for the global jQuery object, but not the template's jQuery object.
-  // So we have to wrap it with the global $ before calling datepicker. Fix me if you have a more elegant way.
-  $(this.$('.input-daterange')).datepicker({});
+  this.$('.input-daterange').datepicker({});
 
-  $(this.$('.select-picker')).selectpicker({});
+  //this.$('.select-picker').selectpicker('refresh');
 
-  // $('.select-picker').selectpicker('refresh');
+  this.$('.select-picker').selectpicker({});
 
-  $select = $("select.select-filter");
+  $select = this.$("select.select-filter");
   $select.on("change", function (e) {
     _selecting(e.currentTarget);
   });
-  $(".filter-input-group").hide();
+  this.$(".filter-input-group").hide();
   _selecting($select);
 
   if (this.data.trigger) {
     present = this.data.trigger;
     console.log("Hiding ", present);
     $(present).hide();
-    $("select.main-selector").change(function () {
-      var selected = $("option:selected", this);
+    this.$("select.main-selector").change(function () {
+      var selected = self.$("option:selected");
       console.log("Selected ", selected, "; Showing", present);
       //do something with prefix
       //LocationsHelper.getCommonLocationMap(selected, prefix);
