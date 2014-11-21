@@ -92,7 +92,7 @@ Template.segmentCreate.events({
 
         submitData.criteria = criteriaData;
         console.log("Data Ready", submitData);
-        Notifications.info("Creating", "Segment " + submitData.name, {timeout: 1000000, userCloseable: false});
+        Notifications.info("Creating", "Segment " + submitData.name, { userCloseable: false});
         $.blockUI({css : {width:0, height : 0, border:0, backgroundColor : "transparent"}, message : ""})
         Meteor.call("createInCollection", "Segments", submitData, function (err, res) {
           Notifications.remove({title: "Creating"});

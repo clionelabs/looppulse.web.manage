@@ -61,10 +61,10 @@ Template.segmentDetail.events({
   },
   "click #showDelete": function() {
     var self = this;
-    bootbox.confirm("Are you sure you want to remove the segment " + self.name + "?", function(result) {
+    bootbox.confirm("Are you sure you want to remove the segment '" + self.name + "' ?", function(result) {
         if (result) {
             console.log("Removing Segment", self.name);
-            Notifications.info("Removing", "Segment " + self.name, {timeout: 1000000, userCloseable: false});
+            Notifications.info("Removing", "Segment '" + self.name +"'", { userCloseable: false});
             $.blockUI({css : {width:0, height : 0, border:0, backgroundColor : "transparent"}, message : ""});
             Meteor.call("removeInCollection", "Segments", self.segmentId, function (err, res) {
               Notifications.remove({title: "Removing"});
@@ -75,7 +75,7 @@ Template.segmentDetail.events({
                 Notifications.error("Removing", "Removal failed -- " + err + " --");
               } else {
                 console.info(res);
-                Notifications.success("Removing", "Removed: '"+self.name + "'. Redirecting to segment list...");
+                Notifications.success("Removed", "Segment '"+self.name + "'. Redirecting to segment list...",);
                 Router.go('segment.list');
               }
             });
