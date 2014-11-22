@@ -90,9 +90,9 @@ Template.segmentDetail.rendered = function(e,tmpl) {
 
     //Visitor Chart by Date
     c3.generate({
-      bindto: "#dateXNumberOfVisitorsBarChart",
+      bindto: "#graphVisitorsXDates",
       data: {
-        json: self.data.dateXNumberOfVisitorsBarChart,
+        json: self.data.graphVisitorsXDatesData,
         keys : {
           x : 'date',
           value: ['number of visitors']
@@ -110,7 +110,7 @@ Template.segmentDetail.rendered = function(e,tmpl) {
           },
           type : 'timeseries',
           tick : {
-            format : function(x) { return moment(x).format(SegmentMetric.TimeBucketDisplayFormat[SegmentMetric.TimeBucket.Day])},
+            format : function(x) { return moment(x).format('YYYY-MM-DD')},
             culling: { max: 10 }
           }
         },
@@ -140,12 +140,12 @@ Template.segmentDetail.rendered = function(e,tmpl) {
 
   var setDwellTimeCharts = function(){
     //Dwell time chart
-    console.log("Drawing DwellTime", self.data.numberOfVisitsXNumberOfVisitorsBarChart);
+    console.log("Drawing DwellTime", self.data.graphVisitorsXDwellData);
     c3.generate({
-      bindto: "#averageDwellTimePerVisitorPerDayXNumberOfVisitorsHistogram",
+      bindto: "#graphVisitorsXDwell",
       data: {
 
-        json: self.data.averageDwellTimeXNumberOfVisitorsChart,
+        json: self.data.graphVisitorsXDwellData,
 
         keys : {
           x : 'duration',
@@ -192,7 +192,7 @@ Template.segmentDetail.rendered = function(e,tmpl) {
     });
 
 
-   ChartHelper.punchCard("#dwellTimePunchCard",self.data.averageDwellTimePunchCard, self.data.operatingTime);
+   ChartHelper.punchCard("#graphDistributionDwellEnter",self.data.graphDistributionDwellEnterData, self.data.operatingTime);
 
   };
 
@@ -200,9 +200,9 @@ Template.segmentDetail.rendered = function(e,tmpl) {
 
     // Repeated Visitor Chart
     c3.generate({
-      bindto: "#numberOfVisitsXNumberOfVisitorsBarChart",
+      bindto: "#graphVisitorsXVisits",
       data: {
-        json: self.data.numberOfVisitsXNumberOfVisitorsBarChart,
+        json: self.data.graphVisitorsXVisitsData,
 
         keys : {
           x : 'count',
@@ -247,8 +247,8 @@ Template.segmentDetail.rendered = function(e,tmpl) {
     });
 
 
-    ChartHelper.punchCard("#enteredAtPunchCard",self.data.enteredAtPunchCard, self.data.operatingTime);
-    ChartHelper.punchCard("#exitedAtPunchCard",self.data.exitedAtPunchCard, self.data.operatingTime);
+    ChartHelper.punchCard("#graphDistributionVisitsEnter",self.data.graphDistributionVisitsEnterData, self.data.operatingTime);
+    ChartHelper.punchCard("#graphDistributionVisitsExit",self.data.graphDistributionVisitsExitData, self.data.operatingTime);
 
   }
 
