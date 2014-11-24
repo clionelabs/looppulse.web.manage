@@ -1,16 +1,3 @@
-/**
- * @param {Segment} segment
- * @param {Unix Timestamp} from Metric start time
- * @param {Unix Timestamp} to Metric end time
- */
-SegmentGraphOtherSegments = function(segment, from, to) {
-  SegmentGraphBase.call(this, segment, from, to);
-  this.graphType = SegmentMetric.Graph.OtherSegments;
-}
-
-SegmentGraphOtherSegments.prototype = Object.create(SegmentGraphBase.prototype);
-SegmentGraphOtherSegments.prototype.constructor = SegmentGraphOtherSegments;
-
 SegmentGraphOtherSegments.prototype.prepareData = function(visitorIds, otherSegmentVisitorIds, otherSegmentNames) {
   var thisVisitorIdSet = _.reduce(visitorIds, function(memo, visitorId) {
     memo[visitorId] = true;

@@ -184,10 +184,18 @@ Meteor.methods({
   },
 
   genSegmentListData: function(from, to) {
-    Metric.generateListGraph(Meteor.userId(), from, to);
+    //TODO GH265 get from session
+    var companyId = Companies.findOne({ownedByUserIds : Meteor.userId() })._id;
+    Segments.find({companyId: companyId}).map(function(segment) {
+      SegmentGraphBase.generateListGraph(segment, from, to);
+    });
   },
 
   genSegmentData: function(segmentId, from, to) {
-    Metric.generateAllGraph(Meteor.userId(), segmentId, from, to);
+    //TODO GH265 get from session
+    var companyId = Companies.findOne({ownedByUserIds : Meteor.userId() })._id;
+    var segment = new Segment(Segments.findOne({companyId: companyId, _id : segmentId}));
+
+    SegmentGraphBase.generateAllGraph(segment, from, to);
   }
 });
