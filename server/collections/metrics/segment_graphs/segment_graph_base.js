@@ -117,7 +117,7 @@ SegmentGraphBase.generateAllGraph = function(segment, from, to) {
     graph.prepareData(visitsEngine);
     graph.save();
 
-    var graph = new SegmentGraphDistributionDwell(segment, from, to, 'ENTER');
+    var graph = new SegmentGraphDistributionDwell(segment, from, to, SegmentGraphBase.Graph.Data.Enter);
     graph.prepareData(visitsEngine);
     graph.save();
 
@@ -125,11 +125,11 @@ SegmentGraphBase.generateAllGraph = function(segment, from, to) {
     graph.prepareData(visitsEngine);
     graph.save();
 
-    var graph = new SegmentGraphDistributionVisits(segment, from, to, 'ENTER');
+    var graph = new SegmentGraphDistributionVisits(segment, from, to, SegmentGraphBase.Graph.Data.Enter);
     graph.prepareData(visitsEngine);
     graph.save();
 
-    var graph = new SegmentGraphDistributionVisits(segment, from, to, 'EXIT');
+    var graph = new SegmentGraphDistributionVisits(segment, from, to, SegmentGraphBase.Graph.Data.Exit);
     graph.prepareData(visitsEngine);
     graph.save();
 
@@ -145,21 +145,3 @@ SegmentGraphBase.generateAllGraph = function(segment, from, to) {
     graph.prepareData(installationVisitsEngines, installationNames);
     graph.save();
 };
-
-SegmentGraphBase.Graph = {};
-SegmentGraphBase.Graph.List = "list";
-SegmentGraphBase.Graph.VisitorsXDates = "visitorsXDates";
-SegmentGraphBase.Graph.VisitorsXDwell = "visitorsXDwell";
-SegmentGraphBase.Graph.VisitorsXVisits = "visitorsXVisits";
-SegmentGraphBase.Graph.TopLocationsVisitors = "topLocationsVisitors";
-SegmentGraphBase.Graph.TopLocationsDwell = "topLocationsDwell";
-SegmentGraphBase.Graph.TopLocationsVisits = "topLocationsVisits";
-SegmentGraphBase.Graph.DistributionDwellEnter = "distributionDwellEnter";
-SegmentGraphBase.Graph.DistributionDwellExit = "distributionDwellExit";
-SegmentGraphBase.Graph.DistributionVisitsEnter = "distributionVisitsEnter";
-SegmentGraphBase.Graph.DistributionVisitsExit = "distributionVisitsExit";
-SegmentGraphBase.Graph.OtherSegments = "otherSegments";
-
-
-SegmentGraphBase.Enter = 'ENTER';
-SegmentGraphBase.Exit = 'EXIT';

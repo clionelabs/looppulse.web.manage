@@ -138,7 +138,7 @@ VisitsEngine.prototype.queryAverageDurationWeeklyHourlySeries = function(by) {
   var slotCount = this.constructZero2DArray(7, 24);
   _.each(this.data, function(vData, vid) {
     _.each(vData, function(item, b) {
-      var at = by === 'ENTER'? item.enteredAt: item.exitedAt;
+      var at = (by === SegmentGraphBase.Graph.Data.Enter) ? item.enteredAt : item.exitedAt;
       slotDurations[at.day()][at.hour()] += item.duration;
       slotCount[at.day()][at.hour()]++;
     });
@@ -165,7 +165,7 @@ VisitsEngine.prototype.queryVisitsCountWeeklyHourlySeries = function(by) {
   var slotCount = this.constructZero2DArray(7, 24);
   _.each(this.data, function(vData, vid) {
     _.each(vData, function(item, b) {
-      var at = by === 'ENTER'? item.enteredAt: item.exitedAt;
+      var at = (by === SegmentGraphBase.Graph.Data) ? item.enteredAt : item.exitedAt;
       slotCount[at.day()][at.hour()]++;
     });
   });
