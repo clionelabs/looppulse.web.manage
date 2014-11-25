@@ -75,7 +75,7 @@ Template.segmentDetail.events({
                 Notifications.error("Removing", "Removal failed -- " + err + " --");
               } else {
                 console.info(res);
-                Notifications.success("Removed", "Segment '"+self.name + "'. Redirecting to segment list...",);
+                Notifications.success("Removed", "Segment '"+self.name + "'. Redirecting to segment list...");
                 Router.go('segment.list');
               }
             });
