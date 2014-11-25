@@ -14,7 +14,7 @@ SegmentGraphs.findByGraphType = function(from, to, segmentId, type) {
         _.extend(selector, {'graphType' : type });
     }
     console.log("[SegmentGraph] subsribed json = " + JSON.stringify(selector));
-    return SegmentGraphs.find(selector);
+    return SegmentGraphs.find(selector, { sort : { "segment.createdAt" : -1 }});
 }
 
 
