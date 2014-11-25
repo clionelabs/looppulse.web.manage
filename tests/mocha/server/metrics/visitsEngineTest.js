@@ -21,7 +21,7 @@ if (!(typeof MochaWeb === 'undefined')){
             {visitorId: 2, enteredAt: getBaseDate().add(0, 'd').add(10, 's'), exitedAt: getBaseDate().add(0, 'd').add(20, 's'), duration: 10*1000}
         ];
         var visitorIds = [1, 2];
-        engine.build(visitorIds, encounters);
+        engine.build(encounters);
       });
 
       it("build()", function() {

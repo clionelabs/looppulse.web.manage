@@ -42,24 +42,15 @@ VisitsEngine = function(periodFrom, periodTo, bucketSize) {
 
 /*
  * Construct the described data strcuture from encounters.
- * Noted that the visitorIds input is required because some visitor might have no visits
  *
- * @params {Number[]} visitorIds List of visitor ids
  * @params {Encounter[]} encounters List of encounters
  */
-VisitsEngine.prototype.build = function(visitorIds, encounters) {
+VisitsEngine.prototype.build = function(encounters) {
   var self = this;
   self.data = {};
-  _.each(visitorIds, function(vid) {
-    self.data[vid] = {};
-  });
   _.each(encounters, function(encounter) {
     var vid = encounter.visitorId;
     var bucket = encounter.enteredAt.diff(self.periodFrom, self.bucketSize);
-    if (self.data[vid] === undefined) {
-      console.warn("[VisitsEngine] missing visitor ids for this encounter: ", encounter);
-      return;
-    }
     self.data[vid] = self.data[vid] || {};
     self.data[vid][bucket] = self.data[vid][bucket] || {enteredAt: null, exitedAt: null, duration: 0};
     if (self.data[vid][bucket]['enteredAt'] === null || self.data[vid][bucket]['enteredAt'].isAfter(encounter.enteredAt)) {

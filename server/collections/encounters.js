@@ -24,11 +24,7 @@ Encounters.createOrUpdate = function (beaconEvent) {
 Encounter.ensureIndex = function () {
   Encounters._ensureIndex({
     visitorId: 1,
-    installationId: 1,
-    enteredAt: 1,
-    exitedAt: 1,
-    duration: 1,
-    'enteredAtParts.dayOfWeek': 1
+    enteredAt: 1
   });
 };
 
