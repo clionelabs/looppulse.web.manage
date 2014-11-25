@@ -21,10 +21,10 @@
             <a href="#visitor-metrics" role="tab" data-toggle="tab">
               <div class="tab-content">
                 <div class="row">
-                  <div class="left number">{{ list.numberOfVisitors }}</div>
+                  <div class="pull-left number">{{ graphListData.numberOfVisitors }}</div>
                 </div>
                 <div class="row">
-                  <div class="left type">Visitors</div>
+                  <div class="pull-left type">Visitors</div>
                 </div>
               </div>
             </a>
@@ -36,10 +36,10 @@
 
               <div class="tab-content">
                 <div class="row">
-                  <div class="left number">{{ formatDurationToMin list.averageDwellTime }}</div>
+                  <div class="pull-left number">{{ formatDurationToMin graphListData.averageDwellTime }}</div>
                 </div>
                 <div class="row">
-                  <div class="left type">Dwell Time</div>
+                  <div class="pull-left type">Dwell Time</div>
                 </div>
               </div>
             </a>
@@ -50,11 +50,11 @@
               data-toggle="tab">
               <div class="tab-content">
                 <div class="row">
-                  <div class="left number">{{ formatPercent list.repeatedVisitorPercentage }}</div>
+                  <div class="pull-left number">{{ formatPercent graphListData.repeatedVisitorPercentage }}</div>
 
                 </div>
                 <div class="row">
-                  <div class="left type">Repeated Visits</div>
+                  <div class="pull-left type">Repeated Visits</div>
                 </div>
               </div>
             </a>
@@ -66,50 +66,50 @@
         <div class="tab-pane active" id="visitor-metrics">
                 <div class="graph-container">
                     <h3 class="graph-name">Total Number of Visitors</h3>
-                    <div class="graph-content" id="dateXNumberOfVisitorsBarChart"></div>
+                    <div class="graph-content" id="graphVisitorsXDates"></div>
                 </div>
-                {{> twoColsBarChart percentageOtherSegmentChart}}
-                {{> twoColsBarChart visitorTopLocationsBarChart}}
+                {{> twoColsBarChart graphOtherSegmentsData}}
+                {{> twoColsBarChart graphTopLocationsVisitorsData}}
         </div>
         <div class="tab-pane" id="dwell-time-metrics">
               <div class="graph-container">
                   <h3 class="graph-name">Average Dwell Time</h3>
-                  <div class="graph-content" id="averageDwellTimePerVisitorPerDayXNumberOfVisitorsHistogram">
+                  <div class="graph-content" id="graphVisitorsXDwell">
                   </div>
               </div>
               <div class="graph-container box">
                   <div class="graph-header">Dwell Time Distribution</div>
-                  <div class="punchcard" id="dwellTimePunchCard">
+                  <div class="punchcard" id="graphDistributionDwellEnter">
 
                   </div>
               </div>
-              {{> twoColsBarChart dwellTimeTopLocationsBarChart}}
+              {{> twoColsBarChart graphTopLocationsDwellData}}
         </div>
         <div class="tab-pane" id="repeated-visits-metrics">
 
                 <div class="graph-container">
                     <h3 class="graph-name">Total Number of Visits</h3>
-                    <div class="graph-content" id="numberOfVisitsXNumberOfVisitorsBarChart"></div>
+                    <div class="graph-content" id="graphVisitorsXVisits"></div>
                 </div>
 
                 <div class="graph-container box">
                     <div class="graph-header">
                         Entry and Exit Distribution
                         <ul class="nav nav-tabs" role="tablist">
-                            <li class="active"><a href="#enteredAtPunchCard" role="tab" data-toggle="tab">Entry Count</a></li>
-                            <li><a href="#exitedAtPunchCard" role="tab" data-toggle="tab">Exit Count</a></li>
+                            <li class="active"><a href="#graphDistributionVisitsEnter" role="tab" data-toggle="tab">Entry Count</a></li>
+                            <li><a href="#graphDistributionVisitsExit" role="tab" data-toggle="tab">Exit Count</a></li>
                         </ul>
                     </div>
                     <div class="tab-content">
                       <div class="tab-pane active" role="tabpanel">
-                        <div id="enteredAtPunchCard" class="punchcard graph-content"></div>
+                        <div id="graphDistributionVisitsEnter" class="punchcard graph-content"></div>
                       </div>
                       <div class="tab-pane" role="tabpanel">
-                        <div id="exitedAtPunchCard" class="punchcard graph-content"></div>
+                        <div id="graphDistributionVisitsExit" class="punchcard graph-content"></div>
                       </div>
                     </div>
                 </div>
-                {{> twoColsBarChart numberOfVisitTopLocationsBarChart}}
+                {{> twoColsBarChart graphTopLocationsVisitsData}}
         </div>
 
       </div>
