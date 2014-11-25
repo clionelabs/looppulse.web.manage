@@ -1,7 +1,7 @@
 UpdateSegmentVisitors = function() {
   var result = { added: 0, matched: 0, removed: 0, unmatched: 0 };
   Segments.findScheduled().map(function(segment) {
-    Visitors.find().map(function(visitor) {
+    Visitors.findByGraphType().map(function(visitor) {
       var visitorId = visitor._id;
       var selector = {
         segmentId: segment._id,

@@ -33,29 +33,7 @@ Meteor.publish('current-location', function(id){
     return null;
   }
   return Locations.find(q)
-})
-
-Meteor.publish('owned-products', function(id){
-  var q = {}
-  console.log("Returning Products Data", id)
-  if (id && AccountsHelper.companyMatch(id, this.userId)) {
-    q = { companyId: id }
-  } else {
-    return null;
-  }
-  return Products.find(q)
-})
-
-Meteor.publish('owned-installations', function(id){
-  var q = {}
-  console.log("Returning Installations Data", id)
-  if (id && AccountsHelper.fieldMatch("locations", id, this.userId)) {
-    q = { locationId: id }
-  } else {
-    return null;
-  }
-  return Installations.find(q)
-})
+});
 
 Meteor.publish('related-encounters', function(ids){
   var q = {}
@@ -88,34 +66,20 @@ Meteor.publish('related-beacon-events', function(ids){
   return BeaconEvents.find(q)
 });
 
-Meteor.publish('segmentListMetrics', function(from, to, id) {
+Meteor.publish('listSegmentGraphs', function(from, to, id) {
   if (this.userId) {
-    return SegmentMetrics.findListView(from, to, id);
+    return SegmentGraphs.findList(from, to, id);
   } else {
     return null;
   }
 });
 
-Meteor.publish('segmentMetrics', function(from, to, id) {
+Meteor.publish('segmentGraphs', function(from, to, id) {
   if (this.userId) {
-    return SegmentMetrics.find(from, to, id);
+    return SegmentGraphs.findByGraphType(from, to, id);
   } else {
     return null;
   }
-});
-
-Meteor.publish('related-metrics', function(id){
-  var q = {};
-  //TODO change to new metrics
-  console.log("Returning metric data ", id);
-
-  if (id && this.userId) {
-    q = { collectionId: id };
-  } else {
-    return null;
-  }
-
-  return Metrics.find(q);
 });
 
 Meteor.publish('location-engagements', function(locationId) {
@@ -129,47 +93,6 @@ Meteor.publish('location-engagements', function(locationId) {
   }
 
   return Engagements.find(q);
-});
-
-Meteor.publish('owned-segments', function(id) {
-  var q = {};
-  var userId = this.userId;
-  console.log("Returning Segment Data", id)
-  if (id && AccountsHelper.companyMatch(id, this.userId)) {
-    q = { companyId: id }
-  } else {
-    if (!userId || !Roles.userIsInRole(userId, ['admin']))
-        return null;
-  }
-  return Segments.find(q);
-});
-
-Meteor.publish('owned-campaigns', function(id) {
-  var q = {};
-  var userId = this.userId;
-
-  console.log("Returning Campaign Data", id)
-  if (id && AccountsHelper.companyMatch(id, this.userId)) {
-    q = { companyId: id }
-  } else {
-    if (!userId || !Roles.userIsInRole(userId, ['admin']))
-        return null;
-  }
-  return Engagements.find(q);
-});
-
-Meteor.publish('owned-categories', function(id) {
-  var q = {};
-  var userId = this.userId;
-
-  console.log("Returning Categories Data", id)
-  if (id && AccountsHelper.companyMatch(id, this.userId)) {
-    q = { companyId: id }
-  } else {
-    if (!userId || !Roles.userIsInRole(userId, ['admin']))
-        return null;
-  }
-  return Categories.find(q);
 });
 
 //@@DEV

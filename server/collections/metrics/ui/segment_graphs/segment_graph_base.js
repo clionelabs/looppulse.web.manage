@@ -1,35 +1,47 @@
-SegmentMetrics = {};
+SegmentGraphBase.prototype.save = function() {
+  if (this.graphType === null) {
+    console.error("[SegmentGraphBase]: subclass needs to implement graphType");
+    return;
+  }
+  if (this.data === null) {
+    console.error("[SegmentGraphBase]: subclass needs to provide data");
+    return;
+  }
 
-SegmentMetrics.findListView = function(from, to, segmentId) {
-    return SegmentMetrics.find(from, to, segmentId, SegmentMetric.Graph.List);
-};
+  var selector = {
+    'segment._id' : this.segment._id,
+    from: this.from,
+    to: this.to,
+    graphType: this.graphType
+  };
 
-SegmentMetrics.find = function(from, to, segmentId, type) {
-    var companyId = Companies.findOne({ownedByUserId : this.userId})._id;
-    var selector = {
-        'collectionMeta.type': "segment",
-        companyId : companyId,
-        from : from,
-        to : to
-    };
-    if (segmentId) {
-        console.log("[SegmentMetrics] segmentId = " + segmentId);
-        _.extend(selector, {'collectionMeta.id' : segmentId});
-    }
-    if (type) {
-        _.extend(selector, {'graphType' : type });
-    }
-    console.log("[SegmentMetric] companyId=" + companyId);
-    return Metrics.find(selector);
+  SegmentGraphs.upsert(selector, this);
 }
+
+SegmentGraphBase.prototype.prepareData = function() {
+  console.warn("[SegmentGraphBase] missing prepareData implementation in subclass");
+}
+
+SegmentGraphBase.prototype.format7X24ToFrontend = function(array) {
+    //TODO start refactor to better encapsulate, perhaps pass to d3?
+    var weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    var result = [];
+    for (var i = 0; i < 7; i++) {
+        for (var j = 0; j < 24; j++) {
+            result.push([weekdays[i], j, array[i][j]]);
+        }
+    }
+    return result;
+}
+
 
 /**
  * @param segment
  * @param from {Unix Timestamp} Use timestamp because the moment cannot be passed
  * @param to {Unix Timestamp}
  */
-SegmentMetric.generateListGraph = function(segment, from, to) {
-    console.log("[SegmentMetric] generating segment " + segment._id + " metric data from " + from + " to " + to);
+SegmentGraphBase.generateListGraph = function(segment, from, to) {
+    console.log("[SegmentGraph] generating segment " + segment._id + " metric data from " + from + " to " + to);
     var atTime = moment().valueOf();
     var visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment._id, atTime);
     var encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
@@ -47,8 +59,8 @@ SegmentMetric.generateListGraph = function(segment, from, to) {
  * @param from {Unix Timestamp} Use timestamp because the moment cannot be passed
  * @param to {Unix Timestamp}
  */
-SegmentMetric.generateAllGraph = function(segment, from, to) {
-    console.log("[SegmentMetric] generating segment " + segment._id + " metric data from " + from + " to " + to);
+SegmentGraphBase.generateAllGraph = function(segment, from, to) {
+    console.log("[SegmentGraph] generating segment " + segment._id + " metric data from " + from + " to " + to);
     var atTime = moment().valueOf();
     var visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment._id, atTime);
     var encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
@@ -66,12 +78,12 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
     });
     var installationVisitsEngines = {};
     _.each(installationEncounters, function(iEncounters, iid) {
-       var iVisitorIds = _.uniq(_.reduce(iEncounters, function(memo, encounter) {
-         memo.push(encounter.visitorId); 
-         return memo;
-       }, []));
-       installationVisitsEngines[iid] = new VisitsEngine(moment(from), moment(to), 'd');
-       installationVisitsEngines[iid].build(iVisitorIds, iEncounters);
+        var iVisitorIds = _.uniq(_.reduce(iEncounters, function(memo, encounter) {
+            memo.push(encounter.visitorId);
+            return memo;
+        }, []));
+        installationVisitsEngines[iid] = new VisitsEngine(moment(from), moment(to), 'd');
+        installationVisitsEngines[iid].build(iVisitorIds, iEncounters);
     });
     var installationNames = {};
     _.each(installationEncounters, function(iEncounters, iid) {
@@ -79,13 +91,13 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
         installationNames[iid] = installation.name;
     });
 
-    // find visitor ids for all segments for the otherSegments graph
+    // findByGraphType visitor ids for all segments for the otherSegments graph
     var otherSegmentVisitorIds = {};
     var otherSegmentNames = {};
     var skippedIds = [segment._id, Segments.findEveryVisitorSegment(segment.companyId)._id];
     Segments.findByCompany(segment.companyId, {_id: {$nin: skippedIds}}).map(function(seg) {
-       otherSegmentVisitorIds[seg._id] = SegmentVisitorFlows.getSegmentVisitorIdList(seg._id, atTime);
-       otherSegmentNames[seg._id] = seg.name;
+        otherSegmentVisitorIds[seg._id] = SegmentVisitorFlows.getSegmentVisitorIdList(seg._id, atTime);
+        otherSegmentNames[seg._id] = seg.name;
     });
 
     // build graphs
@@ -105,19 +117,19 @@ SegmentMetric.generateAllGraph = function(segment, from, to) {
     graph.prepareData(visitsEngine);
     graph.save();
 
-    var graph = new SegmentGraphDistributionDwell(segment, from, to, 'ENTER');
+    var graph = new SegmentGraphDistributionDwell(segment, from, to, SegmentGraphBase.Graph.Data.Enter);
     graph.prepareData(visitsEngine);
     graph.save();
 
     var graph = new SegmentGraphVisitorsXVisits(segment, from, to);
     graph.prepareData(visitsEngine);
     graph.save();
-    
-    var graph = new SegmentGraphDistributionVisits(segment, from, to, 'ENTER');
+
+    var graph = new SegmentGraphDistributionVisits(segment, from, to, SegmentGraphBase.Graph.Data.Enter);
     graph.prepareData(visitsEngine);
     graph.save();
 
-    var graph = new SegmentGraphDistributionVisits(segment, from, to, 'EXIT');
+    var graph = new SegmentGraphDistributionVisits(segment, from, to, SegmentGraphBase.Graph.Data.Exit);
     graph.prepareData(visitsEngine);
     graph.save();
 

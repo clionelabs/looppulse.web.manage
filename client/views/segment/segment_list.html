@@ -25,10 +25,10 @@
           </tr>
         </thead>
         <tbody>
-            {{#each segments}}
+            {{#each segmentGraphs}}
               <tr>
                 <td>
-                  <a href="{{pathFor 'segment.detail' segmentId=collectionMeta.id }}">{{ name }}</a>
+                  <a href="{{pathFor 'segment.detail' segmentId=segment._id }}">{{ segment.name }}</a>
                 </td>
                 <td>{{ formatToThousand data.numberOfVisitors }}</td>
                 <td>{{ formatDurationToMin data.averageDwellTime }}</td>

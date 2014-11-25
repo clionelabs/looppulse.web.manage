@@ -1,16 +1,3 @@
-/**
- * @param {Segment} segment
- * @param {Unix Timestamp} from Metric start time
- * @param {Unix Timestamp} to Metric end time
- */
-SegmentGraphVisitorsXDwell = function(segment, from, to) {
-  SegmentGraphBase.call(this, segment, from, to);
-  this.graphType = SegmentMetric.Graph.VisitorsXDwell;
-}
-
-SegmentGraphVisitorsXDwell.prototype = Object.create(SegmentGraphBase.prototype);
-SegmentGraphVisitorsXDwell.prototype.constructor = SegmentGraphVisitorsXDwell;
-
 SegmentGraphVisitorsXDwell.prototype.prepareData = function(visitsEngine) {
   var interval = 10 * 60 * 1000; // 10 minutes. TODO: dynamic interval depending on data
   var intervalCounts = visitsEngine.queryVisitorCountsXDurationIntervalSeries(interval);
