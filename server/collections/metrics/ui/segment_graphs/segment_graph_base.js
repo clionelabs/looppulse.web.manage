@@ -69,38 +69,44 @@ SegmentGraphBase.generateAllGraph = function(segment, from, to) {
 
     // build visitsEngine with encounters for most graphs
     var visitsEngine = new VisitsEngine(moment(from), moment(to), 'days');
-    visitsEngine.build(visitorIds, encounters);
+    Benchmark.time(function() {
+      visitsEngine.build(visitorIds, encounters);
+    }, 'Build visitsEngine'); 
 
     // build visitsEngine for each installation separately for those topLocations graph
-    var installationEncounters = {};
-    _.each(encounters, function(encounter) {
-        var iid = encounter.installationId;
-        installationEncounters[iid] = installationEncounters[iid] || [];
-        installationEncounters[iid].push(encounter);
-    });
     var installationVisitsEngines = {};
-    _.each(installationEncounters, function(iEncounters, iid) {
-        var iVisitorIds = _.uniq(_.reduce(iEncounters, function(memo, encounter) {
-            memo.push(encounter.visitorId);
-            return memo;
-        }, []));
-        installationVisitsEngines[iid] = new VisitsEngine(moment(from), moment(to), 'd');
-        installationVisitsEngines[iid].build(iVisitorIds, iEncounters);
-    });
     var installationNames = {};
-    _.each(installationEncounters, function(iEncounters, iid) {
-        var installation = Installations.findOne(iid);
-        installationNames[iid] = installation.name;
-    });
+    Benchmark.time(function() {
+      var installationEncounters = {};
+      _.each(encounters, function(encounter) {
+          var iid = encounter.installationId;
+          installationEncounters[iid] = installationEncounters[iid] || [];
+          installationEncounters[iid].push(encounter);
+      });
+      _.each(installationEncounters, function(iEncounters, iid) {
+          var iVisitorIds = _.uniq(_.reduce(iEncounters, function(memo, encounter) {
+              memo.push(encounter.visitorId);
+              return memo;
+          }, []));
+          installationVisitsEngines[iid] = new VisitsEngine(moment(from), moment(to), 'd');
+          installationVisitsEngines[iid].build(iVisitorIds, iEncounters);
+      });
+      _.each(installationEncounters, function(iEncounters, iid) {
+          var installation = Installations.findOne(iid);
+          installationNames[iid] = installation.name;
+      });
+    }, 'Build installation visitsEngines'); 
 
     // findByGraphType visitor ids for all segments for the otherSegments graph
     var otherSegmentVisitorIds = {};
     var otherSegmentNames = {};
-    var skippedIds = [segment._id, Segments.findEveryVisitorSegment(segment.companyId)._id];
-    Segments.findByCompany(segment.companyId, {_id: {$nin: skippedIds}}).map(function(seg) {
-        otherSegmentVisitorIds[seg._id] = SegmentVisitorFlows.getSegmentVisitorIdList(seg._id, atTime);
-        otherSegmentNames[seg._id] = seg.name;
-    });
+    Benchmark.time(function() {
+      var skippedIds = [segment._id, Segments.findEveryVisitorSegment(segment.companyId)._id];
+      Segments.findByCompany(segment.companyId, {_id: {$nin: skippedIds}}).map(function(seg) {
+          otherSegmentVisitorIds[seg._id] = SegmentVisitorFlows.getSegmentVisitorIdList(seg._id, atTime);
+          otherSegmentNames[seg._id] = seg.name;
+      });
+    }, 'Build segment visitors'); 
 
     // build graphs
     Benchmark.time(function() {
