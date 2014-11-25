@@ -43,11 +43,22 @@ SegmentGraphBase.prototype.format7X24ToFrontend = function(array) {
 SegmentGraphBase.generateListGraph = function(segment, from, to) {
     console.log("[SegmentGraph] generating segment " + segment._id + " metric data from " + from + " to " + to);
     var atTime = moment().valueOf();
-    var visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment._id, atTime);
-    var encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
 
-    var visitsEngine = new VisitsEngine(moment(from), moment(to), 'days');
-    visitsEngine.build(visitorIds, encounters);
+    var visitorIds;
+    Benchmark.time(function() {
+      visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment._id, atTime);
+    }, segment.name + '-fetch visitorIds');
+
+    var encounters;
+    Benchmark.time(function() {
+      encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
+    }, segment.name + '-fetch encounters');
+
+    var visitsEngine;
+    Benchmark.time(function() {
+      visitsEngine = new VisitsEngine(moment(from), moment(to), 'days');
+      visitsEngine.build(visitorIds, encounters);
+    }, segment.name + '-build visitsEngine');
 
     Benchmark.time(function() {
       var graph = new SegmentGraphList(segment, from, to);
@@ -64,8 +75,15 @@ SegmentGraphBase.generateListGraph = function(segment, from, to) {
 SegmentGraphBase.generateAllGraph = function(segment, from, to) {
     console.log("[SegmentGraph] generating segment " + segment._id + " metric data from " + from + " to " + to);
     var atTime = moment().valueOf();
-    var visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment._id, atTime);
-    var encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
+    var visitorIds;
+    Benchmark.time(function() {
+      visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment._id, atTime);
+    }, segment.name + '-fetch visitorIds');
+
+    var encounters;
+    Benchmark.time(function() {
+      encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
+    }, segment.name + '-fetch encounters');
 
     // build visitsEngine with encounters for most graphs
     var visitsEngine = new VisitsEngine(moment(from), moment(to), 'days');
