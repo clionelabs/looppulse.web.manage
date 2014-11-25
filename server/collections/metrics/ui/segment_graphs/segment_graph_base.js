@@ -49,9 +49,11 @@ SegmentGraphBase.generateListGraph = function(segment, from, to) {
     var visitsEngine = new VisitsEngine(moment(from), moment(to), 'days');
     visitsEngine.build(visitorIds, encounters);
 
-    var graph = new SegmentGraphList(segment, from, to);
-    graph.prepareData(visitsEngine);
-    graph.save();
+    Benchmark.time(function() {
+      var graph = new SegmentGraphList(segment, from, to);
+      graph.prepareData(visitsEngine);
+      graph.save();
+    }, segment.name + '-SegmentGraphList');
 }
 
 /**
@@ -101,47 +103,69 @@ SegmentGraphBase.generateAllGraph = function(segment, from, to) {
     });
 
     // build graphs
-    var graph = new SegmentGraphList(segment, from, to);
-    graph.prepareData(visitsEngine);
-    graph.save();
+    Benchmark.time(function() {
+      var graph = new SegmentGraphList(segment, from, to);
+      graph.prepareData(visitsEngine);
+      graph.save();
+    }, segment.name + '-SegmentGraphList');
 
+    Benchmark.time(function() {
     var graph = new SegmentGraphVisitorsXDates(segment, from, to);
     graph.prepareData(visitsEngine);
     graph.save();
+    }, segment.name + '-SegmentGraphVisitorsXDates');
 
+    Benchmark.time(function() {
     var graph = new SegmentGraphOtherSegments(segment, from, to);
     graph.prepareData(visitorIds, otherSegmentVisitorIds, otherSegmentNames);
     graph.save();
+    }, segment.name + '-SegmentGraphOtherSegments');
 
+    Benchmark.time(function() {
     var graph = new SegmentGraphVisitorsXDwell(segment, from, to);
     graph.prepareData(visitsEngine);
     graph.save();
+    }, segment.name + '-SegmentGraphVisitorsXDwell');
 
+    Benchmark.time(function() {
     var graph = new SegmentGraphDistributionDwell(segment, from, to, SegmentGraphBase.Graph.Data.Enter);
     graph.prepareData(visitsEngine);
     graph.save();
+    }, segment.name + '-SegmentGraphDistributionDwell');
 
+    Benchmark.time(function() {
     var graph = new SegmentGraphVisitorsXVisits(segment, from, to);
     graph.prepareData(visitsEngine);
     graph.save();
+    }, segment.name + '-SegmentGraphVisitorsXVisits');
 
+    Benchmark.time(function() {
     var graph = new SegmentGraphDistributionVisits(segment, from, to, SegmentGraphBase.Graph.Data.Enter);
     graph.prepareData(visitsEngine);
     graph.save();
+    }, segment.name + '-SegmentGraphDistributionVists');
 
+    Benchmark.time(function() {
     var graph = new SegmentGraphDistributionVisits(segment, from, to, SegmentGraphBase.Graph.Data.Exit);
     graph.prepareData(visitsEngine);
     graph.save();
+    }, segment.name + '-SegmentGraphDistributionVisits');
 
+    Benchmark.time(function() {
     var graph = new SegmentGraphTopLocationsVisitors(segment, from, to);
     graph.prepareData(installationVisitsEngines, installationNames);
     graph.save();
+    }, segment.name + '-SegmentGraphTopLocationsVisitors');
 
+    Benchmark.time(function() {
     var graph = new SegmentGraphTopLocationsDwell(segment, from, to);
     graph.prepareData(installationVisitsEngines, installationNames);
     graph.save();
+    }, segment.name + '-SegmentGraphTopLocationsDwell');
 
+    Benchmark.time(function() {
     var graph = new SegmentGraphTopLocationsVisits(segment, from, to);
     graph.prepareData(installationVisitsEngines, installationNames);
     graph.save();
+    }, segment.name + '-SegmentGraphTopLocationsVisits');
 };
