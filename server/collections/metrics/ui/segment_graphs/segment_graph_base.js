@@ -47,7 +47,7 @@ SegmentGraphBase.generateListGraph = function(segment, from, to) {
     var encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
 
     var visitsEngine = new VisitsEngine(moment(from), moment(to), 'days');
-    visitsEngine.build(visitorIds, encounters);
+    visitsEngine.build(encounters);
 
     var graph = new SegmentGraphList(segment, from, to);
     graph.prepareData(visitsEngine);
@@ -67,7 +67,7 @@ SegmentGraphBase.generateAllGraph = function(segment, from, to) {
 
     // build visitsEngine with encounters for most graphs
     var visitsEngine = new VisitsEngine(moment(from), moment(to), 'days');
-    visitsEngine.build(visitorIds, encounters);
+    visitsEngine.build(encounters);
 
     // build visitsEngine for each installation separately for those topLocations graph
     var installationEncounters = {};
@@ -78,12 +78,8 @@ SegmentGraphBase.generateAllGraph = function(segment, from, to) {
     });
     var installationVisitsEngines = {};
     _.each(installationEncounters, function(iEncounters, iid) {
-        var iVisitorIds = _.uniq(_.reduce(iEncounters, function(memo, encounter) {
-            memo.push(encounter.visitorId);
-            return memo;
-        }, []));
         installationVisitsEngines[iid] = new VisitsEngine(moment(from), moment(to), 'd');
-        installationVisitsEngines[iid].build(iVisitorIds, iEncounters);
+        installationVisitsEngines[iid].build(iEncounters);
     });
     var installationNames = {};
     _.each(installationEncounters, function(iEncounters, iid) {
