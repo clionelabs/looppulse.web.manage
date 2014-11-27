@@ -50,10 +50,10 @@ VisitorEncountersCache.insertEncounter = function(encounter) {
  *
  * @result {Encounters[]} List of encounters
  */
-VisitorEncountersCache.getMultipleVisitorEncounters = function(visitorIds, from, to) {
+VisitorEncountersCache.getEncounters = function(visitorIds, from, to) {
   var result = [];
   _.each(visitorIds, function(vid) {
-    result.push(VisitorEncountersCache.getSingleVisitorEncounters(vid, from, to));
+    result.push(VisitorEncountersCache._getVisitorEncounters(vid, from, to));
   });
   result = _.flatten(result);
   return result;
@@ -62,13 +62,14 @@ VisitorEncountersCache.getMultipleVisitorEncounters = function(visitorIds, from,
 /*
  * Return matched encounters of a particular visitor, given the time range
  *
+ * @private
  * @param {Number} vid
  * @param {Moment} from  Inclusive from time
  * @param {Moment} to Exclusive to time
  *
  * @return {Encounter[]} List of encounters
  */
-VisitorEncountersCache.getSingleVisitorEncounters = function(vid, from, to) {
+VisitorEncountersCache._getVisitorEncounters = function(vid, from, to) {
   if (VisitorEncountersCache.data[vid] === undefined) return [];
   var vEncounters = VisitorEncountersCache.data[vid];
 
