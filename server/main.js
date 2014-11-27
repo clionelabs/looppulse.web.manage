@@ -37,11 +37,15 @@ var observeFirebase = function () {
 
 var observeCollections = function() {
   var classes = [
-    Encounter, Engagement, SegmentVisitor, SegmentGraphs, SegmentVisitorFlow, VisitorEncountersCache
+    Encounter, Engagement, SegmentVisitor, SegmentGraphs, SegmentVisitorFlow, VisitorEncountersCache, SegmentVisitorFlowsCache
   ];
   classes.forEach(function(objectClass) {
     if (objectClass.hasOwnProperty('startup')) {
       objectClass.startup();
     }
   });
+
+
+  var f = { "_id" : "225vrqThRwJJxdGKw", "segmentId" : "gLMgSER6fWZgKnE3o", "visitorId" : "ZbNNCyLxdYawN7bqs", "deltaAt" : 1415951130358, "delta" : 1 };
+  SegmentVisitorFlowsCache.removeFlow(f);
 };

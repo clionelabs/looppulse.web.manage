@@ -6,7 +6,7 @@
  *   ....
  * }
  *
- * The purpose is to support efficient fetching on encounters. Due to the big overhead on Meteor Collections, fetching a lot of encounters into
+ * The purpose is to support efficient fetching on encounters. Due to the big overhead on Meteor Collections, fetching a lot of encounters in
  * a collection is very slow. e.g. 10000 records take already around 1 second...
  */
 VisitorEncountersCache = {

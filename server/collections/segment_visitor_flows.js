@@ -102,7 +102,8 @@ SegmentVisitorFlows.getSegmentVisitorIdList = function(segmentId, at) {
 SegmentVisitorFlows.getSegmentVisitorIdsWithTimeDict = function(segmentId, at) {
   var outIds = {};
   var inIds = {};
-  SegmentVisitorFlows.find({segmentId: segmentId, deltaAt: {$lt: at}}, {sort: {deltaAt: -1}}).forEach(function(flow) {
+  // SegmentVisitorFlows.find({segmentId: segmentId, deltaAt: {$lt: at}}, {sort: {deltaAt: -1}}).forEach(function(flow) {
+  SegmentVisitorFlowsCache.getSegmentFlows(segmentId, at).forEach(function(flow) {
     if (outIds[flow.visitorId] !== undefined || inIds[flow.visitorId] !== undefined) return; // since we sort in desc order, only the last delta is relevant
     if (flow.delta === 1) inIds[flow.visitorId] = flow.deltaAt;
     else outIds[flow.visitorId] = flow.deltaAt;
@@ -132,7 +133,8 @@ SegmentVisitorFlows.getVisitorSegmentIdList = function(visitorId, at) {
 SegmentVisitorFlows.getVisitorSegmentIdsWithTimeDict = function(visitorId, at) {
   var outIds = {};
   var inIds = {};
-  SegmentVisitorFlows.find({visitorId: visitorId, deltaAt: {$lt: at}}, {sort: {deltaAt: -1}}).forEach(function(flow) {
+  //SegmentVisitorFlows.find({visitorId: visitorId, deltaAt: {$lt: at}}, {sort: {deltaAt: -1}}).forEach(function(flow) {
+  SegmentVisitorFlowsCache.getVisitorFlows(visitorId, at).forEach(function(flow) {
     if (outIds[flow.segmentId] !== undefined || inIds[flow.segmentId] !== undefined) return; // since we sort in desc order, only the last delta is relevant
     if (flow.delta === 1) inIds[flow.segmentId] = flow.deltaAt;
     else outIds[flow.segmentId] = flow.deltaAt;
