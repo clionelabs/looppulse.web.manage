@@ -37,7 +37,7 @@ var observeFirebase = function () {
 
 var observeCollections = function() {
   var classes = [
-    Encounter, Engagement, SegmentVisitor, SegmentGraphs, SegmentVisitorFlow
+    Encounter, Engagement, SegmentVisitor, SegmentGraphs, SegmentVisitorFlow, VisitorEncountersCache
   ];
   classes.forEach(function(objectClass) {
     if (objectClass.hasOwnProperty('startup')) {

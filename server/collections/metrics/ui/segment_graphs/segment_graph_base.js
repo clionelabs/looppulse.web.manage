@@ -44,7 +44,7 @@ SegmentGraphBase.generateListGraph = function(segment, from, to) {
     console.log("[SegmentGraph] generating segment " + segment._id + " metric data from " + from + " to " + to);
     var atTime = moment().valueOf();
     var visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment._id, atTime);
-    var encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
+    var encounters = VisitorEncountersCache.getMultipleVisitorEncounters(visitorIds, from, to);
 
     var visitsEngine = new VisitsEngine(moment(from), moment(to), 'days');
     visitsEngine.build(encounters);
@@ -63,7 +63,7 @@ SegmentGraphBase.generateAllGraph = function(segment, from, to) {
     console.log("[SegmentGraph] generating segment " + segment._id + " metric data from " + from + " to " + to);
     var atTime = moment().valueOf();
     var visitorIds = SegmentVisitorFlows.getSegmentVisitorIdList(segment._id, atTime);
-    var encounters = Encounters.findClosedByVisitorsInTimePeriod(visitorIds, from, to).fetch();
+    var encounters = VisitorEncountersCache.getMultipleVisitorEncounters(visitorIds, from, to);
 
     // build visitsEngine with encounters for most graphs
     var visitsEngine = new VisitsEngine(moment(from), moment(to), 'days');
