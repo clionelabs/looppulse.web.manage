@@ -16,7 +16,7 @@
  */
 SegmentVisitorFlowsCache = {
   segmentFlows: {},
-  visitorFLows: {}
+  visitorFlows: {}
 }
 
 /*
@@ -24,10 +24,14 @@ SegmentVisitorFlowsCache = {
  * @param {SegmentVisitorFlow} flow
  */
 SegmentVisitorFlowsCache.insertFlow = function(flow) {
-  if (SegmentVisitorFlowsCache.segmentFlows[flow.segmentId] === undefined) SegmentVisitorFlowsCache.segmentFlows[flow.segmentId] = [];
-  if (SegmentVisitorFlowsCache.visitorFLows[flow.visitorId] === undefined) SegmentVisitorFlowsCache.visitorFLows[flow.visitorId] = [];
+  if (SegmentVisitorFlowsCache.segmentFlows[flow.segmentId] === undefined) {
+    SegmentVisitorFlowsCache.segmentFlows[flow.segmentId] = [];
+  }
+  if (SegmentVisitorFlowsCache.visitorFlows[flow.visitorId] === undefined) {
+    SegmentVisitorFlowsCache.visitorFlows[flow.visitorId] = [];
+  }
   SegmentVisitorFlowsCache._insertFlow(SegmentVisitorFlowsCache.segmentFlows[flow.segmentId], flow);
-  SegmentVisitorFlowsCache._insertFlow(SegmentVisitorFlowsCache.visitorFLows[flow.visitorId], flow);
+  SegmentVisitorFlowsCache._insertFlow(SegmentVisitorFlowsCache.visitorFlows[flow.visitorId], flow);
 }
 
 /*
@@ -38,8 +42,8 @@ SegmentVisitorFlowsCache.removeFlow = function(flow) {
   if (SegmentVisitorFlowsCache.segmentFlows[flow.segmentId] !== undefined) {
       SegmentVisitorFlowsCache._removeFlow(SegmentVisitorFlowsCache.segmentFlows[flow.segmentId], flow); 
   }
-  if (SegmentVisitorFlowsCache.visitorFLows[flow.visitorId] !== undefined) {
-      SegmentVisitorFlowsCache._removeFlow(SegmentVisitorFlowsCache.visitorFLows[flow.visitorId], flow);
+  if (SegmentVisitorFlowsCache.visitorFlows[flow.visitorId] !== undefined) {
+      SegmentVisitorFlowsCache._removeFlow(SegmentVisitorFlowsCache.visitorFlows[flow.visitorId], flow);
   }
 }
 
@@ -60,14 +64,16 @@ SegmentVisitorFlowsCache.getSegmentFlows = function(segmentId, before) {
  * @param {Unix Timestamp} before
  */
 SegmentVisitorFlowsCache.getVisitorFlows = function(visitorId, before) {
-  return SegmentVisitorFlowsCache._getFlows(SegmentVisitorFlowsCache.visitorFLows[visitorId], before);
+  return SegmentVisitorFlowsCache._getFlows(SegmentVisitorFlowsCache.visitorFlows[visitorId], before);
 }
 
 /*
  * @private
  */
 SegmentVisitorFlowsCache._getFlows = function(flows, before) {
-  if (flows === undefined) return []
+  if (flows === undefined) {
+    return [];
+  }
   var result = [];
   for (var i = 0; i < flows.length; i++) {
     if (flows[i].deltaAt >= before) break;
@@ -77,7 +83,7 @@ SegmentVisitorFlowsCache._getFlows = function(flows, before) {
 }
 
 /*
- * This method has a theoreitcal performance of O(N). However, insert normally happens in order,
+ * This method has a theoretical performance of O(N). However, insert normally happens in order,
  * so looping from the end could achieve a performance close to O(1)
  *
  * @private
@@ -94,7 +100,7 @@ SegmentVisitorFlowsCache._insertFlow = function(flows, flow) {
 }
 
 /*
- * This method has a theoreitcal performance of O(N). However, insert normally happens in order,
+ * This method has a theoretical performance of O(N). However, insert normally happens in order,
  * so looping from the end could achieve a performance close to O(1)
  *
  * @private
@@ -124,7 +130,7 @@ SegmentVisitorFlowsCache._removeFlow = function(flows, flow) {
 SegmentVisitorFlowsCache.startup = function () {
   SegmentVisitorFlows.find().observe({
     "added": function(flow) {SegmentVisitorFlowsCache.insertFlow(flow)},
-    "removed": function(flow) {SegmentVisitorFlowsCache.removeFlow(flow)},
+    "removed": function(flow) {SegmentVisitorFlowsCache.removeFlow(flow)}
   });
   console.info("[SegmentVisitorFlowsCache] startup complete");
 };
