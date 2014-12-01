@@ -27,8 +27,8 @@ mrt:numeral
 mizzao:bootstrap-3
 mike:mocha
 meteorhacks:kadira
-spacejamio:chai
-spacejamio:sinon
+practicalmeteor:chai
+practicalmeteor:sinon
 mizzao:user-status
 meteor-platform
 mizzao:bootboxjs

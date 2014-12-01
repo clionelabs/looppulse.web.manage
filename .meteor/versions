@@ -79,6 +79,7 @@ observe-sequence@1.0.3
 ordered-dict@1.0.1
 percolatestudio:synced-cron@1.1.0
 practicalmeteor:chai@1.9.2_3
+practicalmeteor:sinon@1.10.3_2
 random@1.0.1
 reactive-dict@1.0.4
 reactive-var@1.0.3
@@ -92,8 +93,6 @@ sha@1.0.1
 softwarerero:accounts-t9n@1.0.0
 spacebars-compiler@1.0.3
 spacebars@1.0.3
-spacejamio:chai@1.9.2_3
-spacejamio:sinon@1.10.3_2
 srp@1.0.1
 stevezhu:lodash@1.0.2
 templating@1.0.9
