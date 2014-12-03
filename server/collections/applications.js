@@ -63,33 +63,35 @@ Application.prototype.save = function() {
 Application.prototype.authenticatedResponse = function (token, sessionInfo) {
   var self = this;
   var response = {};
-  if (token != self.token) {
-    response["authenticated"] = false;
-    response["statusCode"] = 401;
-  } else {
-    response["authenticated"] = true;
-    response["statusCode"] = 200;
-
-    // TODO: read these from company settings
+  try {
     var company = Companies.findOne({_id: self.companyId});
     response["system"] = company.authenticatedResponse();
-
-    // Create session data
     var sessionId = Sessions.create(
       self.companyId,
       sessionInfo.visitorUUID,
       sessionInfo.sdk,
       sessionInfo.device);
     response["session"] = sessionId;
+    response["authenticated"] = true;
+    response["statusCode"] = 200;
+  } catch (e) {
+    console.error("[Application] Authentication Error: ", e);
+    response = {};
+    response["authenticated"] = false;
+    if (token != self.token) {
+      response["statusCode"] = 401;
+    } else {
+      response["statusCode"] = 400;
+    }
   }
   return response;
 };
 
 UnauthenticatedApplication = function() {
 };
-UnauthenticatedApplication.prototype.authenticatedResponse = function(token) {
+UnauthenticatedApplication.prototype.authenticatedResponse = function(token, sessionInfo) {
   var app = new Application();
-  return app.authenticatedResponse(token);
+  return app.authenticatedResponse(token, sessionInfo);
 };
 
 
