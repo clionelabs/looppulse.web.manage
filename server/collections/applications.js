@@ -66,12 +66,15 @@ Application.prototype.authenticatedResponse = function (token, sessionInfo) {
   try {
     var company = Companies.findOne({_id: self.companyId});
     response["system"] = company.authenticatedResponse();
-    var sessionId = Sessions.create(
-      self.companyId,
-      sessionInfo.visitorUUID,
-      sessionInfo.sdk,
-      sessionInfo.device);
-    response["session"] = sessionId;
+    if (sessionInfo) {
+      console.warn("session: ", sessionInfo);
+      var sessionId = Sessions.create(
+        self.companyId,
+        sessionInfo.visitorUUID,
+        sessionInfo.sdk,
+        sessionInfo.device);
+      response["session"] = sessionId;
+    }
     response["authenticated"] = true;
     response["statusCode"] = 200;
   } catch (e) {
