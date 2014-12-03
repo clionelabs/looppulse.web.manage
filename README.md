@@ -95,6 +95,9 @@ Here are some few points for reference,
   2. Enter `admin@example.com` in the [forget password link](http://localhost:3000/forgot-password)
   3. Check console log and get the password reset link in password recovery email.
 
+2. Test authentication via `curl`
+
+  `curl -X POST -H 'x-auth-token: TOKEN' HOST://api/authenticate/applications/APPID`
 
 ## Firbase Security
 
