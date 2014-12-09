@@ -11,7 +11,6 @@ Template.segmentDetail.helpers({
       return "dec";
     }
   }
-
 });
 
 Template.segmentDetail.events({
@@ -85,19 +84,27 @@ Template.segmentDetail.events({
 });
 Template.segmentDetail.rendered = function(e,tmpl) {
 
-  console.log("Chart Data", this.data);
-
   var self = this;
+
+  console.log("Chart Data", self.data);
 
   DateHelper.setUpDatePicker(self);
 
   var setVisitorCharts = function(){
 
+    //stupid this.data is not reactive
+    var data = Router.current().data().graphVisitorsXDatesData;
+
+    if (!data) {
+      $("#graphVisitorsXDates").empty();
+      return;
+    }
+
     //Visitor Chart by Date
     c3.generate({
       bindto: "#graphVisitorsXDates",
       data: {
-        json: self.data.graphVisitorsXDatesData,
+        json: data,
         keys : {
           x : 'date',
           value: ['number of visitors']
@@ -145,12 +152,20 @@ Template.segmentDetail.rendered = function(e,tmpl) {
 
   var setDwellTimeCharts = function(){
     //Dwell time chart
-    console.log("Drawing DwellTime", self.data.graphVisitorsXDwellData);
+
+    //stupid this.data is not reactive
+    var data = Router.current().data().graphVisitorsXDwellData;
+
+    if (!data) {
+      $("#graphVisitorsXDwell").empty();
+      return;
+    }
+
     c3.generate({
       bindto: "#graphVisitorsXDwell",
       data: {
 
-        json: self.data.graphVisitorsXDwellData,
+        json: data,
 
         keys : {
           x : 'duration',
@@ -196,18 +211,28 @@ Template.segmentDetail.rendered = function(e,tmpl) {
       }
     });
 
-
-   ChartHelper.punchCard("#graphDistributionDwellEnter",self.data.graphDistributionDwellEnterData, self.data.operatingTime);
-
+    Tracker.autorun(function() {
+      var dwellEnterData = Router.current().data().graphDistributionDwellEnterData;
+      var operatingTime = Router.current().data().operatingTime;
+      ChartHelper.punchCard("#graphDistributionDwellEnter", dwellEnterData, operatingTime);
+    });
   };
 
-  var setRepeatedVisitorCharts = function(){
+  var setRepeatedVisitorCharts = function() {
+
+    //stupid this.data is not reactive
+    var data = Router.current().data().graphVisitorsXVisitsData;
+
+    if (! data) {
+      $("#graphVisitorsXVisits").empty();
+      return;
+    }
 
     // Repeated Visitor Chart
     c3.generate({
       bindto: "#graphVisitorsXVisits",
       data: {
-        json: self.data.graphVisitorsXVisitsData,
+        json: data,
 
         keys : {
           x : 'count',
@@ -251,9 +276,16 @@ Template.segmentDetail.rendered = function(e,tmpl) {
       }
     });
 
+    Tracker.autorun(function() {
+      var graphDistributionVisitsEnterData = Router.current().data().graphDistributionVisitsEnterData;
+      var graphDistributionVisitsExitData = Router.current().data().graphDistributionVisitsExitData;
+      var operatingTime = Router.current().data().operatingTime;
 
-    ChartHelper.punchCard("#graphDistributionVisitsEnter",self.data.graphDistributionVisitsEnterData, self.data.operatingTime);
-    ChartHelper.punchCard("#graphDistributionVisitsExit",self.data.graphDistributionVisitsExitData, self.data.operatingTime);
+      ChartHelper.punchCard("#graphDistributionVisitsEnter", graphDistributionVisitsEnterData, operatingTime);
+      ChartHelper.punchCard("#graphDistributionVisitsExit", graphDistributionVisitsExitData, operatingTime);
+    });
+
+
 
   }
 
@@ -269,9 +301,9 @@ Template.segmentDetail.rendered = function(e,tmpl) {
       } else {
         console.log("initializing", target);
         if (target === "#dwell-time-metrics") {
-          setDwellTimeCharts();
+          Tracker.autorun(setDwellTimeCharts);
         } else if (target === "#repeated-visits-metrics") {
-          setRepeatedVisitorCharts();
+          Tracker.autorun(setRepeatedVisitorCharts);
         }
         //do nothing for the visitor tabs
 
@@ -281,7 +313,7 @@ Template.segmentDetail.rendered = function(e,tmpl) {
   })
 
   //init
-  setVisitorCharts();
+  Tracker.autorun(setVisitorCharts);
 
 
 
