@@ -53,16 +53,13 @@ Template.segmentDetail.events({
   },
   "click #showInfo": function() {
     Meteor.call("getSegmentCriteriaToString", this.criteria, function(e, msg) {
-      console.log(msg);
       $("#criteria").html(msg);
-
     });
   },
   "click #showDelete": function() {
     var self = this;
     bootbox.confirm("Are you sure you want to remove the segment '" + self.name + "' ?", function(result) {
         if (result) {
-            console.log("Removing Segment", self.name);
             Notifications.info("Removing", "Segment '" + self.name +"'", { userCloseable: false});
             $.blockUI({css : {width:0, height : 0, border:0, backgroundColor : "transparent"}, message : ""});
             Meteor.call("removeInCollection", "Segments", self.segmentId, function (err, res) {
@@ -85,8 +82,6 @@ Template.segmentDetail.events({
 Template.segmentDetail.rendered = function(e,tmpl) {
 
   var self = this;
-
-  console.log("Chart Data", self.data);
 
   if (self && self.data) {
     DateHelper.setUpDatePicker(self.data.from, self.data.to);
@@ -212,11 +207,6 @@ Template.segmentDetail.rendered = function(e,tmpl) {
       }
     });
 
-    self.autorun(function() {
-      var dwellEnterData = Router.current().data().graphDistributionDwellEnterData;
-      var operatingTime = Router.current().data().operatingTime;
-      ChartHelper.punchCard("#graphDistributionDwellEnter", dwellEnterData, operatingTime);
-    });
   };
 
   var setRepeatedVisitorCharts = function() {
@@ -276,35 +266,36 @@ Template.segmentDetail.rendered = function(e,tmpl) {
         }
       }
     });
-
-    self.autorun(function() {
-      var graphDistributionVisitsEnterData = Router.current().data().graphDistributionVisitsEnterData;
-      var graphDistributionVisitsExitData = Router.current().data().graphDistributionVisitsExitData;
-      var operatingTime = Router.current().data().operatingTime;
-
-      ChartHelper.punchCard("#graphDistributionVisitsEnter", graphDistributionVisitsEnterData, operatingTime);
-      ChartHelper.punchCard("#graphDistributionVisitsExit", graphDistributionVisitsExitData, operatingTime);
-    });
-
-
-
   }
 
   $(".metric-tabs a[data-toggle='tab']").on("click", function(e){
     // e.target // newly activated tab
       // e.relatedTarget // previous active tab
-      console.log("Target Finding")
       var currentTab = $(e.currentTarget);
       var target = currentTab.attr("href")
       if (currentTab.data("init")){
-        console.log("initialized:", target);
         return true;
       } else {
-        console.log("initializing", target);
         if (target === "#dwell-time-metrics") {
-          self.autorun(Meteor.setTimeout(setDwellTimeCharts, 10));
+          self.autorun(Meteor.defer(function () {
+            setDwellTimeCharts();
+            var dwellEnterData = Router.current().data().graphDistributionDwellEnterData;
+            var operatingTime = Router.current().data().operatingTime;
+            ChartHelper.punchCard("#graphDistributionDwellEnter", dwellEnterData, operatingTime);
+
+          }));
         } else if (target === "#repeated-visits-metrics") {
-          self.autorun(Meteor.setTimeout(setRepeatedVisitorCharts, 10));
+          self.autorun(Meteor.defer(
+              function() {
+                setRepeatedVisitorCharts();
+                var graphDistributionVisitsEnterData = Router.current().data().graphDistributionVisitsEnterData;
+                var graphDistributionVisitsExitData = Router.current().data().graphDistributionVisitsExitData;
+                var operatingTime = Router.current().data().operatingTime;
+
+                ChartHelper.punchCard("#graphDistributionVisitsEnter", graphDistributionVisitsEnterData, operatingTime);
+                ChartHelper.punchCard("#graphDistributionVisitsExit", graphDistributionVisitsExitData, operatingTime);
+              })
+          );
         }
         //do nothing for the visitor tabs
 
