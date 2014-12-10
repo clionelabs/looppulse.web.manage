@@ -88,9 +88,10 @@ Template.segmentDetail.rendered = function(e,tmpl) {
 
   console.log("Chart Data", self.data);
 
-  DateHelper.setUpDatePicker(self);
-
-  var setVisitorCharts = function(){
+  if (self && self.data) {
+    DateHelper.setUpDatePicker(self.data.from, self.data.to);
+  }
+  var setVisitorCharts = function() {
 
     //stupid this.data is not reactive
     var data = Router.current().data().graphVisitorsXDatesData;
@@ -211,7 +212,7 @@ Template.segmentDetail.rendered = function(e,tmpl) {
       }
     });
 
-    Tracker.autorun(function() {
+    self.autorun(function() {
       var dwellEnterData = Router.current().data().graphDistributionDwellEnterData;
       var operatingTime = Router.current().data().operatingTime;
       ChartHelper.punchCard("#graphDistributionDwellEnter", dwellEnterData, operatingTime);
@@ -276,7 +277,7 @@ Template.segmentDetail.rendered = function(e,tmpl) {
       }
     });
 
-    Tracker.autorun(function() {
+    self.autorun(function() {
       var graphDistributionVisitsEnterData = Router.current().data().graphDistributionVisitsEnterData;
       var graphDistributionVisitsExitData = Router.current().data().graphDistributionVisitsExitData;
       var operatingTime = Router.current().data().operatingTime;
@@ -301,9 +302,9 @@ Template.segmentDetail.rendered = function(e,tmpl) {
       } else {
         console.log("initializing", target);
         if (target === "#dwell-time-metrics") {
-          Tracker.autorun(setDwellTimeCharts);
+          self.autorun(Meteor.setTimeout(setDwellTimeCharts, 10));
         } else if (target === "#repeated-visits-metrics") {
-          Tracker.autorun(setRepeatedVisitorCharts);
+          self.autorun(Meteor.setTimeout(setRepeatedVisitorCharts, 10));
         }
         //do nothing for the visitor tabs
 
@@ -313,9 +314,7 @@ Template.segmentDetail.rendered = function(e,tmpl) {
   })
 
   //init
-  Tracker.autorun(setVisitorCharts);
-
-
-
+  self.autorun(setVisitorCharts);
+  
 }
 
