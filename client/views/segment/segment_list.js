@@ -11,5 +11,8 @@ Template.segmentList.helpers({
 });
 
 Template.segmentList.rendered = function() {
-  DateHelper.setUpDatePicker(this);
+  var self = this;
+  var from = +self.data.from;
+  var to = +self.data.to;
+  DateHelper.setUpDatePicker(from, to);
 }

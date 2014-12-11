@@ -11,7 +11,6 @@ Template.segmentDetail.helpers({
       return "dec";
     }
   }
-
 });
 
 Template.segmentDetail.events({
@@ -54,16 +53,13 @@ Template.segmentDetail.events({
   },
   "click #showInfo": function() {
     Meteor.call("getSegmentCriteriaToString", this.criteria, function(e, msg) {
-      console.log(msg);
       $("#criteria").html(msg);
-
     });
   },
   "click #showDelete": function() {
     var self = this;
     bootbox.confirm("Are you sure you want to remove the segment '" + self.name + "' ?", function(result) {
         if (result) {
-            console.log("Removing Segment", self.name);
             Notifications.info("Removing", "Segment '" + self.name +"'", { userCloseable: false});
             $.blockUI({css : {width:0, height : 0, border:0, backgroundColor : "transparent"}, message : ""});
             Meteor.call("removeInCollection", "Segments", self.segmentId, function (err, res) {
@@ -85,19 +81,26 @@ Template.segmentDetail.events({
 });
 Template.segmentDetail.rendered = function(e,tmpl) {
 
-  console.log("Chart Data", this.data);
-
   var self = this;
 
-  DateHelper.setUpDatePicker(self);
+  if (self && self.data) {
+    DateHelper.setUpDatePicker(self.data.from, self.data.to);
+  }
+  var setVisitorCharts = function() {
 
-  var setVisitorCharts = function(){
+    //stupid this.data is not reactive
+    var data = Router.current().data().graphVisitorsXDatesData;
+
+    if (!data) {
+      $("#graphVisitorsXDates").empty();
+      return;
+    }
 
     //Visitor Chart by Date
     c3.generate({
       bindto: "#graphVisitorsXDates",
       data: {
-        json: self.data.graphVisitorsXDatesData,
+        json: data,
         keys : {
           x : 'date',
           value: ['number of visitors']
@@ -145,12 +148,20 @@ Template.segmentDetail.rendered = function(e,tmpl) {
 
   var setDwellTimeCharts = function(){
     //Dwell time chart
-    console.log("Drawing DwellTime", self.data.graphVisitorsXDwellData);
+
+    //stupid this.data is not reactive
+    var data = Router.current().data().graphVisitorsXDwellData;
+
+    if (!data) {
+      $("#graphVisitorsXDwell").empty();
+      return;
+    }
+
     c3.generate({
       bindto: "#graphVisitorsXDwell",
       data: {
 
-        json: self.data.graphVisitorsXDwellData,
+        json: data,
 
         keys : {
           x : 'duration',
@@ -196,18 +207,23 @@ Template.segmentDetail.rendered = function(e,tmpl) {
       }
     });
 
-
-   ChartHelper.punchCard("#graphDistributionDwellEnter",self.data.graphDistributionDwellEnterData, self.data.operatingTime);
-
   };
 
-  var setRepeatedVisitorCharts = function(){
+  var setRepeatedVisitorCharts = function() {
+
+    //stupid this.data is not reactive
+    var data = Router.current().data().graphVisitorsXVisitsData;
+
+    if (! data) {
+      $("#graphVisitorsXVisits").empty();
+      return;
+    }
 
     // Repeated Visitor Chart
     c3.generate({
       bindto: "#graphVisitorsXVisits",
       data: {
-        json: self.data.graphVisitorsXVisitsData,
+        json: data,
 
         keys : {
           x : 'count',
@@ -250,28 +266,36 @@ Template.segmentDetail.rendered = function(e,tmpl) {
         }
       }
     });
-
-
-    ChartHelper.punchCard("#graphDistributionVisitsEnter",self.data.graphDistributionVisitsEnterData, self.data.operatingTime);
-    ChartHelper.punchCard("#graphDistributionVisitsExit",self.data.graphDistributionVisitsExitData, self.data.operatingTime);
-
   }
 
   $(".metric-tabs a[data-toggle='tab']").on("click", function(e){
     // e.target // newly activated tab
       // e.relatedTarget // previous active tab
-      console.log("Target Finding")
       var currentTab = $(e.currentTarget);
       var target = currentTab.attr("href")
       if (currentTab.data("init")){
-        console.log("initialized:", target);
         return true;
       } else {
-        console.log("initializing", target);
         if (target === "#dwell-time-metrics") {
-          setDwellTimeCharts();
+          self.autorun(Meteor.defer(function () {
+            setDwellTimeCharts();
+            var dwellEnterData = Router.current().data().graphDistributionDwellEnterData;
+            var operatingTime = Router.current().data().operatingTime;
+            ChartHelper.punchCard("#graphDistributionDwellEnter", dwellEnterData, operatingTime);
+
+          }));
         } else if (target === "#repeated-visits-metrics") {
-          setRepeatedVisitorCharts();
+          self.autorun(Meteor.defer(
+              function() {
+                setRepeatedVisitorCharts();
+                var graphDistributionVisitsEnterData = Router.current().data().graphDistributionVisitsEnterData;
+                var graphDistributionVisitsExitData = Router.current().data().graphDistributionVisitsExitData;
+                var operatingTime = Router.current().data().operatingTime;
+
+                ChartHelper.punchCard("#graphDistributionVisitsEnter", graphDistributionVisitsEnterData, operatingTime);
+                ChartHelper.punchCard("#graphDistributionVisitsExit", graphDistributionVisitsExitData, operatingTime);
+              })
+          );
         }
         //do nothing for the visitor tabs
 
@@ -281,9 +305,7 @@ Template.segmentDetail.rendered = function(e,tmpl) {
   })
 
   //init
-  setVisitorCharts();
-
-
-
+  self.autorun(setVisitorCharts);
+  
 }
 
