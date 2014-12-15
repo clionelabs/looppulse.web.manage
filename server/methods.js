@@ -184,7 +184,6 @@ Meteor.methods({
   },
 
   genSegmentListData: function(from, to) {
-    //TODO GH265 get from session
     var companyId = Companies.findOne({ownedByUserIds : Meteor.userId() })._id;
     Segments.find({companyId: companyId}).map(function(segment) {
       SegmentGraphBase.generateListGraph(segment, from, to);

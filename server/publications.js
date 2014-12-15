@@ -135,7 +135,7 @@ Meteor.publish('companies', function () {
   console.log("Returning Company Data of User", this.userId)
 
   q = { ownedByUserIds: { $in : [ this.userId ] } }
-  return Companies.find(q, { fields: { _id:1, name:1 } }); //Note: Return MongoDB Cursor
+  return Companies.find(q, { fields: { _id:1, name:1, ownedByUserIds:1 } }); //Note: Return MongoDB Cursor
 });
 
 Meteor.publish('companyCategories', function (companyId) {

@@ -4,6 +4,17 @@ Meteor.startup(function () {
     forbidClientAccountCreation: true
   });
 
+  Tracker.autorun(function () {
+    console.log("userId changed" + Meteor.userId());
+    var company = Companies.findOne({ "ownedByUserIds" : Meteor.userId() });
+    if (company) {
+      Session.makeAuth('currentCompanyId');
+      Session.setAuth('currentCompanyId', company._id);
+    } else {
+      Session.clearAuth();
+    }
+  });
+
   Accounts.ui.config({ passwordSignupFields: 'EMAIL_ONLY' });
 
   AccountsEntry.config({
